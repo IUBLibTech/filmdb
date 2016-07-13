@@ -1,0 +1,17 @@
+<%= form_for(@physical_object) do |f| %>
+  <% if @physical_object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
+
+      <ul>
+      <% @physical_object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
