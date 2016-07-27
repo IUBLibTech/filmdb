@@ -1,12 +1,8 @@
-<p id="notice"><%= notice %></p>
-
-<%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
-<%= link_to 'Back', physical_objects_path %>
-<table class="physical_object_metadata">
+<table class='physical_object_metadata_editable'>
   <tr>
-    <td>Date Inventoried</td>
+    <td>Date Inventoried </td>
     <td>
-      <%= @physical_object.date_inventoried %>
+      <%= f.text_field :date_inventoried %>
     </td>
     <td>(Can we use the database record creation date when created in filmdb?)</td>
   </tr>
@@ -19,7 +15,7 @@
   <tr>
     <td>Location</td>
     <td>
-      <%= @physical_object.location %>
+      <%= f.text_field :location %>
     </td>
   </tr>
   <tr>
@@ -31,26 +27,25 @@
   <tr>
     <td>Media Type</td>
     <td>
-      <%= @physical_object.media_type %>
+      <%= f.select :media_type, @physical_object.media_types %>
     </td>
   </tr>
   <tr>
     <td>IU Barcode</td>
     <td>
-      <%= @physical_object.iu_barcode %>
+      <%= f.text_field :iu_barcode %>
     </td>
   </tr>
   <tr>
     <td>Title</td>
     <td>
-      <%= @physical_object.title %>
+      <%= f.text_field :title %>
     </td>
   </tr>
   <tr>
     <td>Copy Right</td>
     <td>
-      <%= @physical_object.copy_right %>
+      <%= f.text_field :copy_right %>
     </td>
   </tr>
 </table>
-<%= render partial: 'physical_object_old_barcodes' %>

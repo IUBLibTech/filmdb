@@ -19,6 +19,11 @@ class PhysicalObjectsController < ApplicationController
 
   # GET /physical_objects/1/edit
   def edit
+    @physical_object = PhysicalObject.find(params[:id])
+    if @physical_object.nil?
+      flash.now[:warning] = "No such physical object..."
+      redirect_to :back
+    end
   end
 
   # POST /physical_objects
@@ -69,6 +74,7 @@ class PhysicalObjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def physical_object_params
-      params.fetch(:physical_object, {})
+      params.require(:physical_object).permit(:date_inventoried, :location, :media_type, :iu_barcode, :title, :copy_right)
+      # params.fetch(:physical_object, {})
     end
 end

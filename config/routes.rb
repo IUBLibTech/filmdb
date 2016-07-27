@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :users
   root "physical_objects#index"
 
   resources :physical_objects
