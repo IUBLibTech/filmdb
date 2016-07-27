@@ -13,3 +13,21 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+    margin: 0 auto;
+    font-family: sans-serif;
+    height: 100%;
+    width: 1000px;
+}
+
+#branding {
+    background-image: url('/assets/branding1.jpg');
+    width: 1000px;
+    height: 260px;
+}
+
+#branding > div.user {
+    float: right;
+    margin-right: 15px;
+}

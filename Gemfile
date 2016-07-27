@@ -27,6 +27,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # HairTrigger lets you create and manage database triggers in a concise, db-agnostic, Rails-y way.
 gem 'hairtrigger'
 
+# pundit adds authorization support
+gem 'pundit'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

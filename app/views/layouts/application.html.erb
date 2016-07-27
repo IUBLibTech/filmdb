@@ -8,7 +8,10 @@
 </head>
 <body>
 <div id="branding">
-  <img src="<%= image_path('branding1.jpg') %>" alt=""/>
+  <div class="user">
+	  User: <%= current_username %> <br/>
+	  <%= link_to "Sign Out", signout_path, method: :delete %>
+  </div>
 </div>
 <%= yield %>
 

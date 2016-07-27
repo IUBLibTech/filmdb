@@ -3,6 +3,14 @@ Rails.application.routes.draw do
   root "physical_objects#index"
 
   resources :physical_objects
+
+  match '/signin', to: 'sessions#new', via: :get
+  match '/signout', to: 'sessions#destroy', via: :delete
+  resources :sessions, only: [:new, :destroy] do
+    get :validate_login, on: :collection
+  end
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
