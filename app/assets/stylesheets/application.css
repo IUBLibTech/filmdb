@@ -24,7 +24,7 @@ body {
 #branding {
     background-image: url('/assets/branding1.jpg');
     width: 1000px;
-    height: 260px;
+    height: 150px;
 }
 
 #branding > div.user {
