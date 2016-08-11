@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  resources :users
   root "physical_objects#index"
 
+  resources :users
   resources :physical_objects
+  resources :spreadsheets, only: [:index, :show, :destroy]
+  post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

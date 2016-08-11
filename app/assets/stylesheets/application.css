@@ -19,6 +19,7 @@ body {
     font-family: sans-serif;
     height: 100%;
     width: 1000px;
+    background-color: #777;
 }
 
 #branding {
@@ -30,4 +31,61 @@ body {
 #branding > div.user {
     float: right;
     margin-right: 15px;
+}
+
+div#nav {
+    height: 22px;
+    background: rgb(20,20,20);
+}
+
+div#nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+div#nav>ul>li {
+    float: left;
+    padding: 0 0 0 12px;
+    font-family: 'Tahoma';
+    font-size: 14px;
+    word-spacing: -0.3em;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+a, a:visited {
+    color: white;
+    text-decoration: none;
+}
+a:hover {
+    color: #8F2609;
+    text-decoration: none;
+}
+
+.red {
+    color: #8F2609;
+}
+
+table {
+    border-spacing: 0;
+}
+
+th, tr, td {
+    border: 1px solid black;
+}
+th {
+    background-color: #8F2609;
+}
+
+table.physical_object_metadata_editable tbody tr td:first-of-type {
+    background-color: #666;
+}
+
+table tbody tr td input, textarea, select {
+    width: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }

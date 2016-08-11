@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<div class="left">
+	<h1>Listing Spreadsheets</h1>
+
+	<table>
+	  <thead>
+	    <tr>
+	      <th>Filename</th>
+	      <th>Actions</th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	    <% @spreadsheets.each do |spreadsheet| %>
+	      <tr>
+	        <td><%= spreadsheet.filename %></td>
+	        <td>
+	          <%= link_to 'Show', spreadsheet %>
+	          <%= link_to 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
+	        </td>
+	      </tr>
+	    <% end %>
+	  </tbody>
+	</table>
+</div>
+<div class="right">
+	<h1>Upload Spreadsheet</h1>
+  <%= form_for @file, url: spreadsheet_upload_path do |f| %>
+    <table>
+      <tr>
+        <td>
+          <%= f.file_field :xls_file %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= f.submit "Upload Inventory File" %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+</div>
+

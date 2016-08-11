@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727124650) do
+ActiveRecord::Schema.define(version: 20160808174539) do
 
   create_table "physical_object_old_barcodes", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -21,17 +21,37 @@ ActiveRecord::Schema.define(version: 20160727124650) do
   end
 
   create_table "physical_objects", force: :cascade do |t|
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.datetime "date_inventoried"
+    t.integer  "user_id",                    limit: 8
+    t.string   "location",                   limit: 255
+    t.integer  "collection_id",              limit: 8
+    t.string   "media_type",                 limit: 255
+    t.integer  "iu_barcode",                 limit: 8
+    t.string   "title",                      limit: 255,   null: false
+    t.integer  "copy_right",                 limit: 4
+    t.string   "format",                     limit: 255
+    t.integer  "spreadsheet_id",             limit: 4,     null: false
+    t.string   "series_name",                limit: 255
+    t.string   "series_production_number",   limit: 255
+    t.string   "series_part",                limit: 255
+    t.string   "alternative_title",          limit: 255
+    t.string   "title_version",              limit: 255
+    t.string   "item_original_identifier",   limit: 255
+    t.text     "summary",                    limit: 65535
+    t.string   "creator",                    limit: 255
+    t.string   "distributors",               limit: 255
+    t.string   "credits",                    limit: 255
+    t.string   "language",                   limit: 255
+    t.text     "accompanying_documentation", limit: 65535
+    t.text     "notes",                      limit: 65535
+  end
+
+  create_table "spreadsheets", force: :cascade do |t|
+    t.string   "filename",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "date_inventoried"
-    t.integer  "user_id",          limit: 8
-    t.string   "location",         limit: 255
-    t.integer  "collection_id",    limit: 8
-    t.string   "media_type",       limit: 255
-    t.integer  "iu_barcode",       limit: 8
-    t.string   "title",            limit: 255, null: false
-    t.integer  "copy_right",       limit: 4
-    t.string   "format",           limit: 255
   end
 
   create_table "users", force: :cascade do |t|
