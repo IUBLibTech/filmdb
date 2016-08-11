@@ -74,7 +74,10 @@ class PhysicalObjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def physical_object_params
-      params.require(:physical_object).permit(:date_inventoried, :location, :media_type, :iu_barcode, :title, :copy_right)
-      # params.fetch(:physical_object, {})
+      params.require(:physical_object).permit(
+        :date_inventoried, :location, :media_type, :iu_barcode, :title, :copy_right, :format, :spreadsheet_id,
+        :series_name, :series_production_number, :series_part, :alternative_title, :title_version, :item_original_identifier,
+        :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes
+      )
     end
 end

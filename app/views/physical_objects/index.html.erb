@@ -1,30 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Physical Objects</h1>
-
-<table border="1">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @physical_objects.each do |physical_object| %>
-      <tr>
-        <td>
-	        <%= physical_object.title %>
-        </td>
-        <td>
-        	<%= link_to 'Show', physical_object %> <br/>
-          <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>
-          <%= link_to 'Destroy', physical_object, method: :delete, data: { confirm: 'Are you sure?' } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render partial: 'physical_objects_table' %>
 
 <br>
 
