@@ -16,6 +16,3 @@
 !/log/.keep
 /tmp
 config/database.yml
-
-# files for rubymine
-/.idea/*
