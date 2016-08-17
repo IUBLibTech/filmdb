@@ -7,6 +7,7 @@
 	  <thead>
 	    <tr>
 	      <th>Filename</th>
+	      <th>Successful Upload</th>
 	      <th>Actions</th>
 	    </tr>
 	  </thead>
@@ -15,9 +16,10 @@
 	    <% @spreadsheets.each do |spreadsheet| %>
 	      <tr>
 	        <td><%= spreadsheet.filename %></td>
+	        <td><%= spreadsheet.successful_upload %></td>
 	        <td>
-	          <%= link_to 'Show', spreadsheet %>
-	          <%= link_to 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
+	          <%= link_to_unless !spreadsheet.successful_upload, 'Show', spreadsheet %>
+	          <%= link_to_unless !spreadsheet.successful_upload, 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
 	        </td>
 	      </tr>
 	    <% end %>

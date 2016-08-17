@@ -34,12 +34,12 @@ class SpreadsheetsController < ApplicationController
         format.html { redirect_to spreadsheets_path, notice: 'You must specify an inventory file.'}
       else
         # check filename
-        ss = Spreadsheet.where(filename: @file.original_filename).first
+        ss = Spreadsheet.where(filename: @file.original_filename, successful_upload: true).first
         if ss
-          format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has already been uploaded" }
+          format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has already been uploaded successfully" }
         else
           SpreadsheetsHelper.parse_spreadsheet(@file)
-          format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been successfully uploaded." }
+          format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been submitted. Please refresh the page to monitor progress." }
         end
       end
     end
