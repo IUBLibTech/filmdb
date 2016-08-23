@@ -7,7 +7,7 @@ module SpreadsheetsHelper
 	end
 	@@mutex = Mutex.new
 
-	def self.parse_invoice(upload)
+	def self.parse(upload)
 		Thread.new {
 			@@mutex.synchronize do
 				parse_spreadsheet(upload)
