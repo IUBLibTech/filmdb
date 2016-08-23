@@ -21,18 +21,18 @@ ActiveRecord::Schema.define(version: 20160817134213) do
   end
 
   create_table "physical_objects", force: :cascade do |t|
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "date_inventoried"
     t.integer  "user_id",                    limit: 8
     t.string   "location",                   limit: 255
     t.integer  "collection_id",              limit: 8
     t.string   "media_type",                 limit: 255
-    t.integer  "iu_barcode",                 limit: 8
+    t.integer  "iu_barcode",                 limit: 8,     null: false
     t.string   "title",                      limit: 255,   null: false
     t.integer  "copy_right",                 limit: 4
     t.string   "format",                     limit: 255
-    t.integer  "spreadsheet_id",             limit: 4,     null: false
+    t.integer  "spreadsheet_id",             limit: 4
     t.string   "series_name",                limit: 255
     t.string   "series_production_number",   limit: 255
     t.string   "series_part",                limit: 255

@@ -50,16 +50,21 @@ module SpreadsheetsHelper
 				validated_physical_objects << validate_physical_object(xlsx.row(row), headers)
 				sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 50).to_i)
 			end
+
+
 			# get bad rows
 			error_rows = validated_physical_objects.each_with_index.inject({}) { |h, (v, i)|
-				h[i] = v if v.is_a? String
+				h[i] = v if !v.is_a? PhysicalObject
 				h
 			}
+
 			# failed import so log the failures
 			if error_rows.size > 0
 				msg = ""
 				error_rows.keys.sort.each do |k|
-					msg << "Row #{k}: #{error_rows[k]}\n"
+					error_rows[k].messages.keys.each do |m|
+						msg << "Row #{k}: #{m} '#{error_rows[k].messages[m]}'"
+					end
 				end
 				sss.update_attributes(failure_message: msg, successful_submission: false, submission_progress: 100)
 			# ingest can move forward
@@ -112,6 +117,10 @@ module SpreadsheetsHelper
 				accompanying_documentation: row_data[headers['Accompanying Documentation']],
 				notes:  row_data[headers['Accompanying Documentation']]
 		)
+		if !po.valid?
+			debugger
+		end
+		po.valid? ? po : po.errors
 	end
 
 	def self.parse_date(date)
