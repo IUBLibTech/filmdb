@@ -16,10 +16,12 @@
 	    <% @spreadsheets.each do |spreadsheet| %>
 	      <tr>
 	        <td><%= spreadsheet.filename %></td>
-	        <td><%= spreadsheet.successful_upload %></td>
+	        <td>
+	        	<%= link_to "#{spreadsheet.successful_upload}", spreadsheet_path(spreadsheet.id) %>
+	        </td>
 	        <td>
 	          <%= link_to_unless !spreadsheet.successful_upload, 'Show', spreadsheet %>
-	          <%= link_to_unless !spreadsheet.successful_upload, 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
+	          <%= link_to_unless false, 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
 	        </td>
 	      </tr>
 	    <% end %>

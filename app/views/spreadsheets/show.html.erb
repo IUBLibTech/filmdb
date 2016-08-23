@@ -1,4 +1,10 @@
 <p id="notice"><%= notice %></p>
-<%= render partial: 'physical_objects/physical_objects_table' %>
-
+<% if @spreadsheet.successful_upload %>
+	<%= render partial: 'physical_objects/physical_objects_table' %>
+<% else %>
+	<h2>Spreadsheet upload failed for the following reasons:</h2>
+	<p>
+	<%= @spreadsheet.spreadsheet_submissions.last.failure_message %>
+	</p>
+<% end %>
 <%= link_to 'Back', spreadsheets_path %>
