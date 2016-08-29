@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160817134213) do
+ActiveRecord::Schema.define(version: 20160829124250) do
 
   create_table "physical_object_old_barcodes", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -67,13 +67,14 @@ ActiveRecord::Schema.define(version: 20160817134213) do
   add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",   limit: 255,                 null: false
-    t.string   "first_name", limit: 255,                 null: false
-    t.string   "last_name",  limit: 255,                 null: false
-    t.integer  "role_mask",  limit: 4,   default: 0
+    t.string   "username",      limit: 255,                 null: false
+    t.string   "first_name",    limit: 255,                 null: false
+    t.string   "last_name",     limit: 255,                 null: false
+    t.integer  "role_mask",     limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",                 default: false
+    t.boolean  "active",                    default: false
+    t.string   "email_address", limit: 255
   end
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
