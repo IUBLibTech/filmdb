@@ -4,6 +4,12 @@
 <%= link_to 'Back', users_path %>
 <table>
   <tr>
+    <td>Username</td>
+    <td>
+	    <%= @user.username %>
+    </td>
+  </tr>
+  <tr>
     <td>Email Address</td>
     <td><%= @user.email_address %></td>
   </tr>
