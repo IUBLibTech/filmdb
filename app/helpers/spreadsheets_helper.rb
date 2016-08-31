@@ -79,7 +79,7 @@ module SpreadsheetsHelper
 				msg = ""
 				error_rows.keys.sort.each do |k|
 					error_rows[k].messages.keys.each do |m|
-						msg << "Row #{k}: #{m} '#{error_rows[k].messages[m]}'"
+						msg << "Row #{k+2}: #{m} '#{error_rows[k].messages[m]}'"
 					end
 					msg << "<br>"
 				end
