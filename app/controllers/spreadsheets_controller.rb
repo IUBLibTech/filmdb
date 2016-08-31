@@ -38,7 +38,7 @@ class SpreadsheetsController < ApplicationController
         if ss
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has already been uploaded successfully" }
         else
-          SpreadsheetsHelper.parse_spreadsheet(@file)
+          SpreadsheetsHelper.parse_threaded(@file)
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been submitted. Please refresh the page to monitor progress." }
         end
       end

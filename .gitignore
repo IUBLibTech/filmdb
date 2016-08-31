@@ -19,3 +19,6 @@ config/database.yml
 
 # files for rubymine
 /.idea/*
+
+# files from Passenger
+pasenger.*.lock

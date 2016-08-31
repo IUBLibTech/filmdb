@@ -4,7 +4,7 @@
 <% else %>
 	<h2>Spreadsheet upload failed for the following reasons:</h2>
 	<p>
-	<%= @spreadsheet.spreadsheet_submissions.last.failure_message %>
+	<%= @spreadsheet.spreadsheet_submissions.last.failure_message.html_safe %>
 	</p>
 <% end %>
 <%= link_to 'Back', spreadsheets_path %>

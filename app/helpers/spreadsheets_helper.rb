@@ -1,13 +1,31 @@
 module SpreadsheetsHelper
 	require 'roo'
 
+	# the column headers that spreadsheets should contain
+	COLUMN_HEADERS = [
+		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
+		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
+		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes'
+	]
+	# hash mapping a column header string to a physical object' assignment operand using send()
+	HEADERS_TO_ASSIGNER = {
+		"#{COLUMN_HEADERS[0]}" => :location=,	"#{COLUMN_HEADERS[1]}" => :media_type=,	"#{COLUMN_HEADERS[2]}" => :iu_barcode=,
+		"#{COLUMN_HEADERS[3]}" => :title=,	"#{COLUMN_HEADERS[4]}" => :copy_right=,	"#{COLUMN_HEADERS[5]}" => :series_name=,
+		"#{COLUMN_HEADERS[6]}" => :series_production_number=,	"#{COLUMN_HEADERS[7]}" => :series_part=,	"#{COLUMN_HEADERS[8]}" => :alternative_title=,
+		# "#{COLUMN_HEADERS[9]}" => not yet implemented
+		"#{COLUMN_HEADERS[10]}" => :summary=,	"#{COLUMN_HEADERS[11]}" => :creator=,	"#{COLUMN_HEADERS[12]}" => :distributors=,
+		"#{COLUMN_HEADERS[13]}" => :credits=,	"#{COLUMN_HEADERS[14]}" => :language=,	"#{COLUMN_HEADERS[15]}" => :accompanying_documentation=,
+		"#{COLUMN_HEADERS[16]}" => :notes=
+	}
+
+
 	# special logger for parsing spreadsheets
 	def self.logger
 		@@logger ||= Logger.new("#{Rails.root}/log/spreadsheet_submission_logger.log")
 	end
 	@@mutex = Mutex.new
 
-	def self.parse_invoice(upload)
+	def self.parse_threaded(upload)
 		Thread.new {
 			@@mutex.synchronize do
 				parse_spreadsheet(upload)
@@ -26,7 +44,6 @@ module SpreadsheetsHelper
 		end
 		sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
 		sss.save
-
 		xlsx = Roo::Excelx.new(file.tempfile.path, file_warning: :ignore)
 		xlsx.default_sheet = xlsx.sheets[0]
 		headers = Hash.new
@@ -40,24 +57,23 @@ module SpreadsheetsHelper
 		validated_physical_objects = Array.new
 
 		# first check to see if the headers are well formed
-		bad_header = head_problems(xlsx.row(0))
+		bad_header = header_problems(headers)
 		if bad_header
 			sss.update_attributes(failure_message: bad_header, successful_submission: false, submission_progress: 100)
 		else
 			# next iterate through each physical object checking it's validity - what gets appended to the array
 			# is either a valid physical object or and error message stating why the object failed
 			((xlsx.first_row + 1)..(xlsx.last_row)).each do |row|
-				validated_physical_objects << validate_physical_object(xlsx.row(row), headers)
+				puts "Processing row #{row}"
+				po = validate_physical_object(xlsx.row(row), headers)
+				validated_physical_objects << po
 				sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 50).to_i)
 			end
-
-
 			# get bad rows
 			error_rows = validated_physical_objects.each_with_index.inject({}) { |h, (v, i)|
 				h[i] = v if !v.is_a? PhysicalObject
 				h
 			}
-
 			# failed import so log the failures
 			if error_rows.size > 0
 				msg = ""
@@ -65,6 +81,7 @@ module SpreadsheetsHelper
 					error_rows[k].messages.keys.each do |m|
 						msg << "Row #{k}: #{m} '#{error_rows[k].messages[m]}'"
 					end
+					msg << "<br>"
 				end
 				sss.update_attributes(failure_message: msg, successful_submission: false, submission_progress: 100)
 			# ingest can move forward
@@ -86,45 +103,32 @@ module SpreadsheetsHelper
 	# the header is correct, or a string value containing the error message detailing what was wrong with the
 	# headers
 	# FIXME: Header validity has not been defined yet and may rely on collection...
-	def self.head_problems(row_data)
-		nil
+	def self.header_problems(headers)
+		msg = ''
+		COLUMN_HEADERS.each do |ch|
+			msg << bad_header_msg(ch) if headers[ch].nil?
+		end
+		msg.length > 0 ? msg : nil
 	end
 
 	# this function attempts to create a valid physical object from a row in a spreadsheet. If successfully
 	# created, the physical object is returned, otherwise the error message (string) is returned
 	def self.validate_physical_object(row_data, headers)
-		po = PhysicalObject.new(
-				date_inventoried: parse_date(row_data[headers['Date Inventoried*']]),
-				# FIXME: how to handle spreadsheets that list a user that is not in the filmdb users table???
-				location: row_data[headers['Location*']],
-				media_type: row_data[headers['Media Type*']],
-				iu_barcode: row_data[headers['Item Barcode*']],
-				title: row_data[headers['Title*']],
-				copy_right: row_data[headers['Copyright']],
-				# FIXME: format needs to be fleshed out...
-				# format: row_data[headers['Medium*']],
-				# spreadsheet_id: ss.id - this needs to be set when the physical object is saved
-				series_name: row_data[headers['Series Name']],
-				series_production_number: row_data[headers['Series Production Number']],
-				series_part: row_data[headers['Series Part']],
-				alternative_title: row_data[headers['Alternative Title']],
-				title_version: row_data[headers['Item Original Identifier']],
-				summary: row_data[headers['Summary']],
-				creator: row_data[headers['Creator (Producers)']],
-				distributors: row_data[headers['Distributors']],
-				credits: row_data[headers['Credits']],
-				language: row_data[headers['Language']],
-				accompanying_documentation: row_data[headers['Accompanying Documentation']],
-				notes:  row_data[headers['Accompanying Documentation']]
-		)
-		if !po.valid?
-			debugger
+		po = PhysicalObject.new
+		HEADERS_TO_ASSIGNER.keys.each do |k|
+			puts "Assigning \"#{k}\" with #{HEADERS_TO_ASSIGNER[k]}. Value: #{row_data[headers[k]]}"
+			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
 		end
 		po.valid? ? po : po.errors
 	end
 
 	def self.parse_date(date)
 		date.blank? ? nil : Date.strptime(date, "%Y-%m-%d")
+	end
+
+	# formats a string message based on the field specified
+	def self.bad_header_msg(field)
+		"Missing or malformed '#{field}' column header<br>"
 	end
 
 end
