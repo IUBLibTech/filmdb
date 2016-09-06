@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829124250) do
+ActiveRecord::Schema.define(version: 20160906122555) do
+
+  create_table "collections", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "physical_object_old_barcodes", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8

@@ -1,7 +1,7 @@
 class PhysicalObject < ActiveRecord::Base
 	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
-
+	belongs_to :collection
 	validates :title, presence: true
 
 
