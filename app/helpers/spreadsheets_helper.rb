@@ -25,25 +25,19 @@ module SpreadsheetsHelper
 	end
 	@@mutex = Mutex.new
 
-	def self.parse_threaded(upload)
+	# this method wraps parse_spreadsheet within it's own thread of execution - see the other method for docs
+	def self.parse_threaded(upload, ss, sss)
 		Thread.new {
 			@@mutex.synchronize do
-				parse_spreadsheet(upload)
+				parse_spreadsheet(upload, ss, sss)
 			end
 		}
 	end
 
-
-	def self.parse_spreadsheet(file)
-		ss = Spreadsheet.where(filename: file.original_filename).first
-		raise "A spreadsheet with filename #{file.original_filename} has already been successfully uploaded" unless (ss.nil? || (ss.successful_upload == false))
-		# either a new file submission
-		if ss.nil?
-			ss = Spreadsheet.new(filename: file.original_filename);
-			ss.save
-		end
-		sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
-		sss.save
+	# This method takes a reference to the uploaded spreadsheet file 'file', the spreadsheet active record instance 'ss',
+	# and the spread sheet submission active record instance 'sss', and processes the physical objects in the spreadsheet.
+	# It either creates new records in filmdb, or logs errors as they occur line by line in the spreadsheet.
+	def self.parse_spreadsheet(file, ss, sss)
 		xlsx = Roo::Excelx.new(file.tempfile.path, file_warning: :ignore)
 		xlsx.default_sheet = xlsx.sheets[0]
 		headers = Hash.new

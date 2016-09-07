@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   resources :collections
-  root "physical_objects#index"
-
   resources :users
   resources :physical_objects
+  resources :units
   resources :spreadsheets, only: [:index, :show, :destroy]
+
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
 
   match '/signin', to: 'sessions#new', via: :get
@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get :validate_login, on: :collection
   end
 
+  root "physical_objects#index"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

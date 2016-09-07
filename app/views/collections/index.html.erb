@@ -5,7 +5,9 @@
 <table>
   <thead>
     <tr>
-      <th colspan="3"></th>
+      <th>Collection Name</th>
+      <th>Unit</th>
+      <th>Actions</th>
     </tr>
   </thead>
 
@@ -13,6 +15,7 @@
     <% @collections.each do |collection| %>
       <tr>
         <td><%= collection.name %></td>
+        <td><%= collection.unit.name unless collection.unit.nil? %></td>
         <td>
         	<%= link_to 'Show', collection %><br/>
 					<%= link_to 'Edit', edit_collection_path(collection) %><br/>
