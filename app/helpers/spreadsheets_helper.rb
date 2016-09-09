@@ -5,7 +5,7 @@ module SpreadsheetsHelper
 	COLUMN_HEADERS = [
 		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
 		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
-		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes'
+		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium'
 	]
 	# hash mapping a column header string to a physical object' assignment operand using send()
 	HEADERS_TO_ASSIGNER = {
@@ -15,7 +15,9 @@ module SpreadsheetsHelper
 		# "#{COLUMN_HEADERS[9]}" => not yet implemented
 		"#{COLUMN_HEADERS[10]}" => :summary=,	"#{COLUMN_HEADERS[11]}" => :creator=,	"#{COLUMN_HEADERS[12]}" => :distributors=,
 		"#{COLUMN_HEADERS[13]}" => :credits=,	"#{COLUMN_HEADERS[14]}" => :language=,	"#{COLUMN_HEADERS[15]}" => :accompanying_documentation=,
-		"#{COLUMN_HEADERS[16]}" => :notes=
+		"#{COLUMN_HEADERS[16]}" => :notes=,
+		# skip the index for UNIT
+		"#{COLUMN_HEADERS[18]}" => :medium=
 	}
 
 
@@ -25,25 +27,19 @@ module SpreadsheetsHelper
 	end
 	@@mutex = Mutex.new
 
-	def self.parse_threaded(upload)
+	# this method wraps parse_spreadsheet within it's own thread of execution - see the other method for docs
+	def self.parse_threaded(upload, ss, sss)
 		Thread.new {
 			@@mutex.synchronize do
-				parse_spreadsheet(upload)
+				parse_spreadsheet(upload, ss, sss)
 			end
 		}
 	end
 
-
-	def self.parse_spreadsheet(file)
-		ss = Spreadsheet.where(filename: file.original_filename).first
-		raise "A spreadsheet with filename #{file.original_filename} has already been successfully uploaded" unless (ss.nil? || (ss.successful_upload == false))
-		# either a new file submission
-		if ss.nil?
-			ss = Spreadsheet.new(filename: file.original_filename);
-			ss.save
-		end
-		sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
-		sss.save
+	# This method takes a reference to the uploaded spreadsheet file 'file', the spreadsheet active record instance 'ss',
+	# and the spread sheet submission active record instance 'sss', and processes the physical objects in the spreadsheet.
+	# It either creates new records in filmdb, or logs errors as they occur line by line in the spreadsheet.
+	def self.parse_spreadsheet(file, ss, sss)
 		xlsx = Roo::Excelx.new(file.tempfile.path, file_warning: :ignore)
 		xlsx.default_sheet = xlsx.sheets[0]
 		headers = Hash.new
@@ -119,6 +115,9 @@ module SpreadsheetsHelper
 			puts "Assigning \"#{k}\" with #{HEADERS_TO_ASSIGNER[k]}. Value: #{row_data[headers[k]]}"
 			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
 		end
+		# manually check user who inventoried, unit, collection, and series
+		unit = Unit.where(name: row_data[headers['Unit']]).first
+		po.unit = unit unless unit.nil?
 		po.valid? ? po : po.errors
 	end
 

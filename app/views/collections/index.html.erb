@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Collections</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Collection Name</th>
+      <th>Unit</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @collections.each do |collection| %>
+      <tr>
+        <td><%= collection.name %></td>
+        <td><%= collection.unit.name unless collection.unit.nil? %></td>
+        <td>
+        	<%= link_to 'Show', collection %><br/>
+					<%= link_to 'Edit', edit_collection_path(collection) %><br/>
+          <%= link_to 'Destroy', collection, method: :delete, data: { confirm: 'Are you sure?' } %><br/>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Collection', new_collection_path %>

@@ -9,9 +9,9 @@
       <% end %>
       </ul>
     </div>
-  <% else %>
-      <%= render partial: 'physical_object_metadata_editable', locals: {f: f} %>
   <% end %>
+  <%= render partial: 'physical_object_metadata_editable', locals: {f: f} %>
+
   <div class="actions">
     <%= f.submit %>
   </div>

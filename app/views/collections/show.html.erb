@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<%= link_to 'Edit', edit_collection_path(@collection) %> |
+<%= link_to 'Back', collections_path %>
+
+<table>
+  <tr>
+    <th>Collection Name</th>
+    <td>
+	    <%= @collection.name %>
+    </td>
+  </tr>
+</table>

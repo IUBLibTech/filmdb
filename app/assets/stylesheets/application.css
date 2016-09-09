@@ -89,3 +89,9 @@ table tbody tr td input, textarea, select {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+
+.bad_barcode {
+    color: red;
+    font-weight: bold;
+    border: 2px solid red;
+}
