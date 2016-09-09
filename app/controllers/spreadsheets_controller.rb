@@ -34,8 +34,8 @@ class SpreadsheetsController < ApplicationController
         format.html { redirect_to spreadsheets_path, notice: 'You must specify an inventory file.'}
       else
         # check filename
-        ss = Spreadsheet.where(filename: @file.original_filename, successful_upload: true).first
-        if ss
+        ss = Spreadsheet.where(filename: @file.original_filename).first
+        if !ss.nil? and ss.successful_upload
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has already been uploaded successfully" }
         else
           if ss.nil?
@@ -44,7 +44,7 @@ class SpreadsheetsController < ApplicationController
           end
           sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
           sss.save
-          SpreadsheetsHelper.parse_threaded(@file, ss, sss)
+          SpreadsheetsHelper.parse_spreadsheet(@file, ss, sss)
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been submitted. Please refresh the page to monitor progress." }
         end
       end

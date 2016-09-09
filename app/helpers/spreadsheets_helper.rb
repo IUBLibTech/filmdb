@@ -5,7 +5,7 @@ module SpreadsheetsHelper
 	COLUMN_HEADERS = [
 		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
 		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
-		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes'
+		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium'
 	]
 	# hash mapping a column header string to a physical object' assignment operand using send()
 	HEADERS_TO_ASSIGNER = {
@@ -15,7 +15,9 @@ module SpreadsheetsHelper
 		# "#{COLUMN_HEADERS[9]}" => not yet implemented
 		"#{COLUMN_HEADERS[10]}" => :summary=,	"#{COLUMN_HEADERS[11]}" => :creator=,	"#{COLUMN_HEADERS[12]}" => :distributors=,
 		"#{COLUMN_HEADERS[13]}" => :credits=,	"#{COLUMN_HEADERS[14]}" => :language=,	"#{COLUMN_HEADERS[15]}" => :accompanying_documentation=,
-		"#{COLUMN_HEADERS[16]}" => :notes=
+		"#{COLUMN_HEADERS[16]}" => :notes=,
+		# skip the index for UNIT
+		"#{COLUMN_HEADERS[18]}" => :medium=
 	}
 
 
@@ -113,6 +115,9 @@ module SpreadsheetsHelper
 			puts "Assigning \"#{k}\" with #{HEADERS_TO_ASSIGNER[k]}. Value: #{row_data[headers[k]]}"
 			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
 		end
+		# manually check user who inventoried, unit, collection, and series
+		unit = Unit.where(name: row_data[headers['Unit']]).first
+		po.unit = unit unless unit.nil?
 		po.valid? ? po : po.errors
 	end
 
