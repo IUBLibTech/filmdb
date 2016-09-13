@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907183459) do
+ActiveRecord::Schema.define(version: 20160913145525) do
 
   create_table "collections", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 20160907183459) do
     t.integer  "collection_id",              limit: 8
     t.string   "media_type",                 limit: 255
     t.integer  "iu_barcode",                 limit: 8,     null: false
-    t.string   "title",                      limit: 255,   null: false
     t.integer  "copy_right",                 limit: 4
     t.string   "format",                     limit: 255
     t.integer  "spreadsheet_id",             limit: 4
@@ -55,6 +54,14 @@ ActiveRecord::Schema.define(version: 20160907183459) do
     t.text     "notes",                      limit: 65535
     t.integer  "unit_id",                    limit: 8
     t.string   "medium",                     limit: 255
+    t.integer  "title_id",                   limit: 8
+  end
+
+  create_table "series_titles", force: :cascade do |t|
+    t.string   "series_title", limit: 255
+    t.text     "description",  limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "spreadsheet_submissions", force: :cascade do |t|
@@ -74,6 +81,13 @@ ActiveRecord::Schema.define(version: 20160907183459) do
   end
 
   add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
+
+  create_table "titles", force: :cascade do |t|
+    t.string   "title",       limit: 255
+    t.text     "description", limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "units", force: :cascade do |t|
     t.string   "name",       limit: 255

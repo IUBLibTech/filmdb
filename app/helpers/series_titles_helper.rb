@@ -1,0 +1,2 @@
+module SeriesTitlesHelper
+end

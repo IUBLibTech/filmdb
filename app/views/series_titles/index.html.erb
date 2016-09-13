@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Series Titles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @series_titles.each do |series_title| %>
+      <tr>
+        <td><%= link_to 'Show', series_title %></td>
+        <td><%= link_to 'Edit', edit_series_title_path(series_title) %></td>
+        <td><%= link_to 'Destroy', series_title, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Series title', new_series_title_path %>
