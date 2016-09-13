@@ -50,7 +50,7 @@
   <tr>
     <td>Title</td>
     <td>
-      <%= f.text_field :title %>
+      <%= f.select :title_id, Title.order("title ASC").collect { |t| [t.title, t.id] }, {}  %>
     </td>
   </tr>
   <tr>

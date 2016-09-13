@@ -50,7 +50,7 @@
   <tr>
     <td>Title</td>
     <td>
-      <%= @physical_object.title %>
+      <%= @physical_object.title.nil? ? "None" : @physical_object.title.title %>
     </td>
   </tr>
   <tr>

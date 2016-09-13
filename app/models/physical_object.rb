@@ -1,12 +1,13 @@
 class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 
+	belongs_to :title
 	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
 	belongs_to :collection
 	belongs_to :unit
 
-	validates :title, presence: true
+	validates :title_id, presence: true
 	validates :iu_barcode, iu_barcode: true
 	validates :unit, presence: true
 	validates :media_type, presence: true

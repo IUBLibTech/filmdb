@@ -14,7 +14,7 @@
 	      <%= physical_object.iu_barcode %>
       </td>
       <td>
-        <%= physical_object.title %>
+        <%= physical_object.title.nil? ? "None" : physical_object.title.title %>
       </td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :series_titles
+  resources :titles
   resources :collections
   resources :users
   resources :physical_objects
