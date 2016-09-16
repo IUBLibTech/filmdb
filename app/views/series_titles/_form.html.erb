@@ -10,7 +10,20 @@
       </ul>
     </div>
   <% end %>
-
+    <table>
+      <tr>
+        <th>Series title</th>
+        <td>
+          <%= f.text_field :series_title %>
+        </td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td>
+          <%= f.text_area :description %>
+        </td>
+      </tr>
+    </table>
   <div class="actions">
     <%= f.submit %>
   </div>

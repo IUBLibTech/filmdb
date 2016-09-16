@@ -69,6 +69,6 @@ class SeriesTitlesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def series_title_params
-      params.fetch(:series_title, {})
+      params.require(:series_title).permit(:series_title, :description)
     end
 end
