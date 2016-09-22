@@ -15,6 +15,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/new
   def new
     @physical_object = PhysicalObject.new
+    @series_titles = SeriesTitle.all.order(:series_title)
   end
 
   # GET /physical_objects/1/edit

@@ -12,9 +12,27 @@
   <% end %>
   <table>
     <tr>
+      <th>Abbreviation</th>
+      <td>
+        <%= f.text_field :abbreviation %>
+      </td>
+    </tr>
+    <tr>
       <th>Unit Name</th>
       <td>
 	      <%= f.text_field :name %>
+      </td>
+    </tr>
+    <tr>
+      <th>Instituion</th>
+      <td>
+        <%= f.text_field :institution %>
+      </td>
+    </tr>
+    <tr>
+      <th>Campus</th>
+      <td>
+        <%= f.text_field :campus %>
       </td>
     </tr>
   </table>

@@ -3,7 +3,10 @@
 <table>
   <thead>
   <tr>
+    <th>Abbreviation</th>
     <th>Name</th>
+    <th>Instituion</th>
+    <th>Campus</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -12,7 +15,16 @@
   <% @units.each do |unit| %>
     <tr>
       <td>
+        <%= unit.abbreviation %>
+      </td>
+      <td>
         <%= unit.name %>
+      </td>
+      <td>
+        <%= unit.institution %>
+      </td>
+      <td>
+        <%= unit.campus %>
       </td>
       <td>
         <%= link_to 'Show', unit %>

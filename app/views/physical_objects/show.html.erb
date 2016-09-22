@@ -10,7 +10,7 @@
     </td>
   </tr>
   <tr>
-    <td>Created By</td>
+    <td>Inventoried By</td>
     <td>
       Users to be implemented...
     </td>
@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td>Unit</td>
-    <td><%= @physical_object.unit.name %></td>
+    <td><%= link_to "#{@physical_object.unit.abbreviation}", unit_path(@physical_object.unit)%></td>
   </tr>
   <tr>
     <td>Collection</td>
@@ -50,7 +50,11 @@
   <tr>
     <td>Title</td>
     <td>
-      <%= @physical_object.title.nil? ? "None" : @physical_object.title.title %>
+      <% if @physical_object.title.nil? %>
+          "None"
+      <% else %>
+          <%= link_to "#{@physical_object.title.title}", title_path(@physical_object.title) %>
+      <% end %>
     </td>
   </tr>
   <tr>
@@ -60,9 +64,9 @@
     </td>
   </tr>
   <tr>
-    <td>Series Name</td>
+    <td>Series Title</td>
     <td>
-      <%= @physical_object.series_name %>
+      <%= @physical_object.title.series.nil? ? "" : @physical_object.title.series_title.series.series_title %>
     </td>
   </tr>
   <tr>

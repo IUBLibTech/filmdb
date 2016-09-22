@@ -6,7 +6,7 @@
     </td>
   </tr>
   <tr>
-    <td>Created By</td>
+    <td>Inventoried By</td>
     <td>
       Users to be implemented...
     </td>
@@ -20,7 +20,7 @@
   <tr>
     <td>Unit</td>
     <td>
-      <%= f.select :unit_id, Unit.order('name ASC').collect { |u| [u.name, u.id] }, { }, multiple: false, size: 1 %>
+      <%= f.select :unit_id, Unit.order('name ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
     </td>
   </tr>
   <tr>
@@ -60,9 +60,10 @@
     </td>
   </tr>
   <tr>
-    <td>Series Name</td>
+    <td>Series Title</td>
     <td>
-	    <%= f.text_field :series_name %>
+
+      <%= select_tag "series_title", options_from_collection_for_select(@series_titles, "id", "series_title") %>
     </td>
   </tr>
   <tr>

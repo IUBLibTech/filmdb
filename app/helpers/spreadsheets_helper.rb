@@ -1,11 +1,11 @@
 module SpreadsheetsHelper
 	require 'roo'
 
-	# the column headers that spreadsheets should contain
+	# the column headers that spreadsheets should contain - in no particular order
 	COLUMN_HEADERS = [
 		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
 		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
-		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium'
+		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium', 'Collection'
 	]
 	# hash mapping a column header string to a physical object' assignment operand using send()
 	HEADERS_TO_ASSIGNER = {
@@ -116,8 +116,24 @@ module SpreadsheetsHelper
 			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
 		end
 		# manually check user who inventoried, unit, collection, and series
+
+		# unit MUST be defined already otherwise it is a parse error and the spreadsheet should fail
 		unit = Unit.where(name: row_data[headers['Unit']]).first
-		po.unit = unit unless unit.nil?
+		if unit.nil?
+			po.errors.add(:unit, "Undefined unit: #{row_data[headers['Unit']]}")
+		else
+			po.unit = unit
+		end
+
+		#TODO: parse user information
+
+		# collection MUST exist already (or be blank) otherwise it is a parse error and the spreadsheet should fail
+		collection = Collection.where(name: row_data[headers['Collection']]).first
+		if !row_data[headers['Collection']].blank? && collection.nil?
+			po.errors.add(:collection, "Unkown collection: #{row_data[headers['Collection']]}")
+		elsif ! collection.nil?
+			po.collection = collection
+		end
 		po.valid? ? po : po.errors
 	end
 
