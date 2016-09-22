@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :series
   resources :series_titles
   resources :titles
   resources :collections

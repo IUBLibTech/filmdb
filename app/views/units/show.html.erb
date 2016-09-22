@@ -4,7 +4,29 @@
 <%= link_to 'Back', units_path %>
 <table>
   <tr>
+    <th>Abbreviation</th>
+    <td><%= @unit.abbreviation %>
+    </td>
+  </tr>
+  <tr>
     <th>Unit Name</th>
     <td><%= @unit.name %></td>
   </tr>
+  <tr>
+    <th>Institution</th>
+    <td><%= @unit.institution %></td>
+  </tr>
+  <tr>
+    <th>Campus</th>
+    <td><%= @unit.campus %></td>
+  </tr>
+</table>
+
+<h4>Collections Belonging to this Unit</h4>
+<table>
+  <% @unit.collections.each do |col| %>
+      <tr>
+        <td><%= col.name %></td>
+      </tr>
+  <% end %>
 </table>
