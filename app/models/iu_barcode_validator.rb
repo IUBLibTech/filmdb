@@ -11,6 +11,6 @@ class IuBarcodeValidator < ActiveModel::EachValidator
 
 	private
 		def error_message_link(assigned)
-			"#{assigned.mdpi_barcode} has already been assigned to a #{assigned.class.to_s.titleize}"
+			"#{assigned.iu_barcode} has already been assigned to a #{assigned.class.to_s.titleize}"
 		end
 end

@@ -4,51 +4,51 @@
 <%= link_to 'Back', physical_objects_path %>
 <table class="physical_object_metadata">
   <tr>
-    <td>Date Inventoried</td>
+    <th>Date Inventoried</th>
     <td>
       <%= @physical_object.date_inventoried %>
     </td>
   </tr>
   <tr>
-    <td>Inventoried By</td>
+    <th>Inventoried By</th>
     <td>
       Users to be implemented...
     </td>
   </tr>
   <tr>
-    <td>Location</td>
+    <th>Location</th>
     <td>
       <%= @physical_object.location %>
     </td>
   </tr>
   <tr>
-    <td>Unit</td>
+    <th>Unit</th>
     <td><%= link_to "#{@physical_object.unit.abbreviation}", unit_path(@physical_object.unit)%></td>
   </tr>
   <tr>
-    <td>Collection</td>
+    <th>Collection</th>
     <td>
       To be implemented...
     </td>
   </tr>
   <tr>
-    <td>Media Type</td>
+    <th>Media Type</th>
     <td>
       <%= @physical_object.media_type %>
     </td>
   </tr>
   <tr>
-    <td>Medium</td>
+    <th>Medium</th>
     <td><%= @physical_object.medium %></td>
   </tr>
   <tr>
-    <td>IU Barcode</td>
+    <th>IU Barcode</th>
     <td>
       <%= @physical_object.iu_barcode %>
     </td>
   </tr>
   <tr>
-    <td>Title</td>
+    <th>Title</th>
     <td>
       <% if @physical_object.title.nil? %>
           "None"
@@ -58,85 +58,85 @@
     </td>
   </tr>
   <tr>
-    <td>Copy Right</td>
+    <th>Copy Right</th>
     <td>
       <%= @physical_object.copy_right %>
     </td>
   </tr>
   <tr>
-    <td>Series Title</td>
+    <th>Series Title</th>
     <td>
-      <%= @physical_object.title.series.nil? ? "" : @physical_object.title.series_title.series.series_title %>
+      <%= @physical_object.title.series.nil? ? "" : @physical_object.title.series.title %>
     </td>
   </tr>
   <tr>
-    <td>Series Production Number</td>
+    <th>Series Production Number</th>
     <td>
       <%= @physical_object.series_production_number %>
     </td>
   </tr>
   <tr>
-    <td>Series Part</td>
+    <th>Series Part</th>
     <td>
       <%= @physical_object.series_part %>
     </td>
   </tr>
   <tr>
-    <td>Alternative Title</td>
+    <th>Alternative Title</th>
     <td>
       <%= @physical_object.alternative_title %>
     </td>
   </tr>
   <tr>
-    <td>Title Version</td>
+    <th>Title Version</th>
     <td>
       <%= @physical_object.title_version %>
     </td>
   </tr>
   <tr>
-    <td>Item Original Identifier</td>
+    <th>Item Original Identifier</th>
     <td>
       <%= @physical_object.item_original_identifier %>
     </td>
   </tr>
   <tr>
-    <td>Summary</td>
+    <th>Summary</th>
     <td>
       <%= @physical_object.summary %>
     </td>
   </tr>
   <tr>
-    <td>Creator</td>
+    <th>Creator</th>
     <td>
       <%= @physical_object.creator %>
     </td>
   </tr>
   <tr>
-    <td>Distributors</td>
+    <th>Distributors</th>
     <td>
       <%= @physical_object.distributors %>
     </td>
   </tr>
   <tr>
-    <td>Credits</td>
+    <th>Credits</th>
     <td>
       <%= @physical_object.credits %>
     </td>
   </tr>
   <tr>
-    <td>Language</td>
+    <th>Language</th>
     <td>
       <%= @physical_object.language %>
     </td>
   </tr>
   <tr>
-    <td>Accompanying Documentation</td>
+    <th>Accompanying Documentation</th>
     <td>
       <%= @physical_object.accompanying_documentation %>
     </td>
   </tr>
   <tr>
-    <td>Notes</td>
+    <th>Notes</th>
     <td>
       <%= @physical_object.notes %>
     </td>

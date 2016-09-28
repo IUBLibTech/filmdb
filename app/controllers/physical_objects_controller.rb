@@ -1,6 +1,6 @@
 class PhysicalObjectsController < ApplicationController
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_series, only: [:new, :create, :edit, :update]
   # GET /physical_objects
   # GET /physical_objects.json
   def index
@@ -15,7 +15,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/new
   def new
     @physical_object = PhysicalObject.new
-    @series_titles = SeriesTitle.all.order(:series_title)
+    @series = Series.all.order(:title)
   end
 
   # GET /physical_objects/1/edit
@@ -31,9 +31,15 @@ class PhysicalObjectsController < ApplicationController
   # POST /physical_objects.json
   def create
     @physical_object = PhysicalObject.new(physical_object_params)
-
     respond_to do |format|
       if @physical_object.save
+        # hook in title to series title if specified
+        if params[:series].blank?
+          @physical_object.title.series =  nil
+        else
+          @physical_object.title.series_id = params[:series]
+        end
+        @physical_object.title.save
         format.html { redirect_to @physical_object, notice: 'Physical object was successfully created.' }
         format.json { render :show, status: :created, location: @physical_object }
       else
@@ -48,6 +54,12 @@ class PhysicalObjectsController < ApplicationController
   def update
     respond_to do |format|
       if @physical_object.update(physical_object_params)
+        if params[:series].blank?
+          @physical_object.title.series =  nil
+        else
+          @physical_object.title.series_id = params[:series]
+        end
+        @physical_object.title.save
         format.html { redirect_to @physical_object, notice: 'Physical object was successfully updated.' }
         format.json { render :show, status: :ok, location: @physical_object }
       else
@@ -71,6 +83,10 @@ class PhysicalObjectsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_physical_object
       @physical_object = PhysicalObject.find(params[:id])
+    end
+
+    def set_series
+      @series = Series.all.order(:title)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

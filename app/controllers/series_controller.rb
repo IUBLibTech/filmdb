@@ -25,10 +25,7 @@ class SeriesController < ApplicationController
   # POST /series.json
   def create
     # Series form passes in a series title string that needs to be mapped
-    @series = Series.new()
-    series_title = SeriesTitle.new(series_title: params[:series_title])
-    series_title.save
-    @series.series_title = series_title
+    @series = Series.new(series_params)
     respond_to do |format|
       if @series.save
         format.html { redirect_to @series, notice: 'Series was successfully created.' }
@@ -72,6 +69,6 @@ class SeriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def series_params
-      params.require(:series_title)
+      params.require(:series).permit(:title, :description)
     end
 end
