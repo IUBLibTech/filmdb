@@ -58,16 +58,10 @@ ActiveRecord::Schema.define(version: 20160922173907) do
   end
 
   create_table "series", force: :cascade do |t|
+    t.string   "title",       limit: 255
+    t.string   "description", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "series_titles", force: :cascade do |t|
-    t.string   "series_title", limit: 255
-    t.text     "description",  limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "series_id",    limit: 8
   end
 
   create_table "spreadsheet_submissions", force: :cascade do |t|
@@ -89,11 +83,11 @@ ActiveRecord::Schema.define(version: 20160922173907) do
   add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
 
   create_table "titles", force: :cascade do |t|
-    t.string   "title",           limit: 255
-    t.text     "description",     limit: 65535
+    t.string   "title",       limit: 255
+    t.text     "description", limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "series_title_id", limit: 8
+    t.integer  "series_id",   limit: 8
   end
 
   create_table "units", force: :cascade do |t|

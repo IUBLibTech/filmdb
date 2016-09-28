@@ -1,4 +1,6 @@
 <p id="notice"><%= notice %></p>
+<%= link_to 'Edit', edit_title_path(@title) %> |
+<%= link_to 'Back', titles_path %>
 <table>
   <tr>
     <th>Title</th>
@@ -8,6 +10,10 @@
     <th>Description</th>
     <td><%= @title.description %></td>
   </tr>
+  <tr>
+    <th>Belongs to Series</th>
+    <td>
+      <%= @title.series ? (link_to "#{@title.series.title}", series_path(@title.series)) : "" %>
+    </td>
+  </tr>
 </table>
-<%= link_to 'Edit', edit_title_path(@title) %> |
-<%= link_to 'Back', titles_path %>

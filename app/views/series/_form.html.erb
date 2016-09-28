@@ -14,7 +14,13 @@
     <tr>
       <th>Series Title</th>
       <td>
-        <%= text_field_tag "series_title" %>
+        <%= f.text_field :title %>
+      </td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td>
+        <%= f.text_area :description %>
       </td>
     </tr>
   </table>

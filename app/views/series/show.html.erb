@@ -1,12 +1,29 @@
 <p id="notice"><%= notice %></p>
+<%= link_to 'Edit', edit_series_path(@series) %> |
+<%= link_to 'Back', series_index_path %>
 <table>
   <tr>
     <th>Series Title</th>
     <td>
-      <%= @series.series_title.series_title %>
+      <%= @series.title %>
+    </td>
+  </tr>
+  <tr>
+    <th>Decription</th>
+    <td>
+      <%= @series.description %>
     </td>
   </tr>
 </table>
+<h4>Titles in this Series</h4>
+<table>
+  <tr>
+    <th>Title</th>
+  </tr>
+  <% @series.titles.each do |t| %>
+      <tr>
+        <td><%= link_to "#{t.title}", title_path(t) %></td>
+      </tr>
+  <% end %>
+</table>
 
-<%= link_to 'Edit', edit_series_path(@series) %> |
-<%= link_to 'Back', series_index_path %>

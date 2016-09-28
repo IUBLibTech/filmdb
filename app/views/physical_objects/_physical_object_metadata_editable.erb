@@ -1,139 +1,138 @@
 <table class='physical_object_metadata_editable'>
   <tr>
-    <td>Date Inventoried </td>
+    <th>Date Inventoried </th>
     <td>
       <%= f.text_field :date_inventoried %>
     </td>
   </tr>
   <tr>
-    <td>Inventoried By</td>
+    <th>Inventoried By</th>
     <td>
       Users to be implemented...
     </td>
   </tr>
   <tr>
-    <td>Location</td>
+    <th>Location</th>
     <td>
       <%= f.text_field :location %>
     </td>
   </tr>
   <tr>
-    <td>Unit</td>
+    <th>Unit</th>
     <td>
       <%= f.select :unit_id, Unit.order('name ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
     </td>
   </tr>
   <tr>
-    <td>Collection</td>
+    <th>Collection</th>
     <td>
 
     </td>
   </tr>
   <tr>
-    <td>Media Type</td>
+    <th>Media Type</th>
     <td>
       <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
     </td>
   </tr>
   <tr>
-    <td>Medium</td>
+    <th>Medium</th>
     <td>
 	    <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
     </td>
   </tr>
   <tr>
-    <td>IU Barcode</td>
+    <th>IU Barcode</th>
     <td>
       <%= f.text_field :iu_barcode  %>
     </td>
   </tr>
   <tr>
-    <td>Title</td>
+    <th>Title</th>
     <td>
       <%= f.select :title_id, Title.order("title ASC").collect { |t| [t.title, t.id] }, {}  %>
     </td>
   </tr>
   <tr>
-    <td>Copy Right</td>
+    <th>Copy Right</th>
     <td>
       <%= f.text_field :copy_right %>
     </td>
   </tr>
   <tr>
-    <td>Series Title</td>
+    <th>Series Title</th>
     <td>
-
-      <%= select_tag "series_title", options_from_collection_for_select(@series_titles, "id", "series_title") %>
+      <%= select_tag "series", options_from_collection_for_select(@series, "id", "title", (@physical_object.title && @physical_object.title.series) ? @physical_object.title.series.id : ""), {prompt: "Select a Series..."} %>
     </td>
   </tr>
   <tr>
-    <td>Series Production Number</td>
+    <th>Series Production Number</th>
     <td>
 	    <%= f.text_field :series_production_number %>
     </td>
   </tr>
   <tr>
-    <td>Series Part</td>
+    <th>Series Part</th>
     <td>
 	    <%= f.text_field :series_part %>
     </td>
   </tr>
   <tr>
-    <td>Alternative Title</td>
+    <th>Alternative Title</th>
     <td>
 	    <%= f.text_field :alternative_title %>
     </td>
   </tr>
   <tr>
-    <td>Title Version</td>
+    <th>Title Version</th>
     <td>
 	    <%= f.text_field :title_version %>
     </td>
   </tr>
   <tr>
-    <td>Item Original Identifier</td>
+    <th>Item Original Identifier</th>
     <td>
 	    <%= f.text_field :item_original_identifier %>
     </td>
   </tr>
   <tr>
-    <td>Summary</td>
+    <th>Summary</th>
     <td>
 	    <%= f.text_area :summary %>
     </td>
   </tr>
   <tr>
-    <td>Creator</td>
+    <th>Creator</th>
     <td>
 	    <%= f.text_field :creator %>
     </td>
   </tr>
   <tr>
-    <td>Distributors</td>
+    <th>Distributors</th>
     <td>
 	    <%= f.text_field :distributors %>
     </td>
   </tr>
   <tr>
-    <td>Credits</td>
+    <th>Credits</th>
     <td>
 	    <%= f.text_field :credits %>
     </td>
   </tr>
   <tr>
-    <td>Language</td>
+    <th>Language</th>
     <td>
 	    <%= f.text_field :language %>
     </td>
   </tr>
   <tr>
-    <td>Accompanying Documentation</td>
+    <th>Accompanying Documentation</th>
     <td>
 	    <%= f.text_area :accompanying_documentation %>
     </td>
   </tr>
   <tr>
-    <td>Notes</td>
+    <th>Notes</th>
     <td>
 	    <%= f.text_area :notes %>
     </td>

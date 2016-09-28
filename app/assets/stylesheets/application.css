@@ -19,7 +19,6 @@ body {
     font-family: sans-serif;
     height: 100%;
     width: 1000px;
-    background-color: #777;
 }
 
 #branding {
@@ -35,7 +34,7 @@ body {
 
 div#nav {
     height: 22px;
-    background: rgb(20,20,20);
+    background: #7d110c none repeat scroll 0 0;
 }
 
 div#nav > ul {
@@ -54,13 +53,26 @@ div#nav>ul>li {
     margin: 0;
 }
 
-a, a:visited {
-    color: white;
+a:link {
+    color: #7D110C;
+    font-weight: bold;
     text-decoration: none;
 }
+a:visited {
+    color: #7D110C;
+}
 a:hover {
-    color: #8F2609;
-    text-decoration: none;
+    color: #7D110C;
+}
+
+.menuItem a:link {
+    color: white;
+}
+.menuItem a:visited {
+    color: white;
+}
+.menuItem a:hover {
+    color: #DBCEAC;
 }
 
 .red {
@@ -76,10 +88,6 @@ th, tr, td {
 }
 th {
     background-color: #8F2609;
-}
-
-table.physical_object_metadata_editable tbody tr td:first-of-type {
-    background-color: #666;
 }
 
 table tbody tr td input, textarea, select {
