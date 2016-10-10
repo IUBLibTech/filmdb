@@ -16,6 +16,12 @@
 		    <%= f.text_field :name %>
 	    </td>
 	  </tr>
+    <tr>
+      <th>Unit</th>
+      <td>
+        <%= f.select :unit_id, Unit.order('name ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
+      </td>
+    </tr>
 	</table>
   <div class="actions">
     <%= f.submit %>

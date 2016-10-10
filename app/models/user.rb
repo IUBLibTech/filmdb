@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
 	validates :username, presence: true, uniqueness: true
+	belongs_to :created_in_spreadsheet, class_name: "Spreadsheet", foreign_key: "created_in_spreadsheet"
 
 	def self.authenticate(username)
 		return false if username.nil? || username.blank?

@@ -1,6 +1,48 @@
 <p id="notice"><%= notice %></p>
 <% if @spreadsheet.successful_upload %>
-	<%= render partial: 'physical_objects/physical_objects_table' %>
+    <%= render partial: 'physical_objects/physical_objects_table' %>
+
+    <h4>Users Created in This Spreadsheet</h4>
+    <table>
+      <tr>
+        <th>Email Address</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Actions</th>
+      </tr>
+      <% @users.each do |u| %>
+          <tr>
+            <td><%= u.email_address %></td>
+            <td><%= u.first_name %></td>
+            <td><%= u.last_name %></td>
+            <td>
+              <%= link_to "Show", user_path(u) %>
+              <%= link_to "Edit", edit_user_path(u) %>
+              <%= link_to 'Destroy', u, method: :delete, data: { confirm: 'Are you sure?' } %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
+
+    <h4>Titles Created in This Spreadsheet</h4>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Physical Object With This Title</th>
+        <th>Actions</th>
+      </tr>
+      <% @titles.each do |t| %>
+          <tr>
+            <td><%= t.title %></td>
+            <td><%= t.physical_objects.size %></td>
+            <td>
+              <%= link_to "Show", title_path(t) %>
+              <%= link_to "Edit", edit_title_path(t) %>
+              <%= link_to 'Destroy', t, method: :delete, data: { confirm: 'Are you sure?' } %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
 <% else %>
 	<h2>Spreadsheet upload failed for the following reasons:</h2>
 	<p>

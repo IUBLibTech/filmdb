@@ -6,13 +6,13 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 # users
-User.new(username: 'jaalbrec', first_name: 'Andrew', last_name: 'Albrecht', email_address: 'jaalbrec@indiana.edu').save
-User.new(username: 'carton', first_name: 'Carla', last_name: 'Arton', email_address: 'carton@indiana.edu').save
-User.new(username: 'jauhrich', first_name: 'Andy', last_name: 'Uhrich', email_address: 'jauhrich@indiana.edu').save
-User.new(username: 'shmichae', first_name: 'Sherri', last_name: 'Michaels', email_address: 'shmichae@indiana.edu').save
-User.new(username: 'wgcowan', first_name: 'Will', last_name: 'Cowan', email_address: 'wgcowan@indiana.edu').save
-User.new(username: 'rstoeltj', first_name: 'Rachael', last_name: 'Stoeltje', email_address: 'rstoeltj@indiana.edu').save
-User.new(username: 'aploshay', first_name: 'Adam', last_name: 'Ploshay', email_address: 'aploshay@iu.edu').save
+User.new(username: 'jaalbrec', first_name: 'Andrew', last_name: 'Albrecht', email_address: 'jaalbrec@indiana.edu', active: true).save
+User.new(username: 'carton', first_name: 'Carla', last_name: 'Arton', email_address: 'carton@indiana.edu', active: true).save
+User.new(username: 'jauhrich', first_name: 'Andy', last_name: 'Uhrich', email_address: 'jauhrich@indiana.edu', active: true).save
+User.new(username: 'shmichae', first_name: 'Sherri', last_name: 'Michaels', email_address: 'shmichae@indiana.edu', active: true).save
+User.new(username: 'wgcowan', first_name: 'Will', last_name: 'Cowan', email_address: 'wgcowan@indiana.edu', active: true).save
+User.new(username: 'rstoeltj', first_name: 'Rachael', last_name: 'Stoeltje', email_address: 'rstoeltj@indiana.edu', active: true).save
+User.new(username: 'aploshay', first_name: 'Adam', last_name: 'Ploshay', email_address: 'aploshay@iu.edu', active: true).save
 
 # Units
 Unit.new(abbreviation: 'B-AAAMC', name: "Indiana University, Bloomington. Archives of African American Music and Culture.", institution: "Indiana University", campus: "Bloomington").save
@@ -92,3 +92,10 @@ Unit.new(abbreviation: 'B-UNIVCOMM', name: "Indiana University, Bloomington. Off
 Unit.new(abbreviation: 'B-ATHVIDEO', name: "Indiana University, Bloomington. Department of Intercollegiate Athletics. Video Production.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ATHVOLLW', name: "Indiana University, Bloomington. Department of Intercollegiate Athletics. Women's Volleyball.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-WEST', name: "Indiana University, Bloomington. West European Studies Film Library.", institution: "Indiana University", campus: "Bloomington").save
+
+# seed misc collections for each
+Unit.all.each do |u|
+  if u.misc_collection.nil?
+    Collection.new(name: 'Misc [not in collection]', unit: u).save
+  end
+end

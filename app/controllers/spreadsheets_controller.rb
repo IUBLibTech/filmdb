@@ -12,6 +12,8 @@ class SpreadsheetsController < ApplicationController
   # GET /spreadsheets/1.json
   def show
     @physical_objects = @spreadsheet.physical_objects
+    @users = User.where(created_in_spreadsheet: @spreadsheet.id)
+    @titles = Title.where(spreadsheet_id: @spreadsheet.id)
   end
 
   # DELETE /spreadsheets/1

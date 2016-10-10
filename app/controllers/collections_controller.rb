@@ -65,10 +65,11 @@ class CollectionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_collection
       @collection = Collection.find(params[:id])
+      @collection_inventory_configuration = @collection.collection_inventory_configuration
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_params
-      params.require(:collection).permit(:name)
+      params.require(:collection).permit(:name, :unit_id)
     end
 end
