@@ -10,4 +10,17 @@
 	    <%= @collection.name %>
     </td>
   </tr>
+  <tr>
+    <th>Unit</th>
+    <td>
+      <%= @collection.unit.abbreviation %>
+    </td>
+  </tr>
 </table>
+
+<h4>Collection Inventory Configuration</h4>
+<% if @collection.collection_inventory_configuration.nil? %>
+None
+<% else %>
+    <%= render partial: 'collection_inventory_configurations/metadata_fields' %>
+<% end %>

@@ -5,12 +5,12 @@ module SpreadsheetsHelper
 	COLUMN_HEADERS = [
 		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
 		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
-		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium', 'Collection'
+		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium', 'Collection', 'First Name', 'Last Name', 'Inventoried By'
 	]
 	# hash mapping a column header string to a physical object' assignment operand using send()
 	HEADERS_TO_ASSIGNER = {
 		"#{COLUMN_HEADERS[0]}" => :location=,	"#{COLUMN_HEADERS[1]}" => :media_type=,	"#{COLUMN_HEADERS[2]}" => :iu_barcode=,
-		"#{COLUMN_HEADERS[3]}" => :title=,	"#{COLUMN_HEADERS[4]}" => :copy_right=,	"#{COLUMN_HEADERS[5]}" => :series_name=,
+		"#{COLUMN_HEADERS[4]}" => :copy_right=,	"#{COLUMN_HEADERS[5]}" => :series_name=,
 		"#{COLUMN_HEADERS[6]}" => :series_production_number=,	"#{COLUMN_HEADERS[7]}" => :series_part=,	"#{COLUMN_HEADERS[8]}" => :alternative_title=,
 		# "#{COLUMN_HEADERS[9]}" => not yet implemented
 		"#{COLUMN_HEADERS[10]}" => :summary=,	"#{COLUMN_HEADERS[11]}" => :creator=,	"#{COLUMN_HEADERS[12]}" => :distributors=,
@@ -19,7 +19,6 @@ module SpreadsheetsHelper
 		# skip the index for UNIT
 		"#{COLUMN_HEADERS[18]}" => :medium=
 	}
-
 
 	# special logger for parsing spreadsheets
 	def self.logger
@@ -46,7 +45,6 @@ module SpreadsheetsHelper
 		xlsx.row(1).each_with_index { |header, i|
 			headers[header] = i
 		}
-
 		# this array contains an entry for each row in the spreadsheet not counting the header row. A given index will
 		# contain either a physical object, or the error message stating why the row entry is invalid. The index+1
 		# of the array corresponds to the row within the spreadsheet.
@@ -61,7 +59,7 @@ module SpreadsheetsHelper
 			# is either a valid physical object or and error message stating why the object failed
 			((xlsx.first_row + 1)..(xlsx.last_row)).each do |row|
 				puts "Processing row #{row}"
-				po = validate_physical_object(xlsx.row(row), headers)
+				po = validate_physical_object(xlsx.row(row), headers, ss)
 				validated_physical_objects << po
 				sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 50).to_i)
 			end
@@ -109,32 +107,58 @@ module SpreadsheetsHelper
 
 	# this function attempts to create a valid physical object from a row in a spreadsheet. If successfully
 	# created, the physical object is returned, otherwise the error message (string) is returned
-	def self.validate_physical_object(row_data, headers)
+	def self.validate_physical_object(row_data, headers, ss)
 		po = PhysicalObject.new
 		HEADERS_TO_ASSIGNER.keys.each do |k|
 			puts "Assigning \"#{k}\" with #{HEADERS_TO_ASSIGNER[k]}. Value: #{row_data[headers[k]]}"
 			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
 		end
-		# manually check user who inventoried, unit, collection, and series
+
+		# manually check user who inventoried
+		email_address = row_data[headers['Inventoried By']]
+		user = User.where(email_address: email_address).first
+		if user.nil?
+			user = User.new(email_address: email_address, username: email_address[0, email_address.index('@')], first_name: row_data[headers['First Name']], last_name: row_data[headers['Last Name']])
+			user.created_in_spreadsheet = ss
+			user.save
+		end
+		po.inventoried_by = user
 
 		# unit MUST be defined already otherwise it is a parse error and the spreadsheet should fail
-		unit = Unit.where(name: row_data[headers['Unit']]).first
-		if unit.nil?
-			po.errors.add(:unit, "Undefined unit: #{row_data[headers['Unit']]}")
-		else
+		unit = Unit.where(abbreviation: row_data[headers['Unit']]).first
+		unless unit.nil?
 			po.unit = unit
 		end
 
-		#TODO: parse user information
-
 		# collection MUST exist already (or be blank) otherwise it is a parse error and the spreadsheet should fail
-		collection = Collection.where(name: row_data[headers['Collection']]).first
-		if !row_data[headers['Collection']].blank? && collection.nil?
-			po.errors.add(:collection, "Unkown collection: #{row_data[headers['Collection']]}")
-		elsif ! collection.nil?
+		if row_data[headers['Collection']].blank?
+			unless unit.nil?
+				po.collection = unit.misc_collection
+			end
+		else
+			collection = Collection.where(name: row_data[headers['Collection']]).first
 			po.collection = collection
 		end
-		po.valid? ? po : po.errors
+
+		# parse title - create a new one only if one with same text does not already exist
+		title = Title.where(title: row_data[headers['Title']]).first
+		if title.nil?
+			title = Title.new(title: row_data[headers['Title']], spreadsheet: ss)
+			title.save
+		end
+		po.title = title
+
+		# calling valid? on an ActiveModel record clears all error messages, so handle associations after the attributes
+		valid = po.valid?
+		if unit.nil?
+			po.errors.add(:unit, "Undefined unit: #{row_data[headers['Unit']]}")
+		end
+		if po.collection.nil? && !row_data[headers['Collection']].blank?
+			po.errors.add(:collection, "Unkown collection: #{row_data[headers['Collection']]}")
+		end
+
+		valid ? po : po.errors
+
 	end
 
 	def self.parse_date(date)

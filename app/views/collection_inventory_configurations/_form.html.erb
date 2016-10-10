@@ -1,0 +1,114 @@
+<%= form_for(@collection_inventory_configuration) do |f| %>
+  <% if @collection_inventory_configuration.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@collection_inventory_configuration.errors.count, "error") %> prohibited this collection_inventory_configuration from being saved:</h2>
+
+      <ul>
+      <% @collection_inventory_configuration.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+    <table>
+      <tr>
+        <th>Collection</th>
+        <td>
+          <%= f.select :collection_id, Collection.where("name != 'Misc [not in collection]'").order('name ASC').collect { |u| [u.name, u.id] }, { }, multiple: false, size: 1 %>
+        </td>
+      </tr>
+      <tr>
+        <th>Location</th>
+        <td>
+          <%= f.check_box :location %>
+        </td>
+      </tr>
+      <tr>
+        <th>Copy Right</th>
+        <td>
+          <%= f.check_box :copy_right %>
+        </td>
+      </tr>
+      <tr>
+        <th>Series Name</th>
+        <td>
+          <%= f.check_box :series_name %>
+        </td>
+      </tr>
+      <tr>
+        <th>Series Production Number</th>
+        <td>
+          <%= f.check_box :series_production_number %>
+        </td>
+      </tr>
+      <tr>
+        <th>Series Part</th>
+        <td>
+          <%= f.check_box :series_part %>
+        </td>
+      </tr>
+      <tr>
+        <th>Alternative Title</th>
+        <td>
+          <%= f.check_box :alternative_title %>
+        </td>
+      </tr>
+      <tr>
+        <th>Title Version</th>
+        <td>
+          <%= f.check_box :title_version %>
+        </td>
+      </tr>
+      <tr>
+        <th>Item Orignal Identifier</th>
+        <td>
+          <%= f.check_box :item_original_identifier %>
+        </td>
+      </tr>
+      <tr>
+        <th>Summary</th>
+        <td>
+          <%= f.check_box :summary %>
+        </td>
+      </tr>
+      <tr>
+        <th>Creator</th>
+        <td>
+          <%= f.check_box :creator %>
+        </td>
+      </tr>
+      <tr>
+        <th>Distributors</th>
+        <td>
+          <%= f.check_box :distributors %>
+        </td>
+      </tr>
+      <tr>
+        <th>Credits</th>
+        <td>
+          <%= f.check_box :credits %>
+        </td>
+      </tr>
+      <tr>
+        <th>Language</th>
+        <td>
+          <%= f.check_box :language %>
+        </td>
+      </tr>
+      <tr>
+        <th>Accompanying Documentation</th>
+        <td>
+          <%= f.check_box :accompanying_documentation %>
+        </td>
+      </tr>
+      <tr>
+        <th>Notes</th>
+        <td>
+          <%= f.check_box :notes %>
+        </td>
+      </tr>
+    </table>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

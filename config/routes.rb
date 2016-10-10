@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :collection_inventory_configurations
   resources :series
   resources :series_titles
   resources :titles

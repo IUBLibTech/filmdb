@@ -12,31 +12,37 @@
   <% end %>
   <table>
     <tr>
-      <td>Username</td>
+      <th>Username</th>
       <td>
 	      <%= f.text_field :username %>
       </td>
     </tr>
     <tr>
-      <td>Email Address</td>
+      <th>Email Address</th>
       <td>
 	      <%= f.text_field :email_address %>
       </td>
     </tr>
     <tr>
-      <td>First Name</td>
+      <th>First Name</th>
       <td>
 	      <%= f.text_field :first_name %>
       </td>
     </tr>
     <tr>
-      <td>Last Name</td>
+      <th>Last Name</th>
       <td>
 	      <%= f.text_field :last_name %>
       </td>
     </tr>
     <tr>
-      <td>Roles</td>
+      <th>Active</th>
+      <td>
+        <%= f.check_box :active %>
+      </td>
+    </tr>
+    <tr>
+      <th>Roles</th>
       <td>
 	      To be implemented...
       </td>

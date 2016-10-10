@@ -10,6 +10,7 @@ class TitlesController < ApplicationController
   # GET /titles/1
   # GET /titles/1.json
   def show
+    @physical_objects = @title.physical_objects
   end
 
   # GET /titles/new

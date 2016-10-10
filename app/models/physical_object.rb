@@ -6,6 +6,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :spreadhsheet
 	belongs_to :collection
 	belongs_to :unit
+	belongs_to :inventoried_by, class_name: "User", foreign_key: "inventoried_by"
 
 	validates :title_id, presence: true
 	validates :iu_barcode, iu_barcode: true

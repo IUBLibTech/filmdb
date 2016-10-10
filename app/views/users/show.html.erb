@@ -4,25 +4,31 @@
 <%= link_to 'Back', users_path %>
 <table>
   <tr>
-    <td>Username</td>
+    <th>Username</th>
     <td>
 	    <%= @user.username %>
     </td>
   </tr>
   <tr>
-    <td>Email Address</td>
+    <th>Email Address</th>
     <td><%= @user.email_address %></td>
   </tr>
   <tr>
-    <td>First Name</td>
+    <th>First Name</th>
     <td><%= @user.first_name %></td>
   </tr>
   <tr>
-    <td>Last Name</td>
+    <th>Last Name</th>
     <td><%= @user.last_name %></td>
   </tr>
   <tr>
-    <td>Role</td>
+    <th>Active</th>
+    <td>
+      <%= @user.active %>
+    </td>
+  </tr>
+  <tr>
+    <th>Role</th>
     <td>To be implemented...</td>
   </tr>
 </table>
