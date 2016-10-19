@@ -1,4 +1,4 @@
-<%= form_for(@title) do |f| %>
+<%= form_for(@title, html: {autocomplete: 'off'}) do |f| %>
   <% if @title.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@title.errors.count, "error") %> prohibited this title from being saved:</h2>

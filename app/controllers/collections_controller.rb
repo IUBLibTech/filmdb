@@ -5,7 +5,7 @@ class CollectionsController < ApplicationController
   # GET /collections
   # GET /collections.json
   def index
-    @collections = Collection.all
+    @collections = Collection.where("name != 'Misc [not in collection]'").all
   end
 
   # GET /collections/1
@@ -26,7 +26,6 @@ class CollectionsController < ApplicationController
   # POST /collections.json
   def create
     @collection = Collection.new(collection_params)
-
     respond_to do |format|
       if @collection.save
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }

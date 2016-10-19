@@ -1,4 +1,5 @@
 module SpreadsheetsHelper
+	require 'rubygems'
 	require 'roo'
 
 	# the column headers that spreadsheets should contain - in no particular order
@@ -141,9 +142,9 @@ module SpreadsheetsHelper
 		end
 
 		# parse title - create a new one only if one with same text does not already exist
-		title = Title.where(title: row_data[headers['Title']]).first
+		title = Title.where(title_text: row_data[headers['Title']]).first
 		if title.nil?
-			title = Title.new(title: row_data[headers['Title']], spreadsheet: ss)
+			title = Title.new(title_text: row_data[headers['Title']], spreadsheet: ss)
 			title.save
 		end
 		po.title = title

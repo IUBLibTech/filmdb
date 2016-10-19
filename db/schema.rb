@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019125729) do
+ActiveRecord::Schema.define(version: 20161019180740) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -120,7 +120,10 @@ ActiveRecord::Schema.define(version: 20161019125729) do
     t.string   "abbreviation", limit: 255, null: false
     t.string   "institution",  limit: 255, null: false
     t.string   "campus",       limit: 255
+    t.integer  "menu_index",   limit: 4
   end
+
+  add_index "units", ["abbreviation"], name: "index_units_on_abbreviation", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               limit: 255,                 null: false

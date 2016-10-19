@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :collection_inventory_configurations
+  resources :collection_inventory_configurations do
+    #get '/collection_inventory_configurations/:id/new'
+  end
   resources :series
   resources :series_titles
   resources :titles
