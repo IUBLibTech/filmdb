@@ -6,13 +6,13 @@
   <tr>
     <th>Date Inventoried</th>
     <td>
-      <%= @physical_object.date_inventoried %>
+      <%= @physical_object.created_at.strftime("%b %d. %Y") %>
     </td>
   </tr>
   <tr>
     <th>Inventoried By</th>
     <td>
-      <%= @physical_object.inventoried_by.name %>
+      <%= @physical_object.inventorier.name %>
     </td>
   </tr>
   <tr>
@@ -28,7 +28,7 @@
   <tr>
     <th>Collection</th>
     <td>
-      <%= @physical_object.collection.name %>
+      <%= link_to "#{@physical_object.collection.name}", collection_path(@physical_object.collection) %>
     </td>
   </tr>
   <tr>
@@ -53,7 +53,7 @@
       <% if @physical_object.title.nil? %>
           "None"
       <% else %>
-          <%= link_to "#{@physical_object.title.title}", title_path(@physical_object.title) %>
+          <%= link_to "#{@physical_object.title.title_text}", title_path(@physical_object.title) %>
       <% end %>
     </td>
   </tr>

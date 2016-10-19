@@ -1,3 +1,4 @@
+<%= link_to 'New Title', new_title_path %>
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Titles</h1>
@@ -14,7 +15,7 @@
   <tbody>
     <% @titles.each do |title| %>
     <tr>
-      <td><%= title.title %></td>
+      <td><%= title.title_text %></td>
       <td><%= title.description %></td>
       <td>
         <%= link_to 'Show', title %><br/>
@@ -28,4 +29,3 @@
 
 <br>
 
-<%= link_to 'New Title', new_title_path %>

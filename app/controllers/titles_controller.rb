@@ -26,7 +26,6 @@ class TitlesController < ApplicationController
   # POST /titles.json
   def create
     @title = Title.new(title_params)
-
     respond_to do |format|
       if @title.save
         format.html { redirect_to @title, notice: 'Title was successfully created.' }
@@ -62,6 +61,17 @@ class TitlesController < ApplicationController
     end
   end
 
+  def autocomplete_title
+    if params[:term]
+      json = Title.where("title_text like ?", "%#{params[:term]}%").select(:id, :title_text, :description).to_json
+      json.gsub! "\"title_text\":", "\"label\":"
+      json.gsub! "\"id\":", "\"value\":"
+      render json: json
+    else
+      render json: ""
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_title
@@ -70,6 +80,6 @@ class TitlesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def title_params
-      params.require(:title).permit(:title, :description)
+      params.require(:title).permit(:title_text, :description, :series_id, :series_title_index)
     end
 end

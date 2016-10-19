@@ -1,6 +1,7 @@
 class PhysicalObjectsController < ApplicationController
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
   before_action :set_series, only: [:new, :create, :edit, :update]
+
   # GET /physical_objects
   # GET /physical_objects.json
   def index
@@ -31,6 +32,13 @@ class PhysicalObjectsController < ApplicationController
   # POST /physical_objects.json
   def create
     @physical_object = PhysicalObject.new(physical_object_params)
+    # it is possible that a new title is created along with the physical object. In this case params[:physical_object][:title_id]
+    #  will be null, but params[:physical_object][:title_text] will not be null
+    if params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
+      new_title = Title.new(title_text: params[:physical_object][:title_text],
+                            description: "*This description was auto-generated because a new title was created at physical object creation/edit.*")
+      @physical_object.title = new_title
+    end
     respond_to do |format|
       if @physical_object.save
         # hook in title to series title if specified

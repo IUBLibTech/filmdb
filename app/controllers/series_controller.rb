@@ -61,6 +61,17 @@ class SeriesController < ApplicationController
     end
   end
 
+  def autocomplete_series
+    if params[:term]
+      json = Series.where("title like ?", "%#{params[:term]}%").select(:id, :title, :description).to_json
+      json.gsub! "\"title\":", "\"label\":"
+      json.gsub! "\"id\":", "\"value\":"
+      render json: json
+    else
+      render json: ""
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_series

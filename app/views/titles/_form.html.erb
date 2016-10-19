@@ -12,9 +12,16 @@
   <% end %>
   <table>
     <tr>
+      <th>Series Title</th>
+      <td>
+        <%= f.hidden_field :series_id %>
+        <%= f.text_field :series_title_text %>
+      </td>
+    </tr>
+    <tr>
       <th>Title</th>
       <td>
-	      <%= f.text_field :title %>
+	      <%= f.text_field :title_text %>
       </td>
     </tr>
     <tr>
@@ -23,9 +30,30 @@
 	      <%= f.text_area :description %>
       </td>
     </tr>
+    <tr>
+      <th>Index in Series</th>
+      <td>
+        <%= f.text_field :series_title_index %>
+      </td>
+    </tr>
   </table>
 
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+<script type="text/javascript">
+  // autocomplete for seriese
+  $('#title_series_title_text').autocomplete({
+    source: '../../../autocomplete_series',
+    focus: function (event, ui) {
+      $(".ui-autocomplete > li").attr("title", ui.item.description);
+      return false;
+    },
+    select: function (event, ui) {
+      $("#title_series_title_text").val(ui.item.label);
+      $('#title_series_id').val(ui.item.value);
+      return false;
+    }
+  })
+</script>

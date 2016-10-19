@@ -6,7 +6,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :spreadhsheet
 	belongs_to :collection
 	belongs_to :unit
-	belongs_to :inventoried_by, class_name: "User", foreign_key: "inventoried_by"
+	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by"
 
 	validates :title_id, presence: true
 	validates :iu_barcode, iu_barcode: true
@@ -37,4 +37,13 @@ class PhysicalObject < ActiveRecord::Base
 		MEDAI_TYPE_MEDIUMS
 	end
 
+	def title_text
+		self.title.title_text if self.title
+	end
+	def series_title_text
+		self.title.series.title if self.title && self.title.series
+	end
+	def series_id
+		self.title.series.id if self.title && self.title.series
+	end
 end

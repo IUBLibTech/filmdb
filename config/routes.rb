@@ -10,12 +10,19 @@ Rails.application.routes.draw do
   resources :spreadsheets, only: [:index, :show, :destroy]
 
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
+  get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
+  post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+
+  get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
+  get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete
   resources :sessions, only: [:new, :destroy] do
     get :validate_login, on: :collection
   end
+
+
 
   root "physical_objects#index"
 

@@ -1,0 +1,324 @@
+<p id="notice"><%= notice %></p>
+<h4>Inventory Page for <%= @collection.name %> [<%= @collection.unit.abbreviation %>]</h4>
+<%= form_for @physical_object, url: {action: "create_physical_object"} do |f| %>
+    <% if @physical_object.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
+
+          <ul>
+            <% @physical_object.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <%= f.submit "Create Physical Object" %>
+    <h4>Required Metadata fields</h4>
+    <table>
+      <tr>
+        <th>Unit</th>
+        <td>
+          <%= @collection.unit.abbreviation %>
+          <%= f.hidden_field :unit_id %>
+        </td>
+      </tr>
+      <tr>
+        <th>Collection</th>
+        <td>
+          <%= @collection.name %>
+          <%= f.hidden_field :collection_id %>
+        </td>
+      </tr>
+      <tr>
+        <th>Inventoried By</th>
+        <td>
+          <%= @physical_object.inventorier&.name%>
+          <%= f.hidden_field :inventoried_by %>
+        </td>
+      </tr>
+      <tr>
+        <th>Title</th>
+        <td>
+          <%= f.hidden_field :title_id %>
+          <%= f.text_field :title_text %>
+          <%# f.autocomplete_field :title_text,  autocomplete_title_title_text_collections_path,
+                                   'data-auto-focus' => true, 'data-showNoMatches' => false,
+                                   'data-noMatchesLabel' => 'No Titles Found',
+                                   :id_element => '#physical_object_title_id'
+          %>
+        </td>
+      </tr>
+      <tr>
+        <th>IU Barcode</th>
+        <td>
+          <%= f.text_field :iu_barcode %>
+        </td>
+      </tr>
+      <tr>
+        <th>Medium Type</th>
+        <td>
+          <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
+        </td>
+      </tr>
+      <tr>
+        <th>Medium</th>
+        <td>
+          <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
+        </td>
+      </tr>
+    </table>
+
+    <h4>Important Metadata Fields</h4>
+    <table>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.location  %>
+          <tr>
+            <th>Location</th>
+            <td>
+              <%= f.text_field :location %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.copy_right  %>
+          <tr>
+            <th>Copy Right</th>
+            <td>
+              <%= f.text_field :copy_right %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.series_name  %>
+          <tr>
+            <th>Series Title</th>
+            <td>
+              <%= f.hidden_field :series_id %>
+              <%= f.text_field :series_title_text %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.series_part  %>
+          <tr>
+            <th>Series Part</th>
+            <td>
+              <%= f.text_field :series_part %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.series_production_number  %>
+          <tr>
+            <th>Series Production Number</th>
+            <td>
+              <%= f.text_field :series_production_number %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.alternative_title  %>
+          <tr>
+            <th>Alternative Title</th>
+            <td>
+              <%= f.text_field :alternative_title %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.title_version  %>
+          <tr>
+            <th>Title Version</th>
+            <td>
+              <%= f.text_field :title_version %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.item_original_identifier  %>
+          <tr>
+            <th>Item Original Identifier</th>
+            <td>
+              <%= f.text_field :item_original_identifier %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.summary  %>
+          <tr>
+            <th>Summary</th>
+            <td>
+              <%= f.text_area :summary %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.creator  %>
+          <tr>
+            <th>Creator</th>
+            <td>
+              <%= f.text_field :creator %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.distributors  %>
+          <tr>
+            <th>Distributors</th>
+            <td>
+              <%= f.text_field :distributors %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.credits  %>
+          <tr>
+            <th>Credits</th>
+            <td>
+              <%= f.text_field :credits %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.language  %>
+          <tr>
+            <th>Language</th>
+            <td>
+              <%= f.text_field :language %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.accompanying_documentation  %>
+          <tr>
+            <th>Accompanying Documentation</th>
+            <td>
+              <%= f.text_field :accompanying_documentation %>
+            </td>
+          </tr>
+      <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.notes  %>
+          <tr>
+            <th>Notes</th>
+            <td>
+              <%= f.text_area :notes %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
+
+
+    <div id="accordion" style="width: 400px; padding: 0">
+      <h3>Optional Metadata Fields</h3>
+      <table>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.location  %>
+            <tr>
+              <th>Location</th>
+              <td>
+                <%= f.text_field :location %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.copy_right  %>
+            <tr>
+              <th>Copy Right</th>
+              <td>
+                <%= f.text_field :copy_right %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.series_name  %>
+            <tr>
+              <th>Series Name</th>
+              <td>
+                <%= select_tag "series", options_from_collection_for_select(@series, "id", "title", (@physical_object.title && @physical_object.title.series) ? @physical_object.title.series.id : ""), {prompt: "Select a Series..."} %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.series_part  %>
+            <tr>
+              <th>Series Part</th>
+              <td>
+                <%= f.text_field :series_part %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.series_production_number  %>
+            <tr>
+              <th>Series Production Number</th>
+              <td>
+                <%= f.text_field :series_production_number %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.alternative_title  %>
+            <tr>
+              <th>Alternative Title</th>
+              <td>
+                <%= f.text_field :alternative_title %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.title_version  %>
+            <tr>
+              <th>Title Version</th>
+              <td>
+                <%= f.text_field :title_version %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.item_original_identifier  %>
+            <tr>
+              <th>Item Original Identifier</th>
+              <td>
+                <%= f.text_field :item_original_identifier %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.summary  %>
+            <tr>
+              <th>Summary</th>
+              <td>
+                <%= f.text_area :summary %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.creator  %>
+            <tr>
+              <th>Creator</th>
+              <td>
+                <%= f.text_field :creator %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.distributors  %>
+            <tr>
+              <th>Distributors</th>
+              <td>
+                <%= f.text_field :distributors %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.credits  %>
+            <tr>
+              <th>Credits</th>
+              <td>
+                <%= f.text_field :credits %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.language  %>
+            <tr>
+              <th>Language</th>
+              <td>
+                <%= f.text_field :language %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.accompanying_documentation  %>
+            <tr>
+              <th>Accompanying Documentation</th>
+              <td>
+                <%= f.text_field :accompanying_documentation %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.notes  %>
+            <tr>
+              <th>Notes</th>
+              <td>
+                <%= f.text_area :notes %>
+              </td>
+            </tr>
+        <% end %>
+      </table>
+    </div>
+<% end %>
+
+<%= render partial: "physical_objects/physical_object_metadata_js" %>
