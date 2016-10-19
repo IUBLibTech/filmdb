@@ -33,7 +33,7 @@
       </tr>
       <% @titles.each do |t| %>
           <tr>
-            <td><%= t.title %></td>
+            <td><%= t.title_text %></td>
             <td><%= t.physical_objects.size %></td>
             <td>
               <%= link_to "Show", title_path(t) %>

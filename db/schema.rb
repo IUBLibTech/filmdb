@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161010011319) do
+ActiveRecord::Schema.define(version: 20161019125729) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -104,12 +104,13 @@ ActiveRecord::Schema.define(version: 20161010011319) do
   add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
 
   create_table "titles", force: :cascade do |t|
-    t.string   "title",          limit: 255
-    t.text     "description",    limit: 65535
+    t.string   "title_text",         limit: 255
+    t.text     "description",        limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "series_id",      limit: 8
-    t.integer  "spreadsheet_id", limit: 8
+    t.integer  "series_id",          limit: 8
+    t.integer  "spreadsheet_id",     limit: 8
+    t.integer  "series_title_index", limit: 4
   end
 
   create_table "units", force: :cascade do |t|

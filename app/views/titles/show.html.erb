@@ -4,7 +4,7 @@
 <table>
   <tr>
     <th>Title</th>
-    <td><%= @title.title %></td>
+    <td><%= @title.title_text %></td>
   </tr>
   <tr>
     <th>Description</th>
@@ -14,6 +14,12 @@
     <th>Belongs to Series</th>
     <td>
       <%= @title.series ? (link_to "#{@title.series.title}", series_path(@title.series)) : "" %>
+    </td>
+  </tr>
+  <tr>
+    <th>Index in Series</th>
+    <td>
+      <%= @title.series_title_index %>
     </td>
   </tr>
 </table>
