@@ -90,9 +90,11 @@ table {
 
 th, tr, td {
     border: 1px solid black;
+    font-size: 1.1em;
 }
 th {
-    background-color: #8F2609;
+    background-color: rgba(125, 18, 12, 0.45);
+    font-weight: bold;
 }
 
 table tbody tr td input, textarea, select {
@@ -107,4 +109,8 @@ table tbody tr td input, textarea, select {
     color: red;
     font-weight: bold;
     border: 2px solid red;
+}
+
+#accordion_table {
+    padding: 0;
 }

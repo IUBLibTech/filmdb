@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   def show
   end
 
-  # GET /users/new
+  # GET /users/new_physical_object
   def new
     @user = User.new
   end
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+        format.html { render :new_physical_object }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

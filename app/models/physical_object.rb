@@ -7,6 +7,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :collection
 	belongs_to :unit
 	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by"
+	belongs_to :modifier, class_name: "User", foreign_key: "modified_by"
 
 	validates :title_id, presence: true
 	validates :iu_barcode, iu_barcode: true
@@ -37,6 +38,9 @@ class PhysicalObject < ActiveRecord::Base
 		MEDAI_TYPE_MEDIUMS
 	end
 
+	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
+	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
+	# is set and passed as the param for assignment
 	def title_text
 		self.title.title_text if self.title
 	end
@@ -45,5 +49,8 @@ class PhysicalObject < ActiveRecord::Base
 	end
 	def series_id
 		self.title.series.id if self.title && self.title.series
+	end
+	def collection_text
+		self.collection.name if self.collection
 	end
 end

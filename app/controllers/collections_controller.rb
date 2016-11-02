@@ -1,4 +1,6 @@
 class CollectionsController < ApplicationController
+  include PhysicalObjectsHelper
+
   before_action :set_collection, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object]
   before_action :init_create_physical_object, only: [:new_physical_object, :create_physical_object]
 
@@ -13,7 +15,7 @@ class CollectionsController < ApplicationController
   def show
   end
 
-  # GET /collections/new
+  # GET /collections/new_physical_object
   def new
     @collection = Collection.new
   end
@@ -31,7 +33,7 @@ class CollectionsController < ApplicationController
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }
         format.json { render :show, status: :created, location: @collection }
       else
-        format.html { render :new }
+        format.html { render :new_physical_object }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
@@ -65,28 +67,14 @@ class CollectionsController < ApplicationController
 
   end
 
-  def create_physical_object
-    @physical_object = PhysicalObject.new(physical_object_params)
-    # it is possible that a new title is created in which case params[:physical_object][:title_id] will be null,
-    # but params[:physical_object][:title_text] will not be null
-    if params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
-      new_title = Title.new(title_text: params[:physical_object][:title_text],
-                            description: "*This description was auto-generated because a new title was created at physical object creation/edit.*")
-      new_title.save
-      @physical_object.title = new_title
-    end
-    respond_to do |format|
-      if @physical_object.save
-        if params[:series].blank?
-          @physical_object.title.series =  nil
-        else
-          @physical_object.title.series_id = params[:series]
-        end
-        @physical_object.title.save
-        format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
-      else
-        format.html { render :new_physical_object }
-      end
+  def autocomplete_collection
+    if params[:term]
+      json = Collection.where("name like ?", "%#{params[:term]}%").select(:id, :name).to_json
+      json.gsub! "\"name\":", "\"label\":"
+      json.gsub! "\"id\":", "\"value\":"
+      render json: json
+    else
+      render json: ""
     end
   end
 
@@ -100,7 +88,8 @@ class CollectionsController < ApplicationController
     def init_create_physical_object
       @user = User.where(username: current_user).first
       @series = Series.all
-      @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id )
+      @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id, modified_by: @user.id )
+      @cv = ControlledVocabulary.physical_object_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -108,11 +97,4 @@ class CollectionsController < ApplicationController
       params.require(:collection).permit(:name, :unit_id)
     end
 
-    def physical_object_params
-      params.require(:physical_object).permit(
-          :date_inventoried, :location, :media_type, :medium, :iu_barcode, :title_id, :copy_right, :format, :spreadsheet_id, :inventoried_by,
-          :series_name, :series_production_number, :series_part, :alternative_title, :title_version, :item_original_identifier,
-          :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes, :unit_id, :collection_id
-      )
-    end
 end

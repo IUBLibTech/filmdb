@@ -2,13 +2,21 @@
   <tr>
     <th>Date Inventoried </th>
     <td>
-      <%= f.text_field :date_inventoried %>
+      <%= Date.current %>
     </td>
   </tr>
   <tr>
     <th>Inventoried By</th>
     <td>
-      Users to be implemented...
+      <%= f.hidden_field :inventoried_by %>
+      <%= @physical_object.inventorier&.name %>
+    </td>
+  </tr>
+  <tr>
+    <th>Modified By</th>
+    <td>
+      <%= f.hidden_field :modified_by %>
+      <%= @physical_object.modifier&.name %>
     </td>
   </tr>
   <tr>
@@ -26,7 +34,8 @@
   <tr>
     <th>Collection</th>
     <td>
-
+      <%= f.hidden_field :collection_id %>
+      <%= f.text_field :collection_text %>
     </td>
   </tr>
   <tr>
@@ -51,12 +60,6 @@
     <th>Title</th>
     <td>
       <%= f.hidden_field :title_id %>
-      <%= f.text_field :title_text %>
-    </td>
-  </tr>
-  <tr>
-    <th>Title (manually created ajax)</th>
-    <td>
       <%= f.text_field :title_text %>
     </td>
   </tr>
@@ -130,7 +133,7 @@
   <tr>
     <th>Language</th>
     <td>
-	    <%= f.text_field :language %>
+
     </td>
   </tr>
   <tr>

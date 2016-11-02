@@ -7,8 +7,8 @@ RSpec.describe TitlesController, type: :routing do
       expect(:get => "/titles").to route_to("titles#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/titles/new").to route_to("titles#new")
+    it "routes to #new_physical_object" do
+      expect(:get => "/titles/new_physical_object").to route_to("titles#new_physical_object")
     end
 
     it "routes to #show" do

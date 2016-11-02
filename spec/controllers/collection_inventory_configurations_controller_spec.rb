@@ -52,9 +52,9 @@ RSpec.describe CollectionInventoryConfigurationsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new collection_inventory_configuration as @collection_inventory_configuration" do
-      get :new, {}, valid_session
+  describe "GET #new_physical_object" do
+    it "assigns a new_physical_object collection_inventory_configuration as @collection_inventory_configuration" do
+      get :new_physical_object, {}, valid_session
       expect(assigns(:collection_inventory_configuration)).to be_a_new(CollectionInventoryConfiguration)
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe CollectionInventoryConfigurationsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new CollectionInventoryConfiguration" do
+      it "creates a new_physical_object CollectionInventoryConfiguration" do
         expect {
           post :create, {:collection_inventory_configuration => valid_attributes}, valid_session
         }.to change(CollectionInventoryConfiguration, :count).by(1)
@@ -93,9 +93,9 @@ RSpec.describe CollectionInventoryConfigurationsController, type: :controller do
         expect(assigns(:collection_inventory_configuration)).to be_a_new(CollectionInventoryConfiguration)
       end
 
-      it "re-renders the 'new' template" do
+      it "re-renders the 'new_physical_object' template" do
         post :create, {:collection_inventory_configuration => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+        expect(response).to render_template("new_physical_object")
       end
     end
   end

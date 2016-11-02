@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019180740) do
+ActiveRecord::Schema.define(version: 20161027183819) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -32,6 +32,33 @@ ActiveRecord::Schema.define(version: 20161019180740) do
     t.boolean  "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "generation"
+    t.boolean  "base"
+    t.boolean  "stock"
+    t.boolean  "access"
+    t.boolean  "gauge"
+    t.boolean  "can_size"
+    t.boolean  "footage"
+    t.boolean  "duration"
+    t.boolean  "reel_number"
+    t.boolean  "format_notes"
+    t.boolean  "picture_type"
+    t.boolean  "frame_rate"
+    t.boolean  "color_or_bw"
+    t.boolean  "aspect_ratio"
+    t.boolean  "sound_field_language"
+    t.boolean  "captions_or_subtitles"
+    t.boolean  "silent"
+    t.boolean  "sound_format_type"
+    t.boolean  "sound_content_type"
+    t.boolean  "sound_configuration"
+    t.boolean  "ad_strip"
+    t.boolean  "shrinkage"
+    t.boolean  "mold"
+    t.boolean  "condition_type"
+    t.boolean  "condition_rating"
+    t.boolean  "research_value"
+    t.boolean  "conservation_actions"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -39,6 +66,16 @@ ActiveRecord::Schema.define(version: 20161019180740) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "unit_id",    limit: 8
+  end
+
+  create_table "controlled_vocabularies", force: :cascade do |t|
+    t.string   "model_type",      limit: 255
+    t.string   "model_attribute", limit: 255
+    t.string   "value",           limit: 255
+    t.boolean  "default"
+    t.integer  "index",           limit: 4,   default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "physical_object_old_barcodes", force: :cascade do |t|
@@ -52,30 +89,181 @@ ActiveRecord::Schema.define(version: 20161019180740) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "date_inventoried"
-    t.integer  "inventoried_by",             limit: 8
-    t.string   "location",                   limit: 255
-    t.integer  "collection_id",              limit: 8
-    t.string   "media_type",                 limit: 255
-    t.integer  "iu_barcode",                 limit: 8,     null: false
-    t.integer  "copy_right",                 limit: 4
-    t.string   "format",                     limit: 255
-    t.integer  "spreadsheet_id",             limit: 4
-    t.string   "series_name",                limit: 255
-    t.string   "series_production_number",   limit: 255
-    t.string   "series_part",                limit: 255
-    t.string   "alternative_title",          limit: 255
-    t.string   "title_version",              limit: 255
-    t.string   "item_original_identifier",   limit: 255
-    t.text     "summary",                    limit: 65535
-    t.string   "creator",                    limit: 255
-    t.string   "distributors",               limit: 255
-    t.string   "credits",                    limit: 255
-    t.string   "language",                   limit: 255
-    t.text     "accompanying_documentation", limit: 65535
-    t.text     "notes",                      limit: 65535
-    t.integer  "unit_id",                    limit: 8
-    t.string   "medium",                     limit: 255
-    t.integer  "title_id",                   limit: 8
+    t.integer  "inventoried_by",                        limit: 8
+    t.string   "location",                              limit: 255
+    t.integer  "collection_id",                         limit: 8
+    t.string   "media_type",                            limit: 255
+    t.integer  "iu_barcode",                            limit: 8,                    null: false
+    t.integer  "copy_right",                            limit: 4
+    t.string   "format",                                limit: 255
+    t.integer  "spreadsheet_id",                        limit: 4
+    t.string   "series_name",                           limit: 255
+    t.string   "series_production_number",              limit: 255
+    t.string   "series_part",                           limit: 255
+    t.string   "alternative_title",                     limit: 255
+    t.string   "title_version",                         limit: 255
+    t.string   "item_original_identifier",              limit: 255
+    t.text     "summary",                               limit: 65535
+    t.string   "creator",                               limit: 255
+    t.string   "distributors",                          limit: 255
+    t.string   "credits",                               limit: 255
+    t.text     "accompanying_documentation",            limit: 65535
+    t.text     "notes",                                 limit: 65535
+    t.integer  "unit_id",                               limit: 8
+    t.string   "medium",                                limit: 255
+    t.integer  "title_id",                              limit: 8
+    t.integer  "modified_by",                           limit: 8
+    t.string   "access",                                limit: 255
+    t.boolean  "first_edition"
+    t.boolean  "second_edition"
+    t.boolean  "third_edition"
+    t.boolean  "fourth_edition"
+    t.boolean  "abridged"
+    t.boolean  "short"
+    t.boolean  "long"
+    t.boolean  "sample"
+    t.boolean  "preview"
+    t.boolean  "revised"
+    t.boolean  "version_original"
+    t.boolean  "captioned"
+    t.boolean  "excerpt"
+    t.boolean  "color"
+    t.boolean  "catholic"
+    t.boolean  "domestic"
+    t.boolean  "trailer"
+    t.boolean  "french"
+    t.boolean  "italian"
+    t.boolean  "spanish"
+    t.boolean  "german"
+    t.boolean  "chinese"
+    t.boolean  "english"
+    t.boolean  "television"
+    t.boolean  "x_rated"
+    t.string   "gauge",                                 limit: 255
+    t.boolean  "generation_projection_print"
+    t.boolean  "generation_ab_a_roll"
+    t.boolean  "generation_ab_b_roll"
+    t.boolean  "generation_ab_c_roll"
+    t.boolean  "generation_ab_d_roll"
+    t.boolean  "generation_answer_print"
+    t.boolean  "generation_composite"
+    t.boolean  "generation_duplicate"
+    t.boolean  "generation_edited"
+    t.boolean  "generation_edited_camera_original"
+    t.boolean  "generation_fine_grain_master"
+    t.boolean  "generation_intermediate"
+    t.boolean  "generation_kinescope"
+    t.boolean  "generation_magnetic_track"
+    t.boolean  "generation_mezzanine"
+    t.boolean  "generation_negative"
+    t.boolean  "generation_optical_sound_track"
+    t.boolean  "generation_original"
+    t.boolean  "generation_outs_and_trims"
+    t.boolean  "generation_positive"
+    t.boolean  "generation_reversal"
+    t.boolean  "generation_separation_master"
+    t.boolean  "generation_work_print"
+    t.boolean  "generation_mixed"
+    t.string   "reel_number",                           limit: 255
+    t.string   "can_size",                              limit: 255
+    t.integer  "footage",                               limit: 4
+    t.string   "duration",                              limit: 255
+    t.boolean  "base_acetate"
+    t.boolean  "base_polyester"
+    t.boolean  "base_nitrate"
+    t.boolean  "base_mixed"
+    t.boolean  "stock_agfa"
+    t.boolean  "stock_ansco"
+    t.boolean  "stock_dupont"
+    t.boolean  "stock_orwo"
+    t.boolean  "stock_fuji"
+    t.boolean  "stock_gevaert"
+    t.boolean  "stock_kodak"
+    t.boolean  "stock_ferrania"
+    t.boolean  "stock_mixed"
+    t.text     "format_notes",                          limit: 65535
+    t.boolean  "picture_not_applicable"
+    t.boolean  "picture_silent_picture"
+    t.boolean  "picture_mos_picture"
+    t.boolean  "picture_composite_picture"
+    t.boolean  "picture_intertitles_only"
+    t.boolean  "picture_credits_only"
+    t.boolean  "picture_picture_effects"
+    t.boolean  "picture_picture_outtakes"
+    t.boolean  "picture_picture_kinescope"
+    t.string   "frame_rate",                            limit: 255
+    t.boolean  "color_bw_bw_toned"
+    t.boolean  "color_bw_bw_tinted"
+    t.boolean  "color_bw_color_ektachrome"
+    t.boolean  "color_bw_color_kodachrome"
+    t.boolean  "color_bw_color_technicolor"
+    t.boolean  "color_bw_color_anscochrome"
+    t.boolean  "color_bw_color_eco"
+    t.boolean  "color_bw_color_eastman"
+    t.boolean  "color_bw_color_bw_mixed"
+    t.boolean  "aspect_ratio_1_33_1"
+    t.boolean  "aspect_ratio_1_37_1"
+    t.boolean  "aspect_ratio_1_66_1"
+    t.boolean  "aspect_ratio_1_85_1"
+    t.boolean  "aspect_ratio_2_35_1"
+    t.boolean  "aspect_ratio_2_39_1"
+    t.boolean  "aspect_ratio_2_59_1"
+    t.boolean  "language_arabic"
+    t.boolean  "language_chinese"
+    t.boolean  "language_english"
+    t.boolean  "language_french"
+    t.boolean  "language_german"
+    t.boolean  "language_hindi"
+    t.boolean  "language_italian"
+    t.boolean  "language_japanese"
+    t.boolean  "language_portuguese"
+    t.boolean  "language_russian"
+    t.boolean  "language_spanish"
+    t.boolean  "close_caption"
+    t.boolean  "silent"
+    t.boolean  "sound_format_optical_variable_area"
+    t.boolean  "sound_format_optical_variable_density"
+    t.boolean  "sound_format_magnetic"
+    t.boolean  "sound_format_type_mixed"
+    t.boolean  "sound_format_digital_sdds"
+    t.boolean  "sound_format_digital_dts"
+    t.boolean  "sound_format_digital_dolby_digital"
+    t.boolean  "sound_format_sound_on_separate_media"
+    t.boolean  "sound_content_music_track"
+    t.boolean  "sound_content_effects_track"
+    t.boolean  "sound_content_dialog"
+    t.boolean  "sound_content_composite_track"
+    t.boolean  "sound_content_outtakes"
+    t.boolean  "sound_configuration_mono"
+    t.boolean  "sound_configuration_stereo"
+    t.boolean  "sound_configuration_surround"
+    t.boolean  "sound_configuration_multi_track"
+    t.boolean  "sound_configuration_dual"
+    t.boolean  "sound_configuration_single"
+    t.string   "ad_strip",                              limit: 255
+    t.decimal  "shrinkage",                                           precision: 10
+    t.string   "mold",                                  limit: 255
+    t.string   "color_fade",                            limit: 255
+    t.string   "perforation_damage",                    limit: 255
+    t.string   "water_damage",                          limit: 255
+    t.string   "warp",                                  limit: 255
+    t.string   "brittle",                               limit: 255
+    t.string   "splice_damage",                         limit: 255
+    t.string   "dirty",                                 limit: 255
+    t.string   "peeling",                               limit: 255
+    t.string   "tape_residue",                          limit: 255
+    t.string   "broken",                                limit: 255
+    t.string   "tearing",                               limit: 255
+    t.boolean  "loose_wind"
+    t.boolean  "not_on_core_or_reel"
+    t.string   "missing_footage",                       limit: 255
+    t.string   "scratches",                             limit: 255
+    t.string   "condition_rating",                      limit: 255
+    t.text     "condition_notes",                       limit: 65535
+    t.string   "research_value",                        limit: 255
+    t.text     "research_value_notes",                  limit: 65535
+    t.text     "conservation_actions",                  limit: 65535
+    t.boolean  "black_and_white"
   end
 
   create_table "series", force: :cascade do |t|

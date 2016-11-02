@@ -58,4 +58,18 @@
       return false;
     }
   })
+
+  //autcomplete for collections
+  $('#physical_object_collection_text').autocomplete({
+    source: '../../../autocomplete_collection',
+    focus: function (event, ui) {
+      //$(".ui-autocomplete > li").attr("title", ui.item.description);
+      return false;
+    },
+    select: function (event, ui) {
+      $("#physical_object_collection_text").val(ui.item.label);
+      $('#physical_object_collection_id').val(ui.item.value);
+      return false;
+    }
+  })
 </script>

@@ -7,8 +7,8 @@ RSpec.describe CollectionInventoryConfigurationsController, type: :routing do
       expect(:get => "/collection_inventory_configurations").to route_to("collection_inventory_configurations#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/collection_inventory_configurations/new").to route_to("collection_inventory_configurations#new")
+    it "routes to #new_physical_object" do
+      expect(:get => "/collection_inventory_configurations/new_physical_object").to route_to("collection_inventory_configurations#new_physical_object")
     end
 
     it "routes to #show" do

@@ -6,8 +6,17 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   before_action :signed_in_user
+  around_filter :scope_current_username
 
   def public_home
 
+  end
+
+  private
+  def scope_current_username
+    User.current_username = current_username
+    yield
+  ensure
+    User.current_username = nil
   end
 end

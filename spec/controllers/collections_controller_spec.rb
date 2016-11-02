@@ -52,9 +52,9 @@ RSpec.describe CollectionsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new collection as @collection" do
-      get :new, {}, valid_session
+  describe "GET #new_physical_object" do
+    it "assigns a new_physical_object collection as @collection" do
+      get :new_physical_object, {}, valid_session
       expect(assigns(:collection)).to be_a_new(Collection)
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe CollectionsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Collection" do
+      it "creates a new_physical_object Collection" do
         expect {
           post :create, {:collection => valid_attributes}, valid_session
         }.to change(Collection, :count).by(1)
@@ -93,9 +93,9 @@ RSpec.describe CollectionsController, type: :controller do
         expect(assigns(:collection)).to be_a_new(Collection)
       end
 
-      it "re-renders the 'new' template" do
+      it "re-renders the 'new_physical_object' template" do
         post :create, {:collection => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+        expect(response).to render_template("new_physical_object")
       end
     end
   end

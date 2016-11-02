@@ -7,8 +7,8 @@ RSpec.describe SeriesController, type: :routing do
       expect(:get => "/series").to route_to("series#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/series/new").to route_to("series#new")
+    it "routes to #new_physical_object" do
+      expect(:get => "/series/new_physical_object").to route_to("series#new_physical_object")
     end
 
     it "routes to #show" do

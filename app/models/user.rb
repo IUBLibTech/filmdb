@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
 		user_string.blank? ? "UNAVAILABLE" : user_string
 	end
 
-	def self.current_username_object
-		Thread.current[:current_username]
+	def self.current_user_object
+		User.where(username: current_username).first
 	end
 
 	def name

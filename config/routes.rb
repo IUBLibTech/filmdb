@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  resources :controlled_vocabularies
   resources :collection_inventory_configurations do
-    #get '/collection_inventory_configurations/:id/new'
+    #get '/collection_inventory_configurations/:id/new_physical_object'
   end
   resources :series
   resources :series_titles
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
 
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
+  get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete
