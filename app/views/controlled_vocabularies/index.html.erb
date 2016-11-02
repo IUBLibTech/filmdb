@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Controlled Vocabularies</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @controlled_vocabularies.each do |controlled_vocabulary| %>
+      <tr>
+        <td><%= link_to 'Show', controlled_vocabulary %></td>
+        <td><%= link_to 'Edit', edit_controlled_vocabulary_path(controlled_vocabulary) %></td>
+        <td><%= link_to 'Destroy', controlled_vocabulary, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Controlled vocabulary', new_controlled_vocabulary_path %>

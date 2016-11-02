@@ -3,8 +3,8 @@ describe PhysicalObjectsController, type: :routing do
 		it "routes to #index" do
 			expect(get("/physical_objects/")).to be_routable
 		end
-		it "routes to #new" do
-			expect(get("/physical_objects/new")).to be_routable
+		it "routes to #new_physical_object" do
+			expect(get("/physical_objects/new_physical_object")).to be_routable
 		end
 		it "routes to #create" do
 			expect(post("/physical_objects/")).to be_routable

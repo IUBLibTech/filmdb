@@ -38,7 +38,7 @@ module SpreadsheetsHelper
 
 	# This method takes a reference to the uploaded spreadsheet file 'file', the spreadsheet active record instance 'ss',
 	# and the spread sheet submission active record instance 'sss', and processes the physical objects in the spreadsheet.
-	# It either creates new records in filmdb, or logs errors as they occur line by line in the spreadsheet.
+	# It either creates new_physical_object records in filmdb, or logs errors as they occur line by line in the spreadsheet.
 	def self.parse_spreadsheet(file, ss, sss)
 		xlsx = Roo::Excelx.new(file.tempfile.path, file_warning: :ignore)
 		xlsx.default_sheet = xlsx.sheets[0]
@@ -141,7 +141,7 @@ module SpreadsheetsHelper
 			po.collection = collection
 		end
 
-		# parse title - create a new one only if one with same text does not already exist
+		# parse title - create a new_physical_object one only if one with same text does not already exist
 		title = Title.where(title_text: row_data[headers['Title']]).first
 		if title.nil?
 			title = Title.new(title_text: row_data[headers['Title']], spreadsheet: ss)

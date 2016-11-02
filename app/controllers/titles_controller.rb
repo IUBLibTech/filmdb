@@ -13,7 +13,7 @@ class TitlesController < ApplicationController
     @physical_objects = @title.physical_objects
   end
 
-  # GET /titles/new
+  # GET /titles/new_physical_object
   def new
     @title = Title.new
   end
@@ -31,7 +31,7 @@ class TitlesController < ApplicationController
         format.html { redirect_to @title, notice: 'Title was successfully created.' }
         format.json { render :show, status: :created, location: @title }
       else
-        format.html { render :new }
+        format.html { render :new_physical_object }
         format.json { render json: @title.errors, status: :unprocessable_entity }
       end
     end

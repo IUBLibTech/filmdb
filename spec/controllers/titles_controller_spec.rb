@@ -52,9 +52,9 @@ RSpec.describe TitlesController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new title as @title" do
-      get :new, {}, valid_session
+  describe "GET #new_physical_object" do
+    it "assigns a new_physical_object title as @title" do
+      get :new_physical_object, {}, valid_session
       expect(assigns(:title)).to be_a_new(Title)
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe TitlesController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Title" do
+      it "creates a new_physical_object Title" do
         expect {
           post :create, {:title => valid_attributes}, valid_session
         }.to change(Title, :count).by(1)
@@ -93,9 +93,9 @@ RSpec.describe TitlesController, type: :controller do
         expect(assigns(:title)).to be_a_new(Title)
       end
 
-      it "re-renders the 'new' template" do
+      it "re-renders the 'new_physical_object' template" do
         post :create, {:title => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+        expect(response).to render_template("new_physical_object")
       end
     end
   end

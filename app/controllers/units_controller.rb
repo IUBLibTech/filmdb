@@ -23,7 +23,7 @@ class UnitsController < ApplicationController
 				format.html { redirect_to @unit, notice: 'Unit was successfully created.' }
 				format.json { render :show, status: :created, location: @unit }
 			else
-				format.html { render :new }
+				format.html { render :new_physical_object }
 				format.json { render json: @unit.errors, status: :unprocessable_entity }
 			end
 		end

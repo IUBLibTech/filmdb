@@ -12,7 +12,7 @@ class CollectionInventoryConfigurationsController < ApplicationController
   def show
   end
 
-  # GET /collection_inventory_configurations/new
+  # GET /collection_inventory_configurations/new_physical_object
   def new
     @collection_inventory_configuration = CollectionInventoryConfiguration.new
   end
@@ -31,7 +31,7 @@ class CollectionInventoryConfigurationsController < ApplicationController
         format.html { redirect_to @collection_inventory_configuration, notice: 'Collection inventory configuration was successfully created.' }
         format.json { render :show, status: :created, location: @collection_inventory_configuration }
       else
-        format.html { render :new }
+        format.html { render :new_physical_object }
         format.json { render json: @collection_inventory_configuration.errors, status: :unprocessable_entity }
       end
     end
@@ -71,6 +71,10 @@ class CollectionInventoryConfigurationsController < ApplicationController
     def collection_inventory_configuration_params
       params.require(:collection_inventory_configuration).permit(
           :collection_id, :location, :copy_right, :series_name, :series_production_number, :series_part, :alternative_title, :title_version,
-          :item_original_identifier, :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes)
+          :item_original_identifier, :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes,
+          :generation, :base, :stock, :access, :gauge, :can_size, :footage, :duration, :reel_number, :format_notes, :picture_type, :frame_rate,
+          :color_or_bw, :aspect_ratio, :sound_field_language, :captions_or_subtitles, :silent, :sound_format_type, :sound_content_type,
+          :sound_configuration, :ad_strip, :shrinkage, :mold, :condition_type, :condition_rating, :research_value, :conservation_actions
+      )
     end
 end

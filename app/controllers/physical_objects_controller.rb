@@ -1,6 +1,8 @@
 class PhysicalObjectsController < ApplicationController
+  include PhysicalObjectsHelper
+
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-  before_action :set_series, only: [:new, :create, :edit, :update]
+  before_action :set_series, only: [:new_physical_object, :create, :edit, :update]
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -13,10 +15,12 @@ class PhysicalObjectsController < ApplicationController
   def show
   end
 
-  # GET /physical_objects/new
+  # GET /physical_objects/new_physical_object
   def new
-    @physical_object = PhysicalObject.new
+    u = User.current_user_object
+    @physical_object = PhysicalObject.new(inventoried_by: u.id, modified_by: u.id)
     @series = Series.all.order(:title)
+    render 'new_physical_object'
   end
 
   # GET /physical_objects/1/edit
@@ -31,30 +35,7 @@ class PhysicalObjectsController < ApplicationController
   # POST /physical_objects
   # POST /physical_objects.json
   def create
-    @physical_object = PhysicalObject.new(physical_object_params)
-    # it is possible that a new title is created along with the physical object. In this case params[:physical_object][:title_id]
-    #  will be null, but params[:physical_object][:title_text] will not be null
-    if params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
-      new_title = Title.new(title_text: params[:physical_object][:title_text],
-                            description: "*This description was auto-generated because a new title was created at physical object creation/edit.*")
-      @physical_object.title = new_title
-    end
-    respond_to do |format|
-      if @physical_object.save
-        # hook in title to series title if specified
-        if params[:series].blank?
-          @physical_object.title.series =  nil
-        else
-          @physical_object.title.series_id = params[:series]
-        end
-        @physical_object.title.save
-        format.html { redirect_to @physical_object, notice: 'Physical object was successfully created.' }
-        format.json { render :show, status: :created, location: @physical_object }
-      else
-        format.html { render :new }
-        format.json { render json: @physical_object.errors, status: :unprocessable_entity }
-      end
-    end
+    create_physical_object
   end
 
   # PATCH/PUT /physical_objects/1
@@ -97,12 +78,4 @@ class PhysicalObjectsController < ApplicationController
       @series = Series.all.order(:title)
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def physical_object_params
-      params.require(:physical_object).permit(
-        :date_inventoried, :location, :media_type, :medium, :iu_barcode, :title_id, :copy_right, :format, :spreadsheet_id,
-        :series_name, :series_production_number, :series_part, :alternative_title, :title_version, :item_original_identifier,
-        :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes, :unit_id
-      )
-    end
 end

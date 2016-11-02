@@ -11,8 +11,8 @@ class SpreadsheetsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:spreadsheets)
   end
 
-  test "should get new" do
-    get :new
+  test "should get new_physical_object" do
+    get :new_physical_object
     assert_response :success
   end
 

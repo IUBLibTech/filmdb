@@ -12,7 +12,7 @@ class SeriesController < ApplicationController
   def show
   end
 
-  # GET /series/new
+  # GET /series/new_physical_object
   def new
     @series = Series.new
   end
@@ -31,7 +31,7 @@ class SeriesController < ApplicationController
         format.html { redirect_to @series, notice: 'Series was successfully created.' }
         format.json { render :show, status: :created, location: @series }
       else
-        format.html { render :new }
+        format.html { render :new_physical_object }
         format.json { render json: @series.errors, status: :unprocessable_entity }
       end
     end

@@ -11,8 +11,8 @@ class PhysicalObjectsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:physical_objects)
   end
 
-  test "should get new" do
-    get :new
+  test "should get new_physical_object" do
+    get :new_physical_object
     assert_response :success
   end
 
