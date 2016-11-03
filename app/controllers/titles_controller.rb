@@ -63,12 +63,24 @@ class TitlesController < ApplicationController
 
   def autocomplete_title
     if params[:term]
-      json = Title.where("title_text like ?", "%#{params[:term]}%").select(:id, :title_text, :description).to_json
+      json = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ?", "%#{params[:term]}%").select('titles.id, title_text, titles.description, series_id, series.title').to_json
+      json.gsub! "\"title_text\":", "\"label\":"
+      json.gsub! "\"id\":", "\"value\":"
+      json.gsub! "\"title\":", "\"series_title\":"
+      render json: json
+    else
+      render json: ''
+    end
+  end
+
+  def autocomplete_title_for_series
+    if params[:series_id] && params[:term]
+      json = Title.where("series_id = ? and title_text like ?", params[:series_id], "%#{params[:term]}%").select(:id, :title_text, :description).to_json
       json.gsub! "\"title_text\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       render json: json
     else
-      render json: ""
+      render json: ''
     end
   end
 

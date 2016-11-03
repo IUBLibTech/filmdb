@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
 
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
+  get 'autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
 

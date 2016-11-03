@@ -4,6 +4,7 @@
   <tr>
     <th>Barcode</th>
     <th>Title</th>
+    <th>Series</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -14,8 +15,9 @@
 	      <%= physical_object.iu_barcode %>
       </td>
       <td>
-        <%= physical_object.title.nil? ? "None" : physical_object.title.title_text %>
+        <%= physical_object.title&.title_text %>
       </td>
+      <td><%= physical_object.title.series&.title %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>

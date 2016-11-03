@@ -2,23 +2,44 @@ module PhysicalObjectsHelper
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)
-    # it is possible that a new_physical_object title is created in which case params[:physical_object][:title_id] will be null,
-    # but params[:physical_object][:title_text] will not be null
-    if params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
-      new_title = Title.new(title_text: params[:physical_object][:title_text],
-                            description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
-      new_title.save
-      @physical_object.title = new_title
+
+    # Series and Title creation can happen through physical object creation. The form autocompletes Title.title_text
+    # and Series.title passing in existing series/titles as hidden params in the hash. But if a non-existing title/series
+    # is specified by the user, series_title_text or title_text will contain a value while the hidden id element will not.
+    # When this happens, the following combinations are possible:
+    #
+    # 1) new series and new title
+    # 2) new series with existing title
+    # 4) new title with existing series or not series specified
+
+    new_series = params[:physical_object][:series_id].blank? && !params[:physical_object][:series_title_text].blank?
+    new_title = params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
+    if new_series && new_title
+      @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
+      @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
+      @series.save
+      @title.series_id = @series.id
+      @title.save
+      @physical_object.title_id = @title.id
+    elsif new_series
+      @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
+      @series.save
+      title = Title.find(params[:physical_object][:title_id])
+      title.update_attributes(series_id: @series.id)
+      @physical_object.title_id = title.id
+    elsif new_title
+      @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
+      #  either an existing series was specified or no series was specified
+      if params[:physical_object][:series_id]
+        @title.series_id =  params[:physical_object][:series_id]
+      end
+      @title.save
+      @physical_object.title_id = @title.id
     end
+
     respond_to do |format|
       controller = params[:controller] == 'physical_objects' ? PhysicalObject : Collection
       if @physical_object.save
-        if params[:series].blank?
-          @physical_object.title.series =  nil
-        else
-          @physical_object.title.series_id = params[:series]
-        end
-        @physical_object.title.save
         if controller == PhysicalObject
           format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
         else
