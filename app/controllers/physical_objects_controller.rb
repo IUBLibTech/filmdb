@@ -43,12 +43,6 @@ class PhysicalObjectsController < ApplicationController
   def update
     respond_to do |format|
       if @physical_object.update(physical_object_params)
-        if params[:series].blank?
-          @physical_object.title.series =  nil
-        else
-          @physical_object.title.series_id = params[:series]
-        end
-        @physical_object.title.save
         format.html { redirect_to @physical_object, notice: 'Physical object was successfully updated.' }
         format.json { render :show, status: :ok, location: @physical_object }
       else

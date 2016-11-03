@@ -31,20 +31,64 @@
     });
   });
 
+  /*
+  Automcomplete is a bit complicated because it has dependencies on what is selected first (series vs. title). There are
+  three cases that need to be handled:
+
+  1) A known series is selected first in which case, autocomplete on title should only suggest titles that are part of the
+  selected series.
+  2) A know title is selected, in which case, if it belongs to a series, the series is set for the physical object and the
+  editable ability of the series title is disabled
+  3) some combination of know title or series but unknown opposite (know title, unknow series OR know series, unknown title)
+
+  The handlers work as follows: when a series/title field gains focus remove the autcomplete if it is installed the install the
+  correct autocompleter based on whether a series is set
+   */
+
   // autocomplete for titles
-  $('#physical_object_title_text').autocomplete({
-    minLength: 2,
-    source: '../../../autocomplete_title',
-    focus: function (event, ui) {
-      $(".ui-autocomplete > li").attr("title", ui.item.description);
-      return false;
-    },
-    select: function (event, ui) {
-      $("#physical_object_title_text").val(ui.item.label);
-      $('#physical_object_title_id').val(ui.item.value);
-      return false;
+  $('#physical_object_title_text').focus(function() {
+    if ($(this).data('autocomplete')) {
+      $(this).autocomplete("destroy");
+      $(this).removeData("autocomplete");
     }
-  })
+    var series_val = series_value();
+    var source = '';
+    if (typeof series_val === 'undefined' || series_val == '') {
+      source = '../../../autocomplete_title';
+    } else {
+      source = '../../../autocomplete_title_for_series/'+series_val+"/";
+    }
+   $(this).autocomplete({
+      minLength: 2,
+      source: source,
+      focus: function (event, ui) {
+        $(".ui-autocomplete > li").attr("title", ui.item.description);
+        return false;
+      },
+      select: function (event, ui) {
+        // need to check if a title is selected that has a series
+        series_id = ui.item.series_id
+        series_title = ui.item.series_title
+        if (series_id_blank() && series_id != 'null') {
+          $("#physical_object_series_title_text").val(series_title);
+          $('#physical_object_series_id').val(series_id);
+          // whenever a title is selected we need to disable the series_title_text field
+          $("#physical_object_series_title_text").prop('disabled', true)
+        }
+        $("#physical_object_title_text").val(ui.item.label);
+        $('#physical_object_title_id').val(ui.item.value);
+
+        return false;
+      }
+    });
+  });
+
+  // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from autocomplete list
+  $('#physical_object_title_text').keypress(function() {
+    $('#physical_object_title_id').removeAttr('value');
+    $('#physical_object_series_title_text').prop('disabled', false)
+  });
+
   // autocomplete for seriese
   $('#physical_object_series_title_text').autocomplete({
     source: '../../../autocomplete_series',
@@ -57,7 +101,7 @@
       $('#physical_object_series_id').val(ui.item.value);
       return false;
     }
-  })
+  });
 
   //autcomplete for collections
   $('#physical_object_collection_text').autocomplete({
@@ -71,5 +115,12 @@
       $('#physical_object_collection_id').val(ui.item.value);
       return false;
     }
-  })
+  });
+
+  function series_value() {
+    return $('#physical_object_series_id').first().attr('value');
+  }
+  function series_id_blank() {
+    return (typeof $('#physical_object_series_id').first().attr('value') === 'undefined' || $('#physical_object_series_id').first().attr('value') == '');
+  }
 </script>

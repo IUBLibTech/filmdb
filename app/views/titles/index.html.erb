@@ -7,6 +7,7 @@
   <thead>
     <tr>
       <th>Title</th>
+      <th>Series</th>
       <th>Description</th>
       <th>Actions</th>
     </tr>
@@ -16,6 +17,7 @@
     <% @titles.each do |title| %>
     <tr>
       <td><%= title.title_text %></td>
+      <td><%= title.series&.title %></td>
       <td><%= title.description %></td>
       <td>
         <%= link_to 'Show', title %><br/>
