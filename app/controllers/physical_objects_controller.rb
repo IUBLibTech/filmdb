@@ -2,7 +2,7 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-  before_action :set_series, only: [:new_physical_object, :create, :edit, :update]
+  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new]
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -70,6 +70,7 @@ class PhysicalObjectsController < ApplicationController
 
     def set_series
       @series = Series.all.order(:title)
+      @cv = ControlledVocabulary.physical_object_cv
     end
 
 end

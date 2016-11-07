@@ -3,6 +3,7 @@ module PhysicalObjectsHelper
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)
 
+
     # Series and Title creation can happen through physical object creation. The form autocompletes Title.title_text
     # and Series.title passing in existing series/titles as hidden params in the hash. But if a non-existing title/series
     # is specified by the user, series_title_text or title_text will contain a value while the hidden id element will not.

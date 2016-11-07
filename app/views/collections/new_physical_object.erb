@@ -1414,11 +1414,4 @@
       </table>
     </div>
 <% end %>
-<script type="text/javascript">
-  $('#physical_object_base_nitrate').change(function() {
-    if ($(this).prop('checked')) {
-      alert("Notify Collection Manager Immediately! Nitrate cannot be stored in the ALF.");
-    }
-  });
-</script>
 <%= render partial: "physical_objects/physical_object_metadata_js" %>
