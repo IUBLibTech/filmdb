@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 <h4>Inventory Page for <%= @collection.name %> [<%= @collection.unit.abbreviation %>]</h4>
-<%= form_for @physical_object, url: {action: "create_physical_object"} do |f| %>
+<%= form_for @physical_object, url: {action: "create_physical_object"}, html: {autocomplete: 'off'} do |f| %>
     <% if @physical_object.errors.any? %>
         <div id="error_explanation">
           <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
