@@ -66,10 +66,11 @@
         return false;
       },
       select: function (event, ui) {
+        
         // need to check if a title is selected that has a series
         series_id = ui.item.series_id
         series_title = ui.item.series_title
-        if (series_id != 'null') {
+        if (series_id != null) {
           $("#physical_object_series_title_text").val(series_title);
           $('#physical_object_series_id').val(series_id);
           // whenever a title is selected we need to disable the series_title_text field
