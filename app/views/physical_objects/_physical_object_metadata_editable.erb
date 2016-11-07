@@ -1,59 +1,29 @@
-<table class='physical_object_metadata_editable'>
-  <tr>
-    <th>Date Inventoried </th>
-    <td>
-      <%= Date.current %>
-    </td>
-  </tr>
-  <tr>
-    <th>Inventoried By</th>
-    <td>
-      <%= f.hidden_field :inventoried_by %>
-      <%= @physical_object.inventorier&.name %>
-    </td>
-  </tr>
-  <tr>
-    <th>Modified By</th>
-    <td>
-      <%= f.hidden_field :modified_by %>
-      <%= @physical_object.modifier&.name %>
-    </td>
-  </tr>
-  <tr>
-    <th>Location</th>
-    <td>
-      <%= f.text_field :location %>
-    </td>
-  </tr>
+<table>
   <tr>
     <th>Unit</th>
     <td>
-      <%= f.select :unit_id, Unit.order('menu_index IS NULL, menu_index ASC, abbreviation ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
+      <%= f.collection_select :unit_id, Unit.order('menu_index DESC').all, :id, :abbreviation %>
     </td>
   </tr>
   <tr>
     <th>Collection</th>
     <td>
+      <%= f.text_field :collection_text%>
       <%= f.hidden_field :collection_id %>
-      <%= f.text_field :collection_text %>
     </td>
   </tr>
   <tr>
-    <th>Media Type</th>
+    <th>Inventoried By</th>
     <td>
-      <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
+      <%= @physical_object.inventorier&.name%>
+      <%= f.hidden_field :inventoried_by %>
     </td>
   </tr>
   <tr>
-    <th>Medium</th>
+    <th>Last Modified By</th>
     <td>
-	    <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
-    </td>
-  </tr>
-  <tr>
-    <th>IU Barcode</th>
-    <td>
-      <%= f.text_field :iu_barcode  %>
+      <%= User.current_user_object.name%>
+      <%= f.hidden_field :modified_by %>
     </td>
   </tr>
   <tr>
@@ -61,92 +31,610 @@
     <td>
       <%= f.hidden_field :title_id %>
       <%= f.text_field :title_text %>
+      <%# f.autocomplete_field :title_text,  autocomplete_title_title_text_collections_path,
+                                   'data-auto-focus' => true, 'data-showNoMatches' => false,
+                                   'data-noMatchesLabel' => 'No Titles Found',
+                                   :id_element => '#physical_object_title_id'
+      %>
     </td>
   </tr>
   <tr>
-    <th>Copy Right</th>
+    <th>IU Barcode</th>
     <td>
-      <%= f.text_field :copy_right %>
+      <%= f.text_field :iu_barcode %>
     </td>
   </tr>
   <tr>
-    <th>Series Title</th>
+    <th>Medium Type</th>
     <td>
-      <%= f.hidden_field :series_id %>
-      <%= f.text_field :series_title_text %>
+      <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
     </td>
   </tr>
   <tr>
-    <th>Series Production Number</th>
+    <th>Medium</th>
     <td>
-	    <%= f.text_field :series_production_number %>
+      <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
     </td>
   </tr>
-  <tr>
-    <th>Series Part</th>
-    <td>
-	    <%= f.text_field :series_part %>
-    </td>
-  </tr>
-  <tr>
-    <th>Alternative Title</th>
-    <td>
-	    <%= f.text_field :alternative_title %>
-    </td>
-  </tr>
-  <tr>
-    <th>Title Version</th>
-    <td>
-	    <%= f.text_field :title_version %>
-    </td>
-  </tr>
-  <tr>
-    <th>Item Original Identifier</th>
-    <td>
-	    <%= f.text_field :item_original_identifier %>
-    </td>
-  </tr>
-  <tr>
-    <th>Summary</th>
-    <td>
-	    <%= f.text_area :summary %>
-    </td>
-  </tr>
-  <tr>
-    <th>Creator</th>
-    <td>
-	    <%= f.text_field :creator %>
-    </td>
-  </tr>
-  <tr>
-    <th>Distributors</th>
-    <td>
-	    <%= f.text_field :distributors %>
-    </td>
-  </tr>
-  <tr>
-    <th>Credits</th>
-    <td>
-	    <%= f.text_field :credits %>
-    </td>
-  </tr>
-  <tr>
-    <th>Language</th>
-    <td>
-
-    </td>
-  </tr>
-  <tr>
-    <th>Accompanying Documentation</th>
-    <td>
-	    <%= f.text_area :accompanying_documentation %>
-    </td>
-  </tr>
-  <tr>
-    <th>Notes</th>
-    <td>
-	    <%= f.text_area :notes %>
-    </td>
-  </tr>
+    <tr>
+      <th>Location</th>
+      <td>
+        <%= f.select :location, options_for_select(@cv[:location]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Copy Right</th>
+      <td>
+        <%= f.text_field :copy_right %>
+      </td>
+    </tr>
+    <tr>
+      <th>Series Title</th>
+      <td>
+        <%= f.hidden_field :series_id %>
+        <%= f.text_field :series_title_text %>
+      </td>
+    </tr>
+    <tr>
+      <th>Series Part</th>
+      <td>
+        <%= f.text_field :series_part %>
+      </td>
+    </tr>
+    <tr>
+      <th>Series Production Number</th>
+      <td>
+        <%= f.text_field :series_production_number %>
+      </td>
+    </tr>
+    <tr>
+      <th>Alternative Title</th>
+      <td>
+        <%= f.text_field :alternative_title %>
+      </td>
+    </tr>
+    <tr>
+      <th>Version</th>
+      <td>
+        <table>
+          <tr>
+            <th>1st Edition</th>
+            <td><%= f.check_box :first_edition %></td>
+            <th>2nd Edition</th>
+            <td><%= f.check_box :second_edition %></td>
+            <th>3rd Edition</th>
+            <td><%= f.check_box :third_edition %></td>
+            <th>4th Edition</th>
+            <td><%= f.check_box :fourth_edition %></td>
+            <th>Abridged</th>
+            <td><%= f.check_box :abridged %></td>
+            <th>Short</th>
+            <td><%= f.check_box :short %></td>
+            <th>Long</th>
+            <td><%= f.check_box :long %></td>
+          </tr>
+          <tr>
+            <th>Sampe</th>
+            <td><%= f.check_box :sample %></td>
+            <th>Preview</th>
+            <td><%= f.check_box :preview %></td>
+            <th>Revised</th>
+            <td><%= f.check_box :revised %></td>
+            <th>Original</th>
+            <td><%= f.check_box :version_original %></td>
+            <th>Captioned</th>
+            <td><%= f.check_box :captioned %></td>
+            <th>Excerpt</th>
+            <td><%= f.check_box :excerpt %></td>
+            <th>Color</th>
+            <td><%= f.check_box :color %></td>
+          </tr>
+          <tr>
+            <th>Black and White</th>
+            <td><%= f.check_box :black_and_white %></td>
+            <th>Catholic</th>
+            <td><%= f.check_box :catholic %></td>
+            <th>Domestic</th>
+            <td><%= f.check_box :domestic %></td>
+            <th>Trailer</th>
+            <td><%= f.check_box :trailer %></td>
+            <th>French</th>
+            <td><%= f.check_box :french %></td>
+            <th>Italian</th>
+            <td><%= f.check_box :italian %></td>
+            <th>Spanish</th>
+            <td><%= f.check_box :spanish %></td>
+          </tr>
+          <tr>
+            <th>German</th>
+            <td><%= f.check_box :german %></td>
+            <th>Chinese</th>
+            <td><%= f.check_box :chinese %></td>
+            <th>English</th>
+            <td><%= f.check_box :english %></td>
+            <th>Television</th>
+            <td><%= f.check_box :television %></td>
+            <th>X-rated</th>
+            <td><%= f.check_box :x_rated %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Generation</th>
+      <td>
+        <table>
+          <tr>
+            <th>Projection Pring</th>
+            <td><%= f.check_box :generation_projection_print %></td>
+            <th>A Roll</th>
+            <td><%= f.check_box :generation_ab_a_roll %></td>
+            <th>B Roll</th>
+            <td><%= f.check_box :generation_ab_b_roll %></td>
+            <th>C Roll</th>
+            <td><%= f.check_box :generation_ab_c_roll %></td>
+            <th>D Roll</th>
+            <td><%= f.check_box :generation_ab_d_roll %></td>
+            <th>Answer Print</th>
+            <td><%= f.check_box :generation_answer_print %></td>
+          </tr>
+          <tr>
+            <th>Composite</th>
+            <td><%= f.check_box :generation_composite %></td>
+            <th>Duplicate</th>
+            <td><%= f.check_box :generation_duplicate %></td>
+            <th>Edited</th>
+            <td><%= f.check_box :generation_edited %></td>
+            <th>Edited Camera Original</th>
+            <td><%= f.check_box :generation_edited_camera_original %></td>
+            <th>Fine Grain Master</th>
+            <td><%= f.check_box :generation_fine_grain_master %></td>
+            <th>Intermediate</th>
+            <td><%= f.check_box :generation_intermediate %></td>
+          </tr>
+          <tr>
+            <th>Kinescope</th>
+            <td><%= f.check_box :generation_kinescope %></td>
+            <th>Magnetic Track</th>
+            <td><%= f.check_box :generation_magnetic_track %></td>
+            <th>Mezzanine</th>
+            <td><%= f.check_box :generation_mezzanine %></td>
+            <th>Negative</th>
+            <td><%= f.check_box :generation_negative %></td>
+            <th>Optical Sound Track</th>
+            <td><%= f.check_box :generation_optical_sound_track %></td>
+            <th>Original</th>
+            <td><%= f.check_box :generation_original %></td>
+          </tr>
+          <tr>
+            <th>Outs and Trims</th>
+            <td><%= f.check_box :generation_outs_and_trims %></td>
+            <th>Positive</th>
+            <td><%= f.check_box :generation_positive %></td>
+            <th>Reversal</th>
+            <td><%= f.check_box :generation_reversal %></td>
+            <th>Separation Master</th>
+            <td><%= f.check_box :generation_separation_master %></td>
+            <th>Work Print</th>
+            <td><%= f.check_box :generation_work_print %></td>
+            <th>Mixed</th>
+            <td><%= f.check_box :generation_mixed %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Base</th>
+      <td>
+        <table>
+          <tr>
+            <th>Acetate</th>
+            <td><%= f.check_box :base_acetate %></td>
+            <th>Polyester</th>
+            <td><%= f.check_box :base_polyester %></td>
+            <th><b>Nitrate</b></th>
+            <td><%= f.check_box :base_nitrate %></td>
+            <th>Mixed</th>
+            <td><%= f.check_box :base_mixed%></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Stock</th>
+      <td>
+        <table>
+          <tr>
+            <th>Agfa</th>
+            <td><%= f.check_box :stock_agfa %></td>
+            <th>Ansco</th>
+            <td><%= f.check_box :stock_ansco %></td>
+            <th>Dupont</th>
+            <td><%= f.check_box :stock_dupont %></td>
+            <th>Orwo</th>
+            <td><%= f.check_box :stock_orwo %></td>
+            <th>Fuji</th>
+            <td><%= f.check_box :stock_fuji %></td>
+            <th>Gevaert</th>
+            <td><%= f.check_box :stock_gevaert %></td>
+            <th>Kodak</th>
+            <td><%= f.check_box :stock_kodak %></td>
+            <th>Ferrania</th>
+            <td><%= f.check_box :stock_ferrania %></td>
+            <th>Mixed</th>
+            <td><%= f.check_box :stock_mixed %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Access</th>
+      <td>
+        <%= f.select :access, options_for_select(@cv[:access]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Gauge</th>
+      <td>
+        <%= f.select :gauge, options_for_select(@cv[:gauge]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Can Size</th>
+      <td>
+        <%= f.select :can_size, options_for_select(@cv[:can_size]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Footage (ft)</th>
+      <td>
+        <%= f.text_field :footage %>
+      </td>
+    </tr>
+    <tr>
+      <th>Duration (hh:mm:ss)</th>
+      <td>
+        <%= f.text_field :duration %>
+      </td>
+    </tr>
+    <tr>
+      <th>Reel Number</th>
+      <td>
+        <%= f.text_field :reel_number %>
+      </td>
+    </tr>
+    <tr>
+      <th>Format Notes</th>
+      <td>
+        <%= f.text_area :format_notes %>
+      </td>
+    </tr>
+    <tr>
+      <th>Picture Type</th>
+      <td>
+        <table>
+          <tr>
+            <th>Not Applicable</th>
+            <td><%= f.check_box :picture_not_applicable %></td>
+            <th>Silent Picture</th>
+            <td><%= f.check_box :picture_silent_picture %></td>
+            <th>Mos Picture</th>
+            <td><%= f.check_box :picture_mos_picture %></td>
+            <th>Composite Picture</th>
+            <td><%= f.check_box :picture_composite_picture %></td>
+            <th>Intertitles Only</th>
+            <td><%= f.check_box :picture_intertitles_only %></td>
+            <th>Credits Only</th>
+            <td><%= f.check_box :picture_credits_only %></td>
+          </tr>
+          <tr>
+            <th>Picture Effects</th>
+            <td><%= f.check_box :picture_picture_effects %></td>
+            <th>Picture Outtakes</th>
+            <td><%= f.check_box :picture_picture_outtakes %></td>
+            <th>Kinescope</th>
+            <td><%= f.check_box :picture_picture_kinescope %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Frame Rate</th>
+      <td>
+        <%= f.select :frame_rate, options_for_select(@cv[:frame_rate]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Color or Black and White</th>
+      <td>
+        <table>
+          <tr>
+            <th>Black and White: Toned</th>
+            <td><%= f.check_box :color_bw_bw_toned %></td>
+            <th>Black and White: Tinted</th>
+            <td><%= f.check_box :color_bw_bw_tinted %></td>
+            <th>Color: Ektachrome</th>
+            <td><%= f.check_box :color_bw_color_ektachrome %></td>
+            <th>Color: Kodachrome</th>
+            <td><%= f.check_box :color_bw_color_kodachrome %></td>
+            <th>Color: Technical</th>
+            <td><%= f.check_box :color_bw_color_technicolor %></td>
+          </tr>
+          <tr>
+            <th>Color: Ansochrome</th>
+            <td><%= f.check_box :color_bw_color_anscochrome %></td>
+            <th>Color: Eco</th>
+            <td><%= f.check_box :color_bw_color_eco %></td>
+            <th>Color: Eastman</th>
+            <td><%= f.check_box :color_bw_color_eastman %></td>
+            <th>Mixed</th>
+            <td><%= f.check_box :color_bw_color_bw_mixed %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Aspect Ratio</th>
+      <td>
+        <table>
+          <tr>
+            <th>1:33:1</th>
+            <td><%= f.check_box :aspect_ratio_1_33_1 %></td>
+            <th>1:37:1</th>
+            <td><%= f.check_box :aspect_ratio_1_37_1 %></td>
+            <th>1:66:1</th>
+            <td><%= f.check_box :aspect_ratio_1_66_1 %></td>
+            <th>1:85:1</th>
+            <td><%= f.check_box :aspect_ratio_1_85_1 %></td>
+            <th>2:35:1</th>
+            <td><%= f.check_box :aspect_ratio_2_35_1 %></td>
+            <th>2:39:1</th>
+            <td><%= f.check_box :aspect_ratio_2_39_1 %></td>
+            <th>2:59:1</th>
+            <td><%= f.check_box :aspect_ratio_2_59_1 %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Language</th>
+      <td>
+        <table>
+          <tr>
+            <th>Arabic</th>
+            <td><%= f.check_box :language_arabic %></td>
+            <th>Chinese</th>
+            <td><%= f.check_box :language_chinese %></td>
+            <th>English</th>
+            <td><%= f.check_box :language_english %></td>
+            <th>French</th>
+            <td><%= f.check_box :language_french %></td>
+            <th>German</th>
+            <td><%= f.check_box :language_german %></td>
+            <th>Hindi</th>
+            <td><%= f.check_box :language_hindi %></td>
+            <th>Italian</th>
+            <td><%= f.check_box :language_italian %></td>
+            <th>Japanese</th>
+            <td><%= f.check_box :language_japanese %></td>
+            <th>Portuguese</th>
+            <td><%= f.check_box :language_portuguese %></td>
+            <th>Russian</th>
+            <td><%= f.check_box :language_russian %></td>
+          </tr>
+          <tr>
+            <th>Spanish</th>
+            <td><%= f.check_box :language_spanish %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Captions or Subtitles</th>
+      <td>
+        <%= f.check_box :close_caption %>
+      </td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td>
+        <%= f.text_area :notes %>
+      </td>
+    </tr>
+    <tr>
+      <th>Silent?</th>
+      <td>
+        <%= f.check_box :silent %>
+      </td>
+    </tr>
+    <tr>
+      <th>Sound Format Type</th>
+      <td>
+        <table>
+          <tr>
+            <th>Optical: Variable Area</th>
+            <td><%= f.check_box :sound_format_optical_variable_area %></td>
+            <th>Optical: Variable Density</th>
+            <td><%= f.check_box :sound_format_optical_variable_density %></td>
+            <th>Magnetic</th>
+            <td><%= f.check_box :sound_format_magnetic %></td>
+            <th>Mixed</th>
+            <td><%= f.check_box :sound_format_type_mixed %></td>
+            <th>Digital: SDDS </th>
+            <td><%= f.check_box :sound_format_digital_sdds %></td>
+          </tr>
+          <tr>
+            <th>Digital: DTS</th>
+            <td><%= f.check_box :sound_format_digital_dts %></td>
+            <th>Digital: Dolby Digital</th>
+            <td><%= f.check_box :sound_format_digital_dolby_digital %></td>
+            <th>Sound on Separate Media Type</th>
+            <td><%= f.check_box :sound_format_sound_on_separate_media %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Sound Content Type</th>
+      <td>
+        <table>
+          <tr>
+            <th>Music track</th>
+            <td><%= f.check_box :sound_content_music_track %></td>
+            <th>Effects Track</th>
+            <td><%= f.check_box :sound_content_effects_track %></td>
+            <th>Dialog</th>
+            <td><%= f.check_box :sound_content_dialog %></td>
+            <th>Composite Track</th>
+            <td><%= f.check_box :sound_content_composite_track %></td>
+            <th>Outtakes</th>
+            <td><%= f.check_box :sound_content_outtakes %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>AD Strip</th>
+      <td>
+        <%= f.select :ad_strip, options_for_select(@cv[:ad_strip]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Shrinkage</th>
+      <td>
+        <%= f.text_field :shrinkage %>
+      </td>
+    </tr>
+    <tr>
+      <th>Mold</th>
+      <td>
+        <%= f.select :ad_strip, options_for_select(@cv[:mold]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Condition Type</th>
+      <td>
+        <table>
+          <tr>
+            <th>Color Fade</th>
+            <td><%= f.select :color_fade, options_for_select(@cv[:condition_type]) %></td>
+            <th>Perforation Damage</th>
+            <td><%= f.select :perforation_damage, options_for_select(@cv[:condition_type]) %></td>
+            <th>Water Damage</th>
+            <td><%= f.select :water_damage, options_for_select(@cv[:condition_type]) %></td>
+          </tr>
+          <tr>
+            <th>Warp</th>
+            <td><%= f.select :warp, options_for_select(@cv[:condition_type]) %></td>
+            <th>Brittle</th>
+            <td><%= f.select :brittle, options_for_select(@cv[:condition_type]) %></td>
+            <th>Lacquer Treated</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>Replasticized</th>
+            <td></td>
+            <th>Splice Damage</th>
+            <td><%= f.select :splice_damage, options_for_select(@cv[:condition_type]) %></td>
+            <th>Spoking</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>Dirty</th>
+            <td><%= f.select :dirty, options_for_select(@cv[:condition_type]) %></td>
+            <th>Dusty</th>
+            <td></td>
+            <th>Rusty</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>Peeling</th>
+            <td><%= f.select :peeling, options_for_select(@cv[:condition_type]) %></td>
+            <th>Tape Residue</th>
+            <td><%= f.select :tape_residue, options_for_select(@cv[:condition_type]) %></td>
+            <th>Broken</th>
+            <td><%= f.select :broken, options_for_select(@cv[:condition_type]) %></td>
+          </tr>
+          <tr>
+            <th>Tearing</th>
+            <td><%= f.select :tearing, options_for_select(@cv[:condition_type]) %></td>
+            <th>Poor Wind</th>
+            <td><%= f.check_box :loose_wind %></td>
+            <th>Not on Core or Reel</th>
+            <td><%= f.check_box :not_on_core_or_reel %></td>
+          </tr>
+          <tr>
+            <th>Missing Footage</th>
+            <td><%= f.text_field :missing_footage %></td>
+            <th>Scratches</th>
+            <td><%= f.select :scratches, options_for_select(@cv[:condition_type]) %></td>
+            <th>Miscellaneous</th>
+            <td></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>Overall Condition Rating</th>
+      <td>
+        <%= f.select :condition_rating, options_for_select(@cv[:condition_rating]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Condition Notes</th>
+      <td>
+        <%= f.text_area :condition_notes %>
+      </td>
+    </tr>
+    <tr>
+      <th>Research Value</th>
+      <td>
+        <%= f.select :research_value, options_for_select(@cv[:research_value]) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Research Value Notes</th>
+      <td>
+        <%= f.text_area :research_value_notes %>
+      </td>
+    </tr>
+    <tr>
+      <th>Conservation Actions</th>
+      <td>
+        <%= f.text_area :conservation_actions %>
+      </td>
+    </tr>
+    <tr>
+      <th>Item Original Identifier</th>
+      <td>
+        <%= f.text_field :item_original_identifier %>
+      </td>
+    </tr>
+    <tr>
+      <th>Summary</th>
+      <td>
+        <%= f.text_area :summary %>
+      </td>
+    </tr>
+    <tr>
+      <th>Distributors</th>
+      <td>
+        <%= f.text_field :distributors %>
+      </td>
+    </tr>
+    <tr>
+      <th>Credits</th>
+      <td>
+        <%= f.text_field :credits %>
+      </td>
+    </tr>
+    <tr>
+      <th>Accompanying Documentation</th>
+      <td>
+        <%= f.text_field :accompanying_documentation %>
+      </td>
+    </tr>
 </table>
+
+
 <%= render partial: "physical_objects/physical_object_metadata_js" %>

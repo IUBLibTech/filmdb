@@ -69,7 +69,7 @@
         // need to check if a title is selected that has a series
         series_id = ui.item.series_id
         series_title = ui.item.series_title
-        if (series_id_blank() && series_id != 'null') {
+        if (series_id != 'null') {
           $("#physical_object_series_title_text").val(series_title);
           $('#physical_object_series_id').val(series_id);
           // whenever a title is selected we need to disable the series_title_text field
@@ -83,7 +83,9 @@
     });
   });
 
-  // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from autocomplete list
+  // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from
+  // the autocomplete list. Additionally we need to unlock series title text incase it was locked from a previous title
+  // selection
   $('#physical_object_title_text').keypress(function() {
     $('#physical_object_title_id').removeAttr('value');
     $('#physical_object_series_title_text').prop('disabled', false)
@@ -101,6 +103,10 @@
       $('#physical_object_series_id').val(ui.item.value);
       return false;
     }
+  });
+
+  $('#physical_object_series_title_text').keypress(function() {
+    $('#physical_object_series_id').removeAttr('value');
   });
 
   //autcomplete for collections
@@ -123,4 +129,10 @@
   function series_id_blank() {
     return (typeof $('#physical_object_series_id').first().attr('value') === 'undefined' || $('#physical_object_series_id').first().attr('value') == '');
   }
+  $('#physical_object_base_nitrate').change(function() {
+    if ($(this).prop('checked')) {
+      alert("Notify Collection Manager Immediately! Nitrate cannot be stored in the ALF.");
+    }
+  });
+
 </script>
