@@ -15,7 +15,7 @@ User.new(username: 'rstoeltj', first_name: 'Rachael', last_name: 'Stoeltje', ema
 User.new(username: 'aploshay', first_name: 'Adam', last_name: 'Ploshay', email_address: 'aploshay@iu.edu', active: true).save
 
 # Units
-Unit.new(abbreviation: 'B-IULMIA', name: "Indiana Univeristy, Bloomington. Indiana University Libraries Moving Image Archive.", institution: "Indiana University", campus: "Bloomington", menu_index: 1).save
+Unit.new(abbreviation: 'B-IULMIA', name: "Indiana University, Bloomington. Indiana University Libraries Moving Image Archive.", institution: "Indiana University", campus: "Bloomington", menu_index: 1).save
 Unit.new(abbreviation: 'B-AAAMC', name: "Indiana University, Bloomington. Archives of African American Music and Culture.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ARCHIVES', name: "Indiana University, Bloomington. Office of University Archives and Records Management.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ATM', name: "Indiana University, Bloomington. Archives of Traditional Music.", institution: "Indiana University", campus: "Bloomington").save

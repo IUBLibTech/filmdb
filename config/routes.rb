@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   get 'autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
+  get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
+
+  get '/inventory/', to: 'inventory#index', as: 'inventory'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

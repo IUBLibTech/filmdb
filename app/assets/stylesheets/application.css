@@ -33,17 +33,19 @@ body {
     margin-right: 15px;
 }
 
-div#nav {
-    height: 22px;
+div#menu {
     background: #7d110c none repeat scroll 0 0;
+    padding: 4px 10px;
+    font-size: 1.5em;
 }
 
-div#nav > ul {
+div#menu > ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    display: none;
 }
-div#nav>ul>li {
+div#menu>ul>li {
     float: left;
     padding: 0 0 0 12px;
     font-family: 'Tahoma';
@@ -66,6 +68,19 @@ a:hover {
     color: #7D110C;
 }
 
+/* CSS for the main menu items in the #menu div */
+#menu {
+    height: 42px;
+    background: #7D110C;
+}
+.menuItem {
+    float: left;
+    padding: 10px 0 0 12px;
+    font-family: 'Tahoma';
+    font-size: 14px;
+    word-spacing: -0.3em;
+    font-weight: bold;
+}
 .menuItem a:link {
     color: white;
 }
@@ -75,6 +90,20 @@ a:hover {
 .menuItem a:hover {
     color: #DBCEAC;
 }
+ul.nav {
+    display: none;
+    padding: 0 5px 0 5px;
+    margin: 0;
+    background-color: #cd894e;
+    color: #7d110c;
+    position: absolute;
+    word-spacing: normal;
+    border-radius: 3px;
+}
+ul.nav > li {
+    list-style-type: none;
+}
+
 
 .red {
     color: #8F2609;
@@ -113,4 +142,16 @@ table tbody tr td input, textarea, select {
 
 #accordion_table {
     padding: 0;
+}
+
+.inventory_ul {
+    list-style-type: none;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.inventory_ul > li {
+    padding-bottom: 10px;
+}
+.inventory_li > div > a {
+    display: none;
 }

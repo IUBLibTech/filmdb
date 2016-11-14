@@ -84,6 +84,10 @@ class TitlesController < ApplicationController
     end
   end
 
+  def autocomplete_title_for_collection
+
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_title
