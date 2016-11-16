@@ -17,7 +17,7 @@
       <td>
         <%= physical_object.title&.title_text %>
       </td>
-      <td><%= physical_object.title.series&.title %></td>
+      <td><%= physical_object.title&.series&.title %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>

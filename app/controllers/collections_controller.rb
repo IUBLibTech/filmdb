@@ -78,6 +78,17 @@ class CollectionsController < ApplicationController
     end
   end
 
+  def autocomplete_collection_for_unit
+    if params[:term]
+      json = Collection.joins(:unit).where("collections.name like ? AND unit_id = ?", "%#{params[:term]}%", "#{params[:unit_id]}").select('collections.id, collections.name, unit_id, units.abbreviation').to_json
+      json.gsub! "\"name\":", "\"label\":"
+      json.gsub! "\"id\":", "\"value\":"
+      render json: json
+    else
+      render json: ""
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_collection

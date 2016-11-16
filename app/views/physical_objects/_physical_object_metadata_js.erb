@@ -111,22 +111,43 @@
   });
 
   //autcomplete for collections
-  $('#physical_object_collection_text').autocomplete({
-    source: '../../../autocomplete_collection',
-    focus: function (event, ui) {
-      //$(".ui-autocomplete > li").attr("title", ui.item.description);
-      return false;
-    },
-    select: function (event, ui) {
-      $("#physical_object_collection_text").val(ui.item.label);
-      $('#physical_object_collection_id').val(ui.item.value);
-      return false;
+  $('#physical_object_collection_text').focus(function() {
+    if ($(this).data('autocomplete')) {
+      $(this).autocomplete("destroy");
+      $(this).removeData("autocomplete");
     }
+    var unit_val = $('#physical_object_unit_id option:selected').attr('value');
+    var source = '../../../autocomplete_collection_for_unit/'+unit_val+"/";
+    $(this).autocomplete({
+      minLength: 2,
+      source: source,
+      focus: function (event, ui) {
+        //$(".ui-autocomplete > li").attr("title", ui.item.description);
+        return false;
+      },
+      select: function (event, ui) {
+        // need to set the unit if a collection is selected
+        unit_id = ui.item.unit_id
+        unit_title = ui.item.abbreviation
+        if (unit_id != null) {
+          $("#physical_object_unit_text").val(unit_title);
+          $('#physical_object_unit_id').val(unit_id);
+          // whenever a title is selected we need to disable the series_title_text field
+          $("#physical_object_unit_text").prop('disabled', true)
+        }
+        $("#physical_object_collection_text").val(ui.item.label);
+        $('#physical_object_collection_id').val(ui.item.value);
+
+        return false;
+      }
+    });
   });
+
 
   function series_value() {
     return $('#physical_object_series_id').first().attr('value');
-  }
+  };
+
   function series_id_blank() {
     return (typeof $('#physical_object_series_id').first().attr('value') === 'undefined' || $('#physical_object_series_id').first().attr('value') == '');
   }

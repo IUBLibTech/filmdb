@@ -73,6 +73,12 @@
           <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
         </td>
       </tr>
+      <tr>
+        <th>Multiple Items in Can</th>
+        <td>
+          <%= f.check_box :multiple_items_in_can %>
+        </td>
+      </tr>
     </table>
 
     <h4>Important Metadata Fields</h4>

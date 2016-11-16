@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Filmdb</title>
+  <title>Filmdb - <%= controller.controller_name.to_s.titleize %>: <%= controller.action_name.to_s.titleize %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -13,18 +13,74 @@
 	  <%= link_to "Sign Out", signout_path, method: :delete, class: 'red' %>
   </div>
 </div>
-<div id="nav">
-  <ul>
-    <li class="menuItem"><%= link_to "Physical Objects", physical_objects_path %></li>
-    <li class="menuItem"><%= link_to "Series", series_index_path %></li>
-    <li class="menuItem"><%= link_to "Users", users_path %></li>
-    <li class="menuItem"><%= link_to "SpreadSheets", spreadsheets_path %></li>
-    <li class="menuItem"><%= link_to "Collections", collections_path %></li>
-    <li class="menuItem"><%= link_to "Units", units_path %></li>
-    <li class="menuItem"><%= link_to "Titles", titles_path %></li>
-  </ul>
+<div id="menu">
+  <div class="menuItem">
+    <%= link_to 'Inventory', inventory_path %>
+  </div>
+  <div class="menuItem">
+    <a href="'#">Update</a>
+    <ul class="nav">
+      <li><a href="#">AD Strip</a></li>
+      <li><a href="#">Location</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Search</a>
+    <ul class="nav">
+      <li><a href="#">Title</a></li>
+      <li><a href="#">Barcode</a></li>
+      <li><a href="#">Series</a></li>
+      <li><a href="#">Collection</a></li>
+      <li><a href="#">Advanced Search</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Import/Export</a>
+    <ul class="nav">
+      <li><%= link_to 'Import Spreadsheet', spreadsheets_path %></li>
+      <li><a href="#">Export Metadata</a></li>
+      <li><a href="#">Reports</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Ship/Return Items</a>
+    <ul class="nav">
+      <li><a href="#">Ship Items</a></li>
+      <li><a href="#">Return Items</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Old Menus</a>
+    <ul class="nav">
+      <li><%= link_to "Physical Objects", physical_objects_path %></li>
+      <li><%= link_to "Units", units_path %></li>
+      <li><%= link_to "Collections", collections_path %></li>
+      <li><%= link_to "Series", series_index_path %></li>
+      <li><%= link_to "Titles", titles_path %></li>
+      <li><%= link_to "Spreadsheets", spreadsheets_path %></li>
+      <li><%= link_to "Users", users_path %></li>
+    </ul>
+  </div>
 </div>
 <%= yield %>
 
 </body>
+<script type="text/javascript">
+  $(document).ready(function() {
+    //menu stuff
+    $('.menuItem').each(function() {
+      $(this).children('ul').css({
+        'min-width': $(this).css('width')
+      });
+    });
+    $('.menuItem').hoverIntent(
+        function() {
+          $(this).children('ul').slideDown(200);
+        },
+        function() {
+          $(this).children('ul').slideUp(200);
+        }
+    );
+  });
+</script>
 </html>

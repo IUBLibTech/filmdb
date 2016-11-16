@@ -2,7 +2,9 @@ module PhysicalObjectsHelper
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)
-
+    user = User.current_user_object
+    @physical_object.inventoried_by = user.id
+    @physical_object.modified_by = user.id
 
     # Series and Title creation can happen through physical object creation. The form autocompletes Title.title_text
     # and Series.title passing in existing series/titles as hidden params in the hash. But if a non-existing title/series
@@ -39,12 +41,14 @@ module PhysicalObjectsHelper
     end
 
     respond_to do |format|
-      controller = params[:controller] == 'physical_objects' ? PhysicalObject : Collection
+      controller = params[:controller] == 'physical_objects' ? PhysicalObject : params[:controller] == 'collections' ? Collection : Series
       if @physical_object.save
         if controller == PhysicalObject
           format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
-        else
+        elsif controller == Collection
           format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
+        else
+          format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
         end
       else
         format.html { render :new_physical_object }
@@ -54,7 +58,7 @@ module PhysicalObjectsHelper
   private
   def physical_object_params
     params.require(:physical_object).permit(
-        :datep_inventoried, :location, :media_type, :medium, :iu_barcode, :title_id, :copy_right, :format, :spreadsheet_id, :inventoried_by,
+        :location, :media_type, :medium, :iu_barcode, :title_id, :copy_right, :format, :spreadsheet_id, :inventoried_by,
         :series_name, :series_production_number, :series_part, :alternative_title, :title_version, :item_original_identifier,
         :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
         :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :preview,
@@ -78,7 +82,7 @@ module PhysicalObjectsHelper
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
         :sound_configuration_dual, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
         :warp, :brittle, :splice_damage, :dirty, :peeling, :tape_residue, :broken, :tearing, :loose_wind, :not_on_core_or_reel, :missing_footage,
-        :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :black_and_white
+        :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :black_and_white, :multiple_items_in_can
     )
   end
 end
