@@ -1,5 +1,6 @@
 class SeriesController < ApplicationController
-  before_action :set_series, only: [:show, :edit, :update, :destroy]
+  include PhysicalObjectsHelper
+  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object]
 
   # GET /series
   # GET /series.json
@@ -61,6 +62,10 @@ class SeriesController < ApplicationController
     end
   end
 
+  def new_physical_object
+    @physical_object = PhysicalObject.new
+  end
+
   def autocomplete_series
     if params[:term]
       json = Series.where("title like ?", "%#{params[:term]}%").select(:id, :title, :description).to_json
@@ -76,6 +81,7 @@ class SeriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_series
       @series = Series.find(params[:id])
+      @cv = ControlledVocabulary.physical_object_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

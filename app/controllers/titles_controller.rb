@@ -1,5 +1,6 @@
 class TitlesController < ApplicationController
-  before_action :set_title, only: [:show, :edit, :update, :destroy]
+  include PhysicalObjectsHelper
+  before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object]
 
   # GET /titles
   # GET /titles.json
@@ -61,6 +62,10 @@ class TitlesController < ApplicationController
     end
   end
 
+  def new_physical_object
+    @physical_object = PhysicalObject.new(title_id: @title.id)
+  end
+
   def autocomplete_title
     if params[:term]
       json = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ?", "%#{params[:term]}%").select('titles.id, title_text, titles.description, series_id, series.title').to_json
@@ -92,6 +97,7 @@ class TitlesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_title
       @title = Title.find(params[:id])
+      @cv = ControlledVocabulary.physical_object_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

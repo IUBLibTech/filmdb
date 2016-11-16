@@ -31,11 +31,6 @@
     <td>
       <%= f.hidden_field :title_id %>
       <%= f.text_field :title_text %>
-      <%# f.autocomplete_field :title_text,  autocomplete_title_title_text_collections_path,
-                                   'data-auto-focus' => true, 'data-showNoMatches' => false,
-                                   'data-noMatchesLabel' => 'No Titles Found',
-                                   :id_element => '#physical_object_title_id'
-      %>
     </td>
   </tr>
   <tr>
@@ -70,10 +65,21 @@
     </tr>
     <tr>
       <th>Series Title</th>
+      <%# This is a bit of a hack -
+          PhysicalObjects belong to titles and titles belong to series, but we need to be able to inventory physical objects through a series first
+          but physical objects also do not have to have a series
+      %>
+      <% if !@series.blank? %>
+      <td>
+        <input id="physical_object_series_id" name="physical_object[series_id]" type="hidden" value="<%= @series.id %>">
+        <input id="physical_object_series_title_text" class="ui-autocomplete-input" name="physical_object[series_title_text]" autocomplete="off" type="text" value="<%= @series.title %>">
+      </td>
+      <% else %>
       <td>
         <%= f.hidden_field :series_id %>
         <%= f.text_field :series_title_text %>
       </td>
+      <% end %>
     </tr>
     <tr>
       <th>Series Part</th>
@@ -223,6 +229,12 @@
         </table>
       </td>
     </tr>
+  <tr>
+    <th>Multiple Items in Can</th>
+    <td>
+      <%= f.check_box :multiple_items_in_can %>
+    </td>
+  </tr>
     <tr>
       <th>Base</th>
       <td>

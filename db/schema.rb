@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027183819) do
+ActiveRecord::Schema.define(version: 20161115155547) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -264,6 +264,7 @@ ActiveRecord::Schema.define(version: 20161027183819) do
     t.text     "research_value_notes",                  limit: 65535
     t.text     "conservation_actions",                  limit: 65535
     t.boolean  "black_and_white"
+    t.boolean  "multiple_items_in_can"
   end
 
   create_table "series", force: :cascade do |t|

@@ -2,7 +2,7 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new]
+  before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :duplicate]
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -19,7 +19,6 @@ class PhysicalObjectsController < ApplicationController
   def new
     u = User.current_user_object
     @physical_object = PhysicalObject.new(inventoried_by: u.id, modified_by: u.id)
-    @series = Series.all.order(:title)
     render 'new_physical_object'
   end
 
@@ -52,6 +51,12 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  def duplicate
+    @physical_object = PhysicalObject.find(params[:id]).dup
+    @physical_object.iu_barcode = nil
+    render 'new_physical_object'
+  end
+
   # DELETE /physical_objects/1
   # DELETE /physical_objects/1.json
   def destroy
@@ -68,8 +73,7 @@ class PhysicalObjectsController < ApplicationController
       @physical_object = PhysicalObject.find(params[:id])
     end
 
-    def set_series
-      @series = Series.all.order(:title)
+    def set_cv
       @cv = ControlledVocabulary.physical_object_cv
     end
 

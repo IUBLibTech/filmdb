@@ -12,9 +12,16 @@ Rails.application.routes.draw do
   resources :units
   resources :spreadsheets, only: [:index, :show, :destroy]
 
+  get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
+
+  # physical objects can be created through the collections, titles, and series controllers
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
   post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+  get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
+  post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
+  get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
+  post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
 
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get 'autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'

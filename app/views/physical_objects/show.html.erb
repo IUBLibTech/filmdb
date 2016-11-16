@@ -1,7 +1,8 @@
 <p id="notice"><%= notice %></p>
 
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
-<%= link_to 'Back', physical_objects_path %>
+<%= link_to 'Back', physical_objects_path %> |
+<%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %>
 <table>
   <tr>
     <th>Unit</th>
@@ -30,7 +31,7 @@
   <tr>
     <th>Title</th>
     <td>
-      <%= @physical_object.title_text %>
+      <%= link_to @physical_object.title_text, title_path(@physical_object.title_id) %>
     </td>
   </tr>
   <tr>
@@ -66,7 +67,10 @@
   <tr>
     <th>Series Title</th>
     <td>
-      <%= @physical_object.series_title_text %>
+      <% if @physical_object.title&.series %>
+      <%= link_to @physical_object.series_title_text, series_path(@physical_object.title.series) %>
+      <% end %>
+
     </td>
   </tr>
   <tr>
@@ -215,6 +219,12 @@
           <td><%= check_box_tag 'generation_mixed', '', checked=@physical_object.generation_mixed %></td>
         </tr>
       </table>
+    </td>
+  </tr>
+  <tr>
+    <th>Multiple Items in Can</th>
+    <td>
+      <%= check_box_tag :multiple_items_in_can , '', checked=@physical_object.multiple_items_in_can %>
     </td>
   </tr>
   <tr>
