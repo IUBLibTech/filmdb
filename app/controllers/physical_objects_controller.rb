@@ -2,7 +2,9 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new]
+  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
+  :edit_location, :update_location
+  ]
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -52,6 +54,40 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  def edit_ad_strip
+    @physical_object = PhysicalObject.new
+  end
+
+  def update_ad_strip
+    bc = params[:physical_object][:iu_barcode]
+    adv = params[:physical_object][:ad_strip]
+    @physical_object = PhysicalObject.where(iu_barcode: bc).first
+    if @physical_object.nil?
+      flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    else
+      @physical_object.update_attributes(ad_strip: adv)
+      flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
+    end
+    redirect_to edit_ad_strip_path
+  end
+
+  def edit_location
+    @physical_object = PhysicalObject.new
+  end
+
+  def update_location
+    bc = params[:physical_object][:iu_barcode]
+    location = params[:physical_object][:location]
+    @physical_object = PhysicalObject.where(iu_barcode: bc).first
+    if @physical_object.nil?
+      flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    else
+      @physical_object.update_attributes(location: location)
+      flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
+    end
+    redirect_to edit_location_path
+  end
+
   # DELETE /physical_objects/1
   # DELETE /physical_objects/1.json
   def destroy
@@ -69,7 +105,7 @@ class PhysicalObjectsController < ApplicationController
     end
 
     def set_series
-      @series = Series.all.order(:title)
+      #@series = Series.all.order(:title)
       @cv = ControlledVocabulary.physical_object_cv
     end
 

@@ -12,6 +12,12 @@ Rails.application.routes.draw do
   resources :units
   resources :spreadsheets, only: [:index, :show, :destroy]
 
+  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
+  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
+  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+
+
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
   post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
