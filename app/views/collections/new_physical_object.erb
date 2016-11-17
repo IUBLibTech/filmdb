@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<p class="notice"><%= notice %></p>
 <h4>Inventory Page for <%= @collection.name %> [<%= @collection.unit.abbreviation %>]</h4>
 <%= form_for @physical_object, url: {action: "create_physical_object"}, html: {autocomplete: 'off'} do |f| %>
     <% if @physical_object.errors.any? %>
@@ -594,7 +594,7 @@
           <tr>
             <th>Mold</th>
             <td>
-              <%= f.select :ad_strip, options_for_select(@cv[:mold]) %>
+              <%= f.select :mold, options_for_select(@cv[:mold]) %>
             </td>
           </tr>
       <% end %>
@@ -1264,7 +1264,7 @@
             <tr>
               <th>Mold</th>
               <td>
-                <%= f.select :ad_strip, options_for_select(@cv[:mold]) %>
+                <%= f.select :mold, options_for_select(@cv[:mold]) %>
               </td>
             </tr>
         <% end %>

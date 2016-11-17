@@ -1,4 +1,4 @@
-<%= form_for(@physical_object, html: {autocomplete: 'off'}) do |f| %>
+<%= form_for @physical_object do |f| %>
   <% if @physical_object.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>

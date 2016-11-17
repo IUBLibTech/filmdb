@@ -155,3 +155,15 @@ table tbody tr td input, textarea, select {
 .inventory_li > div > a {
     display: none;
 }
+
+.warning {
+    color: red;
+}
+.notice {
+    color: green;
+}
+.warning, .notice {
+    font-weight: bold;
+    font-size: 1.3em;
+
+}

@@ -2,7 +2,13 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
+<<<<<<< HEAD
   before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :duplicate]
+=======
+  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
+  :edit_location, :update_location
+  ]
+>>>>>>> sprint-9
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -51,10 +57,45 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+<<<<<<< HEAD
   def duplicate
     @physical_object = PhysicalObject.find(params[:id]).dup
     @physical_object.iu_barcode = nil
     render 'new_physical_object'
+=======
+  def edit_ad_strip
+    @physical_object = PhysicalObject.new
+  end
+
+  def update_ad_strip
+    bc = params[:physical_object][:iu_barcode]
+    adv = params[:physical_object][:ad_strip]
+    @physical_object = PhysicalObject.where(iu_barcode: bc).first
+    if @physical_object.nil?
+      flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    else
+      @physical_object.update_attributes(ad_strip: adv)
+      flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
+    end
+    redirect_to edit_ad_strip_path
+  end
+
+  def edit_location
+    @physical_object = PhysicalObject.new
+  end
+
+  def update_location
+    bc = params[:physical_object][:iu_barcode]
+    location = params[:physical_object][:location]
+    @physical_object = PhysicalObject.where(iu_barcode: bc).first
+    if @physical_object.nil?
+      flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    else
+      @physical_object.update_attributes(location: location)
+      flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
+    end
+    redirect_to edit_location_path
+>>>>>>> sprint-9
   end
 
   # DELETE /physical_objects/1
@@ -73,7 +114,12 @@ class PhysicalObjectsController < ApplicationController
       @physical_object = PhysicalObject.find(params[:id])
     end
 
+<<<<<<< HEAD
     def set_cv
+=======
+    def set_series
+      #@series = Series.all.order(:title)
+>>>>>>> sprint-9
       @cv = ControlledVocabulary.physical_object_cv
     end
 

@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   resources :spreadsheets, only: [:index, :show, :destroy]
 
   get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
+  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
+  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
+  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
 
   # physical objects can be created through the collections, titles, and series controllers
