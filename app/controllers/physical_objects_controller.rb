@@ -2,13 +2,9 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-<<<<<<< HEAD
-  before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :duplicate]
-=======
   before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
-  :edit_location, :update_location
+  :edit_location, :update_location, :duplicate
   ]
->>>>>>> sprint-9
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -57,12 +53,12 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
-<<<<<<< HEAD
   def duplicate
     @physical_object = PhysicalObject.find(params[:id]).dup
     @physical_object.iu_barcode = nil
     render 'new_physical_object'
-=======
+  end
+
   def edit_ad_strip
     @physical_object = PhysicalObject.new
   end
@@ -95,7 +91,6 @@ class PhysicalObjectsController < ApplicationController
       flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
     end
     redirect_to edit_location_path
->>>>>>> sprint-9
   end
 
   # DELETE /physical_objects/1
@@ -114,12 +109,8 @@ class PhysicalObjectsController < ApplicationController
       @physical_object = PhysicalObject.find(params[:id])
     end
 
-<<<<<<< HEAD
-    def set_cv
-=======
     def set_series
       #@series = Series.all.order(:title)
->>>>>>> sprint-9
       @cv = ControlledVocabulary.physical_object_cv
     end
 
