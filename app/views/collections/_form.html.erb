@@ -19,7 +19,7 @@
     <tr>
       <th>Unit</th>
       <td>
-        <%= f.select :unit_id, Unit.order('name ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
+        <%= f.select :unit_id, Unit.order('menu_index DESC, name ASC').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
       </td>
     </tr>
 	</table>

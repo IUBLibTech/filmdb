@@ -45,6 +45,7 @@ class CollectionInventoryConfigurationsController < ApplicationController
   # PATCH/PUT /collection_inventory_configurations/1
   # PATCH/PUT /collection_inventory_configurations/1.json
   def update
+    debugger
     respond_to do |format|
       if @collection_inventory_configuration.update(collection_inventory_configuration_params)
         format.html { redirect_to @collection_inventory_configuration, notice: 'Collection inventory configuration was successfully updated.' }

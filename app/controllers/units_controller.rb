@@ -3,7 +3,7 @@ class UnitsController < ApplicationController
 	before_action :set_unit, only: [:show, :edit, :update, :destroy]
 
 	def index
-		@units = Unit.all.order('menu_index IS NULL, menu_index ASC, abbreviation ASC')
+		@units = Unit.all.order('menu_index DESC, abbreviation ASC')
 	end
 
 	def show
