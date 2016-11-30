@@ -30,7 +30,7 @@
         </td>
       </tr>
       <tr>
-        <th>Inventoried By</th>
+        <th>Created By</th>
         <td>
           <%= @physical_object.inventorier&.name%>
           <%= f.hidden_field :inventoried_by %>
@@ -59,6 +59,12 @@
         <th>IU Barcode</th>
         <td>
           <%= f.text_field :iu_barcode %>
+        </td>
+      </tr>
+      <tr>
+        <th>MDPI Barcode</th>
+        <td>
+          <%= f.text_field :mdpi_barcode %>
         </td>
       </tr>
       <tr>
@@ -93,7 +99,7 @@
       <% end %>
       <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.copy_right  %>
           <tr>
-            <th>Copy Right</th>
+            <th>Copyright</th>
             <td>
               <%= f.text_field :copy_right %>
             </td>
@@ -166,30 +172,16 @@
                   <td><%= f.check_box :captioned %></td>
                   <th>Excerpt</th>
                   <td><%= f.check_box :excerpt %></td>
-                  <th>Color</th>
-                  <td><%= f.check_box :color %></td>
                 </tr>
                 <tr>
-                  <th>Black and White</th>
-                  <td><%= f.check_box :black_and_white %></td>
                   <th>Catholic</th>
                   <td><%= f.check_box :catholic %></td>
                   <th>Domestic</th>
                   <td><%= f.check_box :domestic %></td>
                   <th>Trailer</th>
                   <td><%= f.check_box :trailer %></td>
-                  <th>French</th>
-                  <td><%= f.check_box :french %></td>
-                  <th>Italian</th>
-                  <td><%= f.check_box :italian %></td>
-                  <th>Spanish</th>
-                  <td><%= f.check_box :spanish %></td>
                 </tr>
                 <tr>
-                  <th>German</th>
-                  <td><%= f.check_box :german %></td>
-                  <th>Chinese</th>
-                  <td><%= f.check_box :chinese %></td>
                   <th>English</th>
                   <td><%= f.check_box :english %></td>
                   <th>Television</th>
@@ -380,7 +372,7 @@
                   <td><%= f.check_box :picture_not_applicable %></td>
                   <th>Silent Picture</th>
                   <td><%= f.check_box :picture_silent_picture %></td>
-                  <th>Mos Picture</th>
+                  <th>MOS Picture</th>
                   <td><%= f.check_box :picture_mos_picture %></td>
                   <th>Composite Picture</th>
                   <td><%= f.check_box :picture_composite_picture %></td>
@@ -411,14 +403,18 @@
       <% end %>
       <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.color_or_bw  %>
           <tr>
-            <th>Color or Black and White</th>
+            <th>Color</th>
             <td>
               <table>
                 <tr>
+                  <th>Black and White</th>
+                  <td><%= f.check_box :color_bw_bw %></td>
                   <th>Black and White: Toned</th>
                   <td><%= f.check_box :color_bw_bw_toned %></td>
                   <th>Black and White: Tinted</th>
                   <td><%= f.check_box :color_bw_bw_tinted %></td>
+                  <th>Color</th>
+                  <td><%= f.check_box :color_bw_color %></td>
                   <th>Color: Ektachrome</th>
                   <td><%= f.check_box :color_bw_color_ektachrome %></td>
                   <th>Color: Kodachrome</th>
@@ -510,7 +506,7 @@
       <% end %>
       <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.notes  %>
           <tr>
-            <th>Notes</th>
+            <th>Captions and Subtitles Notes</th>
             <td>
               <%= f.text_area :notes %>
             </td>
@@ -574,6 +570,29 @@
             </td>
           </tr>
       <% end %>
+      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.sound_configuration %>
+          <tr>
+            <th>Sound Configuration</th>
+            <td>
+              <table>
+                <tr>
+                  <th>Mono</th>
+                  <td><%= f.check_box :sound_configuration_mono %></td>
+                  <th>Stereo</th>
+                  <td><%= f.check_box :sound_configuration_stereo %></td>
+                  <th>Surround</th>
+                  <td><%= f.check_box :sound_configuration_surround %></td>
+                  <th>Multi-track (i.e. Maurer)</th>
+                  <td><%= f.check_box :sound_configuration_multi_track %></td>
+                  <th>Dual</th>
+                  <td><%= f.check_box :sound_configuration_dual %></td>
+                  <th>single</th>
+                  <td><%= f.check_box :sound_configuration_single %></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+      <% end %>
       <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.ad_strip  %>
           <tr>
             <th>AD Strip</th>
@@ -617,23 +636,23 @@
                   <th>Brittle</th>
                   <td><%= f.select :brittle, options_for_select(@cv[:condition_type]) %></td>
                   <th>Lacquer Treated</th>
-                  <td></td>
+                  <td><%= f.check_box :lacquer_treated %></td>
                 </tr>
                 <tr>
                   <th>Replasticized</th>
-                  <td></td>
+                  <td><%= f.check_box :replasticized %></td>
                   <th>Splice Damage</th>
                   <td><%= f.select :splice_damage, options_for_select(@cv[:condition_type]) %></td>
                   <th>Spoking</th>
-                  <td></td>
+                  <td><%= f.text_field :spoking %></td>
                 </tr>
                 <tr>
                   <th>Dirty</th>
                   <td><%= f.select :dirty, options_for_select(@cv[:condition_type]) %></td>
                   <th>Dusty</th>
-                  <td></td>
+                  <td><%= f.check_box :dusty %></td>
                   <th>Rusty</th>
-                  <td></td>
+                  <td><%= f.text_field :rusty %></td>
                 </tr>
                 <tr>
                   <th>Peeling</th>
@@ -657,7 +676,7 @@
                   <th>Scratches</th>
                   <td><%= f.select :scratches, options_for_select(@cv[:condition_type]) %></td>
                   <th>Miscellaneous</th>
-                  <td></td>
+                  <td><%= f.text_area :miscellaneous %></td>
                 </tr>
               </table>
             </td>
@@ -703,39 +722,12 @@
             </td>
           </tr>
       <% end %>
-      <tr>
-        <td colspan="2">Do we still need items below this line?</td>
-      </tr>
 
       <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.item_original_identifier  %>
           <tr>
             <th>Item Original Identifier</th>
             <td>
               <%= f.text_field :item_original_identifier %>
-            </td>
-          </tr>
-      <% end %>
-      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.summary  %>
-          <tr>
-            <th>Summary</th>
-            <td>
-              <%= f.text_area :summary %>
-            </td>
-          </tr>
-      <% end %>
-      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.distributors  %>
-          <tr>
-            <th>Distributors</th>
-            <td>
-              <%= f.text_field :distributors %>
-            </td>
-          </tr>
-      <% end %>
-      <% if !@collection.collection_inventory_configuration.nil? && @collection.collection_inventory_configuration.credits  %>
-          <tr>
-            <th>Credits</th>
-            <td>
-              <%= f.text_field :credits %>
             </td>
           </tr>
       <% end %>
@@ -763,7 +755,7 @@
         <% end %>
         <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.copy_right  %>
             <tr>
-              <th>Copy Right</th>
+              <th>Copyright</th>
               <td>
                 <%= f.text_field :copy_right %>
               </td>
@@ -836,30 +828,16 @@
                     <td><%= f.check_box :captioned %></td>
                     <th>Excerpt</th>
                     <td><%= f.check_box :excerpt %></td>
-                    <th>Color</th>
-                    <td><%= f.check_box :color %></td>
                   </tr>
                   <tr>
-                    <th>Black and White</th>
-                    <td><%= f.check_box :black_and_white %></td>
                     <th>Catholic</th>
                     <td><%= f.check_box :catholic %></td>
                     <th>Domestic</th>
                     <td><%= f.check_box :domestic %></td>
                     <th>Trailer</th>
                     <td><%= f.check_box :trailer %></td>
-                    <th>French</th>
-                    <td><%= f.check_box :french %></td>
-                    <th>Italian</th>
-                    <td><%= f.check_box :italian %></td>
-                    <th>Spanish</th>
-                    <td><%= f.check_box :spanish %></td>
                   </tr>
                   <tr>
-                    <th>German</th>
-                    <td><%= f.check_box :german %></td>
-                    <th>Chinese</th>
-                    <td><%= f.check_box :chinese %></td>
                     <th>English</th>
                     <td><%= f.check_box :english %></td>
                     <th>Television</th>
@@ -1050,7 +1028,7 @@
                     <td><%= f.check_box :picture_not_applicable %></td>
                     <th>Silent Picture</th>
                     <td><%= f.check_box :picture_silent_picture %></td>
-                    <th>Mos Picture</th>
+                    <th>MOS Picture</th>
                     <td><%= f.check_box :picture_mos_picture %></td>
                     <th>Composite Picture</th>
                     <td><%= f.check_box :picture_composite_picture %></td>
@@ -1081,14 +1059,18 @@
         <% end %>
         <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.color_or_bw  %>
             <tr>
-              <th>Color or Black and White</th>
+              <th>Color</th>
               <td>
                 <table>
                   <tr>
+                    <th>Black and White</th>
+                    <td><%= f.check_box :color_bw_bw %></td>
                     <th>Black and White: Toned</th>
                     <td><%= f.check_box :color_bw_bw_toned %></td>
                     <th>Black and White: Tinted</th>
                     <td><%= f.check_box :color_bw_bw_tinted %></td>
+                    <th>Color</th>
+                    <td><%= f.check_box :color_bw_color %></td>
                     <th>Color: Ektachrome</th>
                     <td><%= f.check_box :color_bw_color_ektachrome %></td>
                     <th>Color: Kodachrome</th>
@@ -1180,7 +1162,7 @@
         <% end %>
         <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.notes  %>
             <tr>
-              <th>Notes</th>
+              <th>Captions and Subtitles Notes</th>
               <td>
                 <%= f.text_area :notes %>
               </td>
@@ -1244,6 +1226,29 @@
               </td>
             </tr>
         <% end %>
+        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.sound_configuration  %>
+            <tr>
+              <th>Sound Configuration</th>
+              <td>
+                <table>
+                  <tr>
+                    <th>Mono</th>
+                    <td><%= f.check_box :sound_configuration_mono %></td>
+                    <th>Stereo</th>
+                    <td><%= f.check_box :sound_configuration_stereo %></td>
+                    <th>Surround</th>
+                    <td><%= f.check_box :sound_configuration_surround %></td>
+                    <th>Multi-track (i.e. Maurer)</th>
+                    <td><%= f.check_box :sound_configuration_multi_track %></td>
+                    <th>Dual</th>
+                    <td><%= f.check_box :sound_configuration_dual %></td>
+                    <th>single</th>
+                    <td><%= f.check_box :sound_configuration_single %></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+        <% end %>
         <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.ad_strip  %>
             <tr>
               <th>AD Strip</th>
@@ -1287,23 +1292,23 @@
                     <th>Brittle</th>
                     <td><%= f.select :brittle, options_for_select(@cv[:condition_type]) %></td>
                     <th>Lacquer Treated</th>
-                    <td></td>
+                    <td><%= f.check_box :lacquer_treated %></td>
                   </tr>
                   <tr>
                     <th>Replasticized</th>
-                    <td></td>
+                    <td><%= f.check_box :replasticized %></td>
                     <th>Splice Damage</th>
                     <td><%= f.select :splice_damage, options_for_select(@cv[:condition_type]) %></td>
                     <th>Spoking</th>
-                    <td></td>
+                    <td><%= f.text_field :spoking %></td>
                   </tr>
                   <tr>
                     <th>Dirty</th>
                     <td><%= f.select :dirty, options_for_select(@cv[:condition_type]) %></td>
                     <th>Dusty</th>
-                    <td></td>
+                    <td><%= f.check_box :dusty %></td>
                     <th>Rusty</th>
-                    <td></td>
+                    <td><%= f.text_field :rusty %></td>
                   </tr>
                   <tr>
                     <th>Peeling</th>
@@ -1327,7 +1332,7 @@
                     <th>Scratches</th>
                     <td><%= f.select :scratches, options_for_select(@cv[:condition_type]) %></td>
                     <th>Miscellaneous</th>
-                    <td></td>
+                    <td><%= f.text_area :miscellaneous %></td>
                   </tr>
                 </table>
               </td>
@@ -1373,39 +1378,12 @@
               </td>
             </tr>
         <% end %>
-        <tr>
-          <td colspan="2">Do we still need items below this line?</td>
-        </tr>
 
         <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.item_original_identifier  %>
             <tr>
               <th>Item Original Identifier</th>
               <td>
                 <%= f.text_field :item_original_identifier %>
-              </td>
-            </tr>
-        <% end %>
-        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.summary  %>
-            <tr>
-              <th>Summary</th>
-              <td>
-                <%= f.text_area :summary %>
-              </td>
-            </tr>
-        <% end %>
-        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.distributors  %>
-            <tr>
-              <th>Distributors</th>
-              <td>
-                <%= f.text_field :distributors %>
-              </td>
-            </tr>
-        <% end %>
-        <% if @collection.collection_inventory_configuration.nil? || !@collection.collection_inventory_configuration.credits  %>
-            <tr>
-              <th>Credits</th>
-              <td>
-                <%= f.text_field :credits %>
               </td>
             </tr>
         <% end %>

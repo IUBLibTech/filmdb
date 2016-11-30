@@ -1,5 +1,6 @@
 class CollectionsController < ApplicationController
   include PhysicalObjectsHelper
+  include CollectionInventoryConfigurationsHelper
 
   before_action :set_collection, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object]
   before_action :init_create_physical_object, only: [:new_physical_object, :create_physical_object]
@@ -28,8 +29,10 @@ class CollectionsController < ApplicationController
   # POST /collections.json
   def create
     @collection = Collection.new(collection_params)
+    config = @collection.collection_inventory_configuration = CollectionInventoryConfigurationsHelper.default_config
     respond_to do |format|
       if @collection.save
+        config.save
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }
         format.json { render :show, status: :created, location: @collection }
       else

@@ -17,7 +17,7 @@
     </td>
   </tr>
   <tr>
-    <th>Inventoried By</th>
+    <th>Created By</th>
     <td>
       <%= @physical_object.inventorier&.name%>
     </td>
@@ -41,6 +41,10 @@
     </td>
   </tr>
   <tr>
+    <th>MDPI Marcode</th>
+    <td><%= @physical_object.mdpi_barcode %></td>
+  </tr>
+  <tr>
     <th>Medium Type</th>
     <td>
       <%= @physical_object.media_type %>
@@ -59,7 +63,7 @@
     </td>
   </tr>
   <tr>
-    <th>Copy Right</th>
+    <th>Copyright</th>
     <td>
       <%= @physical_object.copy_right %>
     </td>
@@ -124,30 +128,16 @@
           <td><%= check_box_tag 'captioned', '', checked=@physical_object.captioned %></td>
           <th>Excerpt</th>
           <td><%= check_box_tag 'excerpt', '', checked=@physical_object.excerpt %></td>
-          <th>Color</th>
-          <td><%= check_box_tag 'color', '', checked=@physical_object.color %></td>
         </tr>
         <tr>
-          <th>Black and White</th>
-          <td><%= check_box_tag 'black_and_white', '', checked=@physical_object.black_and_white %></td>
           <th>Catholic</th>
           <td><%= check_box_tag 'catholic', '', checked=@physical_object.catholic %></td>
           <th>Domestic</th>
           <td><%= check_box_tag 'domestic', '', checked=@physical_object.domestic %></td>
           <th>Trailer</th>
           <td><%= check_box_tag 'trailer', '', checked=@physical_object.trailer %></td>
-          <th>French</th>
-          <td><%= check_box_tag 'french', '', checked=@physical_object.french %></td>
-          <th>Italian</th>
-          <td><%= check_box_tag 'italian', '', checked=@physical_object.italian %></td>
-          <th>Spanish</th>
-          <td><%= check_box_tag 'spanish', '', checked=@physical_object.spanish %></td>
         </tr>
         <tr>
-          <th>German</th>
-          <td><%= check_box_tag 'german', '', checked=@physical_object.german %></td>
-          <th>Chinese</th>
-          <td><%= check_box_tag 'chinese', '', checked=@physical_object.chinese %></td>
           <th>English</th>
           <td><%= check_box_tag 'english', '', checked=@physical_object.english %></td>
           <th>Television</th>
@@ -219,12 +209,6 @@
           <td><%= check_box_tag 'generation_mixed', '', checked=@physical_object.generation_mixed %></td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Multiple Items in Can</th>
-    <td>
-      <%= check_box_tag :multiple_items_in_can , '', checked=@physical_object.multiple_items_in_can %>
     </td>
   </tr>
   <tr>
@@ -308,6 +292,12 @@
     </td>
   </tr>
   <tr>
+    <th>Multiple Items in Can</th>
+    <td>
+      <%= check_box_tag :multiple_items_in_can , '', checked=@physical_object.multiple_items_in_can %>
+    </td>
+  </tr>
+  <tr>
     <th>Format Notes</th>
     <td>
       <%= @physical_object.format_notes %>
@@ -322,7 +312,7 @@
           <td><%= check_box_tag 'picture_not_applicable', '', checked=@physical_object.picture_not_applicable  %></td>
           <th>Silent Picture</th>
           <td><%= check_box_tag 'picture_silent_picture', '', checked=@physical_object.picture_silent_picture %></td>
-          <th>Mos Picture</th>
+          <th>MOS Picture</th>
           <td><%= check_box_tag 'picture_mos_picture', '', checked=@physical_object.picture_mos_picture  %></td>
           <th>Composite Picture</th>
           <td><%= check_box_tag 'picture_composite_picture', '', checked=@physical_object.picture_composite_picture %></td>
@@ -349,14 +339,18 @@
     </td>
   </tr>
   <tr>
-    <th>Color or Black and White</th>
+    <th>Color</th>
     <td>
       <table>
         <tr>
+          <th>Black and White</th>
+          <td><%= check_box_tag 'color_bw_bw', '', checked=@physical_object.color_bw_bw %></td>
           <th>Black and White: Toned</th>
           <td><%= check_box_tag 'color_bw_bw_toned ', '', checked=@physical_object.color_bw_bw_toned %></td>
           <th>Black and White: Tinted</th>
           <td><%= check_box_tag 'color_bw_bw_tinted', '', checked=@physical_object.color_bw_bw_tinted %></td>
+          <th>Color</th>
+          <td><%= check_box_tag 'color_bw_color', '', checked=@physical_object.color_bw_color %></td>
           <th>Color: Ektachrome</th>
           <td><%= check_box_tag 'color_bw_color_ektachrome', '', checked=@physical_object.color_bw_color_ektachrome %></td>
           <th>Color: Kodachrome</th>
@@ -440,7 +434,7 @@
     </td>
   </tr>
   <tr>
-    <th>Notes</th>
+    <th>Captions and Subtitles Notes</th>
     <td>
       <%= @physical_object.notes %>
     </td>
@@ -498,6 +492,27 @@
     </td>
   </tr>
   <tr>
+    <th>Sound Configuration</th>
+    <td>
+      <table>
+        <tr>
+          <th>Mono</th>
+          <td><%= check_box_tag 'sound_configuration_mono', '', checked=@physical_object.sound_configuration_mono %></td>
+          <th>Stereo</th>
+          <td><%= check_box_tag 'sound_configuration_stereo', '', checked=@physical_object.sound_configuration_stereo %></td>
+          <th>Surround</th>
+          <td><%= check_box_tag 'sound_configuration_surround', '', checked=@physical_object.sound_configuration_surround %></td>
+          <th>Multi-track (i.e. Maurer)</th>
+          <td><%= check_box_tag 'sound_configuration_multi_track', '', checked=@physical_object.sound_configuration_multi_track %></td>
+          <th>Dual</th>
+          <td><%= check_box_tag 'sound_configuration_dual', '', checked=@physical_object.sound_configuration_dual %></td>
+          <th>Single</th>
+          <td><%= check_box_tag 'sound_configuration_single', '', checked=@physical_object.sound_configuration_single %></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
     <th>AD Strip</th>
     <td>
       <%= @physical_object.ad_strip %>
@@ -533,7 +548,7 @@
           <th>Brittle</th>
           <td><%= @physical_object.brittle %></td>
           <th>Lacquer Treated</th>
-          <td></td>
+          <td><%= check_box_tag 'lacquer_treated', '', checked=@physical_object.lacquer_treated %></td>
         </tr>
         <tr>
           <th>Replasticized</th>
@@ -541,15 +556,15 @@
           <th>Splice Damage</th>
           <td><%= @physical_object.splice_damage %></td>
           <th>Spoking</th>
-          <td></td>
+          <td><%= @physical_object.spoking %></td>
         </tr>
         <tr>
           <th>Dirty</th>
           <td><%= @physical_object.dirty %></td>
           <th>Dusty</th>
-          <td></td>
+          <td><%= check_box_tag 'dusty', '', checked=@physical_object.dusty %></td>
           <th>Rusty</th>
-          <td></td>
+          <td><%= @physical_object.rusty %></td>
         </tr>
         <tr>
           <th>Peeling</th>
@@ -573,7 +588,7 @@
           <th>Scratches</th>
           <td><%= @physical_object.scratches %></td>
           <th>Miscellaneous</th>
-          <td></td>
+          <td><%= @physical_object.miscellaneous %></td>
         </tr>
       </table>
     </td>
@@ -612,24 +627,6 @@
     <th>Item Original Identifier</th>
     <td>
       <%= @physical_object.item_original_identifier %>
-    </td>
-  </tr>
-  <tr>
-    <th>Summary</th>
-    <td>
-      <%= @physical_object.summary %>
-    </td>
-  </tr>
-  <tr>
-    <th>Distributors</th>
-    <td>
-      <%= @physical_object.distributors %>
-    </td>
-  </tr>
-  <tr>
-    <th>Credits</th>
-    <td>
-      <%= @physical_object.credits %>
     </td>
   </tr>
   <tr>

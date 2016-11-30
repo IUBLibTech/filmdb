@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161115155547) do
+ActiveRecord::Schema.define(version: 20161128211204) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -23,10 +23,7 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.boolean  "alternative_title"
     t.boolean  "title_version"
     t.boolean  "item_original_identifier"
-    t.boolean  "summary"
     t.boolean  "creator"
-    t.boolean  "distributors"
-    t.boolean  "credits"
     t.boolean  "language"
     t.boolean  "accompanying_documentation"
     t.boolean  "notes"
@@ -59,6 +56,7 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.boolean  "condition_rating"
     t.boolean  "research_value"
     t.boolean  "conservation_actions"
+    t.boolean  "multiple_items_in_can"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -103,10 +101,7 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.string   "alternative_title",                     limit: 255
     t.string   "title_version",                         limit: 255
     t.string   "item_original_identifier",              limit: 255
-    t.text     "summary",                               limit: 65535
     t.string   "creator",                               limit: 255
-    t.string   "distributors",                          limit: 255
-    t.string   "credits",                               limit: 255
     t.text     "accompanying_documentation",            limit: 65535
     t.text     "notes",                                 limit: 65535
     t.integer  "unit_id",                               limit: 8
@@ -127,15 +122,9 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.boolean  "version_original"
     t.boolean  "captioned"
     t.boolean  "excerpt"
-    t.boolean  "color"
     t.boolean  "catholic"
     t.boolean  "domestic"
     t.boolean  "trailer"
-    t.boolean  "french"
-    t.boolean  "italian"
-    t.boolean  "spanish"
-    t.boolean  "german"
-    t.boolean  "chinese"
     t.boolean  "english"
     t.boolean  "television"
     t.boolean  "x_rated"
@@ -167,7 +156,7 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.string   "reel_number",                           limit: 255
     t.string   "can_size",                              limit: 255
     t.integer  "footage",                               limit: 4
-    t.string   "duration",                              limit: 255
+    t.integer  "duration",                              limit: 4
     t.boolean  "base_acetate"
     t.boolean  "base_polyester"
     t.boolean  "base_nitrate"
@@ -263,8 +252,17 @@ ActiveRecord::Schema.define(version: 20161115155547) do
     t.string   "research_value",                        limit: 255
     t.text     "research_value_notes",                  limit: 65535
     t.text     "conservation_actions",                  limit: 65535
-    t.boolean  "black_and_white"
     t.boolean  "multiple_items_in_can"
+    t.integer  "mdpi_barcode",                          limit: 8
+    t.boolean  "color_bw_color"
+    t.boolean  "color_bw_bw"
+    t.text     "accompanying_documentation_location",   limit: 65535
+    t.boolean  "lacquer_treated"
+    t.boolean  "replasticized"
+    t.string   "spoking",                               limit: 255
+    t.boolean  "dusty"
+    t.string   "rusty",                                 limit: 255
+    t.text     "miscellaneous",                         limit: 65535
   end
 
   create_table "series", force: :cascade do |t|
