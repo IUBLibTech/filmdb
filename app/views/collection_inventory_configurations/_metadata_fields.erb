@@ -12,7 +12,7 @@
     </td>
   </tr>
   <tr>
-    <th>Copy Right</th>
+    <th>Copyright</th>
     <td>
       <%= check_box_tag "", "", @collection_inventory_configuration.copy_right, disabled: true  %>
     </td>
@@ -54,27 +54,9 @@
     </td>
   </tr>
   <tr>
-    <th>Summary</th>
-    <td>
-      <%= check_box_tag "", "", @collection_inventory_configuration.summary, disabled: true  %>
-    </td>
-  </tr>
-  <tr>
     <th>Creator</th>
     <td>
       <%= check_box_tag "", "", @collection_inventory_configuration.creator, disabled: true  %>
-    </td>
-  </tr>
-  <tr>
-    <th>Distributors</th>
-    <td>
-      <%= check_box_tag "", "", @collection_inventory_configuration.distributors, disabled: true  %>
-    </td>
-  </tr>
-  <tr>
-    <th>Credits</th>
-    <td>
-      <%= check_box_tag "", "", @collection_inventory_configuration.credits, disabled: true  %>
     </td>
   </tr>
   <tr>
@@ -95,7 +77,6 @@
       <%= check_box_tag "", "", @collection_inventory_configuration.notes, disabled: true  %>
     </td>
   </tr>
-
   <tr>
     <th>Generation</th>
     <td><%= check_box_tag "", "", @collection_inventory_configuration.generation, disabled: true %></td>
@@ -131,6 +112,12 @@
   <tr>
     <th>Reel Number</th>
     <td><%= check_box_tag "", "", @collection_inventory_configuration.reel_number, disabled: true %></td>
+  </tr>
+  <tr>
+    <th>Multiple Items In Can</th>
+    <td>
+      <%= check_box_tag "", "", @collection_inventory_configuration.multiple_items_in_can, disabled: true %>
+    </td>
   </tr>
   <tr>
     <th>Format Notes</th>

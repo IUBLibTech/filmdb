@@ -27,6 +27,12 @@ class TitlesController < ApplicationController
   # POST /titles.json
   def create
     @title = Title.new(title_params)
+    @series = nil
+    if params[:title][:series_title_id].blank? && !params[:title][:series_title_text].blank?
+      @series = Series.new(title: params[:title][:series_title_text])
+      @series.save
+      @title.series_id = @series.id
+    end
     respond_to do |format|
       if @title.save
         format.html { redirect_to @title, notice: 'Title was successfully created.' }

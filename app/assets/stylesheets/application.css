@@ -20,6 +20,8 @@ body {
     font-family: sans-serif;
     height: 100%;
     width: 1000px;
+    color: #FFDBAA;
+    background-color: #718EA4
 }
 
 #branding {
@@ -30,11 +32,17 @@ body {
 
 #branding > div.user {
     float: right;
-    margin-right: 15px;
+    background: red; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#718EA4, rgba(113,142,164,0)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#718EA4, rgba(113,142,164,0)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#718EA4, rgba(113,142,164,0)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#718EA4, rgba(113,142,164,0)); /* Standard syntax (must be last) */
+    padding: 10px 5px 104px;
+    color: #805215;
 }
 
 div#menu {
-    background: #7d110c none repeat scroll 0 0;
+    background: #042037 none repeat scroll 0 0;
     padding: 4px 10px;
     font-size: 1.5em;
 }
@@ -56,22 +64,27 @@ div#menu>ul>li {
     margin: 0;
 }
 
+h1 {
+    color: #805215;
+}
+
 a:link {
-    color: #7D110C;
+    color: #805215;
     font-weight: bold;
     text-decoration: none;
 }
 a:visited {
-    color: #7D110C;
+    color: #805215;
 }
 a:hover {
-    color: #7D110C;
+    color: #FFDBAA;
+    background-color: rgba(0,0,0,0);
 }
 
 /* CSS for the main menu items in the #menu div */
 #menu {
     height: 42px;
-    background: #7D110C;
+    background: #042037;
 }
 .menuItem {
     float: left;
@@ -81,21 +94,12 @@ a:hover {
     word-spacing: -0.3em;
     font-weight: bold;
 }
-.menuItem a:link {
-    color: white;
-}
-.menuItem a:visited {
-    color: white;
-}
-.menuItem a:hover {
-    color: #DBCEAC;
-}
 ul.nav {
     display: none;
     padding: 0 5px 0 5px;
     margin: 0;
-    background-color: #cd894e;
-    color: #7d110c;
+    background-color: #123652;
+    color: #042037;
     position: absolute;
     word-spacing: normal;
     border-radius: 3px;
@@ -112,18 +116,20 @@ ul.nav > li {
 .green {
     color: #23c417;
 }
-
+table, th, td {
+    border: 1px solid #042037;
+}
 table {
     border-spacing: 0;
 }
 
 th, tr, td {
-    border: 1px solid black;
     font-size: 1.1em;
 }
 th {
-    background-color: rgba(125, 18, 12, 0.45);
+    background-color: #123652;
     font-weight: bold;
+    color: #805215;
 }
 
 table tbody tr td input, textarea, select {
@@ -157,10 +163,13 @@ table tbody tr td input, textarea, select {
 }
 
 .warning {
-    color: red;
+    background-color: red;
+    color: black;
+
 }
 .notice {
-    color: green;
+    background-color: green;
+    color: black;
 }
 .warning, .notice {
     font-weight: bold;
