@@ -20,8 +20,8 @@ body {
     font-family: sans-serif;
     height: 100%;
     width: 1000px;
-    color: #FFDBAA;
-    background-color: #718EA4
+    color: #123652;
+    background-color: white;
 }
 
 #branding {
@@ -68,19 +68,6 @@ h1 {
     color: #805215;
 }
 
-a:link {
-    color: #805215;
-    font-weight: bold;
-    text-decoration: none;
-}
-a:visited {
-    color: #805215;
-}
-a:hover {
-    color: #FFDBAA;
-    background-color: rgba(0,0,0,0);
-}
-
 /* CSS for the main menu items in the #menu div */
 #menu {
     height: 42px;
@@ -108,6 +95,31 @@ ul.nav > li {
     list-style-type: none;
 }
 
+ul.nav > li > a:link, .menuItem > a:link {
+    color: #805215;
+    font-weight: bold;
+    text-decoration: none;
+}
+ul.nav > li > a:visited, .menuItem > a:visited {
+    color: #805215;
+}
+ul.nav > li > a:hover, .menuteItem > a:hover {
+    color: #FFDBAA;
+    background-color: rgba(0,0,0,0);
+}
+
+a:link {
+    color: #805215;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:visited {
+    color: #805215;
+}
+a:hover {
+    color: #042037;
+    background-color: rgba(0,0,0,0);
+}
 
 .red {
     color: #8F2609;
@@ -116,28 +128,58 @@ ul.nav > li {
 .green {
     color: #23c417;
 }
-table, th, td {
-    border: 1px solid #042037;
-}
+
 table {
     border-spacing: 0;
+    max-width: 995px;
+    margin-left: 5px;
+}
+table, th, td {
+    border: none;
 }
 
-th, tr, td {
-    font-size: 1.1em;
-}
-th {
-    background-color: #123652;
-    font-weight: bold;
-    color: #805215;
+th, td {
+    text-align: left;
+    white-space: nowrap;
 }
 
-table tbody tr td input, textarea, select {
-    width: 100%;
+td:first-of-type {
+    padding-right: 20px;
+}
+
+table > tbody > tr, td > input, textarea, select {
     margin: 0px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+#generation > td > div {
+    -webkit-box-shadow:inset 0 0 0 1px #333333;
+    -moz-box-shadow:inset 0 0 0 1px #333333;
+    box-shadow:inset 0 0 0 1px #333333;
+    height: 269px;
+    margin-right: 5px;
+    width: 32.7%;
+}
+
+.metadata_section > table {
+    width: 995px;
+}
+
+table.version_table > tbody > tr > td > input {
+    margin-right: 25px;
+}
+
+label {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+input[type='checkbox'] {
+    position: relative;
+    vertical-align: middle;
 }
 
 .bad_barcode {
@@ -174,5 +216,140 @@ table tbody tr td input, textarea, select {
 .warning, .notice {
     font-weight: bold;
     font-size: 1.3em;
+}
 
+.metadata_section {
+    margin-bottom: 25px;
+}
+.metadata_section > h4 {
+    background: #496D89;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 5px;
+    color: black;
+    margin: 0;
+}
+#format_notes_metadata {
+    clear: both;
+}
+#format_type_label {
+    float: left;
+    width: 20%;
+}
+#format_type_values {
+    width: 400px;
+}
+#image_metadata > table, #sound_metadata > table {
+    width: 485px;
+}
+
+#image_metadata > table > tbody > tr td , #sound_metadata > table > tbody > tr td {
+    padding: 0<br/;
+}
+
+td#color {
+    padding: 0;
+}
+
+._25 {
+    width: 25%;
+}
+._33 {
+    width: 33%;
+}
+._40 {
+    width: 40%;
+}
+._45 {
+    width: 45%;
+}
+._50 {
+    width: 50%;
+}
+._75 {
+    width: 75%;
+}
+._100 {
+    width: 100%;
+}
+.line_300 {
+    line-height: 300%;
+}
+.h_75px {
+    height: 75px;
+}
+.h_80px {
+    height: 80px;
+}
+.h_90px {
+    height: 90px;
+}
+.h_100px {
+    height: 100px;
+}
+.h_150px {
+    height: 150px;
+}
+.h_175px {
+    height: 175px;
+}
+.h_195px {
+    height: 195px;
+}
+.h_260px {
+    height: 260px;
+}
+.h_360px {
+    height: 360px;
+}
+.h_400px {
+    height: 400px;
+}
+.pl_10px {
+    padding-left: 10px;
+}
+.left {
+    float: left;
+}
+.rp_10px {
+    padding-right: 10px;
+}
+
+.generation_box {
+    border: 1px solid gray;
+    height: 270px;
+    float: left;
+    padding-right: 10px;
+}
+.generation_box_ml_5px {
+    margin-left: 5px;
+}
+
+
+#image_metadata {
+    width: 490px;
+    padding-right: 10px;
+}
+
+#format_metadata {
+    height: 450px;
+}
+#condition_metadata {
+    height: 500px;
+}
+.clear_div {
+    clear: both;
+    height: 0px;
+    display: none;
+}
+
+textarea {
+    resize: vertical;
+}
+.block {
+    display: block;
+}
+
+#color_div {
+    margin-top: 15px;
 }
