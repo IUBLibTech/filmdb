@@ -42,9 +42,10 @@ body {
 }
 
 div#menu {
-    background: #042037 none repeat scroll 0 0;
+    background: #496D89 none repeat scroll 0 0;
     padding: 4px 10px;
     font-size: 1.5em;
+    height: 42px;
 }
 
 div#menu > ul {
@@ -68,11 +69,6 @@ h1 {
     color: #805215;
 }
 
-/* CSS for the main menu items in the #menu div */
-#menu {
-    height: 42px;
-    background: #042037;
-}
 .menuItem {
     float: left;
     padding: 10px 0 0 12px;
@@ -85,8 +81,7 @@ ul.nav {
     display: none;
     padding: 0 5px 0 5px;
     margin: 0;
-    background-color: #123652;
-    color: #042037;
+    background-color: #718EA4;
     position: absolute;
     word-spacing: normal;
     border-radius: 3px;
@@ -96,15 +91,15 @@ ul.nav > li {
 }
 
 ul.nav > li > a:link, .menuItem > a:link {
-    color: #805215;
+    color: wheat;
     font-weight: bold;
     text-decoration: none;
 }
 ul.nav > li > a:visited, .menuItem > a:visited {
-    color: #805215;
+    color: wheat;
 }
 ul.nav > li > a:hover, .menuteItem > a:hover {
-    color: #FFDBAA;
+    color: #805215;
     background-color: rgba(0,0,0,0);
 }
 
@@ -226,7 +221,7 @@ input[type='checkbox'] {
     font-weight: bold;
     font-size: 1.5em;
     padding: 5px;
-    color: black;
+    color: white;
     margin: 0;
 }
 #format_notes_metadata {
@@ -275,6 +270,12 @@ td#color {
 .line_300 {
     line-height: 300%;
 }
+.h_45px {
+    height: 45px;
+}
+.h_55px {
+    height: 55px;
+}
 .h_75px {
     height: 75px;
 }
@@ -298,6 +299,9 @@ td#color {
 }
 .h_260px {
     height: 260px;
+}
+.h_300px {
+    height: 300px;
 }
 .h_360px {
     height: 360px;

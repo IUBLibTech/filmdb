@@ -3,637 +3,172 @@
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
 <%= link_to 'Back', physical_objects_path %> |
 <%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %>
-<table>
-  <tr>
-    <th>Unit</th>
-    <td>
-      <%= @physical_object.unit.abbreviation %>
-    </td>
-  </tr>
-  <tr>
-    <th>Collection</th>
-    <td>
-      <%= @physical_object.collection_text%>
-    </td>
-  </tr>
-  <tr>
-    <th>Created By</th>
-    <td>
-      <%= @physical_object.inventorier&.name%>
-    </td>
-  </tr>
-  <tr>
-    <th>Last Modified By</th>
-    <td>
-      <%= User.current_user_object.name%>
-    </td>
-  </tr>
-  <tr>
-    <th>Title</th>
-    <td>
-      <%= link_to @physical_object.title_text, title_path(@physical_object.title_id) %>
-    </td>
-  </tr>
-  <tr>
-    <th>IU Barcode</th>
-    <td>
-      <%= @physical_object.iu_barcode %>
-    </td>
-  </tr>
-  <tr>
-    <th>MDPI Marcode</th>
-    <td><%= @physical_object.mdpi_barcode %></td>
-  </tr>
-  <tr>
-    <th>Medium Type</th>
-    <td>
-      <%= @physical_object.media_type %>
-    </td>
-  </tr>
-  <tr>
-    <th>Medium</th>
-    <td>
-      <%= @physical_object.medium %>
-    </td>
-  </tr>
-  <tr>
-    <th>Location</th>
-    <td>
-      <%= @physical_object.location %>
-    </td>
-  </tr>
-  <tr>
-    <th>Copyright</th>
-    <td>
-      <%= @physical_object.copy_right %>
-    </td>
-  </tr>
-  <tr>
-    <th>Series Title</th>
-    <td>
-      <% if @physical_object.title&.series %>
-      <%= link_to @physical_object.series_title_text, series_path(@physical_object.title.series) %>
-      <% end %>
+<div id="core_metadata" class="metadata_section">
+  <h4>Core Metadata</h4>
+  <div class="left _50">
+    <b>Title</b> <%= @physical_object.title_text %><br/>
+    <b>Series</b> <%= @physical_object.series_title_text %><br/>
+    <b>Series Part</b> <%= @physical_object.series_part %><br/>
+    <b>Media Type</b> <%= @physical_object.media_type %><br/>
+    <b>Medium</b> <%= @physical_object.medium %><br/>
+  </div>
+  <div class="left _50">
+    <b>Unit</b> <%= @physical_object.unit.abbreviation %><br/>
+    <b>Collection</b> <%= @physical_object.collection&.name %><br/>
+    <b>Current Location</b> <%= @physical_object.location %><br/>
+    <b>IU Barcode</b> <%= @physical_object.iu_barcode %><br/>
+    <b>MDPI Barcode</b> <%= @physical_object.mdpi_barcode %><br/>
+    <b>IUCAT Title NO.</b> <i>not implemented yet...</i><br/>
+  </div>
+  <div class="clear">
+    <b class="block">Version</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS) %>
+  </div>
+</div>
 
-    </td>
-  </tr>
-  <tr>
-    <th>Series Part</th>
-    <td>
-      <%= @physical_object.series_part %>
-    </td>
-  </tr>
-  <tr>
-    <th>Series Production Number</th>
-    <td>
-      <%= @physical_object.series_production_number %>
-    </td>
-  </tr>
-  <tr>
-    <th>Alternative Title</th>
-    <td>
-      <%= @physical_object.alternative_title %>
-    </td>
-  </tr>
-  <tr>
-    <th>Version</th>
-    <td>
-      <table>
-        <tr>
-          <th>1st Edition</th>
-          <td><%= check_box_tag 'first_edition', '', checked=@physical_object.first_edition %></td>
-          <th>2nd Edition</th>
-          <td><%= check_box_tag 'second_edition', '', checked=@physical_object.second_edition %></td>
-          <th>3rd Edition</th>
-          <td><%= check_box_tag 'third_edition', '', checked=@physical_object.third_edition %></td>
-          <th>4th Edition</th>
-          <td><%= check_box_tag 'fourth_edition', '', checked=@physical_object.fourth_edition %></td>
-          <th>Abridged</th>
-          <td><%= check_box_tag 'abridged', '', checked=@physical_object.abridged%></td>
-          <th>Short</th>
-          <td><%= check_box_tag 'short', '', checked=@physical_object.short %></td>
-          <th>Long</th>
-          <td><%= check_box_tag 'long', '', checked=@physical_object.long %></td>
-        </tr>
-        <tr>
-          <th>Sampe</th>
-          <td><%= check_box_tag 'sample', '', checked=@physical_object.sample %></td>
-          <th>Preview</th>
-          <td><%= check_box_tag 'preview', '', checked=@physical_object.preview %></td>
-          <th>Revised</th>
-          <td><%= check_box_tag 'revised', '', checked=@physical_object.revised %></td>
-          <th>Original</th>
-          <td><%= check_box_tag 'version_original', '', checked=@physical_object.version_original %></td>
-          <th>Captioned</th>
-          <td><%= check_box_tag 'captioned', '', checked=@physical_object.captioned %></td>
-          <th>Excerpt</th>
-          <td><%= check_box_tag 'excerpt', '', checked=@physical_object.excerpt %></td>
-        </tr>
-        <tr>
-          <th>Catholic</th>
-          <td><%= check_box_tag 'catholic', '', checked=@physical_object.catholic %></td>
-          <th>Domestic</th>
-          <td><%= check_box_tag 'domestic', '', checked=@physical_object.domestic %></td>
-          <th>Trailer</th>
-          <td><%= check_box_tag 'trailer', '', checked=@physical_object.trailer %></td>
-        </tr>
-        <tr>
-          <th>English</th>
-          <td><%= check_box_tag 'english', '', checked=@physical_object.english %></td>
-          <th>Television</th>
-          <td><%= check_box_tag 'television', '', checked=@physical_object.television %></td>
-          <th>X-rated</th>
-          <td><%= check_box_tag 'x_rated', '', checked=@physical_object.x_rated %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Generation</th>
-    <td>
-      <table>
-        <tr>
-          <th>Projection Pring</th>
-          <td><%= check_box_tag 'generation_projection_print', '', checked=@physical_object.generation_projection_print %></td>
-          <th>A Roll</th>
-          <td><%= check_box_tag 'generation_ab_a_roll', '', checked=@physical_object.generation_ab_a_roll %></td>
-          <th>B Roll</th>
-          <td><%= check_box_tag 'generation_ab_b_roll', '', checked=@physical_object.generation_ab_b_roll %></td>
-          <th>C Roll</th>
-          <td><%= check_box_tag 'generation_ab_c_roll', '', checked=@physical_object.generation_ab_c_roll %></td>
-          <th>D Roll</th>
-          <td><%= check_box_tag 'generation_ab_d_roll', '', checked=@physical_object.generation_ab_d_roll %></td>
-          <th>Answer Print</th>
-          <td><%= check_box_tag 'generation_answer_print', '', checked=@physical_object.generation_answer_print %></td>
-        </tr>
-        <tr>
-          <th>Composite</th>
-          <td><%= check_box_tag 'generation_composite', '', checked=@physical_object.generation_composite %></td>
-          <th>Duplicate</th>
-          <td><%= check_box_tag 'generation_duplicate', '', checked=@physical_object.generation_duplicate %></td>
-          <th>Edited</th>
-          <td><%= check_box_tag 'generation_edited', '', checked=@physical_object.generation_edited %></td>
-          <th>Edited Camera Original</th>
-          <td><%= check_box_tag 'generation_edited_camera_original', '', checked=@physical_object.generation_edited_camera_original %></td>
-          <th>Fine Grain Master</th>
-          <td><%= check_box_tag 'generation_fine_grain_master', '', checked=@physical_object.generation_fine_grain_master %></td>
-          <th>Intermediate</th>
-          <td><%= check_box_tag 'generation_intermediate', '', checked=@physical_object.generation_intermediate %></td>
-        </tr>
-        <tr>
-          <th>Kinescope</th>
-          <td><%= check_box_tag 'generation_kinescope', '', checked=@physical_object.generation_kinescope %></td>
-          <th>Magnetic Track</th>
-          <td><%= check_box_tag 'generation_magnetic_track', '', checked=@physical_object.generation_magnetic_track %></td>
-          <th>Mezzanine</th>
-          <td><%= check_box_tag 'generation_mezzanine', '', checked=@physical_object.generation_mezzanine %></td>
-          <th>Negative</th>
-          <td><%= check_box_tag 'generation_negative', '', checked=@physical_object.generation_negative %></td>
-          <th>Optical Sound Track</th>
-          <td><%= check_box_tag 'generation_optical_sound_track', '', checked=@physical_object.generation_optical_sound_track %></td>
-          <th>Original</th>
-          <td><%= check_box_tag 'generation_original', '', checked=@physical_object.generation_original %></td>
-        </tr>
-        <tr>
-          <th>Outs and Trims</th>
-          <td><%= check_box_tag 'generation_outs_and_trims', '', checked=@physical_object.generation_outs_and_trims %></td>
-          <th>Positive</th>
-          <td><%= check_box_tag 'generation_positive', '', checked=@physical_object.generation_positive %></td>
-          <th>Reversal</th>
-          <td><%= check_box_tag 'generation_reversal', '', checked=@physical_object.generation_reversal %></td>
-          <th>Separation Master</th>
-          <td><%= check_box_tag 'generation_separation_master', '', checked=@physical_object.generation_separation_master %></td>
-          <th>Work Print</th>
-          <td><%= check_box_tag 'generation_work_print', '', checked=@physical_object.generation_work_print %></td>
-          <th>Mixed</th>
-          <td><%= check_box_tag 'generation_mixed', '', checked=@physical_object.generation_mixed %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Base</th>
-    <td>
-      <table>
-        <tr>
-          <th>Acetate</th>
-          <td><%= check_box_tag 'base_acetate', '', checked=@physical_object.base_acetate %></td>
-          <th>Polyester</th>
-          <td><%= check_box_tag 'base_polyester', '', checked=@physical_object.base_polyester %></td>
-          <th><b>Nitrate</b></th>
-          <td><%= check_box_tag 'base_nitrate', '', checked=@physical_object.base_nitrate %></td>
-          <th>Mixed</th>
-          <td><%= check_box_tag 'base_mixed', '', checked=@physical_object.base_mixed %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Stock</th>
-    <td>
-      <table>
-        <tr>
-          <th>Agfa</th>
-          <td><%= check_box_tag 'stock_agfa', '', checked=@physical_object.stock_agfa %></td>
-          <th>Ansco</th>
-          <td><%= check_box_tag 'stock_ansco', '', checked=@physical_object.stock_ansco %></td>
-          <th>Dupont</th>
-          <td><%= check_box_tag 'stock_dupont', '', checked=@physical_object.stock_dupont %></td>
-          <th>Orwo</th>
-          <td><%= check_box_tag 'stock_orwo', '', checked=@physical_object.stock_orwo %></td>
-          <th>Fuji</th>
-          <td><%= check_box_tag 'stock_fuji', '', checked=@physical_object.stock_fuji %></td>
-          <th>Gevaert</th>
-          <td><%= check_box_tag 'stock_gevaert', '', checked=@physical_object.stock_gevaert %></td>
-          <th>Kodak</th>
-          <td><%= check_box_tag 'stock_kodak', '', checked=@physical_object.stock_kodak %></td>
-          <th>Ferrania</th>
-          <td><%= check_box_tag 'stock_ferrania', '', checked=@physical_object.stock_ferrania %></td>
-          <th>Mixed</th>
-          <td><%= check_box_tag 'stock_mixed', '', checked=@physical_object.stock_mixed %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Access</th>
-    <td>
-      <%= @physical_object.access %>
-    </td>
-  </tr>
-  <tr>
-    <th>Gauge</th>
-    <td>
-      <%= @physical_object.gauge %>
-    </td>
-  </tr>
-  <tr>
-    <th>Can Size</th>
-    <td>
-      <%= @physical_object.can_size %>
-    </td>
-  </tr>
-  <tr>
-    <th>Footage (ft)</th>
-    <td>
-      <%= @physical_object.footage %>
-    </td>
-  </tr>
-  <tr>
-    <th>Duration (hh:mm:ss)</th>
-    <td>
-      <%= @physical_object.duration %>
-    </td>
-  </tr>
-  <tr>
-    <th>Reel Number</th>
-    <td>
-      <%= @physical_object.reel_number %>
-    </td>
-  </tr>
-  <tr>
-    <th>Multiple Items in Can</th>
-    <td>
-      <%= check_box_tag :multiple_items_in_can , '', checked=@physical_object.multiple_items_in_can %>
-    </td>
-  </tr>
-  <tr>
-    <th>Format Notes</th>
-    <td>
-      <%= @physical_object.format_notes %>
-    </td>
-  </tr>
-  <tr>
-    <th>Picture Type</th>
-    <td>
-      <table>
-        <tr>
-          <th>Not Applicable</th>
-          <td><%= check_box_tag 'picture_not_applicable', '', checked=@physical_object.picture_not_applicable  %></td>
-          <th>Silent Picture</th>
-          <td><%= check_box_tag 'picture_silent_picture', '', checked=@physical_object.picture_silent_picture %></td>
-          <th>MOS Picture</th>
-          <td><%= check_box_tag 'picture_mos_picture', '', checked=@physical_object.picture_mos_picture  %></td>
-          <th>Composite Picture</th>
-          <td><%= check_box_tag 'picture_composite_picture', '', checked=@physical_object.picture_composite_picture %></td>
-          <th>Intertitles Only</th>
-          <td><%= check_box_tag 'picture_intertitles_only', '', checked=@physical_object.picture_intertitles_only %></td>
-          <th>Credits Only</th>
-          <td><%= check_box_tag 'picture_credits_only', '', checked=@physical_object.picture_credits_only %></td>
-        </tr>
-        <tr>
-          <th>Picture Effects</th>
-          <td><%= check_box_tag 'picture_picture_effects', '', checked=@physical_object.picture_picture_effects %></td>
-          <th>Picture Outtakes</th>
-          <td><%= check_box_tag 'picture_picture_outtakes', '', checked=@physical_object.picture_picture_outtakes %></td>
-          <th>Kinescope</th>
-          <td><%= check_box_tag 'picture_picture_kinescope', '', checked=@physical_object.picture_picture_kinescope %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Frame Rate</th>
-    <td>
-      <%= @physical_object.frame_rate %>
-    </td>
-  </tr>
-  <tr>
-    <th>Color</th>
-    <td>
-      <table>
-        <tr>
-          <th>Black and White</th>
-          <td><%= check_box_tag 'color_bw_bw', '', checked=@physical_object.color_bw_bw %></td>
-          <th>Black and White: Toned</th>
-          <td><%= check_box_tag 'color_bw_bw_toned ', '', checked=@physical_object.color_bw_bw_toned %></td>
-          <th>Black and White: Tinted</th>
-          <td><%= check_box_tag 'color_bw_bw_tinted', '', checked=@physical_object.color_bw_bw_tinted %></td>
-          <th>Color</th>
-          <td><%= check_box_tag 'color_bw_color', '', checked=@physical_object.color_bw_color %></td>
-          <th>Color: Ektachrome</th>
-          <td><%= check_box_tag 'color_bw_color_ektachrome', '', checked=@physical_object.color_bw_color_ektachrome %></td>
-          <th>Color: Kodachrome</th>
-          <td><%= check_box_tag 'color_bw_color_kodachrome', '', checked=@physical_object.color_bw_color_kodachrome %></td>
-          <th>Color: Technical</th>
-          <td><%= check_box_tag 'color_bw_color_technicolor', '', checked=@physical_object.color_bw_color_technicolor %></td>
-        </tr>
-        <tr>
-          <th>Color: Ansochrome</th>
-          <td><%= check_box_tag 'color_bw_color_anscochrome', '', checked=@physical_object.color_bw_color_anscochrome %></td>
-          <th>Color: Eco</th>
-          <td><%= check_box_tag 'color_bw_color_eco', '', checked=@physical_object.color_bw_color_eco %></td>
-          <th>Color: Eastman</th>
-          <td><%= check_box_tag 'color_bw_color_eastman', '', checked=@physical_object.color_bw_color_eastman %></td>
-          <th>Mixed</th>
-          <td><%= check_box_tag 'color_bw_color_bw_mixed', '', checked=@physical_object.color_bw_color_bw_mixed %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Aspect Ratio</th>
-    <td>
-      <table>
-        <tr>
-          <th>1:33:1</th>
-          <td><%= check_box_tag 'aspect_ratio_1_33_1', '', checked=@physical_object.aspect_ratio_1_33_1 %></td>
-          <th>1:37:1</th>
-          <td><%= check_box_tag 'aspect_ratio_1_37_1', '', checked=@physical_object.aspect_ratio_1_37_1 %></td>
-          <th>1:66:1</th>
-          <td><%= check_box_tag 'aspect_ratio_1_66_1', '', checked=@physical_object.aspect_ratio_1_66_1 %></td>
-          <th>1:85:1</th>
-          <td><%= check_box_tag 'aspect_ratio_1_85_1', '', checked=@physical_object.aspect_ratio_1_85_1 %></td>
-          <th>2:35:1</th>
-          <td><%= check_box_tag 'aspect_ratio_2_35_1', '', checked=@physical_object.aspect_ratio_2_35_1 %></td>
-          <th>2:39:1</th>
-          <td><%= check_box_tag 'aspect_ratio_2_39_1', '', checked=@physical_object.aspect_ratio_2_39_1 %></td>
-          <th>2:59:1</th>
-          <td><%= check_box_tag 'aspect_ratio_2_59_1', '', checked=@physical_object.aspect_ratio_2_59_1 %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Language</th>
-    <td>
-      <table>
-        <tr>
-          <th>Arabic</th>
-          <td><%= check_box_tag 'language_arabic', '', checked=@physical_object.language_arabic %></td>
-          <th>Chinese</th>
-          <td><%= check_box_tag 'language_chinese', '', checked=@physical_object.language_chinese %></td>
-          <th>English</th>
-          <td><%= check_box_tag 'language_english', '', checked=@physical_object.language_english %></td>
-          <th>French</th>
-          <td><%= check_box_tag 'language_french', '', checked=@physical_object.language_french %></td>
-          <th>German</th>
-          <td><%= check_box_tag 'language_german', '', checked=@physical_object.language_german %></td>
-          <th>Hindi</th>
-          <td><%= check_box_tag 'language_hindi', '', checked=@physical_object.language_hindi %></td>
-          <th>Italian</th>
-          <td><%= check_box_tag 'language_italian', '', checked=@physical_object.language_italian %></td>
-          <th>Japanese</th>
-          <td><%= check_box_tag 'language_japanese', '', checked=@physical_object.language_japanese %></td>
-          <th>Portuguese</th>
-          <td><%= check_box_tag 'language_portuguese', '', checked=@physical_object.language_portuguese %></td>
-          <th>Russian</th>
-          <td><%= check_box_tag 'language_russian', '', checked=@physical_object.language_russian %></td>
-        </tr>
-        <tr>
-          <th>Spanish</th>
-          <td><%= check_box_tag 'language_spanish', '', checked=@physical_object.language_spanish %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Captions or Subtitles</th>
-    <td>
-      <%= check_box_tag 'close_caption', '', checked=@physical_object.close_caption %>
-    </td>
-  </tr>
-  <tr>
-    <th>Captions and Subtitles Notes</th>
-    <td>
-      <%= @physical_object.notes %>
-    </td>
-  </tr>
-  <tr>
-    <th>Silent?</th>
-    <td>
-      <%= check_box_tag 'silent', '', checked=@physical_object.silent %>
-    </td>
-  </tr>
-  <tr>
-    <th>Sound Format Type</th>
-    <td>
-      <table>
-        <tr>
-          <th>Optical: Variable Area</th>
-          <td><%= check_box_tag 'sound_format_optical_variable_area', '', checked=@physical_object.sound_format_optical_variable_area %></td>
-          <th>Optical: Variable Density</th>
-          <td><%= check_box_tag 'sound_format_optical_variable_density', '', checked=@physical_object.sound_format_optical_variable_density %></td>
-          <th>Magnetic</th>
-          <td><%= check_box_tag 'sound_format_magnetic', '', checked=@physical_object.sound_format_magnetic %></td>
-          <th>Mixed</th>
-          <td><%= check_box_tag 'sound_format_type_mixed', '', checked=@physical_object.sound_format_type_mixed %></td>
-          <th>Digital: SDDS </th>
-          <td><%= check_box_tag 'sound_format_digital_sdds', '', checked=@physical_object.sound_format_digital_sdds %></td>
-        </tr>
-        <tr>
-          <th>Digital: DTS</th>
-          <td><%= check_box_tag 'sound_format_digital_dts', '', checked=@physical_object.sound_format_digital_dts %></td>
-          <th>Digital: Dolby Digital</th>
-          <td><%= check_box_tag 'sound_format_digital_dolby_digital', '', checked=@physical_object.sound_format_digital_dolby_digital %></td>
-          <th>Sound on Separate Media Type</th>
-          <td><%= check_box_tag 'sound_format_sound_on_separate_media', '', checked=@physical_object.sound_format_sound_on_separate_media %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Sound Content Type</th>
-    <td>
-      <table>
-        <tr>
-          <th>Music track</th>
-          <td><%= check_box_tag 'sound_content_music_track', '', checked=@physical_object.sound_content_music_track %></td>
-          <th>Effects Track</th>
-          <td><%= check_box_tag 'sound_content_effects_track', '', checked=@physical_object.sound_content_effects_track %></td>
-          <th>Dialog</th>
-          <td><%= check_box_tag 'sound_content_dialog', '', checked=@physical_object.sound_content_dialog %></td>
-          <th>Composite Track</th>
-          <td><%= check_box_tag 'sound_content_composite_track', '', checked=@physical_object.sound_content_composite_track %></td>
-          <th>Outtakes</th>
-          <td><%= check_box_tag 'sound_content_outtakes', '', checked=@physical_object.sound_content_outtakes %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Sound Configuration</th>
-    <td>
-      <table>
-        <tr>
-          <th>Mono</th>
-          <td><%= check_box_tag 'sound_configuration_mono', '', checked=@physical_object.sound_configuration_mono %></td>
-          <th>Stereo</th>
-          <td><%= check_box_tag 'sound_configuration_stereo', '', checked=@physical_object.sound_configuration_stereo %></td>
-          <th>Surround</th>
-          <td><%= check_box_tag 'sound_configuration_surround', '', checked=@physical_object.sound_configuration_surround %></td>
-          <th>Multi-track (i.e. Maurer)</th>
-          <td><%= check_box_tag 'sound_configuration_multi_track', '', checked=@physical_object.sound_configuration_multi_track %></td>
-          <th>Dual</th>
-          <td><%= check_box_tag 'sound_configuration_dual', '', checked=@physical_object.sound_configuration_dual %></td>
-          <th>Single</th>
-          <td><%= check_box_tag 'sound_configuration_single', '', checked=@physical_object.sound_configuration_single %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>AD Strip</th>
-    <td>
-      <%= @physical_object.ad_strip %>
-    </td>
-  </tr>
-  <tr>
-    <th>Shrinkage</th>
-    <td>
-      <%= @physical_object.shrinkage %>
-    </td>
-  </tr>
-  <tr>
-    <th>Mold</th>
-    <td>
-      <%= @physical_object.mold %>
-    </td>
-  </tr>
-  <tr>
-    <th>Condition Type</th>
-    <td>
-      <table>
-        <tr>
-          <th>Color Fade</th>
-          <td><%= @physical_object.color_fade %></td>
-          <th>Perforation Damage</th>
-          <td><%= @physical_object.perforation_damage %></td>
-          <th>Water Damage</th>
-          <td><%= @physical_object.water_damage %></td>
-        </tr>
-        <tr>
-          <th>Warp</th>
-          <td><%= @physical_object.warp %></td>
-          <th>Brittle</th>
-          <td><%= @physical_object.brittle %></td>
-          <th>Lacquer Treated</th>
-          <td><%= check_box_tag 'lacquer_treated', '', checked=@physical_object.lacquer_treated %></td>
-        </tr>
-        <tr>
-          <th>Replasticized</th>
-          <td></td>
-          <th>Splice Damage</th>
-          <td><%= @physical_object.splice_damage %></td>
-          <th>Spoking</th>
-          <td><%= @physical_object.spoking %></td>
-        </tr>
-        <tr>
-          <th>Dirty</th>
-          <td><%= @physical_object.dirty %></td>
-          <th>Dusty</th>
-          <td><%= check_box_tag 'dusty', '', checked=@physical_object.dusty %></td>
-          <th>Rusty</th>
-          <td><%= @physical_object.rusty %></td>
-        </tr>
-        <tr>
-          <th>Peeling</th>
-          <td><%= @physical_object.peeling %></td>
-          <th>Tape Residue</th>
-          <td><%= @physical_object.tape_residue %></td>
-          <th>Broken</th>
-          <td><%= @physical_object.broken %></td>
-        </tr>
-        <tr>
-          <th>Tearing</th>
-          <td><%= @physical_object.tearing %></td>
-          <th>Poor Wind</th>
-          <td><%= check_box_tag 'loose_wind' %></td>
-          <th>Not on Core or Reel</th>
-          <td><%= check_box_tag 'not_on_core_or_reel', '', checked=@physical_object.not_on_core_or_reel %></td>
-        </tr>
-        <tr>
-          <th>Missing Footage</th>
-          <td><%= @physical_object.missing_footage %></td>
-          <th>Scratches</th>
-          <td><%= @physical_object.scratches %></td>
-          <th>Miscellaneous</th>
-          <td><%= @physical_object.miscellaneous %></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <th>Overall Condition Rating</th>
-    <td>
-      <%= @physical_object.condition_rating %>
-    </td>
-  </tr>
-  <tr>
-    <th>Condition Notes</th>
-    <td>
-      <%= @physical_object.condition_notes %>
-    </td>
-  </tr>
-  <tr>
-    <th>Research Value</th>
-    <td>
-      <%= @physical_object.research_value %>
-    </td>
-  </tr>
-  <tr>
-    <th>Research Value Notes</th>
-    <td>
-      <%= @physical_object.research_value_notes %>
-    </td>
-  </tr>
-  <tr>
-    <th>Conservation Actions</th>
-    <td>
-      <%= @physical_object.conservation_actions %>
-    </td>
-  </tr>
-  <tr>
-    <th>Item Original Identifier</th>
-    <td>
-      <%= @physical_object.item_original_identifier %>
-    </td>
-  </tr>
-  <tr>
-    <th>Accompanying Documentation</th>
-    <td>
-      <%= @physical_object.accompanying_documentation %>
-    </td>
-  </tr>
-</table>
+<div id="" class="metadata_section">
+  <h4>Format</h4>
+  <div class="left _50">
+    <b >Gauge</b><%= @physical_object.gauge %><br/>
+    <b class="block">Generation</b><%= @physical_object.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %>
+  </div>
+  <div class="">
+    <b>Original Identifier&nbsp;</b><%= @physical_object.item_original_identifier %><br/>
+    <b>Reel Number&nbsp;</b><%= @physical_object.reel_number %><br/>
+    <b>Multiple Items in Can &nbsp;</b><%= @physical_object.multiple_items_in_can ? 'yes' : 'no' %> <br/>
+    <b>Can Size&nbsp;</b><%= @physical_object.can_size%><br/>
+    <b>Footage (ft)&nbsp;</b><%= @physical_object.footage %><br/>
+    <b>Duration (hh:mm:ss)&nbsp;</b><%= @physical_object.duration %><br/>
+    <b>Edge Code</b> <i>currently not implemented</i>
+  </div>
+  <div>
+    <b class="block">Base</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::BASE_FIELDS) %>
+  </div>
+  <div>
+    <b class="block">Stock</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::STOCK_FIELDS) %>
+  </div>
+  <div class="clear"></div>
+</div>
+<div id="image_metadata" class="metadata_section left _50">
+  <h4>Image</h4>
+  <div>
+    <div class="">
+      <b class="block">Picture Type&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(PhysicalObject::PICTURE_TYPE_FIELDS) %>
+    </div>
+    <div class="clear">
+      <b >Frame Rate&nbsp;</b><%= @physical_object.frame_rate %>
+    </div>
+    <div id="" class="">
+      <b class="block">Color&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(PhysicalObject::COLOR_FIELDS) %>
+      </div>
+    </div>
+    <div>
+      <b class="block">Aspect Ratio&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(PhysicalObject::ASPECT_RATIO_FIELDS) %>
+    </div>
+
+  </div>
+</div>
+<div id="sound_metadata" class="metadata_section left _50">
+  <h4>Sound</h4>
+  <div>
+    <b>Silent&nbsp;</b><%= @physical_object.silent? ? "yes" : "no" %><br/>
+    <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption? ? "yes" : "no" %><br/>
+    <b>Captions/Subtitles Notes&nbsp;</b><br/>
+  </div>
+  <div>
+    <%= @physical_object.notes %>
+  </div>
+  <b >Format Type&nbsp;</b>
+  <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_FORMAT_FIELDS) %>
+  <div class="">
+    <b >Content Type&nbsp;</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONTENT_FIELDS) %>
+  </div>
+  <div class="">
+    <b >Configuration&nbsp;</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONFIGURATION_FIELDS) %>
+  </div>
+  <div class="">
+    <b class="">Language - Dialog&nbsp;</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::LANGUAGE_FIELDS) %>
+  </div>
+  <div class="">
+    <b >Language - Captions and Subtitles</b>
+    <i>Not implemented yet...</i>
+  </div>
+</div>
+<div id="format_notes_metadata" class="metadata_section">
+  <h4>Format Notes</h4>
+  <p><%= @physical_object.format_notes %></p>
+</div>
+<div id="accompanying_documentation_metadata" class="metadata_section">
+  <h4>Accompanying Documentation</h4>
+  <div>
+    <i>Implementaion to be drastically modified...</i>
+  </div>
+</div>
+<div id="" class="metadata_section">
+  <h4>Condition</h4>
+  <div class="h_55px">
+    <div class="left _45 rp_10px">
+      <b>Overall Condition</b> <%= @physical_object.condition_rating %><br/>
+      <b>Condition Notes</b> <%= @physical_object.condition_notes %>
+    </div>
+    <div class="left _50">
+      <b>Research Value</b> <%= @physical_object.research_value %><br/>
+      <b class="block">Research Value Notes</b>
+      <div>
+        <%= @physical_object.research_value_notes %>
+      </div>
+    </div>
+  </div>
+  <div class="clear">
+    <b>AD Strip</b> <%= @physical_object.ad_strip %>&nbsp;&nbsp;&nbsp;
+    <b>Shrinkage</b> <%= @physical_object.shrinkage %>&nbsp;&nbsp;&nbsp;
+    <b>Mold</b> <%= @physical_object.mold %><br/>
+  </div>
+  <div class="h_150px">
+    <b class="block">Condition Types</b>
+    <div class="left _33">
+      Brittle <%= @physical_object.brittle %><br/>
+      Dirty <%= @physical_object.dirty %><br/>
+      Not on Core or Reel <%= @physical_object.not_on_core_or_reel? ? "yes" : "no" %><br/>
+      Poor Wind <%= @physical_object.loose_wind? ? "yes" : "no" %> <br/>
+      Scratches <%= @physical_object.scratches %><br/>
+      Tape Residue <%= @physical_object.tape_residue %><br/>
+      Water Damage <%= @physical_object.water_damage %>
+    </div>
+    <div class="left _33">
+      Broken <%= @physical_object.broken %><br/>
+      Dusty <%= @physical_object.dusty? ? "yes" : "no" %><br/>
+      Peeling <%= @physical_object.peeling %><br/>
+      Replasticized <%= @physical_object.replasticized? ? "yes" : "no" %><br/>
+      Splice Damage <%= @physical_object.splice_damage %><br/>
+      Tearing <%= @physical_object.tearing %>
+    </div>
+    <div class="left _33">
+      Color Fade <%= @physical_object.color_fade %><br/>
+      Lacquer Treated <%= @physical_object.lacquer_treated? ? 'yes' : 'no' %><br/>
+      Perforation Damage <%= @physical_object.perforation_damage %><br/>
+      Rusty <%= @physical_object.rusty %><br/>
+      Spoking <%= @physical_object.spoking %><br/>
+      Warp <%= @physical_object.warp %>
+    </div>
+  </div>
+  <div>
+    <b class="block">Missing Footage</b>
+    <%= @physical_object.missing_footage %><br/>
+    <b class="block"> Miscellaneous</b>
+    <%= @physical_object.miscellaneous %>
+  </div>
+</div>
+<div id="conservation_actions_metadata" class="metadata_section">
+  <h4>Conservation actions</h4>
+  <%= @physical_object.conservation_actions %>
+</div>
 <%= render partial: 'physical_object_old_barcodes' %>
