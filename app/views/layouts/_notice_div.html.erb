@@ -1,0 +1,5 @@
+<% unless flash[:notice].blank? %>
+  <div>
+    <p class="notice"><%= flash[:notice].html_safe %></p>
+  </div>
+<% end %>

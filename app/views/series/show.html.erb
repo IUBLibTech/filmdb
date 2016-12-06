@@ -1,4 +1,4 @@
-<p class="notice"><%= notice %></p>
+<%= render partial: 'layouts/notice_div' %>
 <%= link_to 'Edit', edit_series_path(@series) %> |
 <%= link_to 'Back', series_index_path %> |
 <%= link_to 'Inventory This Series', series_new_physical_object_path(@series) %>

@@ -64,6 +64,7 @@ class SeriesController < ApplicationController
 
   def new_physical_object
     @physical_object = PhysicalObject.new
+    render 'physical_objects/new_physical_object'
   end
 
   def autocomplete_series

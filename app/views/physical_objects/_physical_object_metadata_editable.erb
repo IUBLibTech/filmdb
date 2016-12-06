@@ -1,27 +1,37 @@
-
 <div id="core_metadata" class="metadata_section">
   <h4>Core Metadata</h4>
   <div class="left _50">
-    <b>Title</b><%= f.hidden_field :title_id %> <%= f.text_field :title_text %><br/>
-    <b>Series</b>
-    <% if !@series.blank? %>
-      <input id="physical_object_series_id" name="physical_object[series_id]" type="hidden" value="<%= @series.id %>">
-      <input id="physical_object_series_title_text" class="ui-autocomplete-input" name="physical_object[series_title_text]" autocomplete="off" type="text" value="<%= @series.title %>"><br/>
+    <b>Title&nbsp;</b>
+    <% if @title %>
+        <%= @title.title_text %><br/>
     <% else %>
-      <%= f.hidden_field :series_id %>
+        <%= f.text_field :title_text %><br/>
+    <% end %>
+    <%= f.hidden_field :title_id %>
+    <b>Series</b>
+    <% if @series %>
+        <%= @series.title %><br/>
+    <% else %>
       <%= f.text_field :series_title_text %><br/>
     <% end %>
+    <%= f.hidden_field :series_id %>
+
     <b>Series Part</b> <%= f.text_field :series_part %><br/>
     <b>Media Type</b> <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %><br/>
     <b>Medium</b> <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
   </div>
   <div class="left _50">
     <b>Unit</b> <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %><br/>
-    <b>Collection</b><%= f.text_field :collection_text%> <%= f.hidden_field :collection_id %><br/>
+    <% if @collection %>
+        <b>Collection</b> <%= @collection.name %>
+    <% else %>
+        <b>Collection</b><%= f.text_field :collection_text%>
+    <% end %>
+    <%= f.hidden_field :collection_id %><br/>
     <b>Current Location</b> <%= f.select :location, options_for_select(@cv[:location]) %><br/>
     <b>IU Barcode</b> <%= f.text_field :iu_barcode %><br/>
     <b>MDPI Barcode</b> <%= f.text_field :mdpi_barcode %><br/>
-    <b>IUCAT Title NO.</b> <i>not implemented yet...</i>
+    <b>IUCAT Title NO.</b> <%= f.text_field :title_control_number %>
   </div>
   <div class="clear">
     <b class="block">Version</b>
@@ -34,7 +44,7 @@
 <div id="format_metadata" class="metadata_section">
   <h4>Format</h4>
   <div class="left _50 h_400px">
-    <b class='block'>Gauge</b><%= f.select :gauge, options_for_select(@cv[:gauge]) %><br/>
+    <b class='block'>Gauge</b><%= f.select :gauge, options_for_select(@cv[:gauge]), {include_blank: ''} %><br/>
     <div>
       <b class="block">Generation</b>
       <div class="generation_box">
@@ -73,7 +83,7 @@
     <b>Original Identifier</b><%= f.text_field :item_original_identifier %><br/>
     <b>Reel Number</b><%= f.text_field :reel_number %><br/>
     <%= f.check_box :multiple_items_in_can %> <b>Multiple Items in Can</b><br/>
-    <b>Can Size</b><%= f.select :can_size, options_for_select(@cv[:can_size]) %><br/>
+    <b>Can Size</b><%= f.select :can_size, options_for_select(@cv[:can_size]), {include_blank: ''}  %><br/>
     <b>Footage (ft)</b><%= f.text_field :footage %><br/>
     <b>Duration (hh:mm:ss)</b><%= f.text_field :duration %><br/>
     <b>Edge Code</b> <i>currently not implemented</i>
@@ -113,7 +123,7 @@
       </div>
     </div>
     <div class="clear">
-      <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate]) %>
+      <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate]), {include_blank: ''}  %>
     </div>
     <div id="color_div" class="h_195px">
       <b class="block">Color</b>
@@ -127,7 +137,7 @@
           <%= f.check_box :color_bw_color %>Color<br/>
           <%= f.check_box :color_bw_color_ektachrome %>Ektachrome<br/>
           <%= f.check_box :color_bw_color_kodachrome %>Kodachrome<br/>
-          <%= f.check_box :color_bw_color_technicolor %>Technicolorl<br/>
+          <%= f.check_box :color_bw_color_technicolor %>Technicolor<br/>
           <%= f.check_box :color_bw_color_anscochrome %>Ansochrome<br/>
           <%= f.check_box :color_bw_color_eco %>Eco<br/>
           <%= f.check_box :color_bw_color_eastman %>Eastman<br/>
@@ -224,11 +234,11 @@
   <h4>Condition</h4>
   <div class="h_100px">
     <div class="left _45 rp_10px">
-      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:condition_rating]) %><br/>
+      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:condition_rating]), {include_blank: ''}  %><br/>
       <b>Condition Notes</b> <%= f.text_area :condition_notes, class: "_100" %>
     </div>
     <div class="left _50">
-      <b>Research Value</b> <%= f.select :research_value, options_for_select(@cv[:research_value]) %><br/>
+      <b>Research Value</b> <%= f.select :research_value, options_for_select(@cv[:research_value]), {include_blank: ''}  %><br/>
       <b class="block">Research Value Notes</b>
       <div>
         <%= f.text_area :research_value_notes, class: '_100' %>
@@ -238,32 +248,31 @@
   <div class="h_260px pl_10px">
     <b class="block">Condition Types</b>
     <div class="left _33">
-      AD Strip <%= f.select :ad_strip, options_for_select(@cv[:ad_strip]) %><br/>
-      Brittle <%= f.select :brittle, options_for_select(@cv[:condition_type]) %><br/>
-      Dirty <%= f.select :dirty, options_for_select(@cv[:condition_type]) %><br/>
+      AD Strip <%= f.select :ad_strip, options_for_select(@cv[:ad_strip]), {include_blank: ''}  %><br/>
+      Dirty <%= f.select :dirty, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
       <%= f.check_box :not_on_core_or_reel %> Not on Core or Reel <br/>
       <%= f.check_box :loose_wind %> Poor Wind <br/>
-      Scratches <%= f.select :scratches, options_for_select(@cv[:condition_type]) %><br/>
-      Tape Residue <%= f.select :tape_residue, options_for_select(@cv[:condition_type]) %><br/>
-      Water Damage <%= f.select :water_damage, options_for_select(@cv[:condition_type]) %>
+      Scratches <%= f.select :scratches, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
+      Tape Residue <%= f.select :tape_residue, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
+      Water Damage <%= f.select :water_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
     </div>
     <div class="left _33">
       Shrinkage <%= f.text_field :shrinkage %><br/>
-      Broken <%= f.select :broken, options_for_select(@cv[:condition_type]) %><br/>
+      Broken <%= f.select :broken, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
       <%= f.check_box :dusty %>Dusty<br/>
-      Peeling <%= f.select :peeling, options_for_select(@cv[:condition_type]) %><br/>
+      Peeling <%= f.select :peeling, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
       <%= f.check_box :replasticized %>Replasticized<br/>
-      Splice Damage <%= f.select :splice_damage, options_for_select(@cv[:condition_type]) %><br/>
-      Tearing <%= f.select :tearing, options_for_select(@cv[:condition_type]) %>
+      Splice Damage <%= f.select :splice_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
+      Tearing <%= f.select :tearing, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
     </div>
     <div class="left _33">
-      Mold <%= f.select :mold, options_for_select(@cv[:mold]) %><br/>
-      Color Fade <%= f.select :color_fade, options_for_select(@cv[:condition_type]) %><br/>
+      Mold <%= f.select :mold, options_for_select(@cv[:mold]), {include_blank: ''}  %><br/>
+      Color Fade <%= f.select :color_fade, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
       <%= f.check_box :lacquer_treated %>Lacquer Treated<br/>
-      Perforation Damage <%= f.select :perforation_damage, options_for_select(@cv[:condition_type]) %><br/>
+      Perforation Damage <%= f.select :perforation_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
       Rusty <%= f.text_field :rusty %><br/>
       Spoking <%= f.text_field :spoking %><br/>
-      Warp <%= f.select :warp, options_for_select(@cv[:condition_type]) %>
+      Warp <%= f.select :warp, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
     </div>
   </div>
   <div>
@@ -277,4 +286,5 @@
   <h4>Conservation actions</h4>
   <%= f.text_area :conservation_actions, class: '_100' %>
 </div>
+
 <%= render partial: "physical_objects/physical_object_metadata_js" %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161128211204) do
+ActiveRecord::Schema.define(version: 20161206195456) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(version: 20161128211204) do
     t.boolean  "research_value"
     t.boolean  "conservation_actions"
     t.boolean  "multiple_items_in_can"
+    t.boolean  "title_control_number"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -263,6 +264,7 @@ ActiveRecord::Schema.define(version: 20161128211204) do
     t.boolean  "dusty"
     t.string   "rusty",                                 limit: 255
     t.text     "miscellaneous",                         limit: 65535
+    t.string   "title_control_number",                  limit: 255
   end
 
   create_table "series", force: :cascade do |t|

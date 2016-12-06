@@ -67,7 +67,7 @@ class CollectionsController < ApplicationController
   end
 
   def new_physical_object
-
+    render "physical_objects/new_physical_object"
   end
 
   def autocomplete_collection
@@ -101,7 +101,6 @@ class CollectionsController < ApplicationController
 
     def init_create_physical_object
       @user = User.where(username: current_user).first
-      @series = Series.all
       @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id, modified_by: @user.id )
       @cv = ControlledVocabulary.physical_object_cv
     end

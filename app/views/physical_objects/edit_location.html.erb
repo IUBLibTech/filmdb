@@ -3,7 +3,7 @@
       <%= flash[:warning] %>
   <% end %>
 </p>
-<p class="notice"><%= notice %></p>
+<%= render partial: 'layouts/notice_div' %>
 <%= form_for @physical_object, url: update_location_path do |f| %>
     <table>
       <tr>

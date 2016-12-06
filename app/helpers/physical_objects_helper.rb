@@ -17,6 +17,7 @@ module PhysicalObjectsHelper
 
     new_series = params[:physical_object][:series_id].blank? && !params[:physical_object][:series_title_text].blank?
     new_title = params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
+
     if new_series && new_title
       @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
       @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
@@ -24,12 +25,14 @@ module PhysicalObjectsHelper
       @title.series_id = @series.id
       @title.save
       @physical_object.title_id = @title.id
+      @other_message = "Additionally the new Title <i>#{@title.title_text}</i>, and the new Series <i>#{@series.title}</i> were created."
     elsif new_series
       @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
       @series.save
       title = Title.find(params[:physical_object][:title_id])
       title.update_attributes(series_id: @series.id)
       @physical_object.title_id = title.id
+      @other_message = "Additionally the new Series <i>#{@series.title}</i> was created."
     elsif new_title
       @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
       #  either an existing series was specified or no series was specified
@@ -38,17 +41,20 @@ module PhysicalObjectsHelper
       end
       @title.save
       @physical_object.title_id = @title.id
+      @other_message = "Additionally the new Title <i>#{@title.title_text}</i> was created."
     end
+    flash[:other_message] = @other_message
 
     respond_to do |format|
-      controller = params[:controller] == 'physical_objects' ? PhysicalObject : params[:controller] == 'collections' ? Collection : Series
       if @physical_object.save
-        if controller == PhysicalObject
+        if controller_name == 'physical_objects'
           format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
-        elsif controller == Collection
+        elsif controller_name == 'collections'
           format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
-        else
+        elsif controller_name == 'series'
           format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
+        elsif controller_name == 'titles'
+          format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
         end
       else
         format.html { render :new_physical_object }
@@ -87,7 +93,7 @@ module PhysicalObjectsHelper
         :warp, :brittle, :splice_damage, :dirty, :peeling, :tape_residue, :broken, :tearing, :loose_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-        :spoking, :dusty, :rusty, :miscellaneous
+        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number
     )
   end
 end

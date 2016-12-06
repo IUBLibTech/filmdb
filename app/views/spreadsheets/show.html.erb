@@ -1,4 +1,4 @@
-<p class="notice"><%= notice %></p>
+<%= render partial: 'layouts/notice_div' %>
 <% if @spreadsheet.successful_upload %>
     <%= render partial: 'physical_objects/physical_objects_table' %>
 

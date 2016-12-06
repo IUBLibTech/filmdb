@@ -70,6 +70,7 @@ class TitlesController < ApplicationController
 
   def new_physical_object
     @physical_object = PhysicalObject.new(title_id: @title.id)
+    render 'physical_objects/new_physical_object'
   end
 
   def autocomplete_title
@@ -103,6 +104,7 @@ class TitlesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_title
       @title = Title.find(params[:id])
+      @series = @title.series
       @cv = ControlledVocabulary.physical_object_cv
     end
 
