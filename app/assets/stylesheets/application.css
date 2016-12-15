@@ -354,6 +354,7 @@ td#color {
 }
 .label {
     display: flex;
+    clear: both;
 }
 
 .label > * {
