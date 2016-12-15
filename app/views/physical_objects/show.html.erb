@@ -7,6 +7,7 @@
   <h4>Core Metadata</h4>
   <div class="left _50">
     <b>Title</b> <%= @physical_object.title_text %><br/>
+    <b>Alternative Title</b> <%= @physical_object.alternative_title %>
     <b>Series</b> <%= @physical_object.series_title_text %><br/>
     <b>Series Part</b> <%= @physical_object.series_part %><br/>
     <b>Media Type</b> <%= @physical_object.media_type %><br/>
@@ -137,6 +138,7 @@
     <div class="left _33">
       Brittle <%= @physical_object.brittle %><br/>
       Dirty <%= @physical_object.dirty %><br/>
+      Channeling <%= @physical_object.channeling %><br/>
       Not on Core or Reel <%= @physical_object.not_on_core_or_reel? ? "yes" : "no" %><br/>
       Poor Wind <%= @physical_object.loose_wind? ? "yes" : "no" %> <br/>
       Scratches <%= @physical_object.scratches %><br/>

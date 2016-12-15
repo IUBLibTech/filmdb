@@ -1,6 +1,8 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object]
+  before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
+  before_action :set_title_cv, only: [:new, :edit]
 
   # GET /titles
   # GET /titles.json
@@ -16,11 +18,17 @@ class TitlesController < ApplicationController
 
   # GET /titles/new_physical_object
   def new
-    @title = Title.new
+    u = User.current_user_object
+    @title = Title.new(modified_by_id: u.id, created_by_id: u.id)
   end
 
   # GET /titles/1/edit
   def edit
+    @title.modified_by_id = User.current_user_object.id
+    if @title.nil?
+      flash.now[:warning] = "No such title..."
+      redirect_to :back
+    end
   end
 
   # POST /titles
@@ -75,7 +83,7 @@ class TitlesController < ApplicationController
 
   def autocomplete_title
     if params[:term]
-      json = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ?", "%#{params[:term]}%").select('titles.id, title_text, titles.description, series_id, series.title').to_json
+      json = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ?", "%#{params[:term]}%").select('titles.id, title_text, titles.summary, series_id, series.title').to_json
       json.gsub! "\"title_text\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       json.gsub! "\"title\":", "\"series_title\":"
@@ -87,7 +95,7 @@ class TitlesController < ApplicationController
 
   def autocomplete_title_for_series
     if params[:series_id] && params[:term]
-      json = Title.where("series_id = ? and title_text like ?", params[:series_id], "%#{params[:term]}%").select(:id, :title_text, :description).to_json
+      json = Title.where("series_id = ? and title_text like ?", params[:series_id], "%#{params[:term]}%").select(:id, :title_text, :summary).to_json
       json.gsub! "\"title_text\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       render json: json
@@ -105,11 +113,24 @@ class TitlesController < ApplicationController
     def set_title
       @title = Title.find(params[:id])
       @series = @title.series
+    end
+
+    def set_physical_object_cv
       @cv = ControlledVocabulary.physical_object_cv
     end
+  def set_title_cv
+    @title_cv = ControlledVocabulary.title_cv
+  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def title_params
-      params.require(:title).permit(:title_text, :description, :series_id, :series_title_index)
+      params.require(:title).permit(
+          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :location, :notes,
+          title_creators_attributes: [:id, :name, :role, :_destroy],
+          title_dates_attributes: [:id, :date, :date_type, :_destroy],
+          title_genres_attributes: [:id, :genre, :_destroy],
+          title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
+          title_publishers_attributes: [:id, :name, :publisher_type, :_destroy]
+      )
     end
 end

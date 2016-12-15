@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206195456) do
+ActiveRecord::Schema.define(version: 20161212195348) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -190,7 +190,6 @@ ActiveRecord::Schema.define(version: 20161206195456) do
     t.boolean  "color_bw_color_anscochrome"
     t.boolean  "color_bw_color_eco"
     t.boolean  "color_bw_color_eastman"
-    t.boolean  "color_bw_color_bw_mixed"
     t.boolean  "aspect_ratio_1_33_1"
     t.boolean  "aspect_ratio_1_37_1"
     t.boolean  "aspect_ratio_1_66_1"
@@ -265,13 +264,21 @@ ActiveRecord::Schema.define(version: 20161206195456) do
     t.string   "rusty",                                 limit: 255
     t.text     "miscellaneous",                         limit: 65535
     t.string   "title_control_number",                  limit: 255
+    t.string   "channeling",                            limit: 255
+    t.boolean  "color_bw_bw_hand_coloring"
+    t.boolean  "color_bw_bw_stencil_coloring"
   end
 
   create_table "series", force: :cascade do |t|
-    t.string   "title",       limit: 255
-    t.string   "description", limit: 255
+    t.string   "title",             limit: 255
+    t.string   "summary",           limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_by_id",     limit: 8
+    t.integer  "modified_by_id",    limit: 8
+    t.string   "production_number", limit: 255
+    t.string   "date",              limit: 255
+    t.integer  "total_episodes",    limit: 4
   end
 
   create_table "spreadsheet_submissions", force: :cascade do |t|
@@ -292,14 +299,58 @@ ActiveRecord::Schema.define(version: 20161206195456) do
 
   add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
 
+  create_table "title_creators", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "name",       limit: 255
+    t.string   "role",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "title_dates", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "date",       limit: 255
+    t.string   "date_type",  limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "title_genres", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "genre",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "title_original_identifiers", force: :cascade do |t|
+    t.integer  "title_id",        limit: 8
+    t.string   "identifier",      limit: 255
+    t.string   "identifier_type", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "title_publishers", force: :cascade do |t|
+    t.integer  "title_id",       limit: 8
+    t.string   "name",           limit: 255
+    t.string   "publisher_type", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "titles", force: :cascade do |t|
     t.string   "title_text",         limit: 255
-    t.text     "description",        limit: 65535
+    t.text     "summary",            limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "series_id",          limit: 8
     t.integer  "spreadsheet_id",     limit: 8
     t.integer  "series_title_index", limit: 4
+    t.integer  "modified_by_id",     limit: 8
+    t.string   "series_part",        limit: 255
+    t.integer  "created_by_id",      limit: 8
+    t.string   "location",           limit: 255
+    t.text     "notes",              limit: 65535
   end
 
   create_table "units", force: :cascade do |t|

@@ -38,14 +38,14 @@ class PhysicalObject < ActiveRecord::Base
                     :generation_negative, :generation_positive, :generation_reversal, :generation_projection_print, :generation_answer_print, :generation_work_print,
                     :generation_composite, :generation_intermediate, :generation_mezzanine, :generation_kinescope, :generation_magnetic_track, :generation_optical_sound_track,
                     :generation_outs_and_trims, :generation_ab_a_roll, :generation_ab_b_roll, :generation_ab_c_roll, :generation_ab_d_roll, :generation_edited,
-                    :generation_edited_camera_original, :generation_original, :generation_mixed, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate
+                    :generation_edited_camera_original, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate
                     ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",
       generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Sound Track",
       generation_outs_and_trims: "Outs and Trims", generation_ab_a_roll: "A Roll", generation_ab_b_roll: "B Roll", generation_ab_c_roll: "C Roll", generation_ab_d_roll: "D Roll",
-      generation_edited: "Edited", generation_edited_camera_original: "Edited Camera Original", generation_original: "Original", generation_mixed: "Mixed",
+      generation_edited: "Edited", generation_edited_camera_original: "Edited Camera Original", generation_original: "Original",
       generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate"
   }
 
@@ -72,14 +72,14 @@ class PhysicalObject < ActiveRecord::Base
 
   COLOR_FIELDS = [
       :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
-      :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color_bw_mixed, :color_bw_color,
+      :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
       :color_bw_bw
   ]
   COLOR_FIELDS_HUMANIZED = {
       color_bw_bw_toned: "Toned (Black and White)", color_bw_bw_tinted: "Tinted (Black and White)", color_bw_color_ektachrome: "Ektachrome",
       color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_anscochrome: "Ansochrome",
-      color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_color_bw_mixed: "Mixed", color_bw_bw: "Black and White",
-      color_bw_color: "Color"
+      color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_bw: "Black and White", color_bw_bw_hand_coloring: "Hand Coloring",
+      color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color: "Color"
   }
 
   ASPECT_RATIO_FIELDS = [
@@ -162,7 +162,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	def series_id
 		self.title.series.id if self.title && self.title.series
-	end
+  end
 
 	def collection_text
 		self.collection.name if self.collection

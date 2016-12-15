@@ -1,32 +1,33 @@
-<%= render partial: 'layouts/notice_div' %>
-<%= link_to 'Edit', edit_series_path(@series) %> |
-<%= link_to 'Back', series_index_path %> |
-<%= link_to 'Inventory This Series', series_new_physical_object_path(@series) %>
-<table>
-  <tr>
-    <th>Series Title</th>
-    <td>
-      <%= @series.title %>
-    </td>
-  </tr>
-  <tr>
-    <th>Decription</th>
-    <td>
-      <%= @series.description %>
-    </td>
-  </tr>
-</table>
+<div class="clear">
+  <%= render partial: 'layouts/notice_div' %>
+  <%= link_to 'Edit', edit_series_path(@series) %> |
+  <%= link_to 'Back', series_index_path %> |
+  <%= link_to 'Inventory This Series', series_new_physical_object_path(@series) %>
+</div>
+<div id="whodoneit">
+  <div><b>Creator</b></div><div><%= @series.creator&.name %></div>
+  <div><b>Last Modified By</b></div><div><%= @series.modifier&.name %></div>
+</div>
+<div id="fields">
+  <div class="lb"><b>Series Name</b></div><div class="fd"><%= @series.title %></div>
+  <div class="lb"><b>Series Production Number</b></div><div class="fd"><%= @series.production_number %></div>
+  <div class="lb"><b>Series Dates</b></div><div class="fd"><%= @series.date %></div>
+  <div class="lb"><b>Total Episodes</b></div><div class="fd"><%= @series.total_episodes %></div>
+</div>
+<div id="sum_div">
+  <div><b>Summary</b></div>
+  <div>
+    <%= @series.summary %>
+  </div>
+</div>
 <h4>Titles in this Series</h4>
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Index in Series</th>
-  </tr>
-  <% @series.titles.order("series_title_index IS NULL, series_title_index ASC").each do |t| %>
-      <tr>
-        <td><%= link_to "#{t.title_text}", title_path(t) %></td>
-        <td><%= t.series_title_index %></td>
-      </tr>
-  <% end %>
-</table>
+<% if @series.titles.size > 0 %>
+    <% @series.titles.each do |t| %>
+        <div>
+          <%= link_to "#{t.title_text}", title_path(t) %>
+        </div>
+    <% end %>
+<% else %>
+    none
+<% end %>
 

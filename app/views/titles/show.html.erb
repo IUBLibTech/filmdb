@@ -1,29 +1,99 @@
 <%= render partial: 'layouts/notice_div' %>
-<%= link_to 'Edit', edit_title_path(@title) %> |
-<%= link_to 'Back', titles_path %> |
-<%= link_to 'Inventory This Title', title_new_physical_object_path %>
-<table>
-  <tr>
-    <th>Title</th>
-    <td><%= @title.title_text %></td>
-  </tr>
-  <tr>
-    <th>Description</th>
-    <td><%= @title.description %></td>
-  </tr>
-  <tr>
-    <th>Belongs to Series</th>
-    <td>
-      <%= @title.series ? (link_to "#{@title.series.title}", series_path(@title.series)) : "" %>
-    </td>
-  </tr>
-  <tr>
-    <th>Index in Series</th>
-    <td>
-      <%= @title.series_title_index %>
-    </td>
-  </tr>
-</table>
+<div>
+  <%= link_to 'Edit', edit_title_path(@title) %> |
+  <%= link_to 'Back', titles_path %> |
+  <%= link_to 'Inventory This Title', title_new_physical_object_path %>
+</div>
+<div id="whodoneit">
+  <div><b>Creator</b></div><div><%= @title.creator&.name %></div>
+  <div><b>Last Modified By</b></div><div><%= @title.modifier&.name %></div>
+</div>
+<div id="main">
+  <div class="left_div">
+    <div class="label"><b>Title</b></div><div class="field"><%= @title.title_text %></div>
+    <div class="label"><b>Series Title</b></div><div class="field"><%= @title.series_title_text %></div>
+    <div class="label"><b>Series Part</b></div><div class="field"><%= @title.series_part %></div>
+    <div class="label"><b>Location</b></div><div class="field"><%= @title.location %></div>
+  </div>
+  <div class="right_div">
+    <div class="block_label"><b>Summary</b></div>
+    <div class="block_label"><%= @title.summary %></div>
+  </div>
+</div>
+<h4 class="clear">Alternative Titles</h4>
+<div>
+  <% @title.physical_objects.each do |po| %>
+      <% unless po.alternative_title.blank? %>
+      <%= po.alternative_title %><br/>
+      <% end %>
+  <% end %>
+</div>
+<div class="clear">
+  <% unless @title.title_original_identifiers.empty? %>
+    <h4>Orginal Identifiers</h4>
+    <% @title.title_original_identifiers.each do |toi| %>
+    <div class="left_div creator_div">
+      <div class="label"><b>Identifier</b></div>
+      <div class="field"><%= toi.identifier %></div>
+      <div class="label"><b>Type</b></div>
+      <div class="field"><%= toi.identifier_type %></div>
+    </div>
+    <% end %>
+  <% end %>
 
-<h4>Physical Objects With This Title</h4>
+  <% unless @title.title_creators.empty? %>
+    <h4>Creators</h4>
+    <% @title.title_creators.each do |tc| %>
+    <div class="left_div creator_div">
+      <div class="label"><b>Creator</b></div>
+      <div class="field">
+        <%= tc.name %>
+      </div>
+      <div class="label"><b>Role</b></div>
+      <div class="field">
+        <%= tc.role %>
+      </div>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% unless @title.title_publishers.empty? %>
+    <h4>Publishers</h4>
+    <% @title.title_publishers.each do |tp| %>
+    <div class="left_div creator_div">
+      <div class="label"><b>Name</b></div>
+      <div class="field"><%= tp.name %></div>
+      <div class="label"><b>Role</b></div>
+      <div class="field"><%= tp.publisher_type %></div>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% unless @title.title_genres.empty? %>
+    <h4>Genres</h4>
+    <% @title.title_genres.each do |tg| %>
+    <div class="left_div creator_div">
+      <div class="field"><%= tg.genre %></div>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% unless @title.title_dates.empty? %>
+    <h4>Dates</h4>
+    <% @title.title_dates.each do |td| %>
+    <div class="left_div creator_div">
+      <div class="label"><b>Date</b></div>
+      <div class="field"><%= td.date %></div>
+      <div class="label"><b>Type</b></div>
+      <div class="field"><%= td.date_type %></div>
+    </div>
+    <% end %>
+  <% end %>
+</div>
+
+<h4 class="mt_25">Physical Objects With This Title</h4>
+<% if @title.physical_objects.size > 0 %>
 <%= render partial: 'physical_objects/physical_objects_table' %>
+<% else %>
+none
+<% end %>

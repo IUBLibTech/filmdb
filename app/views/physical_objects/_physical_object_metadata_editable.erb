@@ -1,107 +1,291 @@
 <div id="core_metadata" class="metadata_section">
   <h4>Core Metadata</h4>
   <div class="left _50">
-    <b>Title&nbsp;</b>
-    <% if @title %>
-        <%= @title.title_text %><br/>
+    <div class="label"><b>Title</b></div>
+    <div class="field">
+      <% if @title %>
+          <%= @title.title_text %>
+      <% else %>
+          <%= f.text_field :title_text %>
+      <% end %>
+      <%= f.hidden_field :title_id %>
+    </div>
+    <div class="label"><b>Alternative Title</b></div>
+    <div class="field"><%= f.text_field :alternative_title %></div>
+    <div class="label">
+      <b>Series</b>
+    </div>
+    <div class="field">
+      <% if @series %>
+          <%= @series.title %><br/>
+          <%= f.hidden_field :series_id, value: @series.id  %>
     <% else %>
-        <%= f.text_field :title_text %><br/>
+          <%= f.hidden_field :series_id %>
+          <%= f.text_field :series_title_text %>
     <% end %>
-    <%= f.hidden_field :title_id %>
-    <b>Series</b>
-    <% if @series %>
-        <%= @series.title %><br/>
-    <% else %>
-      <%= f.text_field :series_title_text %><br/>
-    <% end %>
-    <%= f.hidden_field :series_id %>
-
-    <b>Series Part</b> <%= f.text_field :series_part %><br/>
-    <b>Media Type</b> <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %><br/>
-    <b>Medium</b> <%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %>
+    </div>
+    <div class="label">
+      <b>Series Part</b>
+    </div>
+    <div class="field">
+      <%= f.text_field :series_part %>
+    </div>
+    <div class="label">
+      <b>Media Type</b>
+    </div>
+    <div class="field">
+      <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
+    </div>
+    <div class="label"><b>Medium</b></div>
+    <div class="field"><%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %></div>
   </div>
   <div class="left _50">
-    <b>Unit</b> <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %><br/>
-    <% if @collection %>
-        <b>Collection</b> <%= @collection.name %>
-    <% else %>
-        <b>Collection</b><%= f.text_field :collection_text%>
-    <% end %>
-    <%= f.hidden_field :collection_id %><br/>
-    <b>Current Location</b> <%= f.select :location, options_for_select(@cv[:location]) %><br/>
-    <b>IU Barcode</b> <%= f.text_field :iu_barcode %><br/>
-    <b>MDPI Barcode</b> <%= f.text_field :mdpi_barcode %><br/>
-    <b>IUCAT Title NO.</b> <%= f.text_field :title_control_number %>
+    <div class="label">
+      <b>Unit</b>
+    </div>
+    <div class="field">
+      <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
+    </div>
+    <div class="label">
+      <b>Collection</b>
+    </div>
+    <div class="field">
+      <% if @collection %>
+          <%= @collection.name %>
+      <% else %>
+          <%= f.text_field :collection_text%>
+      <% end %>
+      <%= f.hidden_field :collection_id %>
+    </div>
+    <div class="label">
+      <b>Current Location</b>
+    </div>
+    <div class="field">
+      <%= f.select :location, options_for_select(@cv[:location]) %>
+    </div>
+    <div class="label">
+      <b>IU Barcode</b>
+    </div>
+    <div class="field">
+      <%= f.text_field :iu_barcode %>
+    </div>
+    <div class="label">
+      <b>MDPI Barcode</b>
+    </div>
+    <div class="field">
+      <%= f.text_field :mdpi_barcode %>
+    </div>
+    <div class="label">
+      <b>IUCAT Title NO.</b>
+    </div>
+    <div class="field">
+      <%= f.text_field :title_control_number %>
+    </div>
   </div>
-  <div class="clear">
+  <div id="version_div" class="clear">
     <b class="block">Version</b>
-    <%= f.check_box :first_edition %>First Edition <%= f.check_box :second_edition %>2nd Edition <%= f.check_box :third_edition %>3rd Edition <%= f.check_box :fourth_edition %>4th Edition
-    <%= f.check_box :abridged %>Abridged <%= f.check_box :short %>Short <%= f.check_box :long %>Long <%= f.check_box :sample %>Sample <%= f.check_box :preview %>Preview<br/>
-    <%= f.check_box :revised %>Revised <%= f.check_box :version_original %>Original <%= f.check_box :captioned %>Captioned <%= f.check_box :excerpt%>Excerpt  <%= f.check_box :catholic %>Catholic
-    <%= f.check_box :domestic %>Domestic <%= f.check_box :trailer %>Trailer <%= f.check_box :english %>English <%= f.check_box :television %>Television <%= f.check_box :x_rated %>X-rated
+    <div class="label"><%= f.check_box :first_edition %><div>First Edition</div></div>
+    <div class="label"><%= f.check_box :second_edition %><div>2nd Edition</div></div>
+    <div class="label"><%= f.check_box :third_edition %><div>3rd Edition</div></div>
+    <div class="label"><%= f.check_box :fourth_edition %><div>4th Edition</div></div>
+    <div class="label"><%= f.check_box :abridged %><div>Abridged</div></div>
+    <div class="label"><%= f.check_box :short %><div>Short</div></div>
+    <div class="label"><%= f.check_box :long %><div>Long</div></div>
+    <div class="label"><%= f.check_box :sample %><div>Sample</div></div>
+    <div class="label"><%= f.check_box :preview %><div>Preview</div></div>
+    <div class="label"><%= f.check_box :revised %><div>Revised</div></div>
+    <div class="label"><%= f.check_box :version_original %><div>Original</div></div>
+    <div class="label"><%= f.check_box :captioned %><div>Captioned</div></div>
+    <div class="label"><%= f.check_box :excerpt%><div>Excerpt</div></div>
+    <div class="label"><%= f.check_box :catholic %><div>Catholic</div></div>
+    <div class="label"><%= f.check_box :domestic %><div>Domestic</div></div>
+    <div class="label"><%= f.check_box :trailer %><div>Trailer</div></div>
+    <div class="label"><%= f.check_box :english %><div>English</div></div>
+    <div class="label"><%= f.check_box :television %><div>Television</div></div>
+    <div class="label"><%= f.check_box :x_rated %><div>X-rated</div></div>
   </div>
 </div>
 <div id="format_metadata" class="metadata_section">
   <h4>Format</h4>
-  <div class="left _50 h_400px">
-    <b class='block'>Gauge</b><%= f.select :gauge, options_for_select(@cv[:gauge]), {include_blank: ''} %><br/>
+  <div class="left _45">
+    <b>Gauge</b><%= f.select :gauge, options_for_select(@cv[:gauge], @physical_object.gauge), {include_blank: ''} %>
     <div>
       <b class="block">Generation</b>
       <div class="generation_box">
-        <%= f.check_box :generation_negative %>Negative<br/>
-        <%= f.check_box :generation_positive %>Positive<br/>
-        <%= f.check_box :generation_reversal %>Reversal<br/>
+        <div class="check_box">
+          <%= f.check_box :generation_negative %>
+          <div>Negative</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_positive %>
+          <div>Positive</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_reversal %>
+          <div>Reversal</div>
+        </div>
       </div>
       <div class="generation_box generation_box_ml_5px">
-        <%= f.check_box :generation_projection_print %>Projection Print<br/>
-        <%= f.check_box :generation_answer_print %>Answer Print<br/>
-        <%= f.check_box :generation_work_print %>Work Print<br/>
-        <%= f.check_box :generation_composite %>Composite<br/>
-        <%= f.check_box :generation_intermediate %>Intermediate<br/>
-        <%= f.check_box :generation_mezzanine %>Mezzanine<br/>
-        <%= f.check_box :generation_kinescope %>Kinescope<br/>
-        <%= f.check_box :generation_magnetic_track %>Magnetic Track<br/>
-        <%= f.check_box :generation_optical_sound_track %>Optical Sound Track<br/>
-        <%= f.check_box :generation_outs_and_trims %>Outs and Trims<br/>
+        <div class="check_box">
+          <%= f.check_box :generation_projection_print %>
+          <div>Projection Print</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_answer_print %>
+          <div>Answer Print</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_work_print %>
+          <div>Work Print</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_composite %>
+          <div>Composite</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_intermediate %>
+          <div>Intermediate</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_mezzanine %>
+          <div>Mezzanine</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_kinescope %>
+          <div>Kinescope</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_magnetic_track %>
+          <div>Magnetic Track</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_optical_sound_track %>
+          <div>Optical Sound Track</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_outs_and_trims %>
+          <div>Outs and Trims</div>
+        </div>
       </div>
       <div class="generation_box generation_box_ml_5px">
-        <%= f.check_box :generation_ab_a_roll %>A Roll<br/>
-        <%= f.check_box :generation_ab_b_roll %>B Roll<br/>
-        <%= f.check_box :generation_ab_c_roll %>C Roll<br/>
-        <%= f.check_box :generation_ab_d_roll %>D Roll<br/>
-        <%= f.check_box :generation_edited %>Edited<br/>
-        <%= f.check_box :generation_edited_camera_original %>Edited Camera Original<br/>
-        <%= f.check_box :generation_original %>Original<br/>
-        <%= f.check_box :generation_mixed %>Mixed<br/>
-        <%= f.check_box :generation_fine_grain_master %>Fine Grain Master<br/>
-        <%= f.check_box :generation_separation_master %>Separation Master<br/>
-        <%= f.check_box :generation_duplicate %>Duplicate<br/>
+        <div class="check_box">
+          <%= f.check_box :generation_ab_a_roll %>
+          <div>A Roll</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_ab_b_roll %>
+          <div>B Roll</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_ab_c_roll %>
+          <div>C Roll</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_ab_d_roll %>
+          <div>D Roll</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_edited %>
+          <div>Edited</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_edited_camera_original %>
+          <div>Edited Camera Original</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_original %>
+          <div>Original</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_fine_grain_master %>
+          <div>Fine Grain Master</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_separation_master %>
+          <div>Separation Master</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_duplicate %>
+          <div>Duplicate</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="line_300">
-    <b>Original Identifier</b><%= f.text_field :item_original_identifier %><br/>
-    <b>Reel Number</b><%= f.text_field :reel_number %><br/>
-    <%= f.check_box :multiple_items_in_can %> <b>Multiple Items in Can</b><br/>
-    <b>Can Size</b><%= f.select :can_size, options_for_select(@cv[:can_size]), {include_blank: ''}  %><br/>
-    <b>Footage (ft)</b><%= f.text_field :footage %><br/>
-    <b>Duration (hh:mm:ss)</b><%= f.text_field :duration %><br/>
-    <b>Edge Code</b> <i>currently not implemented</i>
+  <div id="format_right_div">
+    <div id="format_right_div_fields">
+      <div class="label">
+        <b>Original Identifier</b>
+      </div>
+      <div class="value">
+        <%= f.text_field :item_original_identifier %>
+      </div>
+      <div class="label">
+        <b>Reel Number</b>
+      </div>
+      <div class="value">
+        <%= f.text_field :reel_number %>
+      </div>
+      <div class="check_label">
+        <%= f.check_box :multiple_items_in_can %> <b>Multiple Items in Can</b>
+      </div>
+      <div class="label">
+        <b>Can Size</b>
+      </div>
+      <div class="value">
+        <%= f.select :can_size, options_for_select(@cv[:can_size], @physical_object.can_size), {include_blank: ''}  %>
+      </div>
+      <div class="label">
+        <b>Footage (ft)</b>
+      </div>
+      <div class="value">
+        <%= f.text_field :footage %>
+      </div>
+      <div class="label">
+        <b>Duration (hh:mm:ss)</b>
+      </div>
+      <div class="value">
+        <%= f.text_field :duration %>
+      </div>
+      <div class="label">
+        <b>Edge Code</b>
+      </div>
+      <div class="value">
+        <i>currently not implemented</i>
+      </div>
+    </div>
+    <div id="base_fields" class="left">
+      <b class="block">Base</b>
+      <div class="check_box">
+        <%= f.check_box :base_acetate %>
+        <div>Acetate</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :base_polyester %>
+        <div>Polyester</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :base_nitrate %>
+        <div>Nitrate</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :base_mixed%>
+        <div>Mixed</div>
+      </div>
+    </div>
+    <div id="stock_div" class="left">
+      <b class="block">Stock</b>
+      <div class="label"><%= f.check_box :stock_agfa %><div>Agfa</div></div>
+      <div class="label"><%= f.check_box :stock_ansco %><div>Ansco</div></div>
+      <div class="label"><%= f.check_box :stock_dupont %><div>Dupont</div></div>
+      <div class="label"><%= f.check_box :stock_orwo %><div>Orwo</div></div>
+      <div class="label"><%= f.check_box :stock_fuji %><div>Fuji</div></div>
+      <div class="label"><%= f.check_box :stock_gevaert %><div>Gevaert</div></div>
+      <div class="label"><%= f.check_box :stock_kodak %><div>Kodak</div></div>
+      <div class="label"><%= f.check_box :stock_ferrania %><div>Ferrania</div></div>
+      <div class="label"><%= f.check_box :stock_mixed %><div>Mixed</div></div>
+    </div>
   </div>
-  <div>
-    <b class="block">Base</b>
-      <%= f.check_box :base_acetate %> Acetate
-      <%= f.check_box :base_polyester %> Polyester
-      <%= f.check_box :base_nitrate %> Nitrate
-      <%= f.check_box :base_mixed%> Mixed
-  </div>
-  <div>
-    <b class="block">Stock</b>
-    <%= f.check_box :stock_agfa %>Agfa <%= f.check_box :stock_ansco %>Ansco <%= f.check_box :stock_dupont %>Dupont <%= f.check_box :stock_orwo %>Orwo <%= f.check_box :stock_fuji %>Fuji<br/>
-     <%= f.check_box :stock_gevaert %>Gevaert <%= f.check_box :stock_kodak %>Kodak <%= f.check_box :stock_ferrania %>Ferrania <%= f.check_box :stock_mixed %>Mixed
 
-  </div>
-  <div class="clear"></div>
 </div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4>Image</h4>
@@ -123,7 +307,7 @@
       </div>
     </div>
     <div class="clear">
-      <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate]), {include_blank: ''}  %>
+      <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate], @physical_object.frame_rate), {include_blank: ''}  %>
     </div>
     <div id="color_div" class="h_195px">
       <b class="block">Color</b>
@@ -132,6 +316,8 @@
           <%= f.check_box :color_bw_bw %>Black & White<br/>
           <%= f.check_box :color_bw_bw_toned %>Toned<br/>
           <%= f.check_box :color_bw_bw_tinted %>Tinted<br/>
+          <%= f.check_box :color_bw_bw_hand_coloring %>Hand Coloring<br/>
+          <%= f.check_box :color_bw_bw_stencil_coloring %>Stencil Coloring<br/>
         </div>
         <div class="_33 left">
           <%= f.check_box :color_bw_color %>Color<br/>
@@ -139,11 +325,10 @@
           <%= f.check_box :color_bw_color_kodachrome %>Kodachrome<br/>
           <%= f.check_box :color_bw_color_technicolor %>Technicolor<br/>
           <%= f.check_box :color_bw_color_anscochrome %>Ansochrome<br/>
-          <%= f.check_box :color_bw_color_eco %>Eco<br/>
-          <%= f.check_box :color_bw_color_eastman %>Eastman<br/>
         </div>
-        <div class="_33 left">
-          <%= f.check_box :color_bw_color_bw_mixed %>Mixed<br/>
+        <div class="left _33">
+          <%= f.check_box :color_bw_color_eco %>Eco<br/>
+          <%= f.check_box :color_bw_color_eastman %>Eastman
         </div>
       </div>
     </div>
@@ -232,50 +417,152 @@
 </div>
 <div id="condition_metadata" class="metadata_section">
   <h4>Condition</h4>
-  <div class="h_100px">
+  <div id="condition_notes">
     <div class="left _45 rp_10px">
-      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:condition_rating]), {include_blank: ''}  %><br/>
+      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:condition_rating], @physical_object.condition_rating), {include_blank: ''}  %><br/>
       <b>Condition Notes</b> <%= f.text_area :condition_notes, class: "_100" %>
     </div>
     <div class="left _50">
-      <b>Research Value</b> <%= f.select :research_value, options_for_select(@cv[:research_value]), {include_blank: ''}  %><br/>
+      <b>Research Value</b> <%= f.select :research_value, options_for_select(@cv[:research_value], @physical_object.research_value), {include_blank: ''}  %><br/>
       <b class="block">Research Value Notes</b>
       <div>
-        <%= f.text_area :research_value_notes, class: '_100' %>
+        <%= f.text_area :research_value_notes %>
       </div>
     </div>
   </div>
-  <div class="h_260px pl_10px">
+  <div class="condition_types">
     <b class="block">Condition Types</b>
+    <div id="condition_3">
+      <div class="select _33">
+        <div>AD Strip</div><%= f.select :ad_strip, options_for_select(@cv[:ad_strip], @physical_object.ad_strip), {include_blank: ''}  %>
+      </div>
+      <div class="select _33">
+        <div>
+          Shrinkage
+        </div>
+        <%= f.text_field :shrinkage %>
+      </div>
+      <div class="select _33">
+        <div>Mold</div>
+        <%= f.select :mold, options_for_select(@cv[:mold], @physical_object.mold), {include_blank: ''}  %>
+      </div>
+    </div>
+
     <div class="left _33">
-      AD Strip <%= f.select :ad_strip, options_for_select(@cv[:ad_strip]), {include_blank: ''}  %><br/>
-      Dirty <%= f.select :dirty, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      <%= f.check_box :not_on_core_or_reel %> Not on Core or Reel <br/>
-      <%= f.check_box :loose_wind %> Poor Wind <br/>
-      Scratches <%= f.select :scratches, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      Tape Residue <%= f.select :tape_residue, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      Water Damage <%= f.select :water_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
+      <div class="select">
+        <div>
+          Dirty
+        </div>
+        <%= f.select :dirty, options_for_select(@cv[:condition_type], @physical_object.dirty), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>
+          Channeling
+        </div>
+        <%= f.select :channeling, options_for_select(@cv[:condition_type], @physical_object.channeling), {include_blank: ''} %>
+      </div>
+      <div class="select">
+        <div>
+          Scratches
+        </div>
+        <%= f.select :scratches, options_for_select(@cv[:condition_type], @physical_object.scratches), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>
+          Tape Residue
+        </div>
+        <%= f.select :tape_residue, options_for_select(@cv[:condition_type], @physical_object.tape_residue), {include_blank: ''}  %>
+      </div>
     </div>
     <div class="left _33">
-      Shrinkage <%= f.text_field :shrinkage %><br/>
-      Broken <%= f.select :broken, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      <%= f.check_box :dusty %>Dusty<br/>
-      Peeling <%= f.select :peeling, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      <%= f.check_box :replasticized %>Replasticized<br/>
-      Splice Damage <%= f.select :splice_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      Tearing <%= f.select :tearing, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
+      <div class="select">
+        <div>Broken</div>
+        <%= f.select :broken, options_for_select(@cv[:condition_type], @physical_object.broken), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>
+          Peeling
+        </div>
+        <%= f.select :peeling, options_for_select(@cv[:condition_type], @physical_object.peeling), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>Splice Damage</div>
+        <%= f.select :splice_damage, options_for_select(@cv[:condition_type], @physical_object.splice_damage), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>Tearing</div>
+        <%= f.select :tearing, options_for_select(@cv[:condition_type], @physical_object.tearing), {include_blank: ''}  %>
+      </div>
     </div>
     <div class="left _33">
-      Mold <%= f.select :mold, options_for_select(@cv[:mold]), {include_blank: ''}  %><br/>
-      Color Fade <%= f.select :color_fade, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      <%= f.check_box :lacquer_treated %>Lacquer Treated<br/>
-      Perforation Damage <%= f.select :perforation_damage, options_for_select(@cv[:condition_type]), {include_blank: ''}  %><br/>
-      Rusty <%= f.text_field :rusty %><br/>
-      Spoking <%= f.text_field :spoking %><br/>
-      Warp <%= f.select :warp, options_for_select(@cv[:condition_type]), {include_blank: ''}  %>
+      <div class="select">
+        <div>Perforation Damage</div>
+        <%= f.select :perforation_damage, options_for_select(@cv[:condition_type], @physical_object.perforation_damage), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>Warp</div>
+        <%= f.select :warp, options_for_select(@cv[:condition_type], @physical_object.warp), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>
+          Water Damage
+        </div>
+        <%= f.select :water_damage, options_for_select(@cv[:condition_type], @physical_object.water_damage), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>Color Fade</div>
+        <%= f.select :color_fade, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
+      </div>
     </div>
   </div>
-  <div>
+  <div class="condition_types">
+    <div class="text">
+      <div>Rusty</div>
+      <%= f.text_field :rusty %>
+    </div>
+    <div class="text">
+      <div>Spoking</div>
+      <%= f.text_field :spoking %>
+    </div>
+
+  </div>
+  <div id="condition_types_check_box_div" class="condition_types">
+    <div class="_33">
+      <div class="check_box">
+        <%= f.check_box :lacquer_treated %>
+        <div>Lacquer Treated</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :dusty %>
+        <div>
+          Dusty
+        </div>
+      </div>
+    </div>
+    <div class="_33">
+      <div class="check_box">
+        <%= f.check_box :replasticized %>
+        <div>Replasticized</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :not_on_core_or_reel %>
+        <div>
+          Not on Core or Reel
+        </div>
+      </div>
+    </div>
+    <div class="_33">
+      <div class="check_box">
+        <%= f.check_box :loose_wind %>
+        <div>
+          Poor Wind
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="clear">
     <b class="block">Missing Footage</b>
     <%= f.text_area :missing_footage, class: '_100' %><br/>
     <b class="block"> Miscellaneous</b>

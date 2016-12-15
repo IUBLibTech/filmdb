@@ -19,22 +19,22 @@ module PhysicalObjectsHelper
     new_title = params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
 
     if new_series && new_title
-      @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
-      @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
+      @series = Series.new(title: params[:physical_object][:series_title_text], summary: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
+      @title = Title.new(title_text: params[:physical_object][:title_text], summary: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
       @series.save
       @title.series_id = @series.id
       @title.save
       @physical_object.title_id = @title.id
       @other_message = "Additionally the new Title <i>#{@title.title_text}</i>, and the new Series <i>#{@series.title}</i> were created."
     elsif new_series
-      @series = Series.new(title: params[:physical_object][:series_title_text], description: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
+      @series = Series.new(title: params[:physical_object][:series_title_text], summary: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
       @series.save
       title = Title.find(params[:physical_object][:title_id])
       title.update_attributes(series_id: @series.id)
       @physical_object.title_id = title.id
       @other_message = "Additionally the new Series <i>#{@series.title}</i> was created."
     elsif new_title
-      @title = Title.new(title_text: params[:physical_object][:title_text], description: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
+      @title = Title.new(title_text: params[:physical_object][:title_text], summary: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
       #  either an existing series was specified or no series was specified
       if params[:physical_object][:series_id]
         @title.series_id =  params[:physical_object][:series_id]
@@ -57,7 +57,7 @@ module PhysicalObjectsHelper
           format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
         end
       else
-        format.html { render :new_physical_object }
+        format.html { render 'physical_objects/new_physical_object' }
       end
     end
   end
@@ -82,7 +82,7 @@ module PhysicalObjectsHelper
         :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_picture_kinescope, :frame_rate,
         :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
         :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman,
-        :color_bw_color_bw_mixed, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
+        :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
         :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :language_arabic, :language_chinese, :language_english, :language_french, :language_german,
         :language_hindi, :language_italian, :language_japanese, :language_portuguese, :language_russian, :language_spanish, :close_caption,
         :silent, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_type_mixed,
@@ -90,7 +90,7 @@ module PhysicalObjectsHelper
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
         :sound_configuration_dual, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
-        :warp, :brittle, :splice_damage, :dirty, :peeling, :tape_residue, :broken, :tearing, :loose_wind, :not_on_core_or_reel, :missing_footage,
+        :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :loose_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
         :spoking, :dusty, :rusty, :miscellaneous, :title_control_number

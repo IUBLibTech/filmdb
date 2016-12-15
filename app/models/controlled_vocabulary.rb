@@ -1,13 +1,24 @@
 class ControlledVocabulary < ActiveRecord::Base
   scope :physical_object_cv, -> {
     cv = ControlledVocabulary.where(model_type: 'PhysicalObject').select(:model_attribute, :value).order(:model_attribute, :index)
-    cv_map = {}
-    cv.each do |v|
+    cv_map(cv)
+  }
+
+  scope :title_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'Title').select(:model_attribute, :value).order(:model_attribute, :index)
+    cv_map(cv)
+  }
+
+
+  private
+  def self.cv_map(scope_result)
+    map = {}
+    scope_result.each do |v|
       sym = v.model_attribute.tr(':', '').to_sym
       val = v.value
-      cv_map[sym] = [] if cv_map[sym].nil?
-      cv_map[sym].push [val, val]
+      map[sym] = [] if map[sym].nil?
+      map[sym].push [val, val]
     end
-    cv_map
-  }
+    map
+  end
 end

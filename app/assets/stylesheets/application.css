@@ -10,9 +10,9 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
- *= require_self
  *= require jquery-ui
+ *= require_self
+ *= require_tree .
  */
 
 body {
@@ -42,20 +42,9 @@ td:first-of-type {
     padding-right: 20px;
 }
 
-table > tbody > tr, td > input, textarea, select {
-    margin: 0px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-
 h1 {
     color: #805215;
 }
-h4 {
-    margin: 0;
-}
-
 label {
     position: relative;
     display: inline-block;
@@ -166,15 +155,6 @@ a:hover {
 .green {
     color: #23c417;
 }
-.md_field > label {
-    width: 35%;
-}
-.md_field > select {
-    width: 62%
-}
-.md_field > input[type='checkbox'] {
-
-}
 
 #generation > td > div {
     -webkit-box-shadow:inset 0 0 0 1px #333333;
@@ -205,7 +185,7 @@ table.version_table > tbody > tr > td > input {
 
 .inventory_ul {
     list-style-type: none;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
 }
 .inventory_ul > li {
@@ -232,65 +212,58 @@ table.version_table > tbody > tr > td > input {
 }
 
 .metadata_section {
-    margin-bottom: 25px;
+    margin-bottom: 5px;
+    overflow: hidden;
 }
-.metadata_section > h4 {
+ h4 {
     background: #496D89;
     font-weight: bold;
-    font-size: 1.5em;
     padding: 5px;
     color: white;
     margin: 0;
 }
-#format_notes_metadata {
-    clear: both;
-}
-#format_type_label {
-    float: left;
-    width: 20%;
-}
-#format_type_values {
-    width: 400px;
-}
+
+
+
 #image_metadata > table, #sound_metadata > table {
     width: 485px;
 }
 
 #image_metadata > table > tbody > tr td , #sound_metadata > table > tbody > tr td {
-    padding: 0<br/;
+    padding: 0;
 }
 
+._50 > div.label {
+    width:35%;
+    float: left;
+}
+._50 > div.field {
+    width: 60%;
+    float: left;
+}
+._50 > div.field > input {
+    width: 95%;
+}
+._50 > div.field > select {
+    width: 100%;
+}
+
+#version_div > div.label {
+    float: left;
+    width: 12%;
+}
 td#color {
     padding: 0;
 }
 
-.generation_box {
-    border: 1px solid gray;
-    height: 270px;
-    float: left;
-    padding-right: 10px;
-}
-.generation_box_ml_5px {
-    margin-left: 5px;
-}
 
-
-#image_metadata {
-    width: 490px;
-    padding-right: 10px;
-}
-
-#format_metadata {
-    height: 450px;
-}
-#condition_metadata {
-    height: 500px;
-}
 .clear_div {
     clear: both;
     height: 0px;
     display: none;
-}
+}.clear {
+     clear: both;
+ }
 
 .block {
     display: block;
@@ -379,5 +352,11 @@ td#color {
 .rp_10px {
     padding-right: 10px;
 }
+.label {
+    display: flex;
+}
 
+.label > * {
+    margin: auto 0;
+}
 

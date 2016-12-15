@@ -15,4 +15,5 @@
 //= require jquery-ui/autocomplete
 //= require turbolinks
 //= require jquery-ui
+//= require jquery_nested_form
 //= require_tree .

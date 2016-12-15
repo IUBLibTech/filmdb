@@ -27,6 +27,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/1/edit
   def edit
     @physical_object = PhysicalObject.find(params[:id])
+    @physical_object.modified_by = User.current_user_object.id
     if @physical_object.nil?
       flash.now[:warning] = "No such physical object..."
       redirect_to :back

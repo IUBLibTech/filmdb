@@ -1,3 +1,19 @@
-// Place all the styles related to the Series controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.label, .field {
+    float: left;
+    width: 50%;
+}
+#fields, #sum_div {
+    float: left;
+    overflow: hidden;
+    width: 50%;
+    clear: both;
+}
+.lb, .fd {
+    float: left;
+    min-height: 28px;
+    width: 50%;
+}
+textarea {
+    width: 100%;
+    min-height: 95px;
+}

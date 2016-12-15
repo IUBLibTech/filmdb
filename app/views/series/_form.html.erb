@@ -10,21 +10,21 @@
       </ul>
     </div>
   <% end %>
-  <table>
-    <tr>
-      <th>Series Title</th>
-      <td>
-        <%= f.text_field :title %>
-      </td>
-    </tr>
-    <tr>
-      <th>Description</th>
-      <td>
-        <%= f.text_area :description %>
-      </td>
-    </tr>
-  </table>
-  <div class="actions">
+  <div id="fields">
+    <%= f.hidden_field :created_by_id %>
+    <%= f.hidden_field :modified_by_id %>
+    <div class="lb"><b>Series Name</b></div><div class="fd"><%= f.text_field :title %></div>
+    <div class="lb"><b>Series Production Number</b></div><div class="fd"><%= f.text_field :production_number %></div>
+    <div class="lb"><b>Series Dates</b></div><div class="fd"><%= f.text_field :date %></div>
+    <div class="lb"><b>Total Episodes</b></div><div class="fd"><%= f.text_field :total_episodes %></div>
+  </div>
+  <div id="sum_div">
+    <div><b>Summary</b></div>
+    <div>
+      <%= f.text_area :summary %>
+    </div>
+  </div>
+  <div class="actions clear">
     <%= f.submit %>
   </div>
 <% end %>

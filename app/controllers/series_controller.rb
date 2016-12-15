@@ -15,11 +15,12 @@ class SeriesController < ApplicationController
 
   # GET /series/new_physical_object
   def new
-    @series = Series.new
+    @series = Series.new(created_by_id: User.current_user_object.id, modified_by_id: User.current_user_object.id)
   end
 
   # GET /series/1/edit
   def edit
+    @series.modified_by_id = User.current_user_object.id
   end
 
   # POST /series
@@ -40,6 +41,7 @@ class SeriesController < ApplicationController
 
   # PATCH/PUT /series/1
   # PATCH/PUT /series/1.json
+  # noinspection RubyArgCount
   def update
     respond_to do |format|
       if @series.update(series_params)
@@ -54,6 +56,7 @@ class SeriesController < ApplicationController
 
   # DELETE /series/1
   # DELETE /series/1.json
+  # noinspection RubyArgCount
   def destroy
     @series.destroy
     respond_to do |format|
@@ -69,7 +72,7 @@ class SeriesController < ApplicationController
 
   def autocomplete_series
     if params[:term]
-      json = Series.where("title like ?", "%#{params[:term]}%").select(:id, :title, :description).to_json
+      json = Series.where("title like ?", "%#{params[:term]}%").select(:id, :title, :summary).to_json
       json.gsub! "\"title\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       render json: json
@@ -87,6 +90,6 @@ class SeriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def series_params
-      params.require(:series).permit(:title, :description)
+      params.require(:series).permit(:title, :summary, :created_by_id, :modified_by_id, :production_number, :total_episodes, :date)
     end
 end
