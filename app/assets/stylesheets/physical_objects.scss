@@ -11,9 +11,10 @@ body {
 }
 
 div.check_box {
-  clear: both;
+  clear: none;
+  float: left;
+  margin: 0 5px;
   dispay: flex;
-  margin: 5px 0;
 }
 
 div.check_box > * {
@@ -49,7 +50,7 @@ div.check_box > * {
 
 #format_right_div_fields > div.label {
   width: 45%;
-  float: left;
+  clear: both;
   display: flex;
 }
 #format_right_div_fields > div.value {
@@ -72,16 +73,13 @@ div.check_box > * {
 }
 
 #base_fields > div.check_box {
-  clear: none;
-  float: left;
-  margin: 0 5px;
+
 }
 
 .generation_box {
   border: 1px solid gray;
   height: 250px;
   float: left;
-  padding-right: 10px;
 }
 .generation_box_ml_5px {
   margin-left: 5px;
@@ -141,4 +139,7 @@ div.select > div {
 }
 .text > * {
   float: left;
+}
+.generation_box > .check_box {
+  clear: both;
 }
