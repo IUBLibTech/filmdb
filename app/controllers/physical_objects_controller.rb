@@ -60,6 +60,10 @@ class PhysicalObjectsController < ApplicationController
     render 'new_physical_object'
   end
 
+  def create_duplicate
+    create_physical_object
+  end
+
   def edit_ad_strip
     @physical_object = PhysicalObject.new
   end

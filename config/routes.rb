@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :spreadsheets, only: [:index, :show, :destroy]
 
   get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
+  post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
