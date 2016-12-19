@@ -37,9 +37,8 @@
         <%= flash[:other_message].html_safe %>
       </div>
   <% end %>
+  <%= render partial: 'physical_objects/physical_object_metadata_editable', locals: {f: f} %>
   <div class="actions">
     <%= f.submit %>
   </div>
-  <%= render partial: 'physical_objects/physical_object_metadata_editable', locals: {f: f} %>
-
 <% end %>
