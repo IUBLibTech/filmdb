@@ -73,11 +73,15 @@ class PhysicalObjectsController < ApplicationController
     bc = params[:physical_object][:iu_barcode]
     adv = params[:physical_object][:ad_strip]
     @physical_object = PhysicalObject.where(iu_barcode: bc).first
+    nitrate = @physical_object.base_nitrate
     if @physical_object.nil?
       flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
     else
       @physical_object.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
+      if @physical_object.base_nitrate && !nitrate
+        notify_nitrate(@physical_object)
+      end
     end
     redirect_to edit_ad_strip_path
   end

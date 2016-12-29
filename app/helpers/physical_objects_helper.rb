@@ -1,4 +1,5 @@
 module PhysicalObjectsHelper
+  include MailHelper
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)
@@ -59,6 +60,9 @@ module PhysicalObjectsHelper
           format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
         elsif controller_name == 'titles'
           format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
+        end
+        if @physical_object.base_nitrate
+          notify_nitrate(@physical_object)
         end
       else
         format.html { render 'physical_objects/new_physical_object' }

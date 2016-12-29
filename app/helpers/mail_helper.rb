@@ -1,7 +1,8 @@
 module MailHelper
 
   def notify_nitrate(physical_object)
-
+    msg = "A physical object was marked as having a Nitrate base by #{physical_object.modifier.name}.\nBarcode: #{physical_object.iu_barcode}\nTitle: #{physical_object.title.title_text}"
+    send_mail('jaalbrec@indiana.edu', 'Physical Object with Nitrate Base', msg)
   end
 
   def test
