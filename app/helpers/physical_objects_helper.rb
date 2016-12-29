@@ -49,7 +49,7 @@ module PhysicalObjectsHelper
     respond_to do |format|
       if @physical_object.save
         if controller_name == 'physical_objects'
-          if action_name = 'create_duplicate'
+          if action_name == 'create_duplicate'
             format.html { redirect_to duplicate_physical_object_path(@physical_object.id), notice: 'Physical Object successfully duplicated'}
           else
             format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
