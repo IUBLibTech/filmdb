@@ -1,5 +1,6 @@
 class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
+  include MailHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
   before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
@@ -105,6 +106,16 @@ class PhysicalObjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to physical_objects_url, notice: 'Physical object was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def test_email
+    @success = true
+    begin
+      test
+    rescue Exception
+      logger.debug $!
+      @success = false
     end
   end
 

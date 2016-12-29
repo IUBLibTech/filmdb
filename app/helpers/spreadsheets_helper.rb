@@ -1,24 +1,49 @@
+# This module does the heavy lifting of creating records from importing a spreadsheet. Because of the relational nature of
+# physical object, title, series, unit, etc, etc metadata, parsing a spreadsheet is a complicated, multipass process defined
+# by these stages:
+# 1) Create a spreadsheet submission object to capture progress, errors (if the submission fails), and/or success report
+# 2) parse column header values to ensure they conform to controlled vocabulary. FAIL ingest if they do not
+# 3) start a transaction then iterate row by row attempting to create physical objects
+#   a) auto parse all physical object metadata fields mapped in HEADERS_TO_ASSIGNERS
+#   b) manually parse values stored in the following fields (these are either multiple values stored in a single cell of the spreadsheet,
+#      are object associations that need to be created, or metadata fields that belong to these associated objects):
+#      Title, Series, Series Part, Version, Unit, Collection, Generation, Base, Stock, Piture Type, Image Color, Sound Format Type,
+#      Sound Content Type, Sound Configutation, Dialog Language, Captions/Subtitles Language,  Condition Types (minus ad strip, shrinkage, and mold),
+#   c)
+
 module SpreadsheetsHelper
 	require 'rubygems'
 	require 'roo'
 
-	# the column headers that spreadsheets should contain - in no particular order
+	# the column headers that spreadsheets COULD contain - only the 5 metadata fields required to create a physical object
+  # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
 	COLUMN_HEADERS = [
-		'Location', 'Media Type', 'Item Barcode', 'Title', 'Copyright', 'Series Name', 'Series Production Number',
-		'Series Part', 'Alternative Title', 'Item Original Identifier', 'Summary', 'Creator (Producers)', 'Distributors',
-		'Credits', 'Language', 'Accompanying Documentation', 'Item Notes', 'Unit', 'Medium', 'Collection', 'First Name', 'Last Name', 'Inventoried By'
+      'Title', 'Duration', 'Series', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode',
+      'MDPI Barcode', 'IUCAT Title No.', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items In Can',
+      'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Silent?',
+      'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type', 'Sound Configuration',
+      'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research', 'Overall Condition Notes',
+      'AD Strip', 'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions',
+
+      'Title Notes', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number',
+      # these fields were not mentioned in IUFD-76 spec but included because they are part of the physical object metadata
+      'Series Part', 'Accompanying Documentation', 'First Name', 'Last Name', 'Inventoried By'
 	]
-	# hash mapping a column header string to a physical object' assignment operand using send()
+
+	# hash mapping a column header to its physical object assignment operand using send()
 	HEADERS_TO_ASSIGNER = {
-		"#{COLUMN_HEADERS[0]}" => :location=,	"#{COLUMN_HEADERS[1]}" => :media_type=,	"#{COLUMN_HEADERS[2]}" => :iu_barcode=,
-		"#{COLUMN_HEADERS[4]}" => :copy_right=,	"#{COLUMN_HEADERS[5]}" => :series_name=,
-		"#{COLUMN_HEADERS[6]}" => :series_production_number=,	"#{COLUMN_HEADERS[7]}" => :series_part=,	"#{COLUMN_HEADERS[8]}" => :alternative_title=,
-		# "#{COLUMN_HEADERS[9]}" => not yet implemented
-		"#{COLUMN_HEADERS[10]}" => :summary=,	"#{COLUMN_HEADERS[11]}" => :creator=,	"#{COLUMN_HEADERS[12]}" => :distributors=,
-		"#{COLUMN_HEADERS[13]}" => :credits=,	"#{COLUMN_HEADERS[14]}" => :language=,	"#{COLUMN_HEADERS[15]}" => :accompanying_documentation=,
-		"#{COLUMN_HEADERS[16]}" => :notes=,
-		# skip the index for UNIT
-		"#{COLUMN_HEADERS[18]}" => :medium=
+      "#{COLUMN_HEADERS[1]}" => :duration=, "#{COLUMN_HEADERS[3]}" => :media_type=, "#{COLUMN_HEADERS[4]}" => :medium=,
+      "#{COLUMN_HEADERS[7]}" => :location=, "#{COLUMN_HEADERS[8]}" => :iu_barcode=, "#{COLUMN_HEADERS[9]}" => :mdpi_barcode=,
+      "#{COLUMN_HEADERS[10]}" => :title_control_number=, "#{COLUMN_HEADERS[12]}" => :gauge=, "#{COLUMN_HEADERS[15]}" => :reel_number=,
+      "#{COLUMN_HEADERS[16]}" => :multiple_items_in_can=, "#{COLUMN_HEADERS[17]}" => :can_size=, "#{COLUMN_HEADERS[18]}" => :footage=,
+      "#{COLUMN_HEADERS[19]}" => :edge_code,
+      "#{COLUMN_HEADERS[23]}" => :frame_rate=, "#{COLUMN_HEADERS[26]}" => :silent=, "#{COLUMN_HEADERS[27]}" => :captions_or_subtitles=,
+      "#{COLUMN_HEADERS[28]}" => :captions_or_subtitles_notes=, "#{COLUMN_HEADERS[34]}" => :format_notes=,
+      "#{COLUMN_HEADERS[35]}" => :overall_condition=, "#{COLUMN_HEADERS[36]}" => :research_value=,
+      "#{COLUMN_HEADERS[37]}" => :condition_notes=, "#{COLUMN_HEADERS[38]}" => :ad_strip=, "#{COLUMN_HEADERS[39]}" => :shrinkage=,
+      "#{COLUMN_HEADERS[40]}" => :mold=, "#{COLUMN_HEADERS[42]}" => :missing_footage=, "#{COLUMN_HEADERS[43]}" => :miscellaneous=,
+      "#{COLUMN_HEADERS[44]}" => :conservation_actions=, "#{COLUMN_HEADERS[51]}" => :alternative_title=,
+      "#{COLUMN_HEADERS[54]}" => :accompanying_documentation=,
 	}
 
 	# special logger for parsing spreadsheets

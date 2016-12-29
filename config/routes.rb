@@ -36,6 +36,8 @@ Rails.application.routes.draw do
 
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 
+  get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
+
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete
   resources :sessions, only: [:new, :destroy] do

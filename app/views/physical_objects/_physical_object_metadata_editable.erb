@@ -76,7 +76,7 @@
       <%= f.text_field :mdpi_barcode %>
     </div>
     <div class="label">
-      <b>IUCAT Title NO.</b>
+      <b>IUCAT Title No.</b>
     </div>
     <div class="field">
       <%= f.text_field :title_control_number %>
@@ -473,6 +473,10 @@
         </div>
         <%= f.select :tape_residue, options_for_select(@cv[:condition_type], @physical_object.tape_residue), {include_blank: ''}  %>
       </div>
+      <div class="select">
+        <div>Rusty</div>
+        <%= f.select :rusty, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
+      </div>
     </div>
     <div class="left _33">
       <div class="select">
@@ -492,6 +496,10 @@
       <div class="select">
         <div>Tearing</div>
         <%= f.select :tearing, options_for_select(@cv[:condition_type], @physical_object.tearing), {include_blank: ''}  %>
+      </div>
+      <div class="select">
+        <div>Spoking</div>
+        <%= f.select :spoking, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
       </div>
     </div>
     <div class="left _33">
@@ -516,14 +524,8 @@
     </div>
   </div>
   <div class="condition_types">
-    <div class="text">
-      <div>Rusty</div>
-      <%= f.text_field :rusty %>
-    </div>
-    <div class="text">
-      <div>Spoking</div>
-      <%= f.text_field :spoking %>
-    </div>
+
+
 
   </div>
   <div id="condition_types_check_box_div" class="condition_types">

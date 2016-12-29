@@ -4,10 +4,10 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :title
 	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
-	belongs_to :collection
-	belongs_to :unit
-	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by"
-	belongs_to :modifier, class_name: "User", foreign_key: "modified_by"
+	belongs_to :collection, autosave: true
+	belongs_to :unit, autosave: true
+	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by", autosave: true
+	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
 
 	validates :title_id, presence: true
 	validates :iu_barcode, iu_barcode: true
