@@ -44,8 +44,12 @@ class PhysicalObjectsController < ApplicationController
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
+    nitrate = @physical_object.base_nitrate
     respond_to do |format|
       if @physical_object.update(physical_object_params)
+        if @physical_object.base_nitrate and !nitrate
+          notify_nitrate(@physical_object)
+        end
         format.html { redirect_to @physical_object, notice: 'Physical object was successfully updated.' }
         format.json { render :show, status: :ok, location: @physical_object }
       else
