@@ -349,6 +349,9 @@ td#color {
 .left {
     float: left;
 }
+.right {
+    float: right;
+}
 .rp_10px {
     padding-right: 10px;
 }

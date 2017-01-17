@@ -3,7 +3,19 @@
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
 <%= link_to 'Back', physical_objects_path %> |
 <%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %>
-<div id="core_metadata" class="metadata_section">
+<div>
+  <div style="height: 20px">
+    <div class="right _25">
+      <b>Inventoried By: </b><%= @physical_object.inventorier.name %>
+    </div>
+  </div>
+  <div style="heigh: 20px">
+    <div class="right _25">
+      <b>Modified By: </b><%= @physical_object.modifier.name %>
+    </div>
+  </div>
+</div>
+<div id="core_metadata" class="metadata_section clear">
   <h4>Core Metadata</h4>
   <div class="left _50">
     <b>Title</b> <%= @physical_object.title_text %><br/>
