@@ -37,14 +37,14 @@ class PhysicalObject < ActiveRecord::Base
   GENERATION_FIELDS = [
                     :generation_negative, :generation_positive, :generation_reversal, :generation_projection_print, :generation_answer_print, :generation_work_print,
                     :generation_composite, :generation_intermediate, :generation_mezzanine, :generation_kinescope, :generation_magnetic_track, :generation_optical_sound_track,
-                    :generation_outs_and_trims, :generation_ab_a_roll, :generation_ab_b_roll, :generation_ab_c_roll, :generation_ab_d_roll, :generation_edited,
+                    :generation_outs_and_trims, :generation_a_roll, :generation_b_roll, :generation_c_roll, :generation_d_roll, :generation_edited,
                     :generation_edited_camera_original, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate
                     ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",
       generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Sound Track",
-      generation_outs_and_trims: "Outs and Trims", generation_ab_a_roll: "A Roll", generation_ab_b_roll: "B Roll", generation_ab_c_roll: "C Roll", generation_ab_d_roll: "D Roll",
+      generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_edited_camera_original: "Edited Camera Original", generation_original: "Original",
       generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate"
   }
@@ -113,7 +113,7 @@ class PhysicalObject < ActiveRecord::Base
   ]
   SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
       sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround",
-      sound_configuration_multi_track: "Multi-track (Maurer", sound_configuration_dual: "Dual", sound_configuration_single: "Single"
+      sound_configuration_multi_track: "Multi-track (Maurer)", sound_configuration_dual: "Dual", sound_configuration_single: "Single"
   }
 
   LANGUAGE_FIELDS = [
@@ -127,10 +127,11 @@ class PhysicalObject < ActiveRecord::Base
   }
 
   CONDITION_FIELDS = [
-      :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage, :warp, :brittle,
-      :splice_damage, :dirty, :peeling, :tape_residue, :broken, :tearing, :loose_wind, :not_on_core_or_reel,
-      :missing_footage, :scratches
+      :ad_strip, :shrinkage, :mold, :dirty, :channeling, :scratches, :tape_residue, :rusty, :broken, :peeling,
+      :splice_damage, :tearing, :spoking, :perforation_damage, :warp, :water_damage, :color_fade,
+      :lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :loose_wind, :missing_footage, :miscellaneous
   ]
+  CONDITION_BOOLEAN_FIELDS = [:lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :loose_wind]
   CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
 
   # Merge all of the humanized field maps together so the search space is singular
@@ -146,7 +147,7 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	def media_type_mediums
-		MEDAI_TYPE_MEDIUMS
+		MEDIA_TYPE_MEDIUMS
 	end
 
 	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
@@ -170,7 +171,21 @@ class PhysicalObject < ActiveRecord::Base
 
 	# duration is input as hh:mm:ss
 	def duration=(time)
-		super(time.split(':').map { |a| a.to_i }.inject(0) { |a, b| a * 60 + b})
+    if time.blank?
+      super(nil)
+    else
+      super(time.split(':').map { |a| a.to_i }.inject(0) { |a, b| a * 60 + b})
+    end
+  end
+
+  # returns true if the specified text is formated as h:mm:ss where h, mm, and ss are integer values
+  def valid_duration?(text)
+    ! /^[0-9]+:[0-9]{2,}:[0-9]{2,}$/.match(text).nil?
+  end
+
+  # returns true of the text is formatted as "x of y" where x and y are either integers or a '?'
+  def valid_reel_number?(text)
+    ! /^[0-9\?]+ of [0-9\?]$/.match(text).nil?
   end
 
   # duration is viewed as hh:mm:ss

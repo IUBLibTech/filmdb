@@ -1,6 +1,22 @@
 <%= render partial: 'layouts/notice_div' %>
-
-<div class="left">
+<div class="">
+	<h1>Upload Spreadsheet</h1>
+  <%= form_for @file, url: spreadsheet_upload_path do |f| %>
+    <table>
+      <tr>
+        <td>
+          <%= f.file_field :xls_file %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= f.submit "Upload Inventory File" %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+</div>
+<div class="">
 	<h1>Listing Spreadsheets</h1>
 
 	<table>
@@ -31,22 +47,5 @@
 	    <% end %>
 	  </tbody>
 	</table>
-</div>
-<div class="right">
-	<h1>Upload Spreadsheet</h1>
-  <%= form_for @file, url: spreadsheet_upload_path do |f| %>
-    <table>
-      <tr>
-        <td>
-          <%= f.file_field :xls_file %>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <%= f.submit "Upload Inventory File" %>
-        </td>
-      </tr>
-    </table>
-  <% end %>
 </div>
 

@@ -1,199 +1,524 @@
-# This module does the heavy lifting of creating records from importing a spreadsheet. Because of the relational nature of
-# physical object, title, series, unit, etc, etc metadata, parsing a spreadsheet is a complicated, multipass process defined
-# by these stages:
-# 1) Create a spreadsheet submission object to capture progress, errors (if the submission fails), and/or success report
-# 2) parse column header values to ensure they conform to controlled vocabulary. FAIL ingest if they do not
-# 3) start a transaction then iterate row by row attempting to create physical objects
-#   a) auto parse all physical object metadata fields mapped in HEADERS_TO_ASSIGNERS
-#   b) manually parse values stored in the following fields (these are either multiple values stored in a single cell of the spreadsheet,
-#      are object associations that need to be created, or metadata fields that belong to these associated objects):
-#      Title, Series, Series Part, Version, Unit, Collection, Generation, Base, Stock, Piture Type, Image Color, Sound Format Type,
-#      Sound Content Type, Sound Configutation, Dialog Language, Captions/Subtitles Language,  Condition Types (minus ad strip, shrinkage, and mold),
-#   c)
-
+# this is the new one - not yet being used
 module SpreadsheetsHelper
-	require 'rubygems'
-	require 'roo'
+  require 'rubygems'
+  require 'roo'
 
-	# the column headers that spreadsheets COULD contain - only the 5 metadata fields required to create a physical object
+  # the column headers that spreadsheets COULD contain - only the 5 metadata fields required to create a physical object
   # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
-	COLUMN_HEADERS = [
-      'Title', 'Duration', 'Series', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode',
-      'MDPI Barcode', 'IUCAT Title No.', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items In Can',
+  COLUMN_HEADERS = [
+      'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode',
+      'MDPI Barcode', 'IUCat Title No.', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can',
       'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Silent?',
       'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type', 'Sound Configuration',
-      'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research', 'Overall Condition Notes',
+      'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes',
       'AD Strip', 'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions',
-
       'Title Notes', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number',
-      # these fields were not mentioned in IUFD-76 spec but included because they are part of the physical object metadata
-      'Series Part', 'Accompanying Documentation', 'First Name', 'Last Name', 'Inventoried By'
-	]
+      'Series Part', 'Accompanying Documentation', 'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date',
+      'Accompanying Documentation Location'
+  ]
 
-	# hash mapping a column header to its physical object assignment operand using send()
-	HEADERS_TO_ASSIGNER = {
-      "#{COLUMN_HEADERS[1]}" => :duration=, "#{COLUMN_HEADERS[3]}" => :media_type=, "#{COLUMN_HEADERS[4]}" => :medium=,
-      "#{COLUMN_HEADERS[7]}" => :location=, "#{COLUMN_HEADERS[8]}" => :iu_barcode=, "#{COLUMN_HEADERS[9]}" => :mdpi_barcode=,
-      "#{COLUMN_HEADERS[10]}" => :title_control_number=, "#{COLUMN_HEADERS[12]}" => :gauge=, "#{COLUMN_HEADERS[15]}" => :reel_number=,
-      "#{COLUMN_HEADERS[16]}" => :multiple_items_in_can=, "#{COLUMN_HEADERS[17]}" => :can_size=, "#{COLUMN_HEADERS[18]}" => :footage=,
-      "#{COLUMN_HEADERS[19]}" => :edge_code,
-      "#{COLUMN_HEADERS[23]}" => :frame_rate=, "#{COLUMN_HEADERS[26]}" => :silent=, "#{COLUMN_HEADERS[27]}" => :captions_or_subtitles=,
-      "#{COLUMN_HEADERS[28]}" => :captions_or_subtitles_notes=, "#{COLUMN_HEADERS[34]}" => :format_notes=,
-      "#{COLUMN_HEADERS[35]}" => :overall_condition=, "#{COLUMN_HEADERS[36]}" => :research_value=,
-      "#{COLUMN_HEADERS[37]}" => :condition_notes=, "#{COLUMN_HEADERS[38]}" => :ad_strip=, "#{COLUMN_HEADERS[39]}" => :shrinkage=,
-      "#{COLUMN_HEADERS[40]}" => :mold=, "#{COLUMN_HEADERS[42]}" => :missing_footage=, "#{COLUMN_HEADERS[43]}" => :miscellaneous=,
-      "#{COLUMN_HEADERS[44]}" => :conservation_actions=, "#{COLUMN_HEADERS[51]}" => :alternative_title=,
-      "#{COLUMN_HEADERS[54]}" => :accompanying_documentation=,
-	}
+  TITLE, DURATION, SERIES, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
+  VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN, CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE = 11,12,13,14,15,16,17,18,19,20
+  STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO, SILENT, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE = 21,22,23,24,25,26,27,28,29,30
+  SOUND_CONFIGURATION, DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, FORMAT_NOTES, OVERALL_CONDITION, RESEARCH_VALUE ,OVERALL_CONDITION_NOTES, AD_STRIP = 31,32,33,34,35,36,37,38
+  SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, TITLE_NOTES, CREATOR = 39,40,41,42,43,44,45,46
+  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 47,48,49,50,51,52,53,54
+  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION = 55,56,57,58,59,60,61
 
-	# special logger for parsing spreadsheets
-	def self.logger
-		@@logger ||= Logger.new("#{Rails.root}/log/spreadsheet_submission_logger.log")
-	end
-	@@mutex = Mutex.new
+  # hash mapping a column header to its physical object assignment operand using send()
+  HEADERS_TO_ASSIGNER = {
+      COLUMN_HEADERS[IUCAT_TITLE_NO] => :title_control_number=, COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
+      COLUMN_HEADERS[EDGE_CODE_DATE] => :edge_code=, COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
+      COLUMN_HEADERS[MISSING_FOOTAGE] => :missing_footage=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
+      COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
+      COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
+      COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
+      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=,
+  }
 
-	# this method wraps parse_spreadsheet within it's own thread of execution - see the other method for docs
-	def self.parse_threaded(upload, ss, sss)
-		Thread.new {
-			@@mutex.synchronize do
-				parse_spreadsheet(upload, ss, sss)
-			end
-		}
-	end
 
-	# This method takes a reference to the uploaded spreadsheet file 'file', the spreadsheet active record instance 'ss',
-	# and the spread sheet submission active record instance 'sss', and processes the physical objects in the spreadsheet.
-	# It either creates new_physical_object records in filmdb, or logs errors as they occur line by line in the spreadsheet.
-	def self.parse_spreadsheet(file, ss, sss)
-		xlsx = Roo::Excelx.new(file.tempfile.path, file_warning: :ignore)
-		xlsx.default_sheet = xlsx.sheets[0]
-		headers = Hash.new
-		xlsx.row(1).each_with_index { |header, i|
-			headers[header] = i
-		}
-		# this array contains an entry for each row in the spreadsheet not counting the header row. A given index will
-		# contain either a physical object, or the error message stating why the row entry is invalid. The index+1
-		# of the array corresponds to the row within the spreadsheet.
-		validated_physical_objects = Array.new
+  CONDITION_PATTERN = /([a-zA-z]+) \(([\d])\)/
+  DELIMITER = ' ; '
 
-		# first check to see if the headers are well formed
-		bad_header = header_problems(headers)
-		if bad_header
-			sss.update_attributes(failure_message: bad_header, successful_submission: false, submission_progress: 100)
-		else
-			# next iterate through each physical object checking it's validity - what gets appended to the array
-			# is either a valid physical object or and error message stating why the object failed
-			((xlsx.first_row + 1)..(xlsx.last_row)).each do |row|
-				puts "Processing row #{row}"
-				po = validate_physical_object(xlsx.row(row), headers, ss)
-				validated_physical_objects << po
-				sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 50).to_i)
-			end
-			# get bad rows
-			error_rows = validated_physical_objects.each_with_index.inject({}) { |h, (v, i)|
-				h[i] = v if !v.is_a? PhysicalObject
-				h
-			}
-			# failed import so log the failures
-			if error_rows.size > 0
-				msg = ""
-				error_rows.keys.sort.each do |k|
-					error_rows[k].messages.keys.each do |m|
-						msg << "Row #{k+2}: #{m} '#{error_rows[k].messages[m]}'"
-					end
-					msg << "<br>"
-				end
-				sss.update_attributes(failure_message: msg, successful_submission: false, submission_progress: 100)
-			# ingest can move forward
-			else
-				validated_physical_objects.each_with_index do |p, i|
-					p.spreadsheet_id = ss.id
-					p.save
-					# subtract 1 from the 50 percent accumulated from validating objects so that the submission is not
-					# complete until after sss is updated after this block
-					sss.update_attributes(submission_progress: ((i / validated_physical_objects.size).to_f * 50).to_i + 49)
-				end
-				sss.update_attributes(successful_submission: true, submission_progress: 100)
-				ss.update_attributes(successful_upload: true)
-			end
-		end
-	end
+  # special logger for parsing spreadsheets
+  def self.logger
+    @@logger ||= Logger.new("#{Rails.root}/log/spreadsheet_submission_logger.log")
+  end
+  @@mutex = Mutex.new
 
-	# this function checks the row passed to make sure it is a valid header row. It returns either nil if
-	# the header is correct, or a string value containing the error message detailing what was wrong with the
-	# headers
-	# FIXME: Header validity has not been defined yet and may rely on collection...
-	def self.header_problems(headers)
-		msg = ''
-		COLUMN_HEADERS.each do |ch|
-			msg << bad_header_msg(ch) if headers[ch].nil?
-		end
-		msg.length > 0 ? msg : nil
-	end
+  # parse a spreadsheet in the same thread of execution as the server (DO NOT USE THIS IN PRODUCTION)
+  def self.parse_serial(upload, ss, sss)
+    xlsx = Roo::Excelx.new(upload.tempfile.path, file_warning: :ignore)
+    xlsx.default_sheet = xlsx.sheets[0]
+    parse_headers(xlsx)
+    if @parse_headers_msg.size > 0
+      sss.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
+    else
+      @cv = ControlledVocabulary.physical_object_cv
+      # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
+      error_msg = ""
+      # all physical objects created from the spreadsheet
+      all_physical_objects = []
+      begin
+        PhysicalObject.transaction do
+          # parsing spreadsheets is a two pass process. First pass makes sure that values in cells conform to the specification
+          # marking each row as bad with a custom error message in the physical object if something erroneous is found. Since
+          # ActiveRecord validation clears the errors map, we need to make this first pass before we attempt to save any records.
+          # Only if all records pass this initial "validation" can we move on to actually attempting to persist
+          # the Physical Objects in the database. We call save (instead of save!) to avoid the exception that would roll back
+          # the whole transaction - so that we can process all physical objects to determine all rows that failed rather than
+          # just the first row.
 
-	# this function attempts to create a valid physical object from a row in a spreadsheet. If successfully
-	# created, the physical object is returned, otherwise the error message (string) is returned
-	def self.validate_physical_object(row_data, headers, ss)
-		po = PhysicalObject.new
-		HEADERS_TO_ASSIGNER.keys.each do |k|
-			puts "Assigning \"#{k}\" with #{HEADERS_TO_ASSIGNER[k]}. Value: #{row_data[headers[k]]}"
-			po.send HEADERS_TO_ASSIGNER[k], row_data[headers[k]]
-		end
+          ((xlsx.first_row + 1)..(xlsx.last_row)).each do |row|
+            po = parse_physical_object(xlsx.row(row), ss, sss)
+            all_physical_objects << po
+            if po.errors.any?
+              error_msg << error_msg(row, po)
+            end
+            # cannot do this in a transaction... need to figure out another way to handle updating the status of the submission.
+            # sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 25).to_i)
+          end
 
-		# manually check user who inventoried
-		email_address = row_data[headers['Inventoried By']]
-		user = User.where(email_address: email_address).first
-		if user.nil?
-			user = User.new(email_address: email_address, username: email_address[0, email_address.index('@')], first_name: row_data[headers['First Name']], last_name: row_data[headers['Last Name']])
-			user.created_in_spreadsheet = ss
-			user.save
-		end
-		po.inventoried_by = user
+          # if @error_msg has length > 0 something blew up... otherwise we can pass off to ActiveRecord validation to see what passes
+          if error_msg.nil? || error_msg.length == 0
+            all_physical_objects.each_with_index do |po, index|
+              unless po.save
+                error_msg << error_msg(index + 1, po)
+              end
+            end
+          end
+          if error_msg.length > 0
+            raise Exception
+          else
+            sss.update_attributes(successful_submission: true, submission_progress: 100)
+            ss.update_attributes(successful_upload: true)
+          end
+        end
+      rescue Exception => error
+        em = error.message << "<br/>"
+        error.backtrace.each do |line|
+          em << line << "<br/>"
+        end
 
-		# unit MUST be defined already otherwise it is a parse error and the spreadsheet should fail
-		unit = Unit.where(abbreviation: row_data[headers['Unit']]).first
-		unless unit.nil?
-			po.unit = unit
-		end
 
-		# collection MUST exist already (or be blank) otherwise it is a parse error and the spreadsheet should fail
-		if row_data[headers['Collection']].blank?
-			unless unit.nil?
-				po.collection = unit.misc_collection
-			end
-		else
-			collection = Collection.where(name: row_data[headers['Collection']]).first
-			po.collection = collection
-		end
+        sss.update_attributes(failure_message: error_msg.length > 0 ? error_msg << em.html_safe : em.html_safe, successful_submission: false, submission_progress: 100)
+      end
+    end
+  end
 
-		# parse title - create a new_physical_object one only if one with same text does not already exist
-		title = Title.where(title_text: row_data[headers['Title']]).first
-		if title.nil?
-			title = Title.new(title_text: row_data[headers['Title']], spreadsheet: ss)
-			title.save
-		end
-		po.title = title
+  # parse a spreadsheet in a separately executing thread
+  def self.parse_parallel(upload, ss, sss)
+    Thread.new {
+      @@mutex.synchronize do
+        parse_spreadsheet(upload, ss, sss)
+      end
+    }
+  end
 
-		# calling valid? on an ActiveModel record clears all error messages, so handle associations after the attributes
-		valid = po.valid?
-		if unit.nil?
-			po.errors.add(:unit, "Undefined unit: #{row_data[headers['Unit']]}")
-		end
-		if po.collection.nil? && !row_data[headers['Collection']].blank?
-			po.errors.add(:collection, "Unkown collection: #{row_data[headers['Collection']]}")
-		end
+  private
+  # examines the header portion of the upload spreadsheet to validate correct vocabulary
+  def self.parse_headers(xlsx)
+    @headers = Hash.new
+    @parse_headers_msg = ''
+    # read all of the file's column headers
+    xlsx.row(1).each_with_index { |header, i|
+      @headers[header.strip] = i
+    }
+    # examine the headers to make sure that title, media type, medium, unit and iu_barcode are presernt (minimum to create physical object)
+    [COLUMN_HEADERS[TITLE], COLUMN_HEADERS[MEDIUM], COLUMN_HEADERS[MEDIA_TYPE], COLUMN_HEADERS[UNIT], COLUMN_HEADERS[IU_BARCODE]].each do |h|
+      unless @headers.include?(h)
+        @parse_headers_msg << parsed_header_message(h)
+      end
+    end
 
-		valid ? po : po.errors
+    # examine headers to make sure that all present conform to vocabulary. and that there are no unknown column headers
+    @headers.keys.each do |ch|
+      if !COLUMN_HEADERS.include?(ch)
+        @parse_headers_msg << parsed_header_message(ch)
+      end
+    end
+  end
+  # utility for formatting a string message about a bad column header
+  def self.parsed_header_message(ch)
+    "Missing or malformed <i>#{ch}</i> header<br/>"
+  end
 
-	end
+  # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
+  def self.parse_physical_object(row, spreadsheet, spreadsheet_submission)
+    # read all auto parse fields
+    po = PhysicalObject.new(spreadsheet_id: spreadsheet.id)
+    HEADERS_TO_ASSIGNER.keys.each do |k|
+      # not all attributes in a physical object may be present in the spreadsheet...
+        po.send HEADERS_TO_ASSIGNER[k], row[@headers[k]] unless @headers[k].nil?
+    end
 
-	def self.parse_date(date)
-		date.blank? ? nil : Date.strptime(date, "%Y-%m-%d")
-	end
+    # manually parse the other values to ensure conformance to controlled vocabulary
+    dur = row[column_index DURATION]
+    unless dur.blank?
+      if po.valid_duration?(dur)
+        po.send(:duration=, dur)
+      else
+        po.errors.add(:duration, "Improperly formated duration value (h:mm:ss): #{dur}")
+      end
+    end
 
-	# formats a string message based on the field specified
-	def self.bad_header_msg(field)
-		"Missing or malformed '#{field}' column header<br>"
-	end
+
+    media_type = row[column_index MEDIA_TYPE]
+    if media_type.blank? || !po.media_types.include?(media_type)
+      po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
+    else
+      po.send(:media_type=, media_type)
+      medium = row[column_index MEDIUM]
+      if medium.blank? || ! po.media_type_mediums[media_type].include?(medium)
+        po.errors.add(:medium, "Medium blank or malformed: '#{medium}'")
+      else
+        po.send(:medium=, medium)
+      end
+    end
+
+
+    location = row[column_index CURRENT_LOCATION]
+    set_value(:location, location, po)
+
+    gauge = row[column_index GAUGE]
+    set_value(:gauge, gauge, po)
+
+    reel = row[column_index REEL_NUMBER]
+    unless reel.blank?
+      if /^[0-9\?]+ of [0-9\?]+$/.match(reel)
+        po.send(:reel_number=, reel)
+      else
+        po.errors.add(:reel_number, "Invalid Reel Number format (x of y): #{reel}")
+      end
+    end
+
+    miic = row[column_index MULTIPLE_ITEMS_IN_CAN]
+    set_boolean_value(:multiple_items_in_can, miic, po)
+
+    can = row[column_index CAN_SIZE]
+    can = can.to_i rescue can    #can size has a 'Cartridge value so is represented as text'
+    set_value(:can_size, can.to_s, po)
+
+    footage = row[column_index FOOTAGE]
+    unless footage.blank?
+      po.send(:footage=, footage.to_i)
+    end
+
+    frame = row[column_index FRAME_RATE]
+    set_value(:frame_rate, frame, po)
+
+    silent = row[column_index SILENT]
+    set_boolean_value(:silent, silent, po)
+
+    captioned = row[column_index CAPTIONS_OR_SUBTITLES]
+    set_boolean_value(:captioned, captioned, po)
+
+    cr = row[column_index OVERALL_CONDITION]
+    unless cr.blank?
+      @cv[:condition_rating].collect { |x| x[0] }.each do |k|
+        if k.include?(cr)
+          po.send(:condition_rating=, k)
+        end
+      end
+      if po.condition_rating.blank?
+        po.errors.add(:condition_rating, "Invalid Overall Condition Rating: #{cr}")
+      end
+    end
+
+    rv = row[column_index RESEARCH_VALUE]
+    unless rv.blank?
+      @cv[:research_value].collect { |x| x[0] }.each do |k|
+        if k.include? (rv)
+          po.send(:research_value=, k)
+        end
+      end
+      if po.research_value.blank?
+        po.errors.add(:research_value, "Invalid Research Value: #{rv}")
+      end
+    end
+
+    ad = row[column_index AD_STRIP]
+    set_value(:ad_strip, ad.to_s, po)
+
+    shrink = row[column_index SHRINKAGE]
+    unless shrink.blank?
+      float = !!Float(shrink) rescue false
+      if float
+        po.send(:shrinkage=, float)
+      end
+    end
+
+    mold = row[column_index MOLD]
+    set_value(:mold, mold, po)
+
+    # now parse all association data
+    title = Title.new(title_text: row[column_index TITLE])
+    title.spreadsheet_id = spreadsheet.id
+
+    series = row[column_index SERIES].blank? ? nil : Series.new(title: row[column_index SERIES])
+    unless series.nil?
+      title.series = series
+      series.spreadsheet_id = spreadsheet.id
+    end
+    unless series.nil?
+      series.save
+    end
+    title.save
+    po.title = title
+
+    unit = Unit.where(abbreviation: row[column_index UNIT]).first
+    if unit.nil?
+      po.errors.add(:unit, "Undefined unit: #{row[column_index UNIT]}")
+    else
+      po.unit = unit
+      # collections are tied to a unit
+      collection = row[column_index COLLECTION].blank? ? nil : Collection.where(name: row[column_index COLLECTION], unit_id: unit.id).first
+      # a value in the COLLECTION cell but not matching an ActiveRecord instance means we must reject the spreadsheet because all
+      # collections in spreadsheet must exist prior to ingest
+      if row[column_index COLLECTION] && collection.nil?
+        po.errors.add(:collection, "Undefined collection for #{unit.abbreviation}: #{row[column_index COLLECTION]}")
+      else
+        po.collection = collection
+      end
+    end
+
+    email = row[column_index EMAIL_ADDRESS]
+    name = row[column_index CREATED_BY]
+    if (email && name)
+      username = email.split('@')[0]
+      user = User.where(username: username).first
+      unless user
+        user = User.new(username: username, email_address: email, first_name: name.split(' ')[0], last_name: name.split(' ')[1], active: false, created_in_spreadsheet: ss.id)
+        user.save
+      end
+      po.inventorier = user
+      po.modifier = user
+    elsif !(email.blank? && name.blank?)
+      po.errors.add(:user, "User missing Created By or Email Address field")
+    end
+
+    # FIXME: this will change eventually to relational objects.
+    acd = row[column_index ACCOMPANYING_DOCUMENTATION]
+    unless acd.blank?
+      po.send(:accompanying_documentation=, acd)
+    end
+
+    # version
+    version_fields = row[column_index VERSION].blank? ? [] : row[column_index VERSION].split(DELIMITER)
+    version_fields.each do |vf|
+      field = vf.parameterize.underscore
+      if PhysicalObject::VERSION_FIELDS.inlcude?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        # it could be 1st - 4th edition which don't 'map' easily from attribute name to humanized text
+        case field
+          when "1st_edition"
+            po.send(:first_edition=, true)
+          when "2nd_edition"
+            po.send(:second_edition=, true)
+          when "3rd_edition"
+            po.send(:third_edition=, true)
+          when "4th_edition"
+            po.send(:fourth_edition=, true)
+          else
+            po.errors.add(:version, "Undefined version: #{vf}")
+        end
+      end
+    end
+
+    # generation
+    gen_fields = row[column_index GENERATION].blank? ? [] : row[column_index GENERATION].split(DELIMITER)
+    gen_fields.each do |gf|
+      field = "generation #{gf}".parameterize.underscore
+      if PhysicalObject::GENERATION_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:generation, "Undefined generation: #{gf}")
+      end
+    end
+
+    # base
+    base_fields = row[column_index BASE].blank? ? [] : row[column_index BASE].split(DELIMITER)
+    base_fields.each do |bf|
+      field = "base #{bf}".parameterize.underscore
+      if PhysicalObject::BASE_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:base, "Undefined base: #{bf}")
+      end
+    end
+
+    # stock
+    stock_fields = row[column_index STOCK].blank? ? [] : row[column_index STOCK].split(DELIMITER)
+    stock_fields.each do |sf|
+      field = "stock #{sf}".parameterize.underscore
+      if PhysicalObject::STOCK_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:stock, "Undefined stock: #{sf}")
+      end
+    end
+
+    #picture type
+    picture_fields = row[column_index PICTURE_TYPE].blank? ? [] : row[column_index PICTURE_TYPE].split(DELIMITER)
+    picture_fields.each do |pf|
+      field = "picture #{pf}".parameterize.underscore
+      if (PhysicalObject::PICTURE_TYPE_FIELDS.include?(field.to_sym))
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:picture_type, "Undefined picture type: #{pf}")
+      end
+    end
+    # color
+    color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
+    color_fields.each do |cf|
+      matched = false
+      PhysicalObject::COLOR_FIELDS.each do |pcf|
+        if /#{cf.downcase}$/.match(pcf.to_s)
+          matched = true
+          po.send(((pcf.to_s) << "=").to_sym, true)
+        end
+      end
+      unless matched
+        po.errors.add(:color_fields, "Undefinded Color: #{cf}")
+      end
+    end
+
+    # aspect ratio
+    aspect_fields = row[column_index ASPECT_RATIO].blank? ? [] : row[column_index ASPECT_RATIO].split(DELIMITER)
+    aspect_fields.each do |af|
+      case af
+        when "1:33:1"
+          po.send(:aspect_ratio_1_33_1=, true)
+        when "1:37:1"
+          po.send(:aspect_ratio_1_37_1=, true)
+        when "1:66:1"
+          po.send(:aspect_ratio_1_66_1=, true)
+        when "1:85:1"
+          po.send(:aspect_ratio_1_85_1=, true)
+        when "2:35:1"
+          po.send(:aspect_ratio_2_35_1=, true)
+        when "2:39:1"
+          po.send(:aspect_ratio_2_39_1=, true)
+        when "2:59:1"
+          po.send(:aspect_ratio_2_59_1=, true)
+        else
+          puts "Bad aspect ratio: #{af}"
+          po.errors.add(:aspect_ratio, "Undefined aspect ratio: #{af}")
+      end
+    end
+
+    # sound format type
+    format_fields = row[column_index SOUND_FORMAT_TYPE].blank? ? [] : row[column_index SOUND_FORMAT_TYPE].split(DELIMITER)
+    format_fields.each do |ff|
+      field = "sound format #{ff}".parameterize.underscore
+      if PhysicalObject::SOUND_FORMAT_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:sound_format_type, "Undefined sound format: #{ff}")
+      end
+    end
+
+    # sound content type
+    content_fields = row[column_index SOUND_CONTENT_TYPE].blank? ? [] : row[column_index SOUND_CONTENT_TYPE].split(DELIMITER)
+    content_fields.each do |cf|
+      field = "sound content #{cf}".parameterize.underscore
+      if PhysicalObject::SOUND_CONTENT_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:sound_content_type, "Undefined sound content type: #{cf}")
+      end
+    end
+
+    # sound configuration
+    config_fields = row[column_index SOUND_CONFIGURATION].blank? ? [] : row[column_index SOUND_CONFIGURATION].split(DELIMITER)
+    config_fields.each do |cf|
+      field = "sound configuration #{cf}".parameterize.underscore
+      if PhysicalObject::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:sound_configuration, "Undefined sound configuration: #{cf}")
+      end
+    end
+
+    # language-dialog fields
+    lang_fields = row[column_index DIALOG_LANGUAGE].blank? ? [] : row[column_index DIALOG_LANGUAGE].split(DELIMITER)
+    lang_fields.each do |lf|
+      field = "language #{lf}".parameterize.underscore
+      if PhysicalObject::LANGUAGE_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
+      else
+        po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
+      end
+    end
+
+    # TODO: implement language-captions/subtitles parsing once fields exist in physical objects
+
+    # ad strip, mold, and shrinkage have their own columns
+    ad = row[column_index AD_STRIP].blank?
+    unless ad.blank?
+      po.send(:ad_strip=, ad)
+    end
+    mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
+    if mold.length > 0
+      po.send(:mold=, mold)
+    end
+    shrink = row[column_index SHRINKAGE]
+   unless shrink.blank?
+      po.send(:shrinkage=, shrink)
+    end
+
+    # condition type fields with value ranges or booleans
+    condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
+    cv = ControlledVocabulary.physical_object_cv
+    condition_fields.each do |cf|
+      if PhysicalObject::CONDITION_BOOLEAN_FIELDS.include?(cf)
+        po.send((cf.parameterize.underscore << "=").to_sym, true)
+      else
+        # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
+        pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
+        matcher = pattern.match(cf)
+        if matcher && PhysicalObject::CONDITION_FIELDS.include?(matcher[1].parameterize.underscore.to_sym)
+          v = cv[:condition_rating][matcher[2].to_i][matcher[2].to_i]
+          po.send((matcher[1].parameterize.underscore << "=").to_sym, v)
+        else
+          po.errors.add(:condition_type, "Undefined or malformed condition type: #{cf}")
+        end
+      end
+    end
+    po
+  end
+
+  def self.set_value(attr_symbol, val, po)
+    unless val.blank?
+      if @cv[attr_symbol].collect { |x| x[0] }.include? val
+        po.send((attr_symbol.to_s << "=").to_sym, val)
+      else
+        po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+      end
+    end
+  end
+
+  def self.set_boolean_value(attr_symbol, val, po)
+    po.send((attr_symbol.to_s << "=").to_sym, ! val.blank?)
+  end
+
+  def self.error_msg(row, physical_object)
+    msg = "<div>Physical Object at row #{row} has the following problem(s):</div><ul>".html_safe
+    physical_object.errors.keys.each do |k|
+      attr = k.to_s.humanize
+      problems = physical_object.errors[k].map(&:inspect).join(', ')
+      msg << "<li>#{attr}: #{problems}</li>".html_safe
+    end
+    msg << "</ul>".html_safe
+  end
+
+  # feed this method a column constant (STOCK, BASE, TITLE, etc) and it returns the column index of the current spreadsheet
+  # where that value resides
+  def self.column_index(column_constant)
+    @headers[COLUMN_HEADERS[column_constant]]
+  end
+
+
 
 end

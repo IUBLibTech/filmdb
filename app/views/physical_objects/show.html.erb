@@ -79,7 +79,7 @@
   <div>
     <b>Silent&nbsp;</b><%= @physical_object.silent? ? "yes" : "no" %><br/>
     <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption? ? "yes" : "no" %><br/>
-    <b>Captions/Subtitles Notes&nbsp;</b><br/>
+    <b>Captions/Subtitles Notes&nbsp;</b><%= @physical_object.captions_or_subtitles_notes %><br/>
   </div>
   <div>
     <%= @physical_object.notes %>
@@ -110,7 +110,8 @@
 <div id="accompanying_documentation_metadata" class="metadata_section">
   <h4>Accompanying Documentation</h4>
   <div>
-    <i>Implementaion to be drastically modified...</i>
+    <i>Implementaion to be drastically modified... but for now...</i><br/>
+    <%= @physical_object.accompanying_documentation %>
   </div>
 </div>
 <div id="" class="metadata_section">

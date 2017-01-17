@@ -46,6 +46,7 @@ class PhysicalObjectsController < ApplicationController
   def update
     nitrate = @physical_object.base_nitrate
     respond_to do |format|
+      @physical_object.modifier = User.current_user_object
       if @physical_object.update(physical_object_params)
         if @physical_object.base_nitrate and !nitrate
           notify_nitrate(@physical_object)

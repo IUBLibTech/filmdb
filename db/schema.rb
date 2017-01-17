@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212195348) do
+ActiveRecord::Schema.define(version: 20170116160141) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -131,10 +131,10 @@ ActiveRecord::Schema.define(version: 20161212195348) do
     t.boolean  "x_rated"
     t.string   "gauge",                                 limit: 255
     t.boolean  "generation_projection_print"
-    t.boolean  "generation_ab_a_roll"
-    t.boolean  "generation_ab_b_roll"
-    t.boolean  "generation_ab_c_roll"
-    t.boolean  "generation_ab_d_roll"
+    t.boolean  "generation_a_roll"
+    t.boolean  "generation_b_roll"
+    t.boolean  "generation_c_roll"
+    t.boolean  "generation_d_roll"
     t.boolean  "generation_answer_print"
     t.boolean  "generation_composite"
     t.boolean  "generation_duplicate"
@@ -267,6 +267,8 @@ ActiveRecord::Schema.define(version: 20161212195348) do
     t.string   "channeling",                            limit: 255
     t.boolean  "color_bw_bw_hand_coloring"
     t.boolean  "color_bw_bw_stencil_coloring"
+    t.text     "edge_code",                             limit: 65535
+    t.text     "captions_or_subtitles_notes",           limit: 65535
   end
 
   create_table "series", force: :cascade do |t|
@@ -279,6 +281,7 @@ ActiveRecord::Schema.define(version: 20161212195348) do
     t.string   "production_number", limit: 255
     t.string   "date",              limit: 255
     t.integer  "total_episodes",    limit: 4
+    t.integer  "spreadsheet_id",    limit: 8
   end
 
   create_table "spreadsheet_submissions", force: :cascade do |t|

@@ -1,7 +1,10 @@
 <%= render partial: 'layouts/notice_div' %>
 <% if @spreadsheet.successful_upload %>
+    <br>
+    <h4>Physical Objects Created in this spreadsheet</h4>
     <%= render partial: 'physical_objects/physical_objects_table' %>
 
+    <% if @spreadsheet.created_users.size > 0 %>
     <h4>Users Created in This Spreadsheet</h4>
     <table>
       <tr>
@@ -23,7 +26,9 @@
           </tr>
       <% end %>
     </table>
+    <% end %>
 
+    <% if @spreadsheet.titles.size > 0 %>
     <h4>Titles Created in This Spreadsheet</h4>
     <table>
       <tr>
@@ -43,6 +48,24 @@
           </tr>
       <% end %>
     </table>
+    <% end %>
+
+    <% if @spreadsheet.series.size > 0 %>
+        <h4>Seriese Created in this Spreadsheet</h4>
+        <table>
+          <tr><th>Series Title</th><th>Actions</th></tr>
+          <% @spreadsheet.series.each do |s| %>
+          <tr>
+            <td><%= s.title %></td>
+            <td>
+              <%= link_to "Show", series_path(s) %>
+              <%= link_to "Edit", edit_series_path(s) %>
+              <%= link_to "Destroy", s, method: :delete, data: { confirm: 'Are you sure?'} %>
+            </td>
+          </tr>
+          <% end %>
+        </table>
+    <% end %>
 <% else %>
 	<h2>Spreadsheet upload failed for the following reasons:</h2>
 	<p>

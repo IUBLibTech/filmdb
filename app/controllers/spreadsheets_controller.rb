@@ -20,6 +20,9 @@ class SpreadsheetsController < ApplicationController
   # DELETE /spreadsheets/1.json
   def destroy
     @spreadsheet.physical_objects.destroy_all
+    @spreadsheet.titles.destroy_all
+    @spreadsheet.series.destroy_all
+    @spreadsheet.created_users.destroy_all
     @spreadsheet.destroy
 
     respond_to do |format|
@@ -46,7 +49,7 @@ class SpreadsheetsController < ApplicationController
           end
           sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
           sss.save
-          SpreadsheetsHelper.parse_spreadsheet(@file, ss, sss)
+          SpreadsheetsHelper.parse_serial(@file, ss, sss)
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been submitted. Please refresh the page to monitor progress." }
         end
       end
