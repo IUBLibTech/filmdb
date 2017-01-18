@@ -3,6 +3,9 @@
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
 <%= link_to 'Back', physical_objects_path %> |
 <%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %>
+<% if @continue_url %>
+   &nbsp;|&nbsp;<%= link_to @continue_text, @continue_url %>
+<% end %>
 <div>
   <div style="height: 20px">
     <div class="right _25">

@@ -48,22 +48,29 @@ module PhysicalObjectsHelper
 
     respond_to do |format|
       if @physical_object.save
+        url = nil
         if controller_name == 'physical_objects'
           if action_name == 'create_duplicate'
-            format.html { redirect_to duplicate_physical_object_path(@physical_object.id), notice: 'Physical Object successfully duplicated'}
+            #format.html { redirect_to duplicate_physical_object_path(@physical_object.id), notice: 'Physical Object successfully duplicated'}
           else
-            format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
+            url = new_physical_object_path
+            #format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
           end
         elsif controller_name == 'collections'
-          format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
+          #format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
+          url = collection_new_physical_object_path
         elsif controller_name == 'series'
-          format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
+          #format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
+          url = series_new_physical_object_path
         elsif controller_name == 'titles'
-          format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
+          #format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
+          url = title_new_physical_object_path
         end
         if @physical_object.base_nitrate
           notify_nitrate(@physical_object)
         end
+        session[:physical_object_create_action] = url
+        format.html { redirect_to physical_object_path(@physical_object.id, notice: 'Physical Object successfully created')}
       else
         format.html { render 'physical_objects/new_physical_object' }
       end

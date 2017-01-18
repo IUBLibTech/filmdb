@@ -16,6 +16,26 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/1
   # GET /physical_objects/1.json
   def show
+    if session[:physical_object_create_action]
+      @continue_url = session[:physical_object_create_action]
+      @continue_text = nil
+      pattern = /([0-9]+)/
+      id = pattern.match(@continue_url) ? pattern.match(@continue_url)[0] : nil
+      if @continue_url == new_physical_object_path
+        @continue_text = "Continue Creating New Physical Objects"
+      elsif @continue_url.include?('collection')
+        debugger
+        collection = Collection.find(id)
+        @continue_text = "Continue Inventorying Collection <i>#{collection.name}</i>".html_safe
+      elsif @continue_url.include?('series')
+        series = Series.find(id)
+        @continue_text = "Continue Inventorying Series <i>#{series.title}</i>".html_safe
+      elsif @continue_url.include?('title')
+        title = Title.find(id)
+        @continue_text = "Continue Inventorying Title <i>#{title.title_text}</i>".html_safe
+      end
+    end
+    session[:physical_object_create_action] = nil
   end
 
   # GET /physical_objects/new_physical_object
