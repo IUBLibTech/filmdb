@@ -1,6 +1,6 @@
 class Spreadsheet < ActiveRecord::Base
 	has_many :physical_objects
-	has_many :spreadsheet_submissions
+	has_many :spreadsheet_submissions, dependent: :delete_all
   has_many :titles
   has_many :series
 	has_many :created_users, class_name: "User", foreign_key: "created_in_spreadsheet"

@@ -13,7 +13,7 @@ User.new(username: 'shmichae', first_name: 'Sherri', last_name: 'Michaels', emai
 User.new(username: 'wgcowan', first_name: 'Will', last_name: 'Cowan', email_address: 'wgcowan@indiana.edu', active: true).save
 User.new(username: 'rstoeltj', first_name: 'Rachael', last_name: 'Stoeltje', email_address: 'rstoeltj@indiana.edu', active: true).save
 User.new(username: 'aploshay', first_name: 'Adam', last_name: 'Ploshay', email_address: 'aploshay@iu.edu', active: true).save
-User.new(username: 'goodpaster', first_name: 'Sabrina', last_name: 'Goodpaster', email_address: 'goodpaster@indiana.edu', active: true).save
+User.new(username: 'goodpass', first_name: 'Sabrina', last_name: 'Goodpaster', email_address: 'goodpass@indiana.edu', active: true).save
 # Units
 Unit.new(abbreviation: 'B-IULMIA', name: "Indiana University, Bloomington. Indiana University Libraries Moving Image Archive.", institution: "Indiana University", campus: "Bloomington", menu_index: 1).save
 Unit.new(abbreviation: 'B-AAAMC', name: "Indiana University, Bloomington. Archives of African American Music and Culture.", institution: "Indiana University", campus: "Bloomington", menu_index: 2).save

@@ -303,7 +303,7 @@
         <%= f.check_box :picture_credits_only %>Credits Only<br/>
         <%= f.check_box :picture_picture_effects %>Picture Effects<br/>
         <%= f.check_box :picture_picture_outtakes %>Picture Outtakes<br/>
-        <%= f.check_box :picture_picture_kinescope %>Kinescope<br/>
+        <%= f.check_box :picture_kinescope %>Kinescope<br/>
       </div>
     </div>
     <div class="clear">
@@ -313,18 +313,18 @@
       <b class="block">Color</b>
       <div>
         <div class="_33 left">
-          <%= f.check_box :color_bw_bw %>Black & White<br/>
+          <%= f.check_box :color_bw_bw_black_and_white %>Black & White<br/>
           <%= f.check_box :color_bw_bw_toned %>Toned<br/>
           <%= f.check_box :color_bw_bw_tinted %>Tinted<br/>
           <%= f.check_box :color_bw_bw_hand_coloring %>Hand Coloring<br/>
           <%= f.check_box :color_bw_bw_stencil_coloring %>Stencil Coloring<br/>
         </div>
         <div class="_33 left">
-          <%= f.check_box :color_bw_color %>Color<br/>
+          <%= f.check_box :color_bw_color_color %>Color<br/>
           <%= f.check_box :color_bw_color_ektachrome %>Ektachrome<br/>
           <%= f.check_box :color_bw_color_kodachrome %>Kodachrome<br/>
           <%= f.check_box :color_bw_color_technicolor %>Technicolor<br/>
-          <%= f.check_box :color_bw_color_anscochrome %>Ansochrome<br/>
+          <%= f.check_box :color_bw_color_ansochrome %>Ansochrome<br/>
         </div>
         <div class="left _33">
           <%= f.check_box :color_bw_color_eco %>Eco<br/>
@@ -354,14 +354,14 @@
     <%= f.check_box :close_caption %><b>Captions/Subtitles</b><br/>
     <b>Captions/Subtitles Notes</b><br/>
   </div>
-  <%= f.text_area :notes, class: '_100' %>
+  <%= f.text_area :captions_or_subtitles_notes, class: '_100' %>
   <b class='block'>Format Type</b>
   <div class="h_100px">
     <div class="left">
       <%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area<br/>
       <%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density<br/>
       <%= f.check_box :sound_format_magnetic %>Magnetic<br/>
-      <%= f.check_box :sound_format_type_mixed %>Mixed
+      <%= f.check_box :sound_format_mixed %>Mixed
     </div>
     <div class="left">
       <%= f.check_box :sound_format_digital_sdds %>Digital: SDDS<br/>
@@ -475,7 +475,7 @@
       </div>
       <div class="select">
         <div>Rusty</div>
-        <%= f.select :rusty, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
+        <%= f.select :rusty, options_for_select(@cv[:condition_type], @physical_object.rusty), {include_blank: ''}  %>
       </div>
     </div>
     <div class="left _33">
@@ -499,7 +499,7 @@
       </div>
       <div class="select">
         <div>Spoking</div>
-        <%= f.select :spoking, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
+        <%= f.select :spoking, options_for_select(@cv[:condition_type], @physical_object.spoking), {include_blank: ''}  %>
       </div>
     </div>
     <div class="left _33">
@@ -555,7 +555,7 @@
     </div>
     <div class="_33">
       <div class="check_box">
-        <%= f.check_box :loose_wind %>
+        <%= f.check_box :poor_wind %>
         <div>
           Poor Wind
         </div>

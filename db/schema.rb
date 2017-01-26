@@ -11,13 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170116160141) do
+ActiveRecord::Schema.define(version: 20170126152250) do
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
     t.boolean  "location"
     t.boolean  "copy_right"
-    t.boolean  "series_name"
     t.boolean  "series_production_number"
     t.boolean  "series_part"
     t.boolean  "alternative_title"
@@ -96,7 +95,6 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.integer  "copy_right",                            limit: 4
     t.string   "format",                                limit: 255
     t.integer  "spreadsheet_id",                        limit: 4
-    t.string   "series_name",                           limit: 255
     t.string   "series_production_number",              limit: 255
     t.string   "series_part",                           limit: 255
     t.string   "alternative_title",                     limit: 255
@@ -180,14 +178,14 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.boolean  "picture_credits_only"
     t.boolean  "picture_picture_effects"
     t.boolean  "picture_picture_outtakes"
-    t.boolean  "picture_picture_kinescope"
+    t.boolean  "picture_kinescope"
     t.string   "frame_rate",                            limit: 255
     t.boolean  "color_bw_bw_toned"
     t.boolean  "color_bw_bw_tinted"
     t.boolean  "color_bw_color_ektachrome"
     t.boolean  "color_bw_color_kodachrome"
     t.boolean  "color_bw_color_technicolor"
-    t.boolean  "color_bw_color_anscochrome"
+    t.boolean  "color_bw_color_ansochrome"
     t.boolean  "color_bw_color_eco"
     t.boolean  "color_bw_color_eastman"
     t.boolean  "aspect_ratio_1_33_1"
@@ -213,7 +211,7 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.boolean  "sound_format_optical_variable_area"
     t.boolean  "sound_format_optical_variable_density"
     t.boolean  "sound_format_magnetic"
-    t.boolean  "sound_format_type_mixed"
+    t.boolean  "sound_format_mixed"
     t.boolean  "sound_format_digital_sdds"
     t.boolean  "sound_format_digital_dts"
     t.boolean  "sound_format_digital_dolby_digital"
@@ -243,7 +241,7 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.string   "tape_residue",                          limit: 255
     t.string   "broken",                                limit: 255
     t.string   "tearing",                               limit: 255
-    t.boolean  "loose_wind"
+    t.boolean  "poor_wind"
     t.boolean  "not_on_core_or_reel"
     t.string   "missing_footage",                       limit: 255
     t.string   "scratches",                             limit: 255
@@ -254,8 +252,8 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.text     "conservation_actions",                  limit: 65535
     t.boolean  "multiple_items_in_can"
     t.integer  "mdpi_barcode",                          limit: 8
-    t.boolean  "color_bw_color"
-    t.boolean  "color_bw_bw"
+    t.boolean  "color_bw_color_color"
+    t.boolean  "color_bw_bw_black_and_white"
     t.text     "accompanying_documentation_location",   limit: 65535
     t.boolean  "lacquer_treated"
     t.boolean  "replasticized"
@@ -318,9 +316,23 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "title_forms", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "form",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "title_genres", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
     t.string   "genre",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "title_locations", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "location",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -352,7 +364,6 @@ ActiveRecord::Schema.define(version: 20170116160141) do
     t.integer  "modified_by_id",     limit: 8
     t.string   "series_part",        limit: 255
     t.integer  "created_by_id",      limit: 8
-    t.string   "location",           limit: 255
     t.text     "notes",              limit: 65535
   end
 

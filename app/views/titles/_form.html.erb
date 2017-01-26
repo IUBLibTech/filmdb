@@ -27,10 +27,6 @@
         </div>
         <div class="label"><b>Series Part</b></div>
         <div class="field"><%= f.text_field :series_part %></div>
-        <div class="label"><b>Location</b></div>
-        <div class="field">
-          <%= f.text_field :location %>
-        </div>
       </div>
       <div class="left _50">
         <div class="block_label"><b>Summary</b></div>
@@ -70,10 +66,28 @@
     <h4>Genres</h4>
     <div id="genres_div" class="fields_for_div">
       <%= f.fields_for :title_genres do |tg| %>
-          <i>No vocab for this one yet...</i>
+        <div class="label">
+          <b>Genre</b>
+        </div>
+        <div class="field">
+          <%= tg.select :genre, options_for_select(@genre_cv[:genre], tg.object.genre) %>
+        </div>
         <div class="clear"><%= tg.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Genre", :title_genres %>
+    </div>
+    <h4>Forms</h4>
+    <div id="forms_div" class="fields_for_div">
+      <%= f.fields_for :title_forms do |tf| %>
+        <div class="label">
+          <b>Form</b>
+        </div>
+        <div class="field">
+          <%= tf.select :form, options_for_select(@form_cv[:form], tf.object.form) %>
+        </div>
+        <div class="clear"><%= tf.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
+      <% end %>
+      <%= f.link_to_add "New Form", :title_forms %>
     </div>
     <h4>Dates</h4>
     <div id="dates_div">
@@ -83,6 +97,13 @@
           <div class="clear"><%= td.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Date", :title_dates %>
+    </div>
+    <h4>Locations</h4>
+    <div id="dates_div">
+      <%= f.fields_for :title_locations do |tl| %>
+          <div class="label"><b>Location</b></div> <div class="field"><%= tl.text_field :location %></div>
+      <% end %>
+      <%= f.link_to_add "New Location", :title_locations %>
     </div>
     <h4>Notes</h4>
     <div id="notes_div">
@@ -103,5 +124,5 @@
       $('#title_series_id').val(ui.item.value);
       return false;
     }
-  })
+  });
 </script>

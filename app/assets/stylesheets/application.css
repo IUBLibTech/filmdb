@@ -35,7 +35,6 @@ table, th, td {
 
 th, td {
     text-align: left;
-    white-space: nowrap;
 }
 
 td:first-of-type {

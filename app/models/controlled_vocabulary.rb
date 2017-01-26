@@ -9,6 +9,20 @@ class ControlledVocabulary < ActiveRecord::Base
     cv_map(cv)
   }
 
+  scope :title_date_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'TitleDate').select(:model_attribute, :value).order(:model_attribute, :index)
+    cv_map(cv)
+  }
+
+  scope :title_genre_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'TitleGenre').select(:model_attribute, :value).order(:model_attribute, :index)
+    cv_map(cv)
+  }
+
+  scope :title_form_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'TitleForm').select(:model_attribute, :value).order(:model_attribute, :index)
+    cv_map(cv)
+  }
 
   private
   def self.cv_map(scope_result)

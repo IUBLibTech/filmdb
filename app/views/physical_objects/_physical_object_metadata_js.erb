@@ -110,6 +110,14 @@
     $('#physical_object_series_id').removeAttr('value');
   });
 
+  $('#physical_object_collection_text').keypress(function() {
+    $('#physical_object_collection_id').removeAttr('value');
+    el = $('#physical_object_unit_id');
+    if (el.attr('disabled') == 'disabled') {
+      el.attr('disabled', false);
+    }
+  })
+
   //autcomplete for collections
   $('#physical_object_collection_text').focus(function() {
     if ($(this).data('autocomplete')) {
@@ -132,8 +140,8 @@
         if (unit_id != null) {
           $("#physical_object_unit_text").val(unit_title);
           $('#physical_object_unit_id').val(unit_id);
-          // whenever a title is selected we need to disable the series_title_text field
-          $("#physical_object_unit_text").prop('disabled', true)
+          // whenever a collection is selected we need to disable the Unit select element
+          $("#physical_object_unit_id").prop('disabled', true)
         }
         $("#physical_object_collection_text").val(ui.item.label);
         $('#physical_object_collection_id').val(ui.item.value);

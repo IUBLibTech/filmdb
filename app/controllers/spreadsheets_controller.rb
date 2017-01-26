@@ -1,4 +1,5 @@
 class SpreadsheetsController < ApplicationController
+  require 'csv_parser'
   before_action :set_spreadsheet, only: [:show, :edit, :update, :destroy]
 
   # GET /spreadsheets
@@ -49,7 +50,8 @@ class SpreadsheetsController < ApplicationController
           end
           sss = SpreadsheetSubmission.new(spreadsheet_id: ss.id)
           sss.save
-          SpreadsheetsHelper.parse_serial(@file, ss, sss)
+          parser = CsvParser.new(@file, ss, sss)
+          parser.parse_csv
           format.html { redirect_to spreadsheets_path, notice: "#{@file.original_filename} has been submitted. Please refresh the page to monitor progress." }
         end
       end
