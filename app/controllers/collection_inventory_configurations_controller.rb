@@ -71,7 +71,7 @@ class CollectionInventoryConfigurationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_inventory_configuration_params
       params.require(:collection_inventory_configuration).permit(
-          :collection_id, :location, :copy_right, :series_name, :series_production_number, :series_part, :alternative_title, :title_version,
+          :collection_id, :location, :copy_right, :series_production_number, :series_part, :alternative_title, :title_version,
           :item_original_identifier, :summary, :creator, :distributors, :credits, :language, :accompanying_documentation, :notes,
           :generation, :base, :stock, :access, :gauge, :can_size, :footage, :duration, :reel_number, :format_notes, :picture_type, :frame_rate,
           :color_or_bw, :aspect_ratio, :sound_field_language, :captions_or_subtitles, :silent, :sound_format_type, :sound_content_type,

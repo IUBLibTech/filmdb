@@ -1,6 +1,12 @@
 class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 
+  # after_create :test_after_create
+  # after_validation :test_after_validation
+  # before_save :test_before_save
+  # after_save :test_after_save
+
+
 	belongs_to :title
 	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
@@ -31,7 +37,7 @@ class PhysicalObject < ActiveRecord::Base
 	}
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
-      :preview, :revised, :original, :captioned, :excerpt, :catolic, :domestic, :trailer, :english, :television, :x_rated]
+      :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
   VERSION_FIELDS_HUMANIZED = {first_edition: "1st Edition", second_edition: "2nd Edition", third_edition: "3rd Edition", fourth_edition: "4th Edition", x_rated: "X-rated"}
 
   GENERATION_FIELDS = [
@@ -62,22 +68,26 @@ class PhysicalObject < ActiveRecord::Base
 
   PICTURE_TYPE_FIELDS = [
       :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_picture_kinescope
+      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope
   ]
   PICTURE_TYPE_FIELDS_HUMANIZED = {
       picture_not_applicable: "Not Applicable", picture_silent_picture: "Silent", picture_mos_picture: "MOS",
       picture_composite_picture: "Composite", picture_intertitles_only: "Intertitles Only", picture_credits_only: "Credits Only",
-      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_picture_kinescope: "Kinescope"
+      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope"
   }
 
-  COLOR_FIELDS = [
-      :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
-      :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
-      :color_bw_bw
+  COLOR_BW_FIELDS = [
+      :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_bw_black_and_white
   ]
+  COLOR_COLOR_FIELDS = [
+      :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
+      :color_bw_color_ansochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color_color
+  ]
+  COLOR_FIELDS = COLOR_BW_FIELDS + COLOR_COLOR_FIELDS
+
   COLOR_FIELDS_HUMANIZED = {
       color_bw_bw_toned: "Toned (Black and White)", color_bw_bw_tinted: "Tinted (Black and White)", color_bw_color_ektachrome: "Ektachrome",
-      color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_anscochrome: "Ansochrome",
+      color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_ansochrome: "Ansochrome",
       color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_bw: "Black and White", color_bw_bw_hand_coloring: "Hand Coloring",
       color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color: "Color"
   }
@@ -92,13 +102,13 @@ class PhysicalObject < ActiveRecord::Base
 
   SOUND_FORMAT_FIELDS = [
       :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
-      :sound_format_type_mixed, :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
+      :sound_format_mixed, :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
       :sound_format_sound_on_separate_media
   ]
   SOUND_FORMAT_FIELDS_HUMANIZED = {
-      sound_format_optical_variable_area: "Variable Area (Optical)", sound_format_optical_variable_density: "Variable Density (Optical)",
-      sound_format_magnetic: "Magnetic", sound_format_type_mixed: "Mixed", sound_format_digital_sdds: "SDDS (Digital)",
-      sound_format_digital_dts: "DTS (Digital)", sound_format_digital_dolby_digital: "Dolby (Digital)",
+      sound_format_optical_variable_area: "Optical: Variable Area", sound_format_optical_variable_density: "Optical: Variable Density",
+      sound_format_magnetic: "Magnetic", sound_format_type_mixed: "Mixed", sound_format_digital_sdds: "Digital: SDDS",
+      sound_format_digital_dts: "Digital: DTS", sound_format_digital_dolby_digital: "Digital: Dolby Digital",
       sound_format_sound_on_separate_media: "Sound on Separate Media"
   }
 
@@ -129,9 +139,9 @@ class PhysicalObject < ActiveRecord::Base
   CONDITION_FIELDS = [
       :ad_strip, :shrinkage, :mold, :dirty, :channeling, :scratches, :tape_residue, :rusty, :broken, :peeling,
       :splice_damage, :tearing, :spoking, :perforation_damage, :warp, :water_damage, :color_fade,
-      :lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :loose_wind, :missing_footage, :miscellaneous
+      :lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind, :missing_footage, :miscellaneous
   ]
-  CONDITION_BOOLEAN_FIELDS = [:lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :loose_wind]
+  CONDITION_BOOLEAN_FIELDS = [:lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind]
   CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
 
   # Merge all of the humanized field maps together so the search space is singular
@@ -209,6 +219,23 @@ class PhysicalObject < ActiveRecord::Base
       str << (self[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
     end
     str
+  end
+
+
+  def test_after_create
+    puts "\n\nAfter Creation: #{self.created_at}\n\n"
+  end
+
+  def test_after_validation
+    puts "\n\nAfter Validation: #{self.created_at}\n\n"
+  end
+
+  def test_before_save
+    puts "\n\nBefore Save: #{self.created_at}\n\n"
+  end
+
+  def test_after_save
+    puts "\n\nAfter Save: #{self.created_at}\n\n"
   end
 
 end

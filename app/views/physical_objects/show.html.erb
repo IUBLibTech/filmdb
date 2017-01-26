@@ -8,13 +8,13 @@
 <% end %>
 <div>
   <div style="height: 20px">
-    <div class="right _25">
-      <b>Inventoried By: </b><%= @physical_object.inventorier.name %>
+    <div class="right _35">
+      <b>Inventoried By: </b><%= @physical_object.inventorier.name %>&nbsp;(<%= @physical_object.created_at.strftime('%Y-%m-%d') %>)
     </div>
   </div>
   <div style="heigh: 20px">
-    <div class="right _25">
-      <b>Modified By: </b><%= @physical_object.modifier.name %>
+    <div class="right _35">
+      <b>Modified By: </b><%= @physical_object.modifier.name %>&nbsp;(<%= @physical_object.updated_at.strftime('%Y-%m-%d') %>)
     </div>
   </div>
 </div>
@@ -156,7 +156,7 @@
       Dirty <%= @physical_object.dirty %><br/>
       Channeling <%= @physical_object.channeling %><br/>
       Not on Core or Reel <%= @physical_object.not_on_core_or_reel? ? "yes" : "no" %><br/>
-      Poor Wind <%= @physical_object.loose_wind? ? "yes" : "no" %> <br/>
+      Poor Wind <%= @physical_object.poor_wind? ? "yes" : "no" %> <br/>
       Scratches <%= @physical_object.scratches %><br/>
       Tape Residue <%= @physical_object.tape_residue %><br/>
       Water Damage <%= @physical_object.water_damage %>

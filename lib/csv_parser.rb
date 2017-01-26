@@ -1,10 +1,10 @@
-# this is the new one - not yet being used
-module SpreadsheetsHelper
-  require 'rubygems'
-  require 'roo'
+class CsvParser
   require 'csv'
+  require 'manual_roll_back_exception'
 
-  # the column headers that spreadsheets COULD contain - only the 5 metadata fields required to create a physical object
+  attr_accessor :percent_complete
+
+  # the column headers that spreadsheets should contain - only the 5 metadata fields required to create a physical object
   # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
   COLUMN_HEADERS = [
       'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode',
@@ -17,7 +17,7 @@ module SpreadsheetsHelper
       'Series Part', 'Accompanying Documentation', 'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date',
       'Accompanying Documentation Location'
   ]
-
+  # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
   TITLE, DURATION, SERIES, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
   VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN, CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE = 11,12,13,14,15,16,17,18,19,20
   STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO, SILENT, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE = 21,22,23,24,25,26,27,28,29,30
@@ -26,7 +26,7 @@ module SpreadsheetsHelper
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 47,48,49,50,51,52,53,54
   CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION = 55,56,57,58,59,60,61
 
-  # hash mapping a column header to its physical object assignment operand using send()
+  # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
       COLUMN_HEADERS[IUCAT_TITLE_NO] => :title_control_number=, COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
       COLUMN_HEADERS[EDGE_CODE_DATE] => :edge_code=, COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
@@ -34,11 +34,16 @@ module SpreadsheetsHelper
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
-      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=,
+      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
+      COLUMN_HEADERS[ORIGINAL_IDENTIFIER] => :item_original_identifier=
   }
 
-
+  # regex for parsing condition types
   CONDITION_PATTERN = /([a-zA-z]+) \(([\d])\)/
+
+  NAME_ROLE_PATTERN = /^([a-zA-Z ]+) \(([a-zA-z ]+)\)$/
+
+  # Delimiter used in columns with multiple values present
   DELIMITER = ' ; '
 
   # special logger for parsing spreadsheets
@@ -47,13 +52,17 @@ module SpreadsheetsHelper
   end
   @@mutex = Mutex.new
 
-  # parse a spreadsheet in the same thread of execution as the server (DO NOT USE THIS IN PRODUCTION)
-  def self.parse_serial(upload, ss, sss)
-    xlsx = Roo::Excelx.new(upload.tempfile.path, file_warning: :ignore)
-    xlsx.default_sheet = xlsx.sheets[0]
-    parse_headers(xlsx)
+  def initialize(filepath, spreadsheet, spreadsheet_submission)
+    @filepath = filepath.tempfile.path
+    @spreadsheet = spreadsheet
+    @spreadsheet_submission = spreadsheet_submission
+  end
+
+  def parse_csv
+    csv = CSV.read(@filepath, headers: false)
+    parse_headers(csv[0])
     if @parse_headers_msg.size > 0
-      sss.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
+      @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
       @cv = ControlledVocabulary.physical_object_cv
       # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
@@ -69,18 +78,18 @@ module SpreadsheetsHelper
           # the Physical Objects in the database. We call save (instead of save!) to avoid the exception that would roll back
           # the whole transaction - so that we can process all physical objects to determine all rows that failed rather than
           # just the first row.
-
-          ((xlsx.first_row + 1)..(xlsx.last_row)).each do |row|
-            po = parse_physical_object(xlsx.row(row), ss, sss)
-            all_physical_objects << po
-            if po.errors.any?
-              error_msg << error_msg(row, po)
+          csv.each_with_index do |row, i|
+            unless i == 0
+              po = parse_physical_object(row)
+              all_physical_objects << po
+              if po.errors.any?
+                error_msg << error_msg(i, po)
+              end
             end
-            # cannot do this in a transaction... need to figure out another way to handle updating the status of the submission.
-            # sss.update_attributes(submission_progress: ((row / xlsx.last_row).to_f * 25).to_i)
           end
 
-          # if @error_msg has length > 0 something blew up... otherwise we can pass off to ActiveRecord validation to see what passes
+          # if @error_msg has length > 0 something blew up... otherwise we can pass off to ActiveRecord validation to see
+          # passes/fails Rails validation
           if error_msg.nil? || error_msg.length == 0
             all_physical_objects.each_with_index do |po, index|
               unless po.save
@@ -89,41 +98,36 @@ module SpreadsheetsHelper
             end
           end
           if error_msg.length > 0
-            raise Exception
+            raise ManualRollBackException
           else
-            sss.update_attributes(successful_submission: true, submission_progress: 100)
-            ss.update_attributes(successful_upload: true)
+            @spreadsheet_submission.update_attributes(successful_submission: true, submission_progress: 100)
+            @spreadsheet.update_attributes(successful_upload: true)
           end
         end
       rescue Exception => error
-        em = error.message << "<br/>"
-        error.backtrace.each do |line|
-          em << line << "<br/>"
+        unless error.class == ManualRollBackException
+          @em = error.message << "<br/>"
+          error.backtrace.each do |line|
+            @em << line << "<br/>"
+          end
         end
-
-
-        sss.update_attributes(failure_message: error_msg.length > 0 ? error_msg << em.html_safe : em.html_safe, successful_submission: false, submission_progress: 100)
+        unless @em.blank?
+          error_msg << @em.html_safe
+        end
+        @spreadsheet_submission.update_attributes(failure_message: error_msg, successful_submission: false, submission_progress: 100)
       end
     end
   end
 
-  # parse a spreadsheet in a separately executing thread
-  def self.parse_parallel(upload, ss, sss)
-    Thread.new {
-      @@mutex.synchronize do
-        parse_spreadsheet(upload, ss, sss)
-      end
-    }
-  end
-
   private
-  # examines the header portion of the upload spreadsheet to validate correct vocabulary
-  def self.parse_headers(xlsx)
+  def parse_headers(row)
     @headers = Hash.new
     @parse_headers_msg = ''
     # read all of the file's column headers
-    xlsx.row(1).each_with_index { |header, i|
-      @headers[header.strip] = i
+    row.each_with_index { |header, i|
+      unless header.nil?
+        @headers[header.strip] = i
+      end
     }
     # examine the headers to make sure that title, media type, medium, unit and iu_barcode are presernt (minimum to create physical object)
     [COLUMN_HEADERS[TITLE], COLUMN_HEADERS[MEDIUM], COLUMN_HEADERS[MEDIA_TYPE], COLUMN_HEADERS[UNIT], COLUMN_HEADERS[IU_BARCODE]].each do |h|
@@ -139,23 +143,24 @@ module SpreadsheetsHelper
       end
     end
   end
+
   # utility for formatting a string message about a bad column header
-  def self.parsed_header_message(ch)
+  def parsed_header_message(ch)
     "Missing or malformed <i>#{ch}</i> header<br/>"
   end
 
-  def parse_csv(file)
-
-  end
-
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
-  def self.parse_physical_object(row, spreadsheet, spreadsheet_submission)
+  def parse_physical_object(row)
     # read all auto parse fields
-    po = PhysicalObject.new(spreadsheet_id: spreadsheet.id)
+    po = PhysicalObject.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
       # not all attributes in a physical object may be present in the spreadsheet...
-        po.send HEADERS_TO_ASSIGNER[k], row[@headers[k]] unless @headers[k].nil?
+      po.send(HEADERS_TO_ASSIGNER[k], row[@headers[k]]) unless @headers[k].nil?
     end
+
+    # date created
+    d = Date.strptime(row[column_index DATE_CREATED], '%Y-%m-%d')
+    po.created_at = d
 
     # manually parse the other values to ensure conformance to controlled vocabulary
     dur = row[column_index DURATION]
@@ -216,7 +221,7 @@ module SpreadsheetsHelper
     set_boolean_value(:silent, silent, po)
 
     captioned = row[column_index CAPTIONS_OR_SUBTITLES]
-    set_boolean_value(:captioned, captioned, po)
+    set_boolean_value(:close_caption, captioned, po)
 
     cr = row[column_index OVERALL_CONDITION]
     unless cr.blank?
@@ -256,17 +261,18 @@ module SpreadsheetsHelper
     mold = row[column_index MOLD]
     set_value(:mold, mold, po)
 
+    # now parse all title data
+    @title_cv = ControlledVocabulary.title_cv
     @title_date_cv = ControlledVocabulary.title_date_cv
-    @title_genre_cv = ControlledVocabulary.title_genre_cv
-    @title_form_cv = ControlledVocabulary.title_form_cv
-    # now parse all association data
+    @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0]}
+    @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0]}
     title = Title.new(title_text: row[column_index TITLE])
-    title.spreadsheet_id = spreadsheet.id
+    title.spreadsheet_id = @spreadsheet.id
     dates = row[column_index DATE].to_s
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
-        date_type = /^([0-9- circas]+) \(([a-zA-Z ]*)\)$/
-        date_only = /^([0-9- circas]+)&/
+        date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
+        date_only = /^([0-9\/?~]+)$/
         if date_type.match(date)
           matcher = date_type.match(date)
           d = matcher[1]
@@ -278,18 +284,77 @@ module SpreadsheetsHelper
           end
         elsif date_only.match(date)
           d = date_only.match(date)[1]
-          TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown').save
+          title.title_dates << TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown')
         else
           po.errors.add(:title_date, "Invalid date/date_type format: #{date}")
         end
       end
     end
 
+    # title creators, publishers, form, genre, (subject - currently waiting on controlled vocab to implement) and location
+    creator_values = row[column_index CREATOR]
+    unless creator_values.blank?
+      creator_values.split(DELIMITER).each do |val|
+        matcher = NAME_ROLE_PATTERN.match(val)
+        if matcher
+          name = matcher[1]
+          role = matcher[2]
+          if @title_cv[:title_creator_role_type].collect { |x| x[0] }.include?(role)
+            title.title_creators << TitleCreator.new(title_id: title.id, name: name, role: role)
+          else
+            po.errors.add(:title_creator, "Undefined Title Creator Role: #{role}")
+          end
+        else
+          po.errors.add(:title_creator, "Malformed Title Creator: #{val}")
+        end
+      end
+    end
 
+    publisher_values = row[column_index PUBLISHER]
+    unless publisher_values.blank?
+      publisher_values.split(DELIMITER).each do |pv|
+        matcher = NAME_ROLE_PATTERN.match(pv)
+        if matcher
+          name = matcher[1]
+          role = matcher[2]
+          if @title_cv[:title_publisher_role_type].collect { |x| x[0] }.include?(role)
+            title.title_publishers << TitlePublisher.new(title_id: title.id, name: name, publisher_type: role)
+          else
+            po.errors.add(:title_publisher, "Undefined Title Publisher Role: #{role}")
+          end
+        else
+          po.errors.add(:title_publisher, "Malformed Title Publisher: #{pv}")
+        end
+      end
+    end
+
+    form_values = row[column_index FORM]
+    unless form_values.blank?
+      form_values.split(DELIMITER).each do |fv|
+        if @title_form_cv.include?(fv)
+          title.title_forms << TitleForm.new(title_id: title.id, form: fv)
+        else
+          po.errors.add(:title_form, "Undefined Title Form: #{fv}")
+        end
+      end
+    end
+
+    genre_values = row[column_index GENRE]
+    unless genre_values.blank?
+      genre_values.split(DELIMITER).each do |gv|
+        if @title_genre_cv.include?(gv)
+          title.title_genres << TitleGenre.new(title_id: title.id, genre: gv)
+        else
+          po.errors.add(:title_genre, "Undefined Title Genre: #{gv}")
+        end
+      end
+    end
+
+    # series data
     series = row[column_index SERIES].blank? ? nil : Series.new(title: row[column_index SERIES])
     unless series.nil?
       title.series = series
-      series.spreadsheet_id = spreadsheet.id
+      series.spreadsheet_id = @spreadsheet.id
     end
     unless series.nil?
       series.save
@@ -319,7 +384,7 @@ module SpreadsheetsHelper
       username = email.split('@')[0]
       user = User.where(username: username).first
       unless user
-        user = User.new(username: username, email_address: email, first_name: name.split(' ')[0], last_name: name.split(' ')[1], active: false, created_in_spreadsheet: ss.id)
+        user = User.new(username: username, email_address: email, first_name: name.split(' ')[0], last_name: name.split(' ')[1], active: false, created_in_spreadsheet: @spreadsheet.id)
         user.save
       end
       po.inventorier = user
@@ -338,7 +403,7 @@ module SpreadsheetsHelper
     version_fields = row[column_index VERSION].blank? ? [] : row[column_index VERSION].split(DELIMITER)
     version_fields.each do |vf|
       field = vf.parameterize.underscore
-      if PhysicalObject::VERSION_FIELDS.inlcude?(field.to_sym)
+      if PhysicalObject::VERSION_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
         # it could be 1st - 4th edition which don't 'map' easily from attribute name to humanized text
@@ -351,6 +416,8 @@ module SpreadsheetsHelper
             po.send(:third_edition=, true)
           when "4th_edition"
             po.send(:fourth_edition=, true)
+          when "original"
+            po.send(:version_original=, true)
           else
             po.errors.add(:version, "Undefined version: #{vf}")
         end
@@ -400,18 +467,18 @@ module SpreadsheetsHelper
         po.errors.add(:picture_type, "Undefined picture type: #{pf}")
       end
     end
+
     # color
     color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
     color_fields.each do |cf|
-      matched = false
-      PhysicalObject::COLOR_FIELDS.each do |pcf|
-        if /#{cf.downcase}$/.match(pcf.to_s)
-          matched = true
-          po.send(((pcf.to_s) << "=").to_sym, true)
-        end
-      end
-      unless matched
-        po.errors.add(:color_fields, "Undefinded Color: #{cf}")
+      color_field = "color bw color #{cf}".parameterize.underscore
+      bw_field = "color bw bw #{cf}".parameterize.underscore
+      if (PhysicalObject::COLOR_BW_FIELDS.include?(bw_field.to_sym))
+        po.send((bw_field << '=').to_sym, true)
+      elsif (PhysicalObject::COLOR_COLOR_FIELDS.include?(color_field.to_sym))
+        po.send((color_field << '=').to_sym, true)
+      else
+        po.errors.add(:color_fields, "Undefined Color: #{cf}")
       end
     end
 
@@ -495,7 +562,7 @@ module SpreadsheetsHelper
       po.send(:mold=, mold)
     end
     shrink = row[column_index SHRINKAGE]
-   unless shrink.blank?
+    unless shrink.blank?
       po.send(:shrinkage=, shrink)
     end
 
@@ -503,16 +570,18 @@ module SpreadsheetsHelper
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
     cv = ControlledVocabulary.physical_object_cv
     condition_fields.each do |cf|
-      if PhysicalObject::CONDITION_BOOLEAN_FIELDS.include?(cf)
+      if PhysicalObject::CONDITION_BOOLEAN_FIELDS.include?(cf.parameterize.underscore.to_sym)
         po.send((cf.parameterize.underscore << "=").to_sym, true)
       else
         # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
         pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
         matcher = pattern.match(cf)
         if matcher && PhysicalObject::CONDITION_FIELDS.include?(matcher[1].parameterize.underscore.to_sym)
-          v = cv[:condition_rating][matcher[2].to_i - 1][1]
+          v = cv[:condition_type][matcher[2].to_i - 1][1]
           po.send((matcher[1].parameterize.underscore << "=").to_sym, v)
         else
+          debugger
+          puts "Failed on #{cf}"
           po.errors.add(:condition_type, "Undefined or malformed condition type: #{cf}")
         end
       end
@@ -520,7 +589,7 @@ module SpreadsheetsHelper
     po
   end
 
-  def self.set_value(attr_symbol, val, po)
+  def set_value(attr_symbol, val, po)
     unless val.blank?
       if @cv[attr_symbol].collect { |x| x[0] }.include? val
         po.send((attr_symbol.to_s << "=").to_sym, val)
@@ -530,11 +599,11 @@ module SpreadsheetsHelper
     end
   end
 
-  def self.set_boolean_value(attr_symbol, val, po)
+  def set_boolean_value(attr_symbol, val, po)
     po.send((attr_symbol.to_s << "=").to_sym, ! val.blank?)
   end
 
-  def self.error_msg(row, physical_object)
+  def error_msg(row, physical_object)
     msg = "<div>Physical Object at row #{row} has the following problem(s):</div><ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
@@ -546,10 +615,7 @@ module SpreadsheetsHelper
 
   # feed this method a column constant (STOCK, BASE, TITLE, etc) and it returns the column index of the current spreadsheet
   # where that value resides
-  def self.column_index(column_constant)
+  def column_index(column_constant)
     @headers[COLUMN_HEADERS[column_constant]]
   end
-
-
-
 end

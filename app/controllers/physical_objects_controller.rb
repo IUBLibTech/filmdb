@@ -1,4 +1,6 @@
 class PhysicalObjectsController < ApplicationController
+  require 'manual_roll_back_exception'
+
   include PhysicalObjectsHelper
   include MailHelper
 
@@ -24,7 +26,6 @@ class PhysicalObjectsController < ApplicationController
       if @continue_url == new_physical_object_path
         @continue_text = "Continue Creating New Physical Objects"
       elsif @continue_url.include?('collection')
-        debugger
         collection = Collection.find(id)
         @continue_text = "Continue Inventorying Collection <i>#{collection.name}</i>".html_safe
       elsif @continue_url.include?('series')
@@ -66,8 +67,17 @@ class PhysicalObjectsController < ApplicationController
   def update
     nitrate = @physical_object.base_nitrate
     respond_to do |format|
-      @physical_object.modifier = User.current_user_object
-      if @physical_object.update(physical_object_params)
+      begin
+        PhysicalObject.transaction do
+          # check to see if the series or title has changed in the update
+          process_series_title
+            @physical_object.modifier = User.current_user_object
+            @success = @physical_object.update_attributes!(physical_object_params)
+        end
+      rescue Exception => error
+        logger.debug $!
+      end
+      if @success
         if @physical_object.base_nitrate and !nitrate
           notify_nitrate(@physical_object)
         end

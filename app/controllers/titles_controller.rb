@@ -2,7 +2,7 @@ class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
-  before_action :set_title_cv, only: [:new, :edit]
+  before_action :set_all_title_cv, only: [:new, :edit]
 
   # GET /titles
   # GET /titles.json
@@ -109,28 +109,44 @@ class TitlesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_title
-      @title = Title.find(params[:id])
-      @series = @title.series
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_title
+    @title = Title.find(params[:id])
+    @series = @title.series
+  end
 
-    def set_physical_object_cv
-      @cv = ControlledVocabulary.physical_object_cv
-    end
+  def set_all_title_cv
+    set_form_cv
+    set_genre_cv
+    set_title_cv
+  end
+  def set_physical_object_cv
+    @cv = ControlledVocabulary.physical_object_cv
+  end
   def set_title_cv
     @title_cv = ControlledVocabulary.title_cv
+  end
+  def set_form_cv
+    @form_cv = ControlledVocabulary.title_form_cv
+  end
+  def set_genre_cv
+    @genre_cv = ControlledVocabulary.title_genre_cv
+  end
+  def set_creator_cv
+
   end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def title_params
       params.require(:title).permit(
-          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :location, :notes,
+          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
           title_creators_attributes: [:id, :name, :role, :_destroy],
           title_dates_attributes: [:id, :date, :date_type, :_destroy],
           title_genres_attributes: [:id, :genre, :_destroy],
           title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
-          title_publishers_attributes: [:id, :name, :publisher_type, :_destroy]
+          title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],
+          title_forms_attributes: [:id, :form, :_destroy],
+          title_locations_attributes: [:id, :location, :_destroy]
       )
     end
 end
