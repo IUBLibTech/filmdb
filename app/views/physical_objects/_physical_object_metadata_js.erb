@@ -112,10 +112,13 @@
 
   $('#physical_object_collection_text').keypress(function() {
     $('#physical_object_collection_id').removeAttr('value');
+    <% unless controller.class == CollectionsController %>
+    // collection controller should never enable the unit text field as this and collection are fixed
     el = $('#physical_object_unit_id');
     if (el.attr('disabled') == 'disabled') {
       el.attr('disabled', false);
     }
+    <% end %>
   })
 
   //autcomplete for collections

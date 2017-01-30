@@ -44,7 +44,11 @@
       <b>Unit</b>
     </div>
     <div class="field">
-      <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
+      <% if @collection %>
+          <%= @collection.unit.abbreviation %>
+      <% else %>
+          <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
+      <% end %>
     </div>
     <div class="label">
       <b>Collection</b>
