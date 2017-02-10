@@ -118,6 +118,7 @@ class SpreadsheetsController < ApplicationController
         end
         m.delete
       end
+      @master_title.save
       # renamed so that the renderer of title knows what to render
       @title = @master_title
       format.html { redirect_to @title, notice: "#{@mergees.size} Titles Were Successfully Merged." }
