@@ -22,7 +22,7 @@
        controller_name == 'titles' ? titles_create_physical_object_path :
        controller_name == 'series' ? series_create_physical_object_path : ''
 %>
-<%= form_for @physical_object, url: url do |f| %>
+<%= nested_form_for @physical_object, url: url do |f| %>
   <% if @physical_object.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>

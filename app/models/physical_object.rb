@@ -1,12 +1,6 @@
 class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 
-  # after_create :test_after_create
-  # after_validation :test_after_validation
-  # before_save :test_before_save
-  # after_save :test_after_save
-
-
 	belongs_to :title
 	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
@@ -20,6 +14,11 @@ class PhysicalObject < ActiveRecord::Base
 	validates :unit, presence: true
 	validates :media_type, presence: true
 	validates :medium, presence: true
+
+  has_many :boolean_conditions, autosave: true
+  has_many :value_conditions, autosave: true
+  accepts_nested_attributes_for :boolean_conditions, allow_destroy: true
+  accepts_nested_attributes_for :value_conditions, allow_destroy: true
 
 	trigger.after(:update).of(:iu_barcode) do
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"

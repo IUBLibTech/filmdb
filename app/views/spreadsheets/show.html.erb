@@ -33,17 +33,17 @@
     <table>
       <tr>
         <th>Title</th>
-        <th>Physical Object With This Title</th>
+        <th>Created in Spreadsheet</th>
+        <th>Created Elsewhere</th>
         <th>Actions</th>
       </tr>
-      <% @titles.each do |t| %>
+      <% @title_count.keys.sort.each do |title| %>
           <tr>
-            <td><%= t.title_text %></td>
-            <td><%= t.physical_objects.size %></td>
+            <td><%= title %></td>
+            <td><%= @title_count[title] %></td>
+            <td><%= Title.title_count_not_in_spreadsheet(title, @spreadsheet.id).size %></td>
             <td>
-              <%= link_to "Show", title_path(t) %>
-              <%= link_to "Edit", edit_title_path(t) %>
-              <%= link_to 'Destroy', t, method: :delete, data: { confirm: 'Are you sure?' } %>
+              <%= link_to "Merge Records", merge_candidates_path(id: @spreadsheet.id, title: title) %>
             </td>
           </tr>
       <% end %>

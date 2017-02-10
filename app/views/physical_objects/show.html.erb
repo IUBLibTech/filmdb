@@ -92,7 +92,7 @@
 <div id="sound_metadata" class="metadata_section left _50">
   <h4>Sound</h4>
   <div>
-    <b>Silent&nbsp;</b><%= @physical_object.silent? ? "yes" : "no" %><br/>
+    <b>Sound&nbsp;</b><%= @physical_object.sound%><br/>
     <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption? ? "yes" : "no" %><br/>
     <b>Captions/Subtitles Notes&nbsp;</b><%= @physical_object.captions_or_subtitles_notes %><br/>
   </div>
@@ -149,36 +149,29 @@
     <b>Shrinkage</b> <%= @physical_object.shrinkage %>&nbsp;&nbsp;&nbsp;
     <b>Mold</b> <%= @physical_object.mold %><br/>
   </div>
-  <div class="h_150px">
-    <b class="block">Condition Types</b>
-    <div class="left _33">
-      Brittle <%= @physical_object.brittle %><br/>
-      Dirty <%= @physical_object.dirty %><br/>
-      Channeling <%= @physical_object.channeling %><br/>
-      Not on Core or Reel <%= @physical_object.not_on_core_or_reel? ? "yes" : "no" %><br/>
-      Poor Wind <%= @physical_object.poor_wind? ? "yes" : "no" %> <br/>
-      Scratches <%= @physical_object.scratches %><br/>
-      Tape Residue <%= @physical_object.tape_residue %><br/>
-      Water Damage <%= @physical_object.water_damage %>
+  <div>
+    <h4>Rated Condition</h4>
+    <% @physical_object.value_conditions.each do |vc| %>
+    <div class="left condition">
+      <b><%= vc.condition_type %></b> <%= vc.value %><br/>
+      <% unless vc.comment.blank? %>
+        <b>Comment</b> <%= vc.comment %>
+      <% end %>
     </div>
-    <div class="left _33">
-      Broken <%= @physical_object.broken %><br/>
-      Dusty <%= @physical_object.dusty? ? "yes" : "no" %><br/>
-      Peeling <%= @physical_object.peeling %><br/>
-      Replasticized <%= @physical_object.replasticized? ? "yes" : "no" %><br/>
-      Splice Damage <%= @physical_object.splice_damage %><br/>
-      Tearing <%= @physical_object.tearing %>
-    </div>
-    <div class="left _33">
-      Color Fade <%= @physical_object.color_fade %><br/>
-      Lacquer Treated <%= @physical_object.lacquer_treated? ? 'yes' : 'no' %><br/>
-      Perforation Damage <%= @physical_object.perforation_damage %><br/>
-      Rusty <%= @physical_object.rusty %><br/>
-      Spoking <%= @physical_object.spoking %><br/>
-      Warp <%= @physical_object.warp %>
-    </div>
+    <% end %>
   </div>
   <div>
+    <h4>Boolean Conditions</h4>
+    <% @physical_object.boolean_conditions.each do |bc| %>
+      <div class="left condition">
+        <b><%= bc.condition_type %></b><br/>
+        <% unless bc.comment.blank? %>
+          <%= bc.comment %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="clear">
     <b class="block">Missing Footage</b>
     <%= @physical_object.missing_footage %><br/>
     <b class="block"> Miscellaneous</b>
