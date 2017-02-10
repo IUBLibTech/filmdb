@@ -22,7 +22,18 @@ class Title < ActiveRecord::Base
   accepts_nested_attributes_for :title_forms, allow_destroy: true
   accepts_nested_attributes_for :title_locations, allow_destroy: true
 
+  scope :title_count_not_in_spreadsheet, -> (title_text, ss_id) {
+    Title.where('(spreadsheet_id IS NULL OR spreadsheet_id != ?) AND title_text = ?',ss_id, title_text)
+  }
+  scope :titles_in_spreadsheet, -> (title_text, ss_id) {
+    Title.where(title_text: title_text, spreadsheet_id: ss_id)
+  }
+
 	def series_title_text
 		self.series.title if self.series
-	end
+  end
+
+  def alternative_titles
+    PhysicalObject.where(title_id: self.id).pluck(:alternative_title).uniq
+  end
 end

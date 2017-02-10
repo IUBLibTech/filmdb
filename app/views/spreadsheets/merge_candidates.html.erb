@@ -1,0 +1,94 @@
+<div id="existing_titles" class="selectable">
+  <h4>Titles Not Created in Spreadsheet: <i><%= @spreadsheet.filename %></i></h4>
+  <ul class="">
+    <% @existing_titles.each do |et| %>
+    <li class="ajax_title_hover  ui-widget-content" title_id="<%= et.id%>">
+      <%= et.title_text %>
+    </li>
+    <% end %>
+  </ul>
+  <br/>
+  <h4>Titles Created in Spreadsheet: <i><%= @spreadsheet.filename %></i></h4>
+  <ul class="">
+    <% @title_candidates.each do |tc| %>
+        <li class="ajax_title_hover ui-widget-content" title_id="<%= tc.id%>">
+          <%= tc.title_text %>
+        </li>
+    <% end %>
+  </ul>
+  <div class="clear">
+    <b>Master Title:</b><span id="master_title"></span><br/>
+    <b>Selected IDs:</b><span id="count"></span>
+    <%= form_tag merge_titles_path do %>
+        <%= hidden_field_tag 'master'%>
+        <%= hidden_field_tag 'selected' %>
+        <%= submit_tag 'Merge Titles' %>
+    <% end %>
+  </div>
+</div>
+<div id="pop_up" class="left">
+
+</div>
+
+<script type="text/javascript">
+  $(".ajax_title_hover").hoverIntent(
+      //hoverIn handler
+      function() {
+        var title_id = $(this).attr('title_id');
+        var url = '../../titles/ajax/'+title_id;
+        $.ajax({
+          url: url,
+          error: function(result) {
+            alert('Something bad happened when trying to call the title summary...');
+          },
+          success: function(result) {
+            el = $('#pop_up');
+            el.html(result);
+            el.show();
+          }
+        })
+      },
+      //hoverOut handler
+      function() {
+        el = $('#pop_up');
+        el.hide();
+      }
+  );
+  var master = null;
+  var selectedIDs = [];
+  $('.selectable').selectable({
+    filter: "ul li",
+    selected: function(event, ui) {
+      if (master == null) {
+        master = $(ui.selected).attr('title_id');
+        $('#master').attr('value', master);
+        $(ui.selected).attr('id', 'master_selection');
+        $('#master_title').html(master);
+      } else {
+        if (ui.selected != master) {
+          selectedIDs = selectedIDs.concat($(ui.selected).attr('title_id'))
+        }
+        $('#selected').attr('value', selectedIDs.toString());
+        $('#count').html(selectedIDs.toString());
+      }
+    },
+    unselected: function(event, ui) {
+      var id = $(ui.unselected).attr('title_id');
+      if (id == master) {
+        master = null;
+        $('#master').attr('value', '');
+        $(ui.unselected).removeAttr('id');
+        $('#master_title').html('');
+      } else {
+        id = $(ui.unselected).attr('title_id');
+        selectedIDs.splice(selectedIDs.indexOf(id), 1);
+        $('#selected').attr('value', selectedIDs.toString());
+        $('#count').html(selectedIDs.toString());
+      }
+    }
+  });
+  $('.selectable').on('selectablestart', function(event, ui) {
+    event.originalEvent.ctrlKey = true;
+  });
+
+</script>

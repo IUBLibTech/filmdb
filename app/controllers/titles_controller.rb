@@ -1,6 +1,6 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
-  before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object]
+  before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit]
 
@@ -102,6 +102,12 @@ class TitlesController < ApplicationController
     else
       render json: ''
     end
+  end
+
+  def ajax_summary
+    #@title = Title.find(params[:id]).to_json(include: [:title_creators, :title_dates, :title_original_identifiers, :title_publishers, :title_genres, :title_forms, :title_locations])
+    #render :json => @title
+    render partial: 'ajax_show'
   end
 
   def autocomplete_title_for_collection

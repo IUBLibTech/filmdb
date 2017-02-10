@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126152250) do
+ActiveRecord::Schema.define(version: 20170201203254) do
+
+  create_table "boolean_conditions", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "condition_type",     limit: 255
+    t.text     "comment",            limit: 65535
+    t.text     "fixed_comment",      limit: 65535
+    t.integer  "fixed_user_id",      limit: 8
+    t.boolean  "active",                           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "collection_inventory_configurations", force: :cascade do |t|
     t.integer  "collection_id",              limit: 8
@@ -207,7 +218,7 @@ ActiveRecord::Schema.define(version: 20170126152250) do
     t.boolean  "language_russian"
     t.boolean  "language_spanish"
     t.boolean  "close_caption"
-    t.boolean  "silent"
+    t.text     "sound",                                 limit: 65535
     t.boolean  "sound_format_optical_variable_area"
     t.boolean  "sound_format_optical_variable_density"
     t.boolean  "sound_format_magnetic"
@@ -389,6 +400,18 @@ ActiveRecord::Schema.define(version: 20170126152250) do
     t.boolean  "active",                             default: false
     t.string   "email_address",          limit: 255
     t.integer  "created_in_spreadsheet", limit: 8
+  end
+
+  create_table "value_conditions", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "condition_type",     limit: 255
+    t.string   "value",              limit: 255
+    t.text     "comment",            limit: 65535
+    t.text     "fixed_comment",      limit: 65535
+    t.integer  "fixed_user_id",      limit: 8
+    t.boolean  "active",                           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).

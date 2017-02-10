@@ -1,3 +1,4 @@
+# noinspection ALL
 class CsvParser
   require 'csv'
   require 'manual_roll_back_exception'
@@ -7,24 +8,22 @@ class CsvParser
   # the column headers that spreadsheets should contain - only the 5 metadata fields required to create a physical object
   # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
   COLUMN_HEADERS = [
-      'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode',
-      'MDPI Barcode', 'IUCat Title No.', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can',
-      'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Silent?',
-      'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type', 'Sound Configuration',
-      'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes',
-      'AD Strip', 'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions',
-      'Title Notes', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number',
-      'Series Part', 'Accompanying Documentation', 'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date',
-      'Accompanying Documentation Location'
+      'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode', 'MDPI Barcode', 'IUCat Title No.',
+      'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can', 'Can Size', 'Footage', 'Edge Code Date', 'Base',
+      'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type',
+      'Sound Configuration', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
+      'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
+      'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
+      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary'
   ]
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
-  TITLE, DURATION, SERIES, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
+  TITLE, DURATION, SERIES_NAME, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
   VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN, CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE = 11,12,13,14,15,16,17,18,19,20
-  STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO, SILENT, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE = 21,22,23,24,25,26,27,28,29,30
+  STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO, SOUND, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE = 21,22,23,24,25,26,27,28,29,30
   SOUND_CONFIGURATION, DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, FORMAT_NOTES, OVERALL_CONDITION, RESEARCH_VALUE ,OVERALL_CONDITION_NOTES, AD_STRIP = 31,32,33,34,35,36,37,38
-  SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, TITLE_NOTES, CREATOR = 39,40,41,42,43,44,45,46
-  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 47,48,49,50,51,52,53,54
-  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION = 55,56,57,58,59,60,61
+  SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
+  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
+  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY = 54,55,56,57,58,59,60,61
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -38,9 +37,8 @@ class CsvParser
       COLUMN_HEADERS[ORIGINAL_IDENTIFIER] => :item_original_identifier=
   }
 
-  # regex for parsing condition types
+  # regexes for parsing
   CONDITION_PATTERN = /([a-zA-z]+) \(([\d])\)/
-
   NAME_ROLE_PATTERN = /^([a-zA-Z ]+) \(([a-zA-z ]+)\)$/
 
   # Delimiter used in columns with multiple values present
@@ -59,8 +57,8 @@ class CsvParser
   end
 
   def parse_csv
-    csv = CSV.read(@filepath, headers: false)
-    parse_headers(csv[0])
+    @csv = CSV.read(@filepath, headers: false)
+    parse_headers(@csv[0])
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
@@ -78,7 +76,7 @@ class CsvParser
           # the Physical Objects in the database. We call save (instead of save!) to avoid the exception that would roll back
           # the whole transaction - so that we can process all physical objects to determine all rows that failed rather than
           # just the first row.
-          csv.each_with_index do |row, i|
+          @csv.each_with_index do |row, i|
             unless i == 0
               po = parse_physical_object(row)
               all_physical_objects << po
@@ -159,7 +157,7 @@ class CsvParser
     end
 
     # date created
-    d = Date.strptime(row[column_index DATE_CREATED], '%Y-%m-%d')
+    d = Date.strptime(row[column_index DATE_CREATED], '%Y/%m/%d')
     po.created_at = d
 
     # manually parse the other values to ensure conformance to controlled vocabulary
@@ -217,8 +215,14 @@ class CsvParser
     frame = row[column_index FRAME_RATE]
     set_value(:frame_rate, frame, po)
 
-    silent = row[column_index SILENT]
-    set_boolean_value(:silent, silent, po)
+    sound = row[column_index SOUND]
+    unless sound.blank?
+      if @cv[:sound].collect { |x| x[0] }.include? sound
+        set_value(:sound, sound, po)
+      else
+        po.errors.add(:sound, "Invalid Sound value: #{sound}")
+      end
+    end
 
     captioned = row[column_index CAPTIONS_OR_SUBTITLES]
     set_boolean_value(:close_caption, captioned, po)
@@ -264,10 +268,15 @@ class CsvParser
     # now parse all title data
     @title_cv = ControlledVocabulary.title_cv
     @title_date_cv = ControlledVocabulary.title_date_cv
-    @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0]}
-    @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0]}
+    @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0] }
+    @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0] }
     title = Title.new(title_text: row[column_index TITLE])
     title.spreadsheet_id = @spreadsheet.id
+    title_summary = row[column_index TITLE_SUMMARY]
+    unless title_summary.blank?
+      title.summary = title_summary
+    end
+
     dates = row[column_index DATE].to_s
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
@@ -350,8 +359,15 @@ class CsvParser
       end
     end
 
+    title_locs = row[column_index LOCATION]
+    unless title_locs.blank?
+      title_locs.split(DELIMITER).each do |tl|
+        title.title_locations << TitleLocation.new(location: tl)
+      end
+    end
+
     # series data
-    series = row[column_index SERIES].blank? ? nil : Series.new(title: row[column_index SERIES])
+    series = row[column_index SERIES_NAME].blank? ? nil : Series.new(title: row[column_index SERIES_NAME])
     unless series.nil?
       title.series = series
       series.spreadsheet_id = @spreadsheet.id
@@ -569,20 +585,19 @@ class CsvParser
     # condition type fields with value ranges or booleans
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
     cv = ControlledVocabulary.physical_object_cv
+    val_conditions = cv[:value_condition].collect { |x| x[0]}
+    bool_conditions = cv[:boolean_condition].collect { |x| x[0]}
     condition_fields.each do |cf|
-      if PhysicalObject::CONDITION_BOOLEAN_FIELDS.include?(cf.parameterize.underscore.to_sym)
-        po.send((cf.parameterize.underscore << "=").to_sym, true)
+      if bool_conditions.include?(cf)
+        po.boolean_conditions << BooleanCondition.new(condition_type: cf, physical_object_id: po.id)
       else
         # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
         pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
         matcher = pattern.match(cf)
-        if matcher && PhysicalObject::CONDITION_FIELDS.include?(matcher[1].parameterize.underscore.to_sym)
-          v = cv[:condition_type][matcher[2].to_i - 1][1]
-          po.send((matcher[1].parameterize.underscore << "=").to_sym, v)
+        if matcher && val_conditions.include?(matcher[1])
+          po.value_conditions << ValueCondition.new(condition_type: matcher[1], value: cv[:condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
         else
-          debugger
-          puts "Failed on #{cf}"
-          po.errors.add(:condition_type, "Undefined or malformed condition type: #{cf}")
+          po.errors.add(:condition, "Undefined or malformed condition type: #{cf}")
         end
       end
     end

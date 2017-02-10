@@ -18,7 +18,10 @@ Rails.application.routes.draw do
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
   post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
+  get '/spreadsheets/:id/:title', to: 'spreadsheets#merge_candidates', as: 'merge_candidates'
+  post 'spreadsheets/:id', to: 'spreadsheets#merge_titles', as: 'merge_titles'
 
   # physical objects can be created through the collections, titles, and series controllers
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -33,6 +36,8 @@ Rails.application.routes.draw do
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
   get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
+
+  get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
 
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 

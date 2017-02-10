@@ -354,7 +354,7 @@
 <div id="sound_metadata" class="metadata_section left _50">
   <h4>Sound</h4>
   <div>
-    <%= f.check_box :silent %><b>Silent</b><br/>
+    <b>Sound</b><%= f.select :sound, options_for_select(@cv[:sound], @physical_object.sound), {include_blank: ''}  %>
     <%= f.check_box :close_caption %><b>Captions/Subtitles</b><br/>
     <b>Captions/Subtitles Notes</b><br/>
   </div>
@@ -435,7 +435,6 @@
     </div>
   </div>
   <div class="condition_types">
-    <b class="block">Condition Types</b>
     <div id="condition_3">
       <div class="select _33">
         <div>AD Strip</div><%= f.select :ad_strip, options_for_select(@cv[:ad_strip], @physical_object.ad_strip), {include_blank: ''}  %>
@@ -452,120 +451,34 @@
       </div>
     </div>
 
-    <div class="left _33">
-      <div class="select">
-        <div>
-          Dirty
-        </div>
-        <%= f.select :dirty, options_for_select(@cv[:condition_type], @physical_object.dirty), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>
-          Channeling
-        </div>
-        <%= f.select :channeling, options_for_select(@cv[:condition_type], @physical_object.channeling), {include_blank: ''} %>
-      </div>
-      <div class="select">
-        <div>
-          Scratches
-        </div>
-        <%= f.select :scratches, options_for_select(@cv[:condition_type], @physical_object.scratches), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>
-          Tape Residue
-        </div>
-        <%= f.select :tape_residue, options_for_select(@cv[:condition_type], @physical_object.tape_residue), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Rusty</div>
-        <%= f.select :rusty, options_for_select(@cv[:condition_type], @physical_object.rusty), {include_blank: ''}  %>
-      </div>
+    <div class="">
+      <h4>Rated Conditions</h4>
+      <%= f.fields_for :value_conditions do |vc| %>
+          <div class="left condition">
+            <%= vc.select :condition_type, options_for_select(@cv[:value_condition], vc.object.condition_type) %>
+            <%= vc.select :value, options_for_select(@cv[:condition_rating], vc.object.value) %>
+            <div class="clear">
+              <b>Comment</b>
+              <%= vc.text_area :comment %>
+            </div>
+            <%= vc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+          </div>
+      <% end %>
+      <%= f.link_to_add 'New Rated Condition', :value_conditions %>
     </div>
-    <div class="left _33">
-      <div class="select">
-        <div>Broken</div>
-        <%= f.select :broken, options_for_select(@cv[:condition_type], @physical_object.broken), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>
-          Peeling
-        </div>
-        <%= f.select :peeling, options_for_select(@cv[:condition_type], @physical_object.peeling), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Splice Damage</div>
-        <%= f.select :splice_damage, options_for_select(@cv[:condition_type], @physical_object.splice_damage), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Tearing</div>
-        <%= f.select :tearing, options_for_select(@cv[:condition_type], @physical_object.tearing), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Spoking</div>
-        <%= f.select :spoking, options_for_select(@cv[:condition_type], @physical_object.spoking), {include_blank: ''}  %>
-      </div>
-    </div>
-    <div class="left _33">
-      <div class="select">
-        <div>Perforation Damage</div>
-        <%= f.select :perforation_damage, options_for_select(@cv[:condition_type], @physical_object.perforation_damage), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Warp</div>
-        <%= f.select :warp, options_for_select(@cv[:condition_type], @physical_object.warp), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>
-          Water Damage
-        </div>
-        <%= f.select :water_damage, options_for_select(@cv[:condition_type], @physical_object.water_damage), {include_blank: ''}  %>
-      </div>
-      <div class="select">
-        <div>Color Fade</div>
-        <%= f.select :color_fade, options_for_select(@cv[:condition_type], @physical_object.color_fade), {include_blank: ''}  %>
-      </div>
-    </div>
-  </div>
-  <div class="condition_types">
-
-
-
   </div>
   <div id="condition_types_check_box_div" class="condition_types">
-    <div class="_33">
-      <div class="check_box">
-        <%= f.check_box :lacquer_treated %>
-        <div>Lacquer Treated</div>
-      </div>
-      <div class="check_box">
-        <%= f.check_box :dusty %>
-        <div>
-          Dusty
-        </div>
+    <h4>Boolean Conditions</h4>
+    <%= f.fields_for :boolean_conditions do |bc| %>
+    <div class="left condition">
+      <%= bc.select :condition_type, options_for_select(@cv[:boolean_condition], bc.object.condition_type) %>
+      <div class="clear">
+        <b>Comment</b>
+        <%= bc.text_area :comment %>
       </div>
     </div>
-    <div class="_33">
-      <div class="check_box">
-        <%= f.check_box :replasticized %>
-        <div>Replasticized</div>
-      </div>
-      <div class="check_box">
-        <%= f.check_box :not_on_core_or_reel %>
-        <div>
-          Not on Core or Reel
-        </div>
-      </div>
-    </div>
-    <div class="_33">
-      <div class="check_box">
-        <%= f.check_box :poor_wind %>
-        <div>
-          Poor Wind
-        </div>
-      </div>
-    </div>
-
+    <% end %>
+    <%= f.link_to_add 'New Boolean Condition', :boolean_conditions %>
   </div>
 
   <div class="clear">

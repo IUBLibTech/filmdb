@@ -116,7 +116,7 @@ module PhysicalObjectsHelper
         :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
         :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :language_arabic, :language_chinese, :language_english, :language_french, :language_german,
         :language_hindi, :language_italian, :language_japanese, :language_portuguese, :language_russian, :language_spanish, :close_caption,
-        :silent, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_mixed,
+        :sound, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_mixed,
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
@@ -124,7 +124,9 @@ module PhysicalObjectsHelper
         :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number
+        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number,
+        value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
+        boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy]
     )
   end
 end
