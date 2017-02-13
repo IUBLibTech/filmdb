@@ -17,8 +17,6 @@
     <% end %>
   </ul>
   <div class="clear">
-    <b>Master Title:</b><span id="master_title"></span><br/>
-    <b>Selected IDs:</b><span id="count"></span>
     <%= form_tag merge_titles_path do %>
         <%= hidden_field_tag 'master'%>
         <%= hidden_field_tag 'selected' %>
@@ -63,13 +61,11 @@
         master = $(ui.selected).attr('title_id');
         $('#master').attr('value', master);
         $(ui.selected).attr('id', 'master_selection');
-        $('#master_title').html(master);
       } else {
         if (ui.selected != master) {
           selectedIDs = selectedIDs.concat($(ui.selected).attr('title_id'))
         }
         $('#selected').attr('value', selectedIDs.toString());
-        $('#count').html(selectedIDs.toString());
       }
     },
     unselected: function(event, ui) {
@@ -78,12 +74,10 @@
         master = null;
         $('#master').attr('value', '');
         $(ui.unselected).removeAttr('id');
-        $('#master_title').html('');
       } else {
         id = $(ui.unselected).attr('title_id');
         selectedIDs.splice(selectedIDs.indexOf(id), 1);
         $('#selected').attr('value', selectedIDs.toString());
-        $('#count').html(selectedIDs.toString());
       }
     }
   });
