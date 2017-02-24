@@ -37,13 +37,13 @@
         <th>Created Elsewhere</th>
         <th>Actions</th>
       </tr>
-      <% @title_count.keys.sort.each do |title| %>
+      <% @title_count_in_spreadsheet.keys.sort.each do |title| %>
           <tr>
             <td><%= title %></td>
-            <td><%= @title_count[title] %></td>
-            <td><%= Title.title_count_not_in_spreadsheet(title, @spreadsheet.id).size %></td>
+            <td><%= @title_count_in_spreadsheet[title] %></td>
+            <td><%= @title_count_not_in_spreadsheet[title].nil? ? 0 : @title_count_not_in_spreadsheet[title] %></td>
             <td>
-              <%= link_to "Merge Records", merge_candidates_path(id: @spreadsheet.id, title: title) %>
+              <%= link_to "Merge Titles", merge_title_candidates_path(id: @spreadsheet.id, title: title) %>
             </td>
           </tr>
       <% end %>
@@ -53,15 +53,18 @@
     <% if @spreadsheet.series.size > 0 %>
         <h4>Seriese Created in this Spreadsheet</h4>
         <table>
-          <tr><th>Series Title</th><th>Actions</th></tr>
-          <% @spreadsheet.series.each do |s| %>
           <tr>
-            <td><%= s.title %></td>
-            <td>
-              <%= link_to "Show", series_path(s) %>
-              <%= link_to "Edit", edit_series_path(s) %>
-              <%= link_to "Destroy", s, method: :delete, data: { confirm: 'Are you sure?'} %>
-            </td>
+            <th>Series Title</th>
+            <th>Created in Spreadsheet</th>
+            <th>Created Elsewhere</th>
+            <th>Actions</th>
+          </tr>
+          <% @series_count_in_spreadsheet.keys.sort.each do |series| %>
+          <tr>
+            <td><%= series %></td>
+            <td><%= @series_count_in_spreadsheet[series] %></td>
+            <td><%= @series_count_not_in_spreadsheet[series].nil? ? 0 : @series_count_not_in_spreadsheet[series] %></td>
+            <td><%= link_to "Merge Series", merge_series_candidates_path(id: @spreadsheet.id, series: series) %></td>
           </tr>
           <% end %>
         </table>

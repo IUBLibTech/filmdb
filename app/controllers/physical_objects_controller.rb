@@ -5,8 +5,8 @@ class PhysicalObjectsController < ApplicationController
   include MailHelper
 
   before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
-  before_action :set_series, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
-  :edit_location, :update_location, :duplicate
+  before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
+                                :edit_location, :update_location, :duplicate
   ]
 
   # GET /physical_objects
@@ -48,6 +48,7 @@ class PhysicalObjectsController < ApplicationController
 
   # GET /physical_objects/1/edit
   def edit
+    @em = 'Editing Physical Object'
     @physical_object = PhysicalObject.find(params[:id])
     @physical_object.modified_by = User.current_user_object.id
     if @physical_object.nil?
@@ -91,8 +92,11 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def duplicate
+    @em = 'Duplicating Physical Object'
     @physical_object = PhysicalObject.find(params[:id]).dup
     @physical_object.iu_barcode = nil
+    @physical_object.item_original_identifier = nil
+    @physical_object.reel_number = nil
     render 'new_physical_object'
   end
 
@@ -164,9 +168,10 @@ class PhysicalObjectsController < ApplicationController
       @physical_object = PhysicalObject.find(params[:id])
     end
 
-    def set_series
+    def set_cv
       #@series = Series.all.order(:title)
       @cv = ControlledVocabulary.physical_object_cv
+      @l_cv = ControlledVocabulary.lanaguage_cv
     end
 
 end

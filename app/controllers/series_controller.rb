@@ -1,6 +1,6 @@
 class SeriesController < ApplicationController
   include PhysicalObjectsHelper
-  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object]
+  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object, :ajax_summary]
 
   # GET /series
   # GET /series.json
@@ -66,6 +66,7 @@ class SeriesController < ApplicationController
   end
 
   def new_physical_object
+    @em = 'Creating New Physical Object'
     @physical_object = PhysicalObject.new
     render 'physical_objects/new_physical_object'
   end
@@ -79,6 +80,10 @@ class SeriesController < ApplicationController
     else
       render json: ""
     end
+  end
+
+  def ajax_summary
+    render partial: 'ajax_show'
   end
 
   private

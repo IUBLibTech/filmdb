@@ -14,7 +14,7 @@
   <tbody>
     <% @series.each do |series| %>
       <tr>
-        <td><%= series.title %></td>
+        <td><%= series.title + (series.spreadsheet_id.nil? ? "[-]" : "[#{series.spreadsheet_id}]")%></td>
         <td><%= link_to 'Show', series %></td>
         <td><%= link_to 'Edit', edit_series_path(series) %></td>
         <td><%= link_to 'Destroy', series, method: :delete, data: { confirm: 'Are you sure?' } %></td>

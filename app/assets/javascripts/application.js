@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui/autocomplete
 //= require jquery-ui/selectable
+//= require jquery-ui/dialog
 //= require turbolinks
 //= require jquery-ui
 //= require jquery_nested_form

@@ -17,8 +17,10 @@ class PhysicalObject < ActiveRecord::Base
 
   has_many :boolean_conditions, autosave: true
   has_many :value_conditions, autosave: true
+  has_many :languages, autosave: true
   accepts_nested_attributes_for :boolean_conditions, allow_destroy: true
   accepts_nested_attributes_for :value_conditions, allow_destroy: true
+  accepts_nested_attributes_for :languages, allow_destroy: true
 
 	trigger.after(:update).of(:iu_barcode) do
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
@@ -100,12 +102,12 @@ class PhysicalObject < ActiveRecord::Base
   }
 
   SOUND_FORMAT_FIELDS = [
-      :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
+      :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
       :sound_format_mixed, :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
       :sound_format_sound_on_separate_media
   ]
   SOUND_FORMAT_FIELDS_HUMANIZED = {
-      sound_format_optical_variable_area: "Optical: Variable Area", sound_format_optical_variable_density: "Optical: Variable Density",
+      sound_format_optical: 'Optical', sound_format_optical_variable_area: "Optical: Variable Area", sound_format_optical_variable_density: "Optical: Variable Density",
       sound_format_magnetic: "Magnetic", sound_format_type_mixed: "Mixed", sound_format_digital_sdds: "Digital: SDDS",
       sound_format_digital_dts: "Digital: DTS", sound_format_digital_dolby_digital: "Digital: Dolby Digital",
       sound_format_sound_on_separate_media: "Sound on Separate Media"
@@ -118,21 +120,11 @@ class PhysicalObject < ActiveRecord::Base
   }
 
   SOUND_CONFIGURATION_FIELDS = [
-      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track, :sound_configuration_dual, :sound_configuration_single
+      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track, :sound_configuration_dual
   ]
   SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
       sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround",
-      sound_configuration_multi_track: "Multi-track (Maurer)", sound_configuration_dual: "Dual", sound_configuration_single: "Single"
-  }
-
-  LANGUAGE_FIELDS = [
-      :language_arabic, :language_chinese, :language_english, :language_french, :language_german,
-      :language_hindi, :language_italian, :language_japanese, :language_portuguese, :language_russian, :language_spanish
-  ]
-  LANGUAGE_FIELDS_HUMANIZED = {
-      language_arabic: "Arabic", language_chinese: "Chinese", language_english: "English", language_french: "French",
-      language_german: "German", language_hindi: "Hindi", language_italian: "Italian", language_japanese: "Japanese",
-      language_portuguese: "Portuguese", language_russian: "Russian", language_spanish: "Spanish"
+      sound_configuration_multi_track: "Multi-track (Maurer)", sound_configuration_dual: "Dual Mono"
   }
 
   CONDITION_FIELDS = [
@@ -147,9 +139,8 @@ class PhysicalObject < ActiveRecord::Base
   HUMANIZED_SYMBOLS = GENERATION_FIELDS_HUMANIZED.merge(VERSION_FIELDS_HUMANIZED.merge(BASE_FIELDS_HUMANIZED.merge(
       STOCK_FIELDS_HUMANIZED.merge(PICTURE_TYPE_FIELDS_HUMANIZED.merge(COLOR_FIELDS_HUMANIZED.merge(
           ASPECT_RATIO_FIELDS_HUMANIZED.merge(SOUND_FORMAT_FIELDS_HUMANIZED.merge(
-              SOUND_CONTENT_FIELDS_HUMANIZED.merge(SOUND_CONFIGURATION_FIELDS_HUMANIZED.merge(
-                  LANGUAGE_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
-              )))))))))
+              SOUND_CONTENT_FIELDS_HUMANIZED.merge(SOUND_CONFIGURATION_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
+              ))))))))
 
 	def media_types
 		MEDIA_TYPES

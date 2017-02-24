@@ -20,8 +20,10 @@ Rails.application.routes.draw do
   post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
 
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
-  get '/spreadsheets/:id/:title', to: 'spreadsheets#merge_candidates', as: 'merge_candidates'
-  post 'spreadsheets/:id', to: 'spreadsheets#merge_titles', as: 'merge_titles'
+  get '/spreadsheets/:id/title/:title', to: 'spreadsheets#merge_title_candidates', as: 'merge_title_candidates'
+  post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_titles'
+  get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
+  post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
   # physical objects can be created through the collections, titles, and series controllers
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -31,6 +33,7 @@ Rails.application.routes.draw do
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
   post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
 
+
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get 'autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
@@ -38,6 +41,9 @@ Rails.application.routes.draw do
   get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
 
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
+  get '/titles/ajax/new/:series_id', to: 'titles#new_ajax', as: 'new_title_ajax'
+  post '/titles/ajax/new_title', to: 'titles#create_ajax', as: 'create_title_ajax'
+  get '/series/ajax/:id', to: 'series#ajax_summary', as: 'series_ajax'
 
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 

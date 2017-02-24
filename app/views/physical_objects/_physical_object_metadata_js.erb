@@ -66,7 +66,6 @@
         return false;
       },
       select: function (event, ui) {
-
         // need to check if a title is selected that has a series
         series_id = ui.item.series_id
         series_title = ui.item.series_title
@@ -74,11 +73,11 @@
           $("#physical_object_series_title_text").val(series_title);
           $('#physical_object_series_id').val(series_id);
           // whenever a title is selected we need to disable the series_title_text field
-          $("#physical_object_series_title_text").prop('disabled', true)
+          $("#physical_object_series_title_text").prop('disabled', true);
         }
+        $('#physical_object_title_text').removeClass('bad_barcode');
         $("#physical_object_title_text").val(ui.item.label);
         $('#physical_object_title_id').val(ui.item.value);
-
         return false;
       }
     });
@@ -87,9 +86,10 @@
   // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from
   // the autocomplete list. Additionally we need to unlock series title text incase it was locked from a previous title
   // selection
-  $('#physical_object_title_text').keypress(function() {
+  $('#physical_object_title_text').keydown(function() {
+    $('#physical_object_title_text').addClass('bad_barcode');
     $('#physical_object_title_id').removeAttr('value');
-    $('#physical_object_series_title_text').prop('disabled', false)
+    $('#physical_object_series_title_text').prop('disabled', false);
   });
 
   // autocomplete for series
@@ -152,6 +152,78 @@
         return false;
       }
     });
+  });
+
+  $('#title_button').click(function() {
+    if ($('#title_popup').is(':visible') == false) {
+      // the url for creating a new title through ajax requires a series id: /titles/ajax/new/:series_id
+      // if the series_id is omitted, it will resolve to /titles/ajax/:id with and id of 'new'
+      series_id = 0;
+      if (!series_id_blank()) {
+        series_id = series_value();
+      }
+      $.ajax({
+        url: window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id,
+        error: function(result) {
+          alert("Error:\n"+result);
+        },
+        success: function(result) {
+          el = $('#title_popup');
+          el.html(result);
+          el.dialog({minWidth: 750, modal: false});
+          // autocomplete for series
+          $('#title_series_title_text').autocomplete({
+            source: '../../../autocomplete_series',
+            focus: function (event, ui) {
+              $(".ui-autocomplete > li").attr("title", ui.item.summary);
+              return false;
+            },
+            select: function (event, ui) {
+              $("#title_series_title_text").val(ui.item.label);
+              $('#title_series_id').val(ui.item.value);
+              return false;
+            },
+            create: function(event, ui) {
+              this.element.css('z-index', '5000')
+            }
+          });
+          create_url = window.location.protocol + '//' + window.location.host + '/titles/ajax/new_title';
+          $('#new_title').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+              data: $(this).serialize(),
+              type: $(this).attr('method'),
+              dataType: 'json',
+              url: create_url,
+              success: function (response) {
+                if (response['error'] == null) {
+                  $('#physical_object_title_text').val(response['title_text']);
+                  $('#physical_object_title_id').val(response['title_id']);
+                  $('#physical_object_title_text').removeClass('bad_barcode');
+                  if (response['series_id'] > 0) {
+                    $('#physical_object_series_title_text').val(response['series_title']);
+                    $('#physical_object_series_id').val(response['series_id']);
+                    $("#physical_object_series_title_text").prop('disabled', true);
+                  } else {
+                    $('#physical_object_series_title_text').val('');
+                    $("#physical_object_series_title_text").prop('disabled', false);
+                    $('#physical_object_series_id').removeAttr('value');
+                  }
+                } else {
+                  alert(result['error']);
+                }
+              },
+              error: function(result) {
+                alert(result['error']);
+              },
+              complete: function() {
+                $('#title_popup').dialog('close');
+              }
+            });
+          });
+        }
+      })
+    }
   });
 
 

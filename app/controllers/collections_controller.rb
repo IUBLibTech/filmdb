@@ -67,6 +67,7 @@ class CollectionsController < ApplicationController
   end
 
   def new_physical_object
+    @em = 'Creating New Physical Object'
     render "physical_objects/new_physical_object"
   end
 

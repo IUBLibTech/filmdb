@@ -16,13 +16,17 @@
   <tbody>
     <% @titles.each do |title| %>
     <tr>
-      <td><%= title.title_text %></td>
+      <td><%= title.title_text + (title.spreadsheet_id.nil? ? "[-]" : "[#{title.spreadsheet_id}]")%></td>
       <td><%= title.series&.title %></td>
       <td><%= title.summary %></td>
       <td>
         <%= link_to 'Show', title_path(title) %><br/>
         <%= link_to 'Edit', edit_title_path(title) %><br/>
-        <%= link_to 'Destroy', title, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% if title.physical_objects.size == 0 %>
+            <%= link_to 'Destroy', title, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% else %>
+        <b class="gray" title="This title cannot be deleted, it has physical objects which must be reassigned or deleted first">Destroy</b>
+        <% end %>
       </td>
     </tr>
     <% end %>

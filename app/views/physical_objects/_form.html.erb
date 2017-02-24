@@ -7,11 +7,10 @@
 %>
 
 <div id="controller_info">
-  <% em = action_name == "edit" ? "Editing Physical Object" : "New Physical Object" %>
   <% cm = controller_name == 'collections' ? "For Collection: <i>#{@collection.name}</i>".html_safe :
       controller_name == 'series' ? "For Series: <i>#{@series.title}</i>".html_safe :
           controller_name == "titles" ? "For Title: <i>#{@title.title_text}</i>".html_safe : "" %>
-  <h2><%= em %> <%= cm %></h2>
+  <h2><%= @em %> <%= cm %></h2>
 </div>
 <%= render partial: 'layouts/notice_div' %>
 <% url =

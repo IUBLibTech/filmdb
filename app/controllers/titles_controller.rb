@@ -2,7 +2,7 @@ class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
-  before_action :set_all_title_cv, only: [:new, :edit]
+  before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
   # GET /titles
   # GET /titles.json
@@ -52,6 +52,33 @@ class TitlesController < ApplicationController
     end
   end
 
+  def new_ajax
+    u = User.current_user_object
+    @title = Title.new(modified_by_id: u.id, created_by_id: u.id);
+    @series = Series.where(id: params[:series_id]).first
+    @title.series = @series
+    render partial: 'form'
+  end
+
+  def create_ajax
+    @title = Title.new(title_params)
+    @series = nil
+    if params[:title][:series_title_id].blank? && !params[:title][:series_title_text].blank?
+      @series = Series.new(title: params[:title][:series_title_text])
+      @series.save
+      @title.series_id = @series.id
+    end
+    respond_to do |format|
+      if @title.save
+        format.json {render json: {title_id: @title.id, title_text: @title.title_text, series_id: (@series.nil? ? 0 : @series.id), series_title: @series.nil? ? '' : @series.title}, status: :created}
+      else
+        format.json {
+          render json: { error: 'Something bad happened while trying to save the title...', status: :unprocessable_entity }
+        }
+      end
+    end
+  end
+
   # PATCH/PUT /titles/1
   # PATCH/PUT /titles/1.json
   def update
@@ -77,6 +104,7 @@ class TitlesController < ApplicationController
   end
 
   def new_physical_object
+    @em = 'Creating New Physical Object'
     @physical_object = PhysicalObject.new(title_id: @title.id)
     render 'physical_objects/new_physical_object'
   end

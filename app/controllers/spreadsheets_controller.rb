@@ -1,6 +1,6 @@
 class SpreadsheetsController < ApplicationController
   require 'csv_parser'
-  before_action :set_spreadsheet, only: [:show, :edit, :update, :destroy, :merge_candidates]
+  before_action :set_spreadsheet, only: [:show, :edit, :update, :destroy, :merge_title_candidates, :merge_series_candidates, :merge_series, :merge_series_titles]
 
   # GET /spreadsheets
   # GET /spreadsheets.json
@@ -14,8 +14,13 @@ class SpreadsheetsController < ApplicationController
   def show
     @physical_objects = @spreadsheet.physical_objects
     @users = User.where(created_in_spreadsheet: @spreadsheet.id)
-    @title_count = Title.where(spreadsheet_id: @spreadsheet.id).group('title_text').count
-    @other_title_count = Title.where('(spreadsheet_id IS NULL or spreadsheet_id != ?) ', @spreadsheet.id).group('title_text').count
+    @series_count = Series.where(spreadsheet_id: @spreadsheet.id).group('title').count
+
+    # need to calculate what distinct titles and series titles appear in the spreadsheet and also outside it
+    @title_count_in_spreadsheet = Title.title_text_count_in_spreadsheet(@spreadsheet.id)
+    @title_count_not_in_spreadsheet = Title.title_text_count_not_in_spreadsheet(@spreadsheet.id)
+    @series_count_in_spreadsheet = Series.series_title_count_in_spreadsheet(@spreadsheet.id)
+    @series_count_not_in_spreadsheet = Series.series_title_count_not_in_spreadsheet(@spreadsheet.id)
   end
 
   # DELETE /spreadsheets/1
@@ -59,10 +64,44 @@ class SpreadsheetsController < ApplicationController
     end
   end
 
+  def merge_series_candidates
+    @series_candidates = Series.series_in_spreadsheet(params[:series], @spreadsheet.id)
+    @existing_series = Series.series_not_in_spreadsheet(params[:series], @spreadsheet)
+  end
+
+  def merge_series
+    respond_to do |format|
+      @master = Series.find(params[:master])
+      @mergees = Series.where(id: params[:selected].split(','))
+      @mergees.each do |s|
+        if @master.summary.blank?
+          @master.summary = s.summary unless s.summary.blank?
+        else
+          @master.summary += " | #{s.summary}" unless s.summary.blank?
+        end
+        # what to do with series dates, total episodes, and series production number if they differ across merge candidates?
+
+        s.titles.each do |t|
+          t.update_attributes(series_id: @master.id)
+        end
+        s.delete
+      end
+      @master.save
+      @series = @master
+      @title_count_in_series = Title.title_text_count_in_series(@master.id)
+      @title_count_not_in_series = Title.title_text_count_not_in_series(@master.id)
+      format.html {render 'merged_series', notice: "#{@mergees.size + 1} Series Were Successfully Mmerged"}
+    end
+  end
+
+  def merge_series_titles
+
+  end
+
   # action which lists matching titles (by title text) for a given spreadsheet id
-  def merge_candidates
+  def merge_title_candidates
     @title_candidates = Title.titles_in_spreadsheet(params[:title], @spreadsheet.id)
-    @existing_titles = Title.title_count_not_in_spreadsheet(params[:title], @spreadsheet.id)
+    @existing_titles = Title.titles_not_in_spreadsheet(params[:title], @spreadsheet.id)
   end
 
   # processes the form submission fomr #merge_conditate view
@@ -71,11 +110,15 @@ class SpreadsheetsController < ApplicationController
       @master_title = Title.find(params[:master])
       @mergees = Title.where(id: params[:selected].split(','))
       @mergees.each do |m|
+        m.series_id = @master_title.series_id
         if @master_title.series_part.blank?
           @master_title.series_part = m.series_part
         end
         unless m.summary.blank?
           @master_title.summary += " | #{m.summary}"
+        end
+        unless m.series_part.blank?
+          @master_title.series_part += (@master_title.series_part.blank? ? m.series_part : " | #{m.series_part}")
         end
 
         m.title_original_identifiers.each do |toi|
@@ -121,7 +164,7 @@ class SpreadsheetsController < ApplicationController
       @master_title.save
       # renamed so that the renderer of title knows what to render
       @title = @master_title
-      format.html { redirect_to @title, notice: "#{@mergees.size} Titles Were Successfully Merged." }
+      format.html { redirect_to @title, notice: "#{@mergees.size + 1} Titles Were Successfully Merged." }
     end
   end
 

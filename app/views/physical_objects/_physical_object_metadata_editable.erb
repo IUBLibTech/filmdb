@@ -1,12 +1,12 @@
 <div id="core_metadata" class="metadata_section">
   <h4>Core Metadata</h4>
   <div class="left _50">
-    <div class="label"><b>Title</b></div>
+    <div class="label"><b>* Title</b></div>
     <div class="field">
       <% if @title %>
           <%= @title.title_text %>
       <% else %>
-          <%= f.text_field :title_text %>
+          <%= f.text_field :title_text, class: 'ajax_complete' %><%= link_to "+", '#', remote: true, class: 'button', id: 'title_button' %>
       <% end %>
       <%= f.hidden_field :title_id %>
     </div>
@@ -31,21 +31,22 @@
       <%= f.text_field :series_part %>
     </div>
     <div class="label">
-      <b>Media Type</b>
+      <b>* Media Type</b>
     </div>
     <div class="field">
       <%= f.select :media_type, @physical_object.media_types, {}, {id: 'media_type'} %>
     </div>
-    <div class="label"><b>Medium</b></div>
+    <div class="label"><b>* Medium</b></div>
     <div class="field"><%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %></div>
   </div>
   <div class="left _50">
     <div class="label">
-      <b>Unit</b>
+      <b>* Unit</b>
     </div>
     <div class="field">
       <% if @collection %>
           <%= @collection.unit.abbreviation %>
+          <%= f.hidden_field :unit_id %>
       <% else %>
           <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
       <% end %>
@@ -68,7 +69,7 @@
       <%= f.select :location, options_for_select(@cv[:location]) %>
     </div>
     <div class="label">
-      <b>IU Barcode</b>
+      <b>* IU Barcode</b>
     </div>
     <div class="field">
       <%= f.text_field :iu_barcode %>
@@ -360,17 +361,20 @@
   </div>
   <%= f.text_area :captions_or_subtitles_notes, class: '_100' %>
   <b class='block'>Format Type</b>
-  <div class="h_100px">
+  <div class="h_100px em_95">
     <div class="left">
+      <%= f.check_box :sound_format_optical %>Optical<br/>
       <%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area<br/>
       <%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density<br/>
-      <%= f.check_box :sound_format_magnetic %>Magnetic<br/>
-      <%= f.check_box :sound_format_mixed %>Mixed
+      <%= f.check_box :sound_format_magnetic %>Magnetic
     </div>
     <div class="left">
+      <%= f.check_box :sound_format_mixed %>Mixed<br/>
       <%= f.check_box :sound_format_digital_sdds %>Digital: SDDS<br/>
       <%= f.check_box :sound_format_digital_dts %>Digital: DTS<br/>
-      <%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital<br/>
+      <%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital
+    </div>
+    <div class="left">
       <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
     </div>
   </div>
@@ -387,7 +391,7 @@
     </div>
   </div>
   <div class="h_90px">
-    <b class='block'>Configuration</b>
+    <b class='block'>Sound Field</b>
     <div class="left _50">
       <%= f.check_box :sound_configuration_mono %>Mono<br/>
       <%= f.check_box :sound_configuration_stereo %>Stereo<br/>
@@ -395,18 +399,18 @@
     </div>
     <div class="left _50">
       <%= f.check_box :sound_configuration_multi_track %>Multi-track (i.e. Maurer)<br/>
-      <%= f.check_box :sound_configuration_dual %>Dual<br/>
-      <%= f.check_box :sound_configuration_single %>Single
+      <%= f.check_box :sound_configuration_dual %>Dual Mono<br/>
     </div>
   </div>
   <div class="h_100px">
-    <b class="block">Language - Dialog</b>
-      <%= f.check_box :language_arabic %>Arabic <%= f.check_box :language_chinese %>Chinese <%= f.check_box :language_english %>English <%= f.check_box :language_french %>French <%= f.check_box :language_german %>German <%= f.check_box :language_hindi %>Hindi<br/>
-      <%= f.check_box :language_italian %>Italian <%= f.check_box :language_japanese %>Japanese <%= f.check_box :language_portuguese %>Portuguese<%= f.check_box :language_russian %>Russian <%= f.check_box :language_spanish %>Spanish
-  </div>
-  <div class="h_75px">
-    <b class='block'>Language - Captions and Subtitles</b>
-    <i>Not implemented yet...</i>
+    <b class="block">Languages</b>
+    <%= f.fields_for :languages do |l| %>
+        <div class="left condition">
+          <b>Language </b><%= l.select :language, options_for_select(@l_cv[:language], l.object.language) %><br/>
+          <b>Type </b><%= l.select :language_type, options_for_select(@l_cv[:language_type], l.object.language_type) %>
+        </div>
+    <% end %>
+    <%= f.link_to_add 'New Language', :languages %>
   </div>
 </div>
 <div id="format_notes_metadata" class="metadata_section">
@@ -492,5 +496,7 @@
   <h4>Conservation actions</h4>
   <%= f.text_area :conservation_actions, class: '_100' %>
 </div>
+<div id="title_popup" title='Create New Title'></div>
+<div id="series_popup"></div>
 
 <%= render partial: "physical_objects/physical_object_metadata_js" %>

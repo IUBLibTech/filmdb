@@ -22,11 +22,41 @@ class Title < ActiveRecord::Base
   accepts_nested_attributes_for :title_forms, allow_destroy: true
   accepts_nested_attributes_for :title_locations, allow_destroy: true
 
-  scope :title_count_not_in_spreadsheet, -> (title_text, ss_id) {
-    Title.where('(spreadsheet_id IS NULL OR spreadsheet_id != ?) AND title_text = ?',ss_id, title_text)
+
+  # returns an array of distinct titles that appear in the specified spreadsheet
+  scope :title_text_in_spreadsheet, -> (ss_id) {
+    Title.select(:title_text).where(spreadsheet_id: ss_id).distinct.pluck(:title_text)
   }
+  # returns an array of distinct tiltes that appear both in the specified spreadsheet but also outside (created in a different spreadsheet or created manually)
+  scope :title_text_not_in_spreadsheet, -> (title_text, ss_id) {
+    Title.select(:title_text).where('spreadsheet_id IS NULL OR spreadsheet_id != ?',ss_id).distinct.pluck(:title_text)
+  }
+
+  # returns a map of Title title_text to the number of titles in the specified spreadsheet that have that title
+  scope :title_text_count_in_spreadsheet, -> (ss_id) {
+    Title.where(spreadsheet_id: ss_id).group(:title_text).count
+  }
+
+  # retuns a map of Title title_text to count of those titles with title_text both in the specified spreadsheet and not in (created in a different spreadsheet or manually)
+  scope :title_text_count_not_in_spreadsheet, -> (ss_id) {
+    titles_in = Title.title_text_in_spreadsheet(ss_id)
+    Title.where(title_text: titles_in).where('spreadsheet_id IS NULL OR spreadsheet_id != ?', ss_id).group(:title_text).count
+  }
+
+  scope :title_text_count_in_series, -> (series_id) {
+    Title.where(series_id: series_id).group('title_text').count
+  }
+  scope :title_text_count_not_in_series, -> (series_id) {
+    titles_in = Title.select(:title_text).where(series_id: series_id).distinct.pluck(:title_text)
+    Title.where(title_text: titles_in).where('series_id IS NULL OR series_id != ?', series_id).group(:title_text).count
+  }
+
   scope :titles_in_spreadsheet, -> (title_text, ss_id) {
-    Title.where(title_text: title_text, spreadsheet_id: ss_id)
+    Title.where(spreadsheet_id: ss_id).where(title_text: title_text)
+  }
+
+  scope :titles_not_in_spreadsheet, -> (title_text, ss_id) {
+    Title.where(title_text: title_text).where('spreadsheet_id IS NULL OR spreadsheet_id != ?', ss_id)
   }
 
 	def series_title_text

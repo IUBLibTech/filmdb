@@ -24,6 +24,11 @@ class ControlledVocabulary < ActiveRecord::Base
     cv_map(cv)
   }
 
+  scope :lanaguage_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'Language').select(:model_attribute, :value).order(:model_attribute, :index)
+    cv_map(cv)
+  }
+
   private
   def self.cv_map(scope_result)
     map = {}

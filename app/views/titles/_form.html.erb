@@ -10,7 +10,7 @@
     </div>
   <% end %>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit (action_name == 'new' ? 'Create' : "Update"), id: 'title_submit' %>
   </div>
   <div id="title_form" class="metadata_section">
     <%= f.hidden_field :created_by_id %>
@@ -111,8 +111,9 @@
     </div>
   </div>
 <% end %>
+<% if controller_name == 'titles' %>
 <script type="text/javascript">
-  // autocomplete for seriese
+  // autocomplete for series
   $('#title_series_title_text').autocomplete({
     source: '../../../autocomplete_series',
     focus: function (event, ui) {
@@ -126,3 +127,4 @@
     }
   });
 </script>
+<% end %>

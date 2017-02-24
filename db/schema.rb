@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170201203254) do
+ActiveRecord::Schema.define(version: 20170223202835) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -83,6 +83,14 @@ ActiveRecord::Schema.define(version: 20170201203254) do
     t.string   "value",           limit: 255
     t.boolean  "default"
     t.integer  "index",           limit: 4,   default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "languages", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "language",           limit: 255
+    t.string   "language_type",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -206,17 +214,6 @@ ActiveRecord::Schema.define(version: 20170201203254) do
     t.boolean  "aspect_ratio_2_35_1"
     t.boolean  "aspect_ratio_2_39_1"
     t.boolean  "aspect_ratio_2_59_1"
-    t.boolean  "language_arabic"
-    t.boolean  "language_chinese"
-    t.boolean  "language_english"
-    t.boolean  "language_french"
-    t.boolean  "language_german"
-    t.boolean  "language_hindi"
-    t.boolean  "language_italian"
-    t.boolean  "language_japanese"
-    t.boolean  "language_portuguese"
-    t.boolean  "language_russian"
-    t.boolean  "language_spanish"
     t.boolean  "close_caption"
     t.text     "sound",                                 limit: 65535
     t.boolean  "sound_format_optical_variable_area"
@@ -237,7 +234,6 @@ ActiveRecord::Schema.define(version: 20170201203254) do
     t.boolean  "sound_configuration_surround"
     t.boolean  "sound_configuration_multi_track"
     t.boolean  "sound_configuration_dual"
-    t.boolean  "sound_configuration_single"
     t.string   "ad_strip",                              limit: 255
     t.decimal  "shrinkage",                                           precision: 10
     t.string   "mold",                                  limit: 255
@@ -278,6 +274,7 @@ ActiveRecord::Schema.define(version: 20170201203254) do
     t.boolean  "color_bw_bw_stencil_coloring"
     t.text     "edge_code",                             limit: 65535
     t.text     "captions_or_subtitles_notes",           limit: 65535
+    t.boolean  "sound_format_optical"
   end
 
   create_table "series", force: :cascade do |t|

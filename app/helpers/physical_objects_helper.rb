@@ -6,89 +6,66 @@ module PhysicalObjectsHelper
     user = User.current_user_object
     @physical_object.inventoried_by = user.id
     @physical_object.modified_by = user.id
+    begin
+      PhysicalObject.transaction do
+      process_series_title
 
-    process_series_title
-
-    respond_to do |format|
-      if @physical_object.save
-        url = nil
-        if controller_name == 'physical_objects'
-          if action_name == 'create_duplicate'
-            #format.html { redirect_to duplicate_physical_object_path(@physical_object.id), notice: 'Physical Object successfully duplicated'}
-          else
-            url = new_physical_object_path
-            #format.html { redirect_to new_physical_object_path , notice: 'Physical Object successfully created' }
+      respond_to do |format|
+        if @physical_object.save
+          @url = nil
+          if controller_name == 'physical_objects'
+            @url = new_physical_object_path
+          elsif controller_name == 'collections'
+            @url = collection_new_physical_object_path
+          elsif controller_name == 'series'
+            @url = series_new_physical_object_path
+          elsif controller_name == 'titles'
+            @url = title_new_physical_object_path
           end
-        elsif controller_name == 'collections'
-          #format.html { redirect_to  collection_new_physical_object_path , notice: 'Physical Object successfully created' }
-          url = collection_new_physical_object_path
-        elsif controller_name == 'series'
-          #format.html { redirect_to series_new_physical_object_path, notice: 'Physical Object successfully created'}
-          url = series_new_physical_object_path
-        elsif controller_name == 'titles'
-          #format.html { redirect_to title_new_physical_object_path, notice: 'Physical Object successfully created'}
-          url = title_new_physical_object_path
+          if @physical_object.base_nitrate
+            notify_nitrate(@physical_object)
+          end
+          session[:physical_object_create_action] = @url
+          format.html { redirect_to physical_object_path(@physical_object.id, notice: 'Physical Object successfully created')}
+        else
+          format.html { render 'physical_objects/new_physical_object' }
         end
-        if @physical_object.base_nitrate
-          notify_nitrate(@physical_object)
-        end
-        session[:physical_object_create_action] = url
-        format.html { redirect_to physical_object_path(@physical_object.id, notice: 'Physical Object successfully created')}
-      else
-        format.html { render 'physical_objects/new_physical_object' }
       end
+    end
+    rescue Exception => error
+      unless error.class == ManualRollBackException
+        raise error
+      end
+      format.html { render 'physical_objects/new_physical_object' }
     end
   end
 
-  # Series and Title creation can happen through physical object creation. The form autocompletes Title.title_text
-  # and Series.title passing in existing series/titles as hidden params in the hash. But if a non-existing title/series
-  # is specified by the user, series_title_text or title_text will contain a value while the hidden id element will not.
-  # When this happens, the following combinations are possible:
-  #
-  # 1) new series and new title
-  # 2) new series with existing title
-  # 4) new title with existing series or not series specified
+  # Overhaul to how this works now - at the point when a physical object is created, series and title must already exist in the
+  # database. However, series/title creation is possible through popups and ajax calls that can happen from the physical object creation page.
+  # It will always be the case that the title exists. Whether or not a series id is passed depends on the following scenarios:
+  # 1) Title was created with a series, when the title is selected by autocomplete, or the title is created by ajax submission and created
+  #    with a series it will populate the series title and series id fields of the form and disable the series title field
+  # 2) Title was created without a series. Titles of this kind can be assigned to existing series with no problem - either by
+  #    selecting the series through autocomplete, or by creating one on the fly (and it getting auto populated in the form). Series
+  #    will be disable in either case
+  # 3) Not sure it's possible to end up with an existing title (that has a series) but the form loads the ID of a different series -
+  #    this case is tested for explicitly here and not allowed
   def process_series_title
-    new_series = params[:physical_object][:series_id].blank? && !params[:physical_object][:series_title_text].blank?
-    new_title = params[:physical_object][:title_id].blank? && !params[:physical_object][:title_text].blank?
+    @title = Title.find(params[:physical_object][:title_id])
+    existing_series = !params[:physical_object][:series_id].blank?
+    if existing_series
+      @series = Series.find(params[:physical_object][:series_id])
+    end
 
-    if new_series && new_title
-      @series = Series.new(title: params[:physical_object][:series_title_text], summary: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
-      @title = Title.new(title_text: params[:physical_object][:title_text], summary: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
-      @series.save
-      @title.series_id = @series.id
-      @title.save
-      @physical_object.title_id = @title.id
-      @other_message = "Additionally the new Title <i>#{@title.title_text}</i>, and the new Series <i>#{@series.title}</i> were created."
-
-      # these calls are necessary for physical_objects_controller#update because it uses physical_object.update_attributes(physical_object_params)
-      params[:physical_object][:series_id] = @series.id
-      params[:physical_object][:title_id] = @title.id
-
-    elsif new_series
-      @series = Series.new(title: params[:physical_object][:series_title_text], summary: "*This description was auto-generated because a new_physical_object series was created at physical object creation/edit.*")
-      @series.save
-
-      # this call is necessary for physical_objects_controller#update because it uses physical_object.update_attributes(physical_object_params)
-      params[:physical_object][:series_id] = @series.id
-
-      title = Title.find(params[:physical_object][:title_id])
-      title.update_attributes(series_id: @series.id)
-      @physical_object.title_id = title.id
-      @other_message = "Additionally the new Series <i>#{@series.title}</i> was created."
-    elsif new_title
-      @title = Title.new(title_text: params[:physical_object][:title_text], summary: "*This description was auto-generated because a new_physical_object title was created at physical object creation/edit.*")
-      #  either an existing series was specified or no series was specified
-      if params[:physical_object][:series_id]
-        @title.series_id =  params[:physical_object][:series_id]
-      end
-      @title.save
-
-      # this call is necessary for physical_objects_controller#update because it uses physical_object.update_attributes(physical_object_params)
-      params[:physical_object][:title_id] = @title.id
-
+    if existing_series && !@title.series_id.nil? && @title.series_id != @series.id
+      @physical_object.errors.add(:title, "Title already has existing Series - attempt to assign another Series")
+      @other_message = "Attempt to assign a different Series to a Title that already has Series"
+      raise ManualRollBackException.new("Attemp to assign this title a different series when it has a series")
+    else
       @physical_object.title_id = @title.id
       @other_message = "Additionally the new Title <i>#{@title.title_text}</i> was created."
+      params[:physical_object][:series_id] = @series.id
+      params[:physical_object][:title_id] = @title.id
     end
     flash[:other_message] = @other_message
   end
@@ -114,9 +91,8 @@ module PhysicalObjectsHelper
         :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
         :color_bw_color_ansochrome, :color_bw_color_eco, :color_bw_color_eastman,
         :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
-        :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :language_arabic, :language_chinese, :language_english, :language_french, :language_german,
-        :language_hindi, :language_italian, :language_japanese, :language_portuguese, :language_russian, :language_spanish, :close_caption,
-        :sound, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_mixed,
+        :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :close_caption,
+        :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_mixed,
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
@@ -126,7 +102,8 @@ module PhysicalObjectsHelper
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
         :spoking, :dusty, :rusty, :miscellaneous, :title_control_number,
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
-        boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy]
+        boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
+        languages_attributes: [:id, :language, :language_type, :_destroy]
     )
   end
 end

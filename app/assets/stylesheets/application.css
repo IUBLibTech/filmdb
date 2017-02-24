@@ -242,6 +242,11 @@ table.version_table > tbody > tr > td > input {
 ._50 > div.field > input {
     width: 95%;
 }
+#physical_object_title_text {
+    float: left;
+    width: 91%;
+    font-sizee: 13px;
+}
 ._50 > div.field > select {
     width: 100%;
 }
@@ -365,7 +370,7 @@ td#color {
     padding: 2px 5px;
     margin-right: 5px;
 }
-#existing_titles {
+#existing_titles, #existing_series {
     margin-top: 20px;
     width: 500px;
     float: left;
@@ -389,7 +394,6 @@ ul {
 .selectable li {
     margin: 3px;
     padding: 0.4em;
-    font-style: 1.2em;
 }
 .selectable .ui-selected {
     background: #e69a37;
@@ -398,4 +402,53 @@ ul {
 li#master_selection {
     background: #805215;
 }
-
+div > a.button {
+    float: left;
+    padding: 2px;
+    margin-left: 3px;
+}
+.button {
+    border-top: 1px solid #96d1f8;
+    background: #496d89;
+    background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#496d89));
+    background: -webkit-linear-gradient(top, #65a9d7, #496d89);
+    background: -moz-linear-gradient(top, #65a9d7, #496d89);
+    background: -ms-linear-gradient(top, #65a9d7, #496d89);
+    background: -o-linear-gradient(top, #65a9d7, #496d89);
+    padding: 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    box-shadow: rgba(0,0,0,1) 0 1px 0;
+    text-shadow: rgba(0,0,0,.4) 0 1px 0;
+    color: white;
+    font-size: 13px;
+    font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+    text-decoration: none;
+    vertical-align: middle;
+}
+.button:hover {
+    border-top-color: #28597a;
+    background: #28597a;
+    color: #ccc;
+}
+.button:active {
+    border-top-color: #1b435e;
+    background: #1b435e;
+}
+#title_popup {
+    display: none;
+    z-index: 99;
+}
+#series_popup {
+    display: none;
+}
+.gray {
+    color: #999;
+    cursor: hand;
+}
+.em_95 {
+    font-size: 0.95em;
+}

@@ -22,7 +22,7 @@
   <h4>Core Metadata</h4>
   <div class="left _50">
     <b>Title</b> <%= @physical_object.title_text %><br/>
-    <b>Alternative Title</b> <%= @physical_object.alternative_title %>
+    <b>Alternative Title</b> <%= @physical_object.alternative_title %><br/>
     <b>Series</b> <%= @physical_object.series_title_text %><br/>
     <b>Series Part</b> <%= @physical_object.series_part %><br/>
     <b>Media Type</b> <%= @physical_object.media_type %><br/>
@@ -110,12 +110,10 @@
     <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONFIGURATION_FIELDS) %>
   </div>
   <div class="">
-    <b class="">Language - Dialog&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::LANGUAGE_FIELDS) %>
-  </div>
-  <div class="">
-    <b >Language - Captions and Subtitles</b>
-    <i>Not implemented yet...</i>
+    <b class="">Languages&nbsp;</b>
+    <% @physical_object.languages.each_with_index do |l, i| %>
+    <b><%= l.language %></b> - <%= l.language_type %>&nbsp;&nbsp;
+    <% end %>
   </div>
 </div>
 <div id="format_notes_metadata" class="metadata_section">
