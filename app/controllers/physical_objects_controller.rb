@@ -171,7 +171,7 @@ class PhysicalObjectsController < ApplicationController
     def set_cv
       #@series = Series.all.order(:title)
       @cv = ControlledVocabulary.physical_object_cv
-      @l_cv = ControlledVocabulary.lanaguage_cv
+      @l_cv = ControlledVocabulary.language_cv
     end
 
 end

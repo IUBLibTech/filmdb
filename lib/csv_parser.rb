@@ -134,10 +134,16 @@ class CsvParser
       end
     end
 
-    # examine headers to make sure that all present conform to vocabulary. and that there are no unknown column headers
+    # examine spreadsheet headers to make sure theybconform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
         @parse_headers_msg << parsed_header_message(ch)
+      end
+    end
+    # make sure that every header is present in the spreadsheet
+    COLUMN_HEADERS.each do |h|
+      unless @headers.keys.include?(h)
+        @parse_headers_msg <<  parsed_header_message(h)
       end
     end
   end

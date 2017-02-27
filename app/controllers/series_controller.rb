@@ -91,6 +91,7 @@ class SeriesController < ApplicationController
     def set_series
       @series = Series.find(params[:id])
       @cv = ControlledVocabulary.physical_object_cv
+      @l_cv = ControlledVocabulary.language_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

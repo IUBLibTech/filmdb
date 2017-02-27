@@ -104,6 +104,7 @@ class CollectionsController < ApplicationController
       @user = User.where(username: current_user).first
       @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id, modified_by: @user.id )
       @cv = ControlledVocabulary.physical_object_cv
+      @l_cv = ControlledVocabulary.language_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
