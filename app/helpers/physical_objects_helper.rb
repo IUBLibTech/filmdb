@@ -64,7 +64,7 @@ module PhysicalObjectsHelper
     else
       @physical_object.title_id = @title.id
       @other_message = "Additionally the new Title <i>#{@title.title_text}</i> was created."
-      params[:physical_object][:series_id] = @series.id
+      params[:physical_object][:series_id] = @series.nil? ? nil : @series.id
       params[:physical_object][:title_id] = @title.id
     end
     flash[:other_message] = @other_message
