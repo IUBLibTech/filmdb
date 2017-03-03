@@ -97,8 +97,8 @@ class PhysicalObject < ActiveRecord::Base
       :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1, :aspect_ratio_2_39_1, :aspect_ratio_2_59_1
   ]
   ASPECT_RATIO_FIELDS_HUMANIZED = {
-      aspect_ratio_1_33_1: "1:33:1", aspect_ratio_1_37_1: "1:37:1", aspect_ratio_1_66_1: "1:66:1", aspect_ratio_1_85_1: "1:85:1",
-      aspect_ratio_2_35_1: "2:35:1", aspect_ratio_2_39_1: "2:39:1", aspect_ratio_2_59_1: "2:59:1"
+      aspect_ratio_1_33_1: "1.33:1", aspect_ratio_1_37_1: "1.37:1", aspect_ratio_1_66_1: "1.66:1", aspect_ratio_1_85_1: "1.85:1",
+      aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1"
   }
 
   SOUND_FORMAT_FIELDS = [

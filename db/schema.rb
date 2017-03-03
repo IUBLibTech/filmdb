@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170227195839) do
+ActiveRecord::Schema.define(version: 20170228164122) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -294,7 +294,7 @@ ActiveRecord::Schema.define(version: 20170227195839) do
     t.integer  "spreadsheet_id",        limit: 4
     t.integer  "submission_progress",   limit: 4
     t.boolean  "successful_submission"
-    t.text     "failure_message",       limit: 65535
+    t.text     "failure_message",       limit: 4294967295
     t.datetime "created_at"
     t.datetime "updated_at"
   end

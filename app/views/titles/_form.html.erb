@@ -40,7 +40,7 @@
       <%= f.fields_for :title_original_identifiers do |toi| %>
         <div class="label"><b>Identifier</b></div> <div class="field"><%= toi.text_field :identifier %></div>
         <div class="label"><b>Identifier Type</b></div>
-        <div class="field"><%= toi.select :identifier_type, options_for_select(@title_cv[:title_original_identifier_type], toi.object.identifier_type) %></div>
+        <div class="field"><%= toi.select :identifier_type, options_for_select(@title_cv[:title_original_identifier_type], toi.object.identifier_type), {include_blank: ''} %></div>
         <div class="clear"><%= toi.link_to_remove (action_name == "edit" ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Original Identifier", :title_original_identifiers %>
@@ -49,7 +49,7 @@
     <div id="creators_div" class="fields_for_div">
       <%= f.fields_for :title_creators do |tc| %>
           <div class="label"><b>Creator</b></div> <div class="field"><%= tc.text_field :name %></div>
-          <div class="label"><b>Role</b></div> <div class="field"><%= tc.select :role, options_for_select(@title_cv[:title_creator_role_type], tc.object.role) %></div>
+          <div class="label"><b>Role</b></div> <div class="field"><%= tc.select :role, options_for_select(@title_cv[:title_creator_role_type], tc.object.role), {include_blank: ''} %></div>
           <div class="clear"><%= tc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Creator", :title_creators %>
@@ -58,7 +58,8 @@
     <div id="publishers_div" class="fields_for_div">
       <%= f.fields_for :title_publishers do |tp| %>
           <div class="label"><b>Publisher</b></div> <div class="field"><%= tp.text_field :name %></div>
-          <div class="label"><b>Role</b></div> <div class="field"><%= tp.select :publisher_type, options_for_select(@title_cv[:title_publisher_role_type], tp.object.publisher_type) %></div>
+          <div class="label"><b>Role</b></div>
+          <div class="field"><%= tp.select :publisher_type, options_for_select(@title_cv[:title_publisher_role_type], tp.object.publisher_type), {include_blank: ''} %></div>
           <div class="clear"><%= tp.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Publisher", :title_publishers %>

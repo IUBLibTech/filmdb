@@ -63,6 +63,7 @@ class CsvParser
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
       @cv = ControlledVocabulary.physical_object_cv
+      @l_cv = ControlledVocabulary.language_cv
       # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
       error_msg = ""
       # all physical objects created from the spreadsheet
@@ -210,8 +211,11 @@ class CsvParser
     set_boolean_value(:multiple_items_in_can, miic, po)
 
     can = row[column_index CAN_SIZE]
-    can = can.to_i rescue can    #can size has a 'Cartridge value so is represented as text'
-    set_value(:can_size, can.to_s, po)
+    can = can.to_i rescue can    #can size has a 'Cartridge' value so is represented as text
+    # ''.to_i returns 0...
+    unless can == 0
+      set_value(:can_size, can.to_s, po)
+    end
 
     footage = row[column_index FOOTAGE]
     unless footage.blank?
@@ -257,19 +261,19 @@ class CsvParser
       end
     end
 
-    ad = row[column_index AD_STRIP]
-    set_value(:ad_strip, ad.to_s, po)
-
-    shrink = row[column_index SHRINKAGE]
-    unless shrink.blank?
-      float = !!Float(shrink) rescue false
-      if float
-        po.send(:shrinkage=, float)
-      end
-    end
-
-    mold = row[column_index MOLD]
-    set_value(:mold, mold, po)
+    # ad = row[column_index AD_STRIP]
+    # set_value(:ad_strip, ad.to_s, po)
+    #
+    # shrink = row[column_index SHRINKAGE]
+    # unless shrink.blank?
+    #   float = !!Float(shrink) rescue false
+    #   if float
+    #     po.send(:shrinkage=, float)
+    #   end
+    # end
+    #
+    # mold = row[column_index MOLD]
+    # set_value(:mold, mold, po)
 
     # now parse all title data
     @title_cv = ControlledVocabulary.title_cv
@@ -320,7 +324,7 @@ class CsvParser
             po.errors.add(:title_creator, "Undefined Title Creator Role: #{role}")
           end
         else
-          po.errors.add(:title_creator, "Malformed Title Creator: #{val}")
+          title.title_creators << TitleCreator.new(title_id: title.id, name: val, role: '')
         end
       end
     end
@@ -338,7 +342,7 @@ class CsvParser
             po.errors.add(:title_publisher, "Undefined Title Publisher Role: #{role}")
           end
         else
-          po.errors.add(:title_publisher, "Malformed Title Publisher: #{pv}")
+          title.title_publishers << TitlePublisher.new(title_id: title.id, name: pv, publisher_type: '')
         end
       end
     end
@@ -402,11 +406,11 @@ class CsvParser
 
     email = row[column_index EMAIL_ADDRESS]
     name = row[column_index CREATED_BY]
-    if (email && name)
+    if !(email.blank? || name.blank?)
       username = email.split('@')[0]
       user = User.where(username: username).first
       unless user
-        user = User.new(username: username, email_address: email, first_name: name.split(' ')[0], last_name: name.split(' ')[1], active: false, created_in_spreadsheet: @spreadsheet.id)
+       user = User.new(username: username, email_address: email, first_name: name.split(' ')[0], last_name: name.split(' ')[1], active: false, created_in_sheet: @spreadsheet)
         user.save
       end
       po.inventorier = user
@@ -508,19 +512,19 @@ class CsvParser
     aspect_fields = row[column_index ASPECT_RATIO].blank? ? [] : row[column_index ASPECT_RATIO].split(DELIMITER)
     aspect_fields.each do |af|
       case af
-        when "1:33:1"
+        when "1.33:1"
           po.send(:aspect_ratio_1_33_1=, true)
-        when "1:37:1"
+        when "1.37:1"
           po.send(:aspect_ratio_1_37_1=, true)
-        when "1:66:1"
+        when "1.66:1"
           po.send(:aspect_ratio_1_66_1=, true)
-        when "1:85:1"
+        when "1.85:1"
           po.send(:aspect_ratio_1_85_1=, true)
-        when "2:35:1"
+        when "2.35:1"
           po.send(:aspect_ratio_2_35_1=, true)
-        when "2:39:1"
+        when "2.39:1"
           po.send(:aspect_ratio_2_39_1=, true)
-        when "2:59:1"
+        when "2.59:1"
           po.send(:aspect_ratio_2_59_1=, true)
         else
           puts "Bad aspect ratio: #{af}"
@@ -561,18 +565,27 @@ class CsvParser
       end
     end
 
-    # language-dialog fields
+    # language fields both dialog and captionos
     lang_fields = row[column_index DIALOG_LANGUAGE].blank? ? [] : row[column_index DIALOG_LANGUAGE].split(DELIMITER)
+    langs = @l_cv[:language].collect { |x| x[0].downcase }
     lang_fields.each do |lf|
-      field = "language #{lf}".parameterize.underscore
-      if PhysicalObject::LANGUAGE_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+      index = langs.find_index(lf.downcase)
+      if ! index.nil?
+        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][0][0], physical_object_id: po.id)
       else
         po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
       end
     end
+    lang_fields = row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].blank? ? [] : row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].split(DELIMITER)
+    lang_fields.each do |lf|
+      index = langs.find_index(lf)
+      if !index.nil?
+        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][1][0], physical_object_id: po.id)
+      else
+        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: #{lf}")
+      end
+    end
 
-    # TODO: implement language-captions/subtitles parsing once fields exist in physical objects
 
     # ad strip, mold, and shrinkage have their own columns
     ad = row[column_index AD_STRIP].blank?
@@ -591,17 +604,17 @@ class CsvParser
     # condition type fields with value ranges or booleans
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
     cv = ControlledVocabulary.physical_object_cv
-    val_conditions = cv[:value_condition].collect { |x| x[0]}
-    bool_conditions = cv[:boolean_condition].collect { |x| x[0]}
+    val_conditions = cv[:value_condition].collect { |x| x[0].downcase }
+    bool_conditions = cv[:boolean_condition].collect { |x| x[0].downcase }
     condition_fields.each do |cf|
-      if bool_conditions.include?(cf)
-        po.boolean_conditions << BooleanCondition.new(condition_type: cf, physical_object_id: po.id)
+      if bool_conditions.include?(cf.downcase)
+        po.boolean_conditions << BooleanCondition.new(condition_type: cf.titleize, physical_object_id: po.id)
       else
         # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
         pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
         matcher = pattern.match(cf)
-        if matcher && val_conditions.include?(matcher[1])
-          po.value_conditions << ValueCondition.new(condition_type: matcher[1], value: cv[:condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
+        if matcher && val_conditions.include?(matcher[1].downcase)
+          po.value_conditions << ValueCondition.new(condition_type: matcher[1].titleize, value: cv[:condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
         else
           po.errors.add(:condition, "Undefined or malformed condition type: #{cf}")
         end
