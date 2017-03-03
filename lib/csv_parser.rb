@@ -498,7 +498,7 @@ class CsvParser
     color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
     color_fields.each do |cf|
       color_field = "color bw color #{cf}".parameterize.underscore
-      bw_field = "color bw bw #{cf}".parameterize.underscore
+      bw_field = "color bw bw #{cf.gsub('&', 'and')}".parameterize.underscore
       if (PhysicalObject::COLOR_BW_FIELDS.include?(bw_field.to_sym))
         po.send((bw_field << '=').to_sym, true)
       elsif (PhysicalObject::COLOR_COLOR_FIELDS.include?(color_field.to_sym))
@@ -557,11 +557,16 @@ class CsvParser
     # sound configuration
     config_fields = row[column_index SOUND_CONFIGURATION].blank? ? [] : row[column_index SOUND_CONFIGURATION].split(DELIMITER)
     config_fields.each do |cf|
-      field = "sound configuration #{cf}".parameterize.underscore
-      if PhysicalObject::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+      # multi-track is written SOOOOO many ways in the spreadsheets - save Carla the headaches of correcting them all...
+      if cf.downcase.include?('multi')
+        po.send(:sound_configuration_multi_track=, true)
       else
-        po.errors.add(:sound_configuration, "Undefined sound configuration: #{cf}")
+        field = "sound configuration #{cf}".parameterize.underscore
+        if PhysicalObject::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
+          po.send((field << "=").to_sym, true)
+        else
+          po.errors.add(:sound_configuration, "Undefined sound configuration: #{cf}")
+        end
       end
     end
 

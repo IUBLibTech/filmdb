@@ -124,7 +124,7 @@ class PhysicalObject < ActiveRecord::Base
   ]
   SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
       sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround",
-      sound_configuration_multi_track: "Multi-track (Maurer)", sound_configuration_dual: "Dual Mono"
+      sound_configuration_multi_track: "Multi-track (ie. Maurer)", sound_configuration_dual: "Dual Mono"
   }
 
   CONDITION_FIELDS = [
