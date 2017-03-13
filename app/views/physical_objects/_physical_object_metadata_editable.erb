@@ -21,7 +21,7 @@
           <%= f.hidden_field :series_id, value: @series.id  %>
     <% else %>
           <%= f.hidden_field :series_id %>
-          <%= f.text_field :series_title_text %>
+          <%= f.text_field :series_title_text, disabled: true %>
     <% end %>
     </div>
     <div class="label">
@@ -493,10 +493,18 @@
   </div>
 </div>
 <div id="conservation_actions_metadata" class="metadata_section">
-  <h4>Conservation actions</h4>
+  <h4>
+    Conservation actions
+    <%= link_to "X", '#', remote: true, class: 'button', id: 'cancel_title_button' %>
+  </h4>
   <%= f.text_area :conservation_actions, class: '_100' %>
 </div>
-<div id="title_popup" title='Create New Title'></div>
-<div id="series_popup"></div>
+<div id="overlay"></div>
+<div id="title_popup" title='Create New Title'>
+  <div id="title_popup_header">
+    <h4>Create New Title</h4><%= link_to "X", "#", remote: true, button: true, id: 'title_popup_cancel_button' %>
+  </div>
+  <div id="title_popup_content" class="clear"></div>
+</div>
 
 <%= render partial: "physical_objects/physical_object_metadata_js" %>

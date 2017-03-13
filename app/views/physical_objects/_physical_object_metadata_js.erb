@@ -89,26 +89,10 @@
   $('#physical_object_title_text').keydown(function() {
     $('#physical_object_title_text').addClass('bad_barcode');
     $('#physical_object_title_id').removeAttr('value');
-    $('#physical_object_series_title_text').prop('disabled', false);
-  });
-
-  // autocomplete for series
-  $('#physical_object_series_title_text').autocomplete({
-    source: '../../../autocomplete_series',
-    focus: function (event, ui) {
-      $(".ui-autocomplete > li").attr("title", ui.item.summary);
-      return false;
-    },
-    select: function (event, ui) {
-      $("#physical_object_series_title_text").val(ui.item.label);
-      $('#physical_object_series_id').val(ui.item.value);
-      return false;
-    }
-  });
-
-  $('#physical_object_series_title_text').keypress(function() {
+    $('#physical_object_series_title_text').val('');
     $('#physical_object_series_id').removeAttr('value');
   });
+
 
   $('#physical_object_collection_text').keypress(function() {
     $('#physical_object_collection_id').removeAttr('value');
@@ -153,24 +137,24 @@
       }
     });
   });
-
+  $('#title_popup_cancel_button').click(function() {
+    $('#title_popup').hideTitlePopup();
+  });
   $('#title_button').click(function() {
     if ($('#title_popup').is(':visible') == false) {
       // the url for creating a new title through ajax requires a series id: /titles/ajax/new/:series_id
       // if the series_id is omitted, it will resolve to /titles/ajax/:id with and id of 'new'
+      //UPDATE: series id should always be 0 - use autocomplete on the new title popup to select an existing series
       series_id = 0;
-      if (!series_id_blank()) {
-        series_id = series_value();
-      }
       $.ajax({
         url: window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id,
         error: function(result) {
           alert("Error:\n"+result);
         },
         success: function(result) {
-          el = $('#title_popup');
+          el = $('#title_popup_content');
           el.html(result);
-          el.dialog({minWidth: 750, modal: false});
+          $("#title_popup").showTitlePopup();
           // autocomplete for series
           $('#title_series_title_text').autocomplete({
             source: '../../../autocomplete_series',
@@ -217,7 +201,7 @@
                 alert(result['error']);
               },
               complete: function() {
-                $('#title_popup').dialog('close');
+                $('#title_popup').hideTitlePopup();
               }
             });
           });
@@ -226,6 +210,18 @@
     }
   });
 
+  jQuery.fn.showTitlePopup = function() {
+    $('#overlay').css("display", "block");
+    this.css("position", "absolute");
+    this.css("display", "block");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+  }
+
+  jQuery.fn.hideTitlePopup = function() {
+    $('#overlay').css("display", "none");
+    this.css("display", "none");
+  }
 
   function series_value() {
     return $('#physical_object_series_id').first().attr('value');

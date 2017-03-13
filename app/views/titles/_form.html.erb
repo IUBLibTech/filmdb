@@ -9,13 +9,9 @@
       </ul>
     </div>
   <% end %>
-  <div class="actions">
-    <%= f.submit (action_name == 'new' ? 'Create' : "Update"), id: 'title_submit' %>
-  </div>
   <div id="title_form" class="metadata_section">
     <%= f.hidden_field :created_by_id %>
     <%= f.hidden_field :modified_by_id %>
-    <h4><%= action_name.titleize %> Title</h4>
     <div>
       <div class="left _50">
         <div class="label"><b>Title</b></div>
@@ -109,6 +105,9 @@
     <h4>Notes</h4>
     <div id="notes_div">
       <%= f.text_area :notes %>
+    </div>
+    <div class="actions">
+      <%= f.submit (action_name == 'new' ? 'Create' : "Update"), id: 'title_submit' %>
     </div>
   </div>
 <% end %>

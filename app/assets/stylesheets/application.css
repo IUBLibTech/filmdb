@@ -82,6 +82,7 @@ div#menu {
     padding: 4px 10px;
     font-size: 1.5em;
     height: 42px;
+    margin-bottom: 25px;
 }
 
 div#menu > ul {
@@ -438,13 +439,32 @@ div > a.button {
     border-top-color: #1b435e;
     background: #1b435e;
 }
-#title_popup {
+div#title_popup {
     display: none;
-    z-index: 99;
+    background: #FFF;
+    padding: 15px;
+    width: 700px;
 }
-#series_popup {
+div#title_popup_header > h4 {
+    float: left;
+    width: 95%;
+}
+#title_popup_cancel_button {
+    font-size: 1.75em;
+}
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
     display: none;
 }
+
+
 .gray {
     color: #999;
     cursor: hand;

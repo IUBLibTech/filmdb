@@ -16,7 +16,7 @@
   <tbody>
     <% @titles.each do |title| %>
     <tr>
-      <td><%= title.title_text + (title.spreadsheet_id.nil? ? "[-]" : "[#{title.spreadsheet_id}]")%></td>
+      <td><%= title.title_text %></td>
       <td><%= title.series&.title %></td>
       <td><%= title.summary %></td>
       <td>
