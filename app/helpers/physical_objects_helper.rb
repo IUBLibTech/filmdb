@@ -105,7 +105,7 @@ module PhysicalObjectsHelper
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
         languages_attributes: [:id, :language, :language_type, :_destroy],
-        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroyx]
+        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy]
     )
   end
 end
