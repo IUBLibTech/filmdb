@@ -11,7 +11,6 @@ module PhysicalObjectsHelper
       process_series_title
 
       respond_to do |format|
-        debugger
         if @physical_object.save
           @url = nil
           if controller_name == 'physical_objects'
