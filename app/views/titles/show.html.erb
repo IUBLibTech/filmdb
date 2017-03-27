@@ -6,9 +6,8 @@
 </div>
 <%= render partial: "show" %>
 
-<h4 class="mt_25">Physical Objects With This Title</h4>
-<% if @title.physical_objects.size > 0 %>
-<%= render partial: 'physical_objects/physical_objects_table' %>
-<% else %>
-none
-<% end %>
+<%= render partial: 'component_groups' %>
+
+<%= render partial: 'physical_objects' %>
+
+<%= render partial: 'component_group_form' %>

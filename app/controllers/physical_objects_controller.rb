@@ -95,7 +95,6 @@ class PhysicalObjectsController < ApplicationController
     @em = 'Duplicating Physical Object'
     @physical_object = PhysicalObject.find(params[:id]).dup
     @physical_object.iu_barcode = nil
-    @physical_object.item_original_identifier = nil
     @physical_object.reel_number = nil
     render 'new_physical_object'
   end

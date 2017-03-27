@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :component_groups
   resources :controlled_vocabularies
   resources :collection_inventory_configurations do
     #get '/collection_inventory_configurations/:id/new_physical_object'
@@ -44,6 +45,7 @@ Rails.application.routes.draw do
   get '/titles/ajax/new/:series_id', to: 'titles#new_ajax', as: 'new_title_ajax'
   post '/titles/ajax/new_title', to: 'titles#create_ajax', as: 'create_title_ajax'
   get '/series/ajax/:id', to: 'series#ajax_summary', as: 'series_ajax'
+  post '/titles/create_component_group/:id', to: 'titles#create_component_group', as: 'create_component_group'
 
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 

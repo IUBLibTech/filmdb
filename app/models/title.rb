@@ -9,6 +9,8 @@ class Title < ActiveRecord::Base
   has_many :title_dates, dependent: :delete_all, autosave: true
   has_many :title_locations, dependent: :delete_all, autosave: true
 
+  has_many :component_groups
+
 	belongs_to :series, autosave: true
 	belongs_to :spreadsheet, autosave: true
   belongs_to :creator, class_name: "User", foreign_key: "created_by_id", autosave: true
@@ -21,6 +23,7 @@ class Title < ActiveRecord::Base
   accepts_nested_attributes_for :title_publishers, allow_destroy: true
   accepts_nested_attributes_for :title_forms, allow_destroy: true
   accepts_nested_attributes_for :title_locations, allow_destroy: true
+
 
 
   # returns an array of distinct titles that appear in the specified spreadsheet

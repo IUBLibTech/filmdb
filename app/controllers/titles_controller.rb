@@ -1,6 +1,6 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
-  before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary]
+  before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
@@ -14,6 +14,7 @@ class TitlesController < ApplicationController
   # GET /titles/1.json
   def show
     @physical_objects = @title.physical_objects
+    @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
   # GET /titles/new_physical_object
@@ -48,6 +49,29 @@ class TitlesController < ApplicationController
       else
         format.html { render :new_physical_object }
         format.json { render json: @title.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def create_component_group
+    @component_group_cv = ControlledVocabulary.component_group_cv
+    po_ids = params[:pos][:po_ids].split(",")
+    # make sure that all submitted po ids actually belong to the title
+    pos = PhysicalObject.where(id: po_ids)
+    bad = pos.reject { |p| p.title_id == @title.id }.collect { |p| p.iu_barcode }
+    respond_to do |format|
+      if bad.size > 0
+        format.html { render :show, warning: "The following Physical Objects do not belong to this title: #{bad.map(&:inspect).join(", ")}"}
+      else
+        cg = nil
+        ComponentGroup.transaction do
+          cg = ComponentGroup.new(group_type: params[:pos][:group_type], title_id: @title.id)
+          cg.save
+          pos.each do |p|
+            ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save
+          end
+        end
+        format.html { redirect_to title_path(@title), notice: "Component Group <i>#{cg.group_type}</i> Created." }
       end
     end
   end

@@ -222,7 +222,13 @@
         <b>Original Identifier</b>
       </div>
       <div class="value">
-        <%= f.text_field :item_original_identifier %>
+        <%= f.fields_for :physical_object_original_identifiers do |id| %>
+            <div class="left condition">
+              Original Identifier: <%= id.text_field :identifier %>
+              <%= id.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+            </div>
+        <% end %>
+        <%= f.link_to_add 'New Original Identifier', :physical_object_original_identifiers %>
       </div>
       <div class="label">
         <b>Reel Number</b>
@@ -502,7 +508,7 @@
 <div id="overlay"></div>
 <div id="title_popup" title='Create New Title'>
   <div id="title_popup_header">
-    <h4>Create New Title</h4><%= link_to "X", "#", remote: true, button: true, id: 'title_popup_cancel_button' %>
+    <h4>Create New Title</h4><%= link_to "X", "#", ffremote: true, button: true, id: 'title_popup_cancel_button' %>
   </div>
   <div id="title_popup_content" class="clear"></div>
 </div>

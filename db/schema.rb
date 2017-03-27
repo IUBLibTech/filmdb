@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228164122) do
+ActiveRecord::Schema.define(version: 20170316191938) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -77,6 +77,20 @@ ActiveRecord::Schema.define(version: 20170228164122) do
     t.integer  "unit_id",    limit: 8
   end
 
+  create_table "component_group_physical_objects", force: :cascade do |t|
+    t.integer  "component_group_id", limit: 8
+    t.integer  "physical_object_id", limit: 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "component_groups", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8,   null: false
+    t.string   "group_type", limit: 255, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "controlled_vocabularies", force: :cascade do |t|
     t.string   "model_type",      limit: 255
     t.string   "model_attribute", limit: 255
@@ -102,6 +116,13 @@ ActiveRecord::Schema.define(version: 20170228164122) do
     t.datetime "updated_at"
   end
 
+  create_table "physical_object_original_identifiers", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "identifier",         limit: 255, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "physical_objects", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -110,7 +131,7 @@ ActiveRecord::Schema.define(version: 20170228164122) do
     t.string   "location",                              limit: 255
     t.integer  "collection_id",                         limit: 8
     t.string   "media_type",                            limit: 255
-    t.integer  "iu_barcode",                            limit: 8,                    null: false
+    t.integer  "iu_barcode",                            limit: 8,                             null: false
     t.integer  "copy_right",                            limit: 4
     t.string   "format",                                limit: 255
     t.integer  "spreadsheet_id",                        limit: 4
@@ -118,7 +139,6 @@ ActiveRecord::Schema.define(version: 20170228164122) do
     t.string   "series_part",                           limit: 255
     t.string   "alternative_title",                     limit: 255
     t.string   "title_version",                         limit: 255
-    t.string   "item_original_identifier",              limit: 255
     t.string   "creator",                               limit: 255
     t.text     "accompanying_documentation",            limit: 65535
     t.text     "notes",                                 limit: 65535
@@ -235,7 +255,7 @@ ActiveRecord::Schema.define(version: 20170228164122) do
     t.boolean  "sound_configuration_multi_track"
     t.boolean  "sound_configuration_dual"
     t.string   "ad_strip",                              limit: 255
-    t.decimal  "shrinkage",                                           precision: 10
+    t.decimal  "shrinkage",                                           precision: 4, scale: 3
     t.string   "mold",                                  limit: 255
     t.string   "color_fade",                            limit: 255
     t.string   "perforation_damage",                    limit: 255

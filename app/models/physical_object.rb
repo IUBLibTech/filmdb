@@ -8,19 +8,25 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :unit, autosave: true
 	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by", autosave: true
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
+  belongs_to :component_group
 
-	validates :title_id, presence: true
-	validates :iu_barcode, iu_barcode: true
-	validates :unit, presence: true
-	validates :media_type, presence: true
-	validates :medium, presence: true
+  has_many :component_group_physical_objects
+  has_many :component_groups, through: :component_group_physical_objects
+
+  validates :title_id, presence: true
+  validates :iu_barcode, iu_barcode: true
+  validates :unit, presence: true
+  validates :media_type, presence: true
+  validates :medium, presence: true
 
   has_many :boolean_conditions, autosave: true
   has_many :value_conditions, autosave: true
   has_many :languages, autosave: true
+  has_many :physical_object_original_identifiers
   accepts_nested_attributes_for :boolean_conditions, allow_destroy: true
   accepts_nested_attributes_for :value_conditions, allow_destroy: true
   accepts_nested_attributes_for :languages, allow_destroy: true
+  accepts_nested_attributes_for :physical_object_original_identifiers, allow_destroy: true
 
 	trigger.after(:update).of(:iu_barcode) do
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
@@ -167,7 +173,10 @@ class PhysicalObject < ActiveRecord::Base
 
 	def collection_text
 		self.collection.name if self.collection
-	end
+  end
+
+  def generations_text
+  end
 
 	# duration is input as hh:mm:ss
 	def duration=(time)

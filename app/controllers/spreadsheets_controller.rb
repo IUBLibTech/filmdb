@@ -1,6 +1,6 @@
 class SpreadsheetsController < ApplicationController
   require 'csv_parser'
-  before_action :set_spreadsheet, only: [:show, :edit, :update, :destroy, :merge_title_candidates, :merge_series_candidates, :merge_series, :merge_series_titles]
+  before_action :set_spreadsheet, only: [:show, :edit, :update, :destroy, :merge_title_candidates, :merge_series_candidates, :merge_series, :merge_series_titles, :merge_titles]
 
   # GET /spreadsheets
   # GET /spreadsheets.json
@@ -90,7 +90,7 @@ class SpreadsheetsController < ApplicationController
       @series = @master
       @title_count_in_series = Title.title_text_count_in_series(@master.id)
       @title_count_not_in_series = Title.title_text_count_not_in_series(@master.id)
-      format.html {render 'merged_series', notice: "#{@mergees.size + 1} Series Were Successfully Mmerged"}
+      format.html {redirect_to spreadsheet_path(id: @spreadsheet.id), notice: "#{@mergees.size + 1} Series Were Successfully Mmerged"}
     end
   end
 
@@ -164,7 +164,7 @@ class SpreadsheetsController < ApplicationController
       @master_title.save
       # renamed so that the renderer of title knows what to render
       @title = @master_title
-      format.html { redirect_to @title, notice: "#{@mergees.size + 1} Titles Were Successfully Merged." }
+      format.html { redirect_to spreadsheet_path(id: @spreadsheet.id), notice: "#{@mergees.size + 1} Titles Were Successfully Merged." }
     end
   end
 

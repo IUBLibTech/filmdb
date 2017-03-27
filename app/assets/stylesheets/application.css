@@ -26,20 +26,17 @@ body {
 
 table {
     border-spacing: 0;
-    max-width: 995px;
-    margin-left: 5px;
+    border-collapse: collapse;
 }
 table, th, td {
-    border: none;
+    border: 1px solid #84b8e0;
 }
-
+th {
+    background: #e69a37;
+}
 th, td {
     text-align: left;
-    padding-right: 15px;
-}
-
-td:first-of-type {
-    padding-right: 20px;
+    padding: 5px;
 }
 
 h1 {
@@ -221,7 +218,7 @@ table.version_table > tbody > tr > td > input {
     font-weight: bold;
     padding: 5px;
     color: white;
-    margin: 0;
+    margin-bottom: 0;
 }
 
 #image_metadata > table, #sound_metadata > table {

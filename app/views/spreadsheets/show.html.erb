@@ -2,7 +2,7 @@
 <% if @spreadsheet.successful_upload %>
     <br>
     <h4>Physical Objects Created in this spreadsheet</h4>
-    <%= render partial: 'physical_objects/physical_objects_table' %>
+    <%= @spreadsheet.physical_objects.size %>
 
     <% if @spreadsheet.created_users.size > 0 %>
     <h4>Users Created in This Spreadsheet</h4>

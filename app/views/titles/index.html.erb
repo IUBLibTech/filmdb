@@ -8,7 +8,7 @@
     <tr>
       <th>Title</th>
       <th>Series</th>
-      <th>Summary</th>
+      <th>Object Count</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -18,7 +18,7 @@
     <tr>
       <td><%= title.title_text %></td>
       <td><%= title.series&.title %></td>
-      <td><%= title.summary %></td>
+      <td><%= title.physical_objects.size %></td>
       <td>
         <%= link_to 'Show', title_path(title) %><br/>
         <%= link_to 'Edit', edit_title_path(title) %><br/>

@@ -1,0 +1,17 @@
+<h4>Component Groups</h4>
+<table class="_100">
+  <tr>
+    <th>Group Type</th>
+    <th>Physical Object Count</th>
+    <th>Barcodes</th>
+    <th>Generations</th>
+  </tr>
+<% @title.component_groups.each do |cg| %>
+  <tr>
+    <td><%= cg.group_type %></td>
+    <td><%= cg.physical_objects.size %></td>
+    <td></td>
+    <td></td>
+  </tr>
+<% end %>
+</table>

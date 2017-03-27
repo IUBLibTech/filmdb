@@ -74,7 +74,7 @@ module PhysicalObjectsHelper
   def physical_object_params
     params.require(:physical_object).permit(
         :location, :media_type, :medium, :iu_barcode, :title_id, :copy_right, :format, :spreadsheet_id, :inventoried_by,
-        :series_production_number, :series_part, :alternative_title, :title_version, :item_original_identifier,
+        :series_production_number, :series_part, :alternative_title, :title_version,
         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
         :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
         :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
@@ -103,7 +103,8 @@ module PhysicalObjectsHelper
         :spoking, :dusty, :rusty, :miscellaneous, :title_control_number,
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
-        languages_attributes: [:id, :language, :language_type, :_destroy]
+        languages_attributes: [:id, :language, :language_type, :_destroy],
+        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroyx]
     )
   end
 end

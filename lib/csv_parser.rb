@@ -33,8 +33,7 @@ class CsvParser
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
-      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
-      COLUMN_HEADERS[ORIGINAL_IDENTIFIER] => :item_original_identifier=
+      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=
   }
 
   # regexes for parsing
@@ -79,7 +78,8 @@ class CsvParser
           # just the first row.
           @csv.each_with_index do |row, i|
             unless i == 0
-              po = parse_physical_object(row)
+
+              po = parse_physical_object(row, i)
               all_physical_objects << po
               if po.errors.any?
                 error_msg << error_msg(i, po)
@@ -155,7 +155,8 @@ class CsvParser
   end
 
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
-  def parse_physical_object(row)
+  def parse_physical_object(row, i)
+
     # read all auto parse fields
     po = PhysicalObject.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
@@ -227,8 +228,9 @@ class CsvParser
 
     sound = row[column_index SOUND]
     unless sound.blank?
-      if @cv[:sound].collect { |x| x[0] }.include? sound
-        set_value(:sound, sound, po)
+      sounds = @cv[:sound].collect { |x| x[0].downcase }
+      if sounds.include? sound.downcase
+        set_value(:sound, @cv[:sound][sounds.find_index(sound.downcase)][0], po)
       else
         po.errors.add(:sound, "Invalid Sound value: #{sound}")
       end
@@ -461,6 +463,12 @@ class CsvParser
       end
     end
 
+    # original identifiers
+    o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
+    o_ids.each do |id|
+      po.physical_object_original_identifiers << PhysicalObjectOriginalIdentifier.new(identifier: id, physical_object_id: po.id)
+    end
+
     # base
     base_fields = row[column_index BASE].blank? ? [] : row[column_index BASE].split(DELIMITER)
     base_fields.each do |bf|
@@ -570,7 +578,7 @@ class CsvParser
       end
     end
 
-    # language fields both dialog and captionos
+    # language fields both dialog and captions
     lang_fields = row[column_index DIALOG_LANGUAGE].blank? ? [] : row[column_index DIALOG_LANGUAGE].split(DELIMITER)
     langs = @l_cv[:language].collect { |x| x[0].downcase }
     lang_fields.each do |lf|
@@ -597,13 +605,15 @@ class CsvParser
     unless ad.blank?
       po.send(:ad_strip=, ad)
     end
+
     mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
     if mold.length > 0
       po.send(:mold=, mold)
     end
+
     shrink = row[column_index SHRINKAGE]
     unless shrink.blank?
-      po.send(:shrinkage=, shrink)
+      po.send(:shrinkage=, shrink.to_f)
     end
 
     # condition type fields with value ranges or booleans
