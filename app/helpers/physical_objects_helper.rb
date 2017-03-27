@@ -11,6 +11,7 @@ module PhysicalObjectsHelper
       process_series_title
 
       respond_to do |format|
+        debugger
         if @physical_object.save
           @url = nil
           if controller_name == 'physical_objects'
@@ -51,7 +52,8 @@ module PhysicalObjectsHelper
   # 3) Not sure it's possible to end up with an existing title (that has a series) but the form loads the ID of a different series -
   #    this case is tested for explicitly here and not allowed
   def process_series_title
-    @title = Title.find(params[:physical_object][:title_id])
+    @title = params[:physical_object][:title_id].blank? ? nil : Title.find(params[:physical_object][:title_id])
+    return if @title.nil?
     existing_series = !params[:physical_object][:series_id].blank?
     if existing_series
       @series = Series.find(params[:physical_object][:series_id])
