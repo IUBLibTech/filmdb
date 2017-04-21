@@ -6,6 +6,7 @@
     <th>Gauge</th>
     <th>Generations</th>
     <th>Actions</th>
+		<th>Legend</th>
   </thead>
   <tbody>
   <% @title.component_groups.each do |cg| %>
@@ -14,7 +15,11 @@
       <td><%= cg.group_summary %></td>
       <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
-      <td><%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %></td>
+      <td>
+				<%= link_to 'Request From Storage', '#' %> <br>
+				<%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+			</td>
+			<td><i>Image Icon showing stauses</i></td>
     </tr>
   <% end %>
   </tbody>
