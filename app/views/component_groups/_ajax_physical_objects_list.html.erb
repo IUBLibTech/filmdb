@@ -1,0 +1,46 @@
+<div id="ajax_physical_object_list_div">
+  <table id="ajax_physical_object_list">
+    <thead>
+    <th>Barcode</th>
+    <th>Format</th>
+    <th>Gauge</th>
+    <th>Generation</th>
+    <th>Reel Number</th>
+    <th>Overall Condition</th>
+    <th>Actions</th>
+    </thead>
+    <tbody>
+    <% @component_group.physical_objects.each do |p| %>
+        <tr>
+          <td><%= p.iu_barcode %></td>
+          <td><%= p.medium %></td>
+          <td><%= p.gauge %></td>
+          <td><%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %></td>
+          <td><%= p.reel_number %></td>
+          <td><%= p.condition_rating %></td>
+          <td>
+            <%= link_to "Show", physical_object_path(p), target: "_blank" %> |
+            <%= link_to "Remove",
+                        remove_physical_object_from_component_group_path(id: @component_group.id, pid: p.id), data: { confirm: 'Are you sure you want to remove this Physica Object from the Component Group?' },
+                        method: :post
+            %>
+          </td>
+        </tr>
+    <% end %>
+    <tr>
+      <td colspan="7">
+        <%= form_for :cg_pos, url: add_physical_objects_to_component_group_path(@component_group.id), remote: false, format: :html, html: {id: "add_to_component_group_form"} do |f| %>
+            <%= f.hidden_field :po_ids %>
+            <div>
+              <div>
+                <%= f.submit "Add Select Physical", title: 'Adds the physical objects selected below, to the component group selected above' %>
+                <i>Select physical objects below then click to add these to the component group selected above (duplicates will be ignored).</i>
+              </div>
+            </div>
+        <% end %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

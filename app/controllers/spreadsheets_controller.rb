@@ -114,6 +114,9 @@ class SpreadsheetsController < ApplicationController
         if @master_title.series_part.blank?
           @master_title.series_part = m.series_part
         end
+
+        # if @master_title.summary is nil then += will fail as there is no += operator or nil...
+        @master_title.summary = '' if @master_title.summary.blank?
         unless m.summary.blank?
           @master_title.summary += " | #{m.summary}"
         end
@@ -156,9 +159,7 @@ class SpreadsheetsController < ApplicationController
             @master_title.title_locations << tl
           end
         end
-        m.physical_objects.each do |po|
-          @master_title.physical_objects << po
-        end
+        PhysicalObjectTitle.where(title_id: m.id).update_all(title_id: @master_title.id)
         m.delete
       end
       @master_title.save

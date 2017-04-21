@@ -12,7 +12,7 @@
   </li>
   <li class="inventory_li">
     <div>
-      Series: <input type='text', id="series_name" /><a href='', id='series_link'>Inventory</a>
+      Series: <i>Disabled Pending Discussion</i><!-- <input type='text', id="series_name" /><a href='', id='series_link'>Inventory</a> -->
     </div>
   </li>
   <li class="inventory_li"><%= link_to 'New Physical Object', new_physical_object_path %></li>
@@ -55,7 +55,7 @@
   });
 
   // autocomplete for series
-  $('#series_name').autocomplete({
+  /*$('#series_name').autocomplete({
     source: '../../../autocomplete_series',
     focus: function (event, ui) {
       $(".ui-autocomplete > li").attr("title", ui.item.summary);
@@ -70,5 +70,5 @@
   });
   $('#series_name').keypress(function() {
     $('#series_link').css('display', 'none');
-  });
+  });*/
 </script>

@@ -1,17 +1,61 @@
 <h4>Component Groups</h4>
-<table class="_100">
-  <tr>
+<table id="component_group_table" class="sel-table _100">
+  <thead>
     <th>Group Type</th>
-    <th>Physical Object Count</th>
-    <th>Barcodes</th>
+    <th>Group Summary</th>
+    <th>Gauge</th>
     <th>Generations</th>
-  </tr>
-<% @title.component_groups.each do |cg| %>
-  <tr>
-    <td><%= cg.group_type %></td>
-    <td><%= cg.physical_objects.size %></td>
-    <td></td>
-    <td></td>
-  </tr>
-<% end %>
+    <th>Actions</th>
+  </thead>
+  <tbody>
+  <% @title.component_groups.each do |cg| %>
+    <tr id="<%= cg.id %>">
+      <td><%= cg.group_type %> (<%= cg.physical_objects.size %>)</td>
+      <td><%= cg.group_summary %></td>
+      <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
+      <td><%= cg.generations %></td>
+      <td><%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %></td>
+    </tr>
+  <% end %>
+  </tbody>
 </table>
+<div id="cg_summary">
+asdadasda
+</div>
+
+<script type="text/javascript">
+  $('#cg_summary').toggle('slide');
+  $("#component_group_table>tbody>tr").click(function() {
+    if ($(this).hasClass('ui-selected')) {
+      $(this).removeClass('ui-selected');
+      removeCgSummary();
+    } else {
+      $('.ui-selected').removeClass('ui-selected');
+      removeCgSummary();
+      $(this).addClass('ui-selected');
+      showCgSummary($(this).attr('id'));
+    }
+  });
+
+  var removeCgSummary = function() {
+    $('#cg_summary').slideUp().delay(200);
+    $('#cg_summary').html('');
+  };
+
+  var showCgSummary = function(id) {
+    var url = '../../component_groups/ajax/'+id;
+    $.ajax({
+      url: url,
+      error: function(result) {
+        alert('Something bad happened when trying to call the component group summary...');
+      },
+      success: function(result) {
+        el = $('#cg_summary');
+        el.html(result);
+        $('#cg_summary').slideDown();
+        hook_cg_add();
+      }
+    });
+  }
+</script>
+

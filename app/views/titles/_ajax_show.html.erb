@@ -28,45 +28,32 @@
 
     <% unless @title.title_creators.empty? %>
         <h4 class="ajax">Creators</h4>
-        <% @title.title_creators.each_with_index do |tc, i| %>
-            <b><i><%= tc.role %>:</i></b>&nbsp;<%= tc.name %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0 && @title.title_creators.size > 1) || (i > 0 && i < @title.title_creators.size - 1)%>
-        <% end %>
+        <b><i><%= @title.title_creators.collect { |c| "#{c.role.blank? ? "#{c.name}" : "#{c.role} : #{c.name}"}" }.join(', ')%></i></b>
     <% end %>
 
     <% unless @title.title_publishers.empty? %>
         <h4>Publishers</h4>
-        <% @title.title_publishers.each_with_index do |tp, i| %>
-              <b><i><%= tp.publisher_type %>:</i></b>&nbsp;<%= tp.name %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0 && @title.title_publishers.size > 1) || (i > 0 && i < @title.title_publishers.size - 1)%>
-        <% end %>
+        <b><i><%= @title.title_publishers.collect { |c| "#{c.publisher_type.blank? ? "#{c.name}" : "#{c.publisher_type} : #{c.name}"}" }.join(', ') %></i></b>
     <% end %>
 
     <% unless @title.title_genres.empty? %>
         <h4>Genres</h4>
-        <% @title.title_genres.each_with_index do |tg, i| %>
-            <%= tg.genre %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0 && @title.title_genres.size > 1) || (i > 0 && i < @title.title_genres.size - 1)%>
-        <% end %>
+        <%= @title.title_genres.collect { |g| g.genre }.join(', ')%>
     <% end %>
 
     <% unless @title.title_forms.empty? %>
         <h4>Forms</h4>
-        <% @title.title_forms.each_with_index do |tf, i| %>
-            <%= tf.form %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0  && @title.title_forms.size > 1) || (i > 0 && i < @title.title_forms.size - 1)%>
-        <% end %>
+        <%= @title.title_forms.collect { |f| f.form }.join(', ') %>
     <% end %>
 
     <% unless @title.title_locations.empty? %>
         <h4>Locations</h4>
-        <% @title.title_locations.each_with_index do |tl, i| %>
-            <%= tl.location %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0 && @title.title_locations.size > 1) || (i > 0 && i < @title.title_locations.size - 1)%>
-        <% end %>
+        <%= @title.title_locations.collect { |l| l.location }.join(', ') %>
     <% end %>
 
     <% unless @title.title_dates.empty? %>
         <h4>Dates</h4>
-        <% @title.title_dates.each_with_index do |td, i| %>
-            <b><i><%= td.date_type %>:</i></b>:&nbsp;<%= td.date %><%= '&nbsp;|&nbsp;'.html_safe if (i == 0 && @title.title_dates.size > 1) || (i > 0 && i < @title.title_dates.size - 1)%>
-        <% end %>
+        <%= @title.title_dates.collect { |d| "#{d.date_type.blank? ? d.date : "#{d.date_type} : #{d.date}" }"}.join(', ') %>
     <% end %>
-
   </div>
 </div>

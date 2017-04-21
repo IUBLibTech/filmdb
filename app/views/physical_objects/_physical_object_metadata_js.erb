@@ -67,7 +67,7 @@
       },
       select: function (event, ui) {
         // need to check if a title is selected that has a series
-        series_id = ui.item.series_id
+        /*series_id = ui.item.series_id
         series_title = ui.item.series_title
         if (series_id != null) {
           $("#physical_object_series_title_text").val(series_title);
@@ -78,6 +78,10 @@
         $('#physical_object_title_text').removeClass('bad_barcode');
         $("#physical_object_title_text").val(ui.item.label);
         $('#physical_object_title_id').val(ui.item.value);
+        */
+        $('#physical_object_title_text').removeClass('bad_barcode');
+        $("#physical_object_title_text").val('');
+        addTitle(ui.item.label, ui.item.value);
         return false;
       }
     });
@@ -181,18 +185,8 @@
               url: create_url,
               success: function (response) {
                 if (response['error'] == null) {
-                  $('#physical_object_title_text').val(response['title_text']);
-                  $('#physical_object_title_id').val(response['title_id']);
+									addTitle(response['title_text'], response['title_id'])
                   $('#physical_object_title_text').removeClass('bad_barcode');
-                  if (response['series_id'] > 0) {
-                    $('#physical_object_series_title_text').val(response['series_title']);
-                    $('#physical_object_series_id').val(response['series_id']);
-                    $("#physical_object_series_title_text").prop('disabled', true);
-                  } else {
-                    $('#physical_object_series_title_text').val('');
-                    $("#physical_object_series_title_text").prop('disabled', false);
-                    $('#physical_object_series_id').removeAttr('value');
-                  }
                 } else {
                   alert(result['error']);
                 }
@@ -235,5 +229,44 @@
       alert("Notify Collection Manager Immediately! Nitrate cannot be stored in the ALF.");
     }
   });
+
+  function addTitle(title_text, title_id) {
+    if (title_id_already_added(title_id)) {
+      sweetAlert(titleText+" has already been associated with this Physical Object");
+    } else {
+      // javascript "".split(',') returns [""] by design, so we have to remove that element from the array if present
+      ids = getSelectedTitleIds();
+      ids.push(title_id);
+      ids.sort();
+      $('#title_ids').attr('value', ids.join(','));
+      li = $(document.createElement('li')).attr({id: 'title_'+title_id, class: 'title_li' });
+      $(document.createElement('div')).attr('class', 'title_text').html(title_text).appendTo(li);
+      remove_div = $(document.createElement('div')).attr('class', 'remove_title_button');
+      $(document.createElement('a')).click(function() { removeTitle($(this)); }).html('X').attr({ id: 'remove_title_button_'+title_id, class: 'button', href: '#', 'data-remote': 'true', title: 'Click to remove this Physical Object/Title association' }).appendTo(remove_div);
+      remove_div.appendTo(li);
+      li.appendTo($('#existing_titles'));
+    }
+  }
+
+  function removeTitle(jqueryObject) {
+    id = jqueryObject.attr('id').replace('remove_title_button_', '');
+    $('#title_'+id).remove();
+    ids = getSelectedTitleIds();
+    ids.splice(ids.indexOf(id), 1);
+    $('#title_ids').attr('value', ids.join(','));
+  }
+  //checks whether the specified title id has already been added to the hidden field #title_ids value attribute
+  function title_id_already_added(id) {
+    ids = $('#title_ids').attr('value').split(',').indexOf(id) > -1;
+  }
+
+  //returns $('#title_ids').attr('value') as an array with "" removed
+  function getSelectedTitleIds() {
+    ids = $('#title_ids').attr('value').split(',');
+    if (ids.indexOf("") >= 0) {
+      ids.splice(ids.indexOf(""), 1);
+    }
+    return ids;
+  }
 
 </script>

@@ -2,7 +2,7 @@
   <thead>
   <tr>
     <th>Barcode</th>
-    <th>Title</th>
+    <th>Title(s)</th>
     <th>Series</th>
     <th>Actions</th>
   </tr>
@@ -14,9 +14,9 @@
 	      <%= physical_object.iu_barcode %>
       </td>
       <td>
-        <%= physical_object.title&.title_text %>
+        <%= physical_object.titles_text %>
       </td>
-      <td><%= physical_object.title&.series&.title %></td>
+      <td><%= physical_object.titles.collect { |t| t.series&.title }.compact.join(', ') %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>

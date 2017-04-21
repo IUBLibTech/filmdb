@@ -2,18 +2,21 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 
 	belongs_to :title
-	has_many :physical_object_old_barcodes
 	belongs_to :spreadhsheet
 	belongs_to :collection, autosave: true
 	belongs_to :unit, autosave: true
 	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by", autosave: true
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
   belongs_to :component_group
+  belongs_to :cage_shelf
+	has_many :physical_object_old_barcodes
 
-  has_many :component_group_physical_objects
+  has_many :component_group_physical_objects, dependent: :delete_all
   has_many :component_groups, through: :component_group_physical_objects
+  has_many :physical_object_titles, dependent: :delete_all
+  has_many :titles, through: :physical_object_titles
 
-  validates :title_id, presence: true
+  #validates :physical_object_titles, presence: true
   validates :iu_barcode, iu_barcode: true
   validates :unit, presence: true
   validates :media_type, presence: true
@@ -23,6 +26,7 @@ class PhysicalObject < ActiveRecord::Base
   has_many :value_conditions, autosave: true
   has_many :languages, autosave: true
   has_many :physical_object_original_identifiers
+
   accepts_nested_attributes_for :boolean_conditions, allow_destroy: true
   accepts_nested_attributes_for :value_conditions, allow_destroy: true
   accepts_nested_attributes_for :languages, allow_destroy: true
@@ -56,7 +60,7 @@ class PhysicalObject < ActiveRecord::Base
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",
-      generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Sound Track",
+      generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Soundtrack",
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_edited_camera_original: "Edited Camera Original", generation_original: "Original",
       generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate"
@@ -96,7 +100,7 @@ class PhysicalObject < ActiveRecord::Base
       color_bw_bw_toned: "Toned (Black and White)", color_bw_bw_tinted: "Tinted (Black and White)", color_bw_color_ektachrome: "Ektachrome",
       color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_ansochrome: "Ansochrome",
       color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_bw: "Black and White", color_bw_bw_hand_coloring: "Hand Coloring",
-      color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color: "Color"
+      color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color_color: "Color"
   }
 
   ASPECT_RATIO_FIELDS = [
@@ -156,11 +160,17 @@ class PhysicalObject < ActiveRecord::Base
 		MEDIA_TYPE_MEDIUMS
 	end
 
+
+	def title_text
+
+	end
+
 	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
 	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
 	# is set and passed as the param for assignment
-	def title_text
-		self.title.title_text if self.title
+	def titles_text
+		#self.title.title_text if self.title
+		self.titles.collect{ |t| t.title_text }.join(", ") unless self.titles.nil?
 	end
 
 	def series_title_text
@@ -176,6 +186,10 @@ class PhysicalObject < ActiveRecord::Base
   end
 
   def generations_text
+  end
+
+  def belongs_to_title?(title_id)
+    PhysicalObjectTitle.where(physical_object_id: id, title_id: title_id).size > 0
   end
 
 	# duration is input as hh:mm:ss

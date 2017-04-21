@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170316191938) do
+ActiveRecord::Schema.define(version: 20170418141050) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -20,6 +20,25 @@ ActiveRecord::Schema.define(version: 20170316191938) do
     t.text     "fixed_comment",      limit: 65535
     t.integer  "fixed_user_id",      limit: 8
     t.boolean  "active",                           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cage_shelves", force: :cascade do |t|
+    t.integer  "cage_id",      limit: 8
+    t.integer  "mdpi_barcode", limit: 8
+    t.string   "identifier",   limit: 255
+    t.text     "notes",        limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  create_table "cages", force: :cascade do |t|
+    t.string   "identifier",      limit: 255
+    t.text     "notes",           limit: 65535
+    t.integer  "top_shelf_id",    limit: 8
+    t.integer  "middle_shelf_id", limit: 8
+    t.integer  "bottom_shelf_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -85,10 +104,11 @@ ActiveRecord::Schema.define(version: 20170316191938) do
   end
 
   create_table "component_groups", force: :cascade do |t|
-    t.integer  "title_id",   limit: 8,   null: false
-    t.string   "group_type", limit: 255, null: false
+    t.integer  "title_id",      limit: 8,     null: false
+    t.string   "group_type",    limit: 255,   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "group_summary", limit: 65535
   end
 
   create_table "controlled_vocabularies", force: :cascade do |t|
@@ -96,7 +116,7 @@ ActiveRecord::Schema.define(version: 20170316191938) do
     t.string   "model_attribute", limit: 255
     t.string   "value",           limit: 255
     t.boolean  "default"
-    t.integer  "index",           limit: 4,   default: 0
+    t.integer  "menu_index",      limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -123,6 +143,15 @@ ActiveRecord::Schema.define(version: 20170316191938) do
     t.datetime "updated_at"
   end
 
+  create_table "physical_object_titles", force: :cascade do |t|
+    t.integer  "title_id",           limit: 8
+    t.integer  "physical_object_id", limit: 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "physical_object_titles", ["physical_object_id", "title_id"], name: "index_physical_object_titles_on_physical_object_id_and_title_id", unique: true, using: :btree
+
   create_table "physical_objects", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -138,13 +167,11 @@ ActiveRecord::Schema.define(version: 20170316191938) do
     t.string   "series_production_number",              limit: 255
     t.string   "series_part",                           limit: 255
     t.string   "alternative_title",                     limit: 255
-    t.string   "title_version",                         limit: 255
     t.string   "creator",                               limit: 255
     t.text     "accompanying_documentation",            limit: 65535
     t.text     "notes",                                 limit: 65535
     t.integer  "unit_id",                               limit: 8
     t.string   "medium",                                limit: 255
-    t.integer  "title_id",                              limit: 8
     t.integer  "modified_by",                           limit: 8
     t.string   "access",                                limit: 255
     t.boolean  "first_edition"
@@ -295,6 +322,9 @@ ActiveRecord::Schema.define(version: 20170316191938) do
     t.text     "edge_code",                             limit: 65535
     t.text     "captions_or_subtitles_notes",           limit: 65535
     t.boolean  "sound_format_optical"
+    t.string   "anamorphic",                            limit: 255
+    t.integer  "track_count",                           limit: 4
+    t.integer  "cage_shelf_id",                         limit: 8
   end
 
   create_table "series", force: :cascade do |t|

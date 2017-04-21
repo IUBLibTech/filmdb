@@ -28,6 +28,26 @@
     </table>
     <% end %>
 
+    <% if @spreadsheet.series.size > 0 %>
+        <h4>Seriese Created in this Spreadsheet</h4>
+        <table>
+          <tr>
+            <th>Series Title</th>
+            <th>Created in Spreadsheet</th>
+            <th>Created Elsewhere</th>
+            <th>Actions</th>
+          </tr>
+          <% @series_count_in_spreadsheet.keys.sort.each do |series| %>
+              <tr>
+                <td><%= series %></td>
+                <td><%= @series_count_in_spreadsheet[series] %></td>
+                <td><%= @series_count_not_in_spreadsheet[series].nil? ? 0 : @series_count_not_in_spreadsheet[series] %></td>
+                <td><%= link_to "Merge Series", merge_series_candidates_path(id: @spreadsheet.id, series: series) %></td>
+              </tr>
+          <% end %>
+        </table>
+    <% end %>
+
     <% if @spreadsheet.titles.size > 0 %>
     <h4>Titles Created in This Spreadsheet</h4>
     <table>
@@ -48,26 +68,6 @@
           </tr>
       <% end %>
     </table>
-    <% end %>
-
-    <% if @spreadsheet.series.size > 0 %>
-        <h4>Seriese Created in this Spreadsheet</h4>
-        <table>
-          <tr>
-            <th>Series Title</th>
-            <th>Created in Spreadsheet</th>
-            <th>Created Elsewhere</th>
-            <th>Actions</th>
-          </tr>
-          <% @series_count_in_spreadsheet.keys.sort.each do |series| %>
-          <tr>
-            <td><%= series %></td>
-            <td><%= @series_count_in_spreadsheet[series] %></td>
-            <td><%= @series_count_not_in_spreadsheet[series].nil? ? 0 : @series_count_not_in_spreadsheet[series] %></td>
-            <td><%= link_to "Merge Series", merge_series_candidates_path(id: @spreadsheet.id, series: series) %></td>
-          </tr>
-          <% end %>
-        </table>
     <% end %>
 <% else %>
 	<h2>Spreadsheet upload failed for the following reasons:</h2>

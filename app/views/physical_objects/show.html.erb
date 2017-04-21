@@ -1,8 +1,8 @@
-<%= render partial: 'layouts/notice_div' %>
-
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
 <%= link_to 'Back', physical_objects_path %> |
 <%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %>
+<%= render partial: 'layouts/notice_div' %>
+
 <% if @continue_url %>
    &nbsp;|&nbsp;<%= link_to @continue_text, @continue_url %>
 <% end %>
@@ -21,10 +21,10 @@
 <div id="core_metadata" class="metadata_section clear">
   <h4>Core Metadata</h4>
   <div class="left _50">
-    <b>Title</b> <%= @physical_object.title_text %><br/>
+    <b>Title</b> <%= @physical_object.titles_text %><br/>
     <b>Alternative Title</b> <%= @physical_object.alternative_title %><br/>
-    <b>Series</b> <%= @physical_object.series_title_text %><br/>
-    <b>Series Part</b> <%= @physical_object.series_part %><br/>
+    <b>Series</b> <b><i>Disabled Pending Discussion</i></b><%#= @physical_object.series_title_text %><br/>
+    <b>Series Part</b> <b><i>Disabled Pending Discussion</i></b> <%#= @physical_object.series_part %><br/>
     <b>Media Type</b> <%= @physical_object.media_type %><br/>
     <b>Medium</b> <%= @physical_object.medium %><br/>
   </div>
@@ -73,9 +73,9 @@
 </div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4>Image</h4>
-  <div>
+  <div id="image_metadata_content_div">
     <div class="">
-      <b class="block">Picture Type&nbsp;</b>
+      <b>Picture Type&nbsp;</b>
       <%= @physical_object.humanize_boolean_fields(PhysicalObject::PICTURE_TYPE_FIELDS) %>
     </div>
     <div class="clear">
@@ -84,36 +84,43 @@
     <div id="" class="">
       <b class="block">Color&nbsp;</b>
       <%= @physical_object.humanize_boolean_fields(PhysicalObject::COLOR_FIELDS) %>
-      </div>
     </div>
     <div>
       <b class="block">Aspect Ratio&nbsp;</b>
       <%= @physical_object.humanize_boolean_fields(PhysicalObject::ASPECT_RATIO_FIELDS) %>
     </div>
-
+    <div>
+      <b>Anamorphic</b>&nbsp;<%= @physical_object.anamorphic %>
+    </div>
   </div>
 </div>
 <div id="sound_metadata" class="metadata_section left _50">
   <h4>Sound</h4>
   <div>
-    <b>Sound&nbsp;</b><%= @physical_object.sound%><br/>
-    <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption? ? "yes" : "no" %><br/>
-    <b>Captions/Subtitles Notes&nbsp;</b><%= @physical_object.captions_or_subtitles_notes %><br/>
+    <b>Sound&nbsp;</b><%= @physical_object.sound%>
   </div>
   <div>
-    <%= @physical_object.notes %>
+    <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption? ? "yes" : "no" %>
   </div>
-  <b >Format Type&nbsp;</b>
-  <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_FORMAT_FIELDS) %>
-  <div class="">
+  <div>
+    <b>Captions/Subtitles Notes&nbsp;</b><%= @physical_object.captions_or_subtitles_notes %>
+  </div>
+  <div>
+    <b>Format Type&nbsp;</b>
+    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_FORMAT_FIELDS) %>
+  </div>
+  <div>
     <b >Content Type&nbsp;</b>
     <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONTENT_FIELDS) %>
   </div>
-  <div class="">
+  <div>
     <b >Sound Field&nbsp;</b>
     <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONFIGURATION_FIELDS) %>
   </div>
-  <div class="">
+  <div>
+    <b>Track Count</b>&nbsp;<%= @physical_object.track_count %>
+  </div>
+  <div>
     <b class="">Languages&nbsp;</b>
     <% @physical_object.languages.each_with_index do |l, i| %>
     <b><%= l.language %></b> - <%= l.language_type %>&nbsp;&nbsp;
@@ -127,8 +134,8 @@
 <div id="accompanying_documentation_metadata" class="metadata_section">
   <h4>Accompanying Documentation</h4>
   <div>
-    <i>Implementaion to be drastically modified... but for now...</i><br/>
-    <%= @physical_object.accompanying_documentation %>
+    <%= @physical_object.accompanying_documentation %> <br>
+    <b>Location</b> <%= @physical_object.accompanying_documentation_location %>
   </div>
 </div>
 <div id="" class="metadata_section">

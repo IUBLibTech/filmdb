@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require jquery-ui
+ *= require sweet_alerts/dist/sweetalert
  *= require_self
  *= require_tree .
  */
@@ -241,9 +242,26 @@ table.version_table > tbody > tr > td > input {
     width: 95%;
 }
 #physical_object_title_text {
-    float: left;
-    width: 91%;
+    width: 78%;
     font-sizee: 13px;
+    margin: 5px 0;
+}
+div.title_text {
+    float: left;
+    width: 90%;
+    height: 20px;
+    vertical-align: middle;
+    line-height: 20px;
+    padding-left: 5px;
+}
+li.title_li {
+    overflow: hidden;
+}
+#title_button {
+    padding: 2px;
+    margin-left: 3px;
+    float: none;
+    top: 5px;
 }
 ._50 > div.field > select {
     width: 100%;
@@ -270,8 +288,13 @@ td#color {
     display: block;
 }
 
-#color_div {
-    margin-top: 15px;
+#image_metadata_content_div > div {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+#sound_metadata > div {
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 #other_message {
@@ -368,8 +391,7 @@ td#color {
     padding: 2px 5px;
     margin-right: 5px;
 }
-#existing_titles, #existing_series {
-    margin-top: 20px;
+#existing_titles {
     width: 500px;
     float: left;
 }
@@ -392,6 +414,7 @@ ul {
 .selectable li {
     margin: 3px;
     padding: 0.4em;
+    cursor: default;
 }
 .selectable .ui-selected {
     background: #e69a37;
@@ -399,6 +422,9 @@ ul {
 }
 li#master_selection {
     background: #805215;
+}
+tr.ui-selected {
+    background: #f0cfa3;
 }
 div > a.button {
     float: left;
@@ -468,4 +494,35 @@ div#title_popup_header > h4 {
 }
 .em_95 {
     font-size: 0.95em;
+}
+#ajax_physical_object_list_div {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 25px;
+}
+#ajax_physical_object_list thead th {
+    background: #7a9db8;
+}
+#ajax_physical_object_list {
+    margin: 0 auto;
+}
+#component_group_table tr {
+    cursor: pointer;
+}
+#cage_table {
+    width: 30%;
+}
+#shelf_content, #shelf_content_form {
+    float: left;
+    width: 65%;
+    margin-left: 15px;
+}
+#shelf_content H4 {
+    margin-top: 0;
+}
+.shelf {
+    cursor: pointer;
+}
+#shelf_po_table {
+    margin-top: 10px;
 }

@@ -1,58 +1,69 @@
 Rails.application.routes.draw do
+
+  resources :cages
+	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
+	post '/cages/cage_shelf/:id/ajax_physical_objects/:barcode', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
+	delete '/cages/cage_shelf/:id/ajax_remove_physical_object_from_shelf/:po_id', to: 'cages#remove_physical_object', as: 'remove_physical_object_from_shelf'
+
+  resources :collections
+  get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
+  post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+  get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
+  get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
+
   resources :component_groups
+  get '/component_groups/ajax/:id', to: 'component_groups#ajax_physical_objects_list', as: 'ajax_physical_objects_list'
+  post '/component_groups/:id/ajax/remove_physical_object/:pid', to:'component_groups#remove_physical_object', as: 'remove_physical_object_from_component_group'
+  post '/component_groups/:id/add_to_component_group/', to: 'component_groups#add_physical_objects', as: 'add_physical_objects_to_component_group'
   resources :controlled_vocabularies
+
   resources :collection_inventory_configurations do
     #get '/collection_inventory_configurations/:id/new_physical_object'
   end
+
   resources :series
+  get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
+  post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
+  get '/series/ajax/:id', to: 'series#ajax_summary', as: 'series_ajax'
+  get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
+
   resources :series_titles
-  resources :titles
-  resources :collections
-  resources :users
-  resources :physical_objects
-  resources :units
+
   resources :spreadsheets, only: [:index, :show, :destroy]
-
-  get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
-  post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
-  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
-  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
-  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
-  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
-
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
   get '/spreadsheets/:id/title/:title', to: 'spreadsheets#merge_title_candidates', as: 'merge_title_candidates'
   post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_titles'
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
   post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
-  # physical objects can be created through the collections, titles, and series controllers
-  get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
-  post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+  resources :titles
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
-  get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
-  post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
-
-
-  get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
-  get 'autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
-  get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
-  get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
-  get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
-
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
   get '/titles/ajax/new/:series_id', to: 'titles#new_ajax', as: 'new_title_ajax'
   post '/titles/ajax/new_title', to: 'titles#create_ajax', as: 'create_title_ajax'
-  get '/series/ajax/:id', to: 'series#ajax_summary', as: 'series_ajax'
   post '/titles/create_component_group/:id', to: 'titles#create_component_group', as: 'create_component_group'
+  get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
+  get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
+
+  resources :users
+
+  resources :physical_objects
+  get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
+  post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
+  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
+  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
+  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+  get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
+
+  resources :units
 
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 
-  get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
-
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete
+
   resources :sessions, only: [:new, :destroy] do
     get :validate_login, on: :collection
   end

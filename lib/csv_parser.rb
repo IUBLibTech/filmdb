@@ -78,7 +78,6 @@ class CsvParser
           # just the first row.
           @csv.each_with_index do |row, i|
             unless i == 0
-
               po = parse_physical_object(row, i)
               all_physical_objects << po
               if po.errors.any?
@@ -241,7 +240,7 @@ class CsvParser
 
     cr = row[column_index OVERALL_CONDITION]
     unless cr.blank?
-      @cv[:condition_rating].collect { |x| x[0] }.each do |k|
+      @cv[:overall_condition_rating].collect { |x| x[0] }.each do |k|
         if k.include?(cr)
           po.send(:condition_rating=, k)
         end
@@ -262,20 +261,6 @@ class CsvParser
         po.errors.add(:research_value, "Invalid Research Value: #{rv}")
       end
     end
-
-    # ad = row[column_index AD_STRIP]
-    # set_value(:ad_strip, ad.to_s, po)
-    #
-    # shrink = row[column_index SHRINKAGE]
-    # unless shrink.blank?
-    #   float = !!Float(shrink) rescue false
-    #   if float
-    #     po.send(:shrinkage=, float)
-    #   end
-    # end
-    #
-    # mold = row[column_index MOLD]
-    # set_value(:mold, mold, po)
 
     # now parse all title data
     @title_cv = ControlledVocabulary.title_cv
@@ -388,7 +373,8 @@ class CsvParser
       series.save
     end
     title.save
-    po.title = title
+    pot = PhysicalObjectTitle.new(physical_object_id: po.id, title_id: title.id)
+    po.physical_object_titles << pot
 
     unit = Unit.where(abbreviation: row[column_index UNIT]).first
     if unit.nil?
@@ -601,7 +587,7 @@ class CsvParser
 
 
     # ad strip, mold, and shrinkage have their own columns
-    ad = row[column_index AD_STRIP].blank?
+    ad = row[column_index AD_STRIP]
     unless ad.blank?
       po.send(:ad_strip=, ad)
     end
@@ -629,7 +615,7 @@ class CsvParser
         pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
         matcher = pattern.match(cf)
         if matcher && val_conditions.include?(matcher[1].downcase)
-          po.value_conditions << ValueCondition.new(condition_type: matcher[1].titleize, value: cv[:condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
+          po.value_conditions << ValueCondition.new(condition_type: matcher[1].titleize, value: cv[:rated_condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
         else
           po.errors.add(:condition, "Undefined or malformed condition type: #{cf}")
         end

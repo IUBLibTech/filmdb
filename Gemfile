@@ -21,6 +21,11 @@ gem 'jquery-rails'
 # User jquery-ui
 gem 'jquery-ui-rails'
 
+# replaces the rails default javascript alert with a jquery version: https://github.com/mois3x/sweet-alert-rails-confirm - this is BUGGY!!!
+# replacing default railds data-confirm with sweet alerts manually. See: http://thelazylog.com/custom-dialog-for-data-confirm-in-rails/
+# gem 'rails-assets-sweetalert2', source: 'https://rails-assets.org'
+# gem 'sweet-alert-confirm'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder

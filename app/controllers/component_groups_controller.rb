@@ -1,5 +1,5 @@
 class ComponentGroupsController < ApplicationController
-  before_action :set_component_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_component_group, only: [:show, :edit, :update, :destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects]
 
   # GET /component_groups
   # GET /component_groups.json
@@ -25,7 +25,6 @@ class ComponentGroupsController < ApplicationController
   # POST /component_groups.json
   def create
     @component_group = ComponentGroup.new(component_group_params)
-
     respond_to do |format|
       if @component_group.save
         format.html { redirect_to @component_group, notice: 'Component group was successfully created.' }
@@ -56,8 +55,38 @@ class ComponentGroupsController < ApplicationController
   def destroy
     @component_group.destroy
     respond_to do |format|
-      format.html { redirect_to component_groups_url, notice: 'Component group was successfully destroyed.' }
+      format.html { redirect_to :back, notice: 'Component group was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def ajax_physical_objects_list
+    render partial: 'ajax_physical_objects_list'
+  end
+
+  def add_physical_objects
+    params[:cg_pos][:po_ids].split(',').collect { |p| p.to_i }.each do |po_id|
+      ComponentGroupPhysicalObject.transaction do
+        if !@component_group.physical_objects.exists?(po_id)
+          ComponentGroupPhysicalObject.new(physical_object_id: po_id, component_group_id: @component_group.id).save
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to title_path(@component_group.title.id), notice: "Physical Objects successfully added to Component Group"}
+    end
+  end
+
+  def remove_physical_object
+    if @component_group.physical_objects.exists?(params[:pid])
+      ComponentGroupPhysicalObject.where(physical_object_id: params[:pid], component_group_id: @component_group.id).delete_all
+      @msg = "Physical Object removed from Component Group"
+    else
+      @msg = "The specified Physical Object does not belong to this Component Group"
+    end
+    respond_to do |format|
+      format.html { redirect_to title_path(@component_group.title.id), notice: @msg }
     end
   end
 

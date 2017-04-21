@@ -20,7 +20,7 @@ class PhysicalObjectsController < ApplicationController
   def show
     if session[:physical_object_create_action]
       @continue_url = session[:physical_object_create_action]
-      @continue_text = nil
+      @continue_text = ''
       pattern = /([0-9]+)/
       id = pattern.match(@continue_url) ? pattern.match(@continue_url)[0] : nil
       if @continue_url == new_physical_object_path
@@ -70,10 +70,10 @@ class PhysicalObjectsController < ApplicationController
     respond_to do |format|
       begin
         PhysicalObject.transaction do
-          # check to see if the series or title has changed in the update
-          process_series_title
-            @physical_object.modifier = User.current_user_object
-            @success = @physical_object.update_attributes!(physical_object_params)
+          # check to see if titles have changed in the update
+          process_titles
+          @physical_object.modifier = User.current_user_object
+          @success = @physical_object.update_attributes!(physical_object_params)
         end
       rescue Exception => error
         logger.debug $!
@@ -96,7 +96,9 @@ class PhysicalObjectsController < ApplicationController
     @physical_object = PhysicalObject.find(params[:id]).dup
     @physical_object.iu_barcode = nil
     @physical_object.reel_number = nil
-    render 'new_physical_object'
+    respond_to do |format|
+      format.html { render 'new_physical_object', notice: 'Physical Object was successfully duplicated.' }
+    end
   end
 
   def create_duplicate

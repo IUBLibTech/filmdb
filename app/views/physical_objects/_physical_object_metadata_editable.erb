@@ -1,34 +1,29 @@
 <div id="core_metadata" class="metadata_section">
   <h4>Core Metadata</h4>
   <div class="left _50">
-    <div class="label"><b>* Title</b></div>
-    <div class="field">
-      <% if @title %>
-          <%= @title.title_text %>
-      <% else %>
-          <%= f.text_field :title_text, class: 'ajax_complete' %><%= link_to "+", '#', remote: true, class: 'button', id: 'title_button' %>
-      <% end %>
-      <%= f.hidden_field :title_id %>
-    </div>
+    <div><b>* Title(s)</b></div>
+    <%= render partial: 'physical_object_title_form', locals: { f: f } %>
     <div class="label"><b>Alternative Title</b></div>
     <div class="field"><%= f.text_field :alternative_title %></div>
     <div class="label">
       <b>Series</b>
     </div>
     <div class="field">
-      <% if @series %>
-          <%= @series.title %><br/>
-          <%= f.hidden_field :series_id, value: @series.id  %>
-    <% else %>
-          <%= f.hidden_field :series_id %>
-          <%= f.text_field :series_title_text, disabled: true %>
-    <% end %>
+      <b><i>Disabled Pending Discussion</i></b>
+      <%# if @series %>
+          <%#= @series.title %><br/>
+          <%#= f.hidden_field :series_id, value: @series.id  %>
+      <%# else %>
+          <%#= f.hidden_field :series_id %>
+          <%#= f.text_field :series_title_text, disabled: true %>
+      <%# end %>
     </div>
     <div class="label">
       <b>Series Part</b>
     </div>
     <div class="field">
-      <%= f.text_field :series_part %>
+      <%#= f.text_field :series_part %>
+      <b><i>Disabled Pending Discussion</i></b>
     </div>
     <div class="label">
       <b>* Media Type</b>
@@ -165,7 +160,7 @@
         </div>
         <div class="check_box">
           <%= f.check_box :generation_optical_sound_track %>
-          <div>Optical Sound Track</div>
+          <div>Optical Soundtrack</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_outs_and_trims %>
@@ -300,8 +295,8 @@
 </div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4>Image</h4>
-  <div>
-    <div class="h_150px">
+  <div id="image_metadata_content_div">
+    <div>
       <b class="block">Picture Type</b>
       <div class="left _50">
         <%= f.check_box :picture_not_applicable %>Not Applicable<br/>
@@ -320,7 +315,7 @@
     <div class="clear">
       <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate], @physical_object.frame_rate), {include_blank: ''}  %>
     </div>
-    <div id="color_div" class="h_195px">
+    <div id="color_div">
       <b class="block">Color</b>
       <div>
         <div class="_33 left">
@@ -343,7 +338,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div class="clear">
       <b class="block">Aspect Ratio</b>
       <div>
         <%= f.check_box :aspect_ratio_1_33_1 %>1.33:1
@@ -355,19 +350,23 @@
         <%= f.check_box :aspect_ratio_2_59_1 %>2.59:1
       </div>
     </div>
-
+    <div>
+      <b class="block">Anamorphic</b><%= f.select :anamorphic, [['Yes'], ['No']], {include_blank: ''} %>
+    </div>
   </div>
 </div>
 <div id="sound_metadata" class="metadata_section left _50">
   <h4>Sound</h4>
   <div>
     <b>Sound</b><%= f.select :sound, options_for_select(@cv[:sound], @physical_object.sound), {include_blank: ''}  %>
-    <%= f.check_box :close_caption %><b>Captions/Subtitles</b><br/>
-    <b>Captions/Subtitles Notes</b><br/>
+    <%= f.check_box :close_caption %><b>Captions/Subtitles</b>
   </div>
-  <%= f.text_area :captions_or_subtitles_notes, class: '_100' %>
-  <b class='block'>Format Type</b>
-  <div class="h_100px em_95">
+  <div>
+    <b>Captions/Subtitles Notes</b><br/>
+    <%= f.text_area :captions_or_subtitles_notes, class: '_100' %>
+  </div>
+  <div class="em_95">
+    <b class='block'>Format Type</b>
     <div class="left">
       <%= f.check_box :sound_format_optical %>Optical<br/>
       <%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area<br/>
@@ -384,7 +383,7 @@
       <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
     </div>
   </div>
-  <div class="h_90px">
+  <div>
     <b class='block'>Content Type</b>
     <div class="left _50">
       <%= f.check_box :sound_content_music_track %>Music track<br/>
@@ -396,7 +395,7 @@
       <%= f.check_box :sound_content_outtakes %>Outtakes
     </div>
   </div>
-  <div class="h_90px">
+  <div>
     <b class='block'>Sound Field</b>
     <div class="left _50">
       <%= f.check_box :sound_configuration_mono %>Mono<br/>
@@ -408,7 +407,10 @@
       <%= f.check_box :sound_configuration_dual %>Dual Mono<br/>
     </div>
   </div>
-  <div class="h_100px">
+  <div>
+    <b class="block">Track Count</b><%= f.select :track_count, (a = *(1..6)).collect { |v| [v,v] }, {include_blank: '' } %>
+  </div>
+  <div>
     <b class="block">Languages</b>
     <%= f.fields_for :languages do |l| %>
         <div class="left condition">
@@ -426,14 +428,15 @@
 <div id="accompanying_documentation_metadata" class="metadata_section">
   <h4>Accompanying Documentation</h4>
   <div>
-    <i>Implementaion to be drastically modified...</i>
+    <%= f.text_area :accompanying_documentation %> <br>
+    <b>Location</b><%= f.text_field :accompanying_documentation_location, size: 75 %>
   </div>
 </div>
 <div id="condition_metadata" class="metadata_section">
   <h4>Condition</h4>
   <div id="condition_notes">
     <div class="left _45 rp_10px">
-      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:condition_rating], @physical_object.condition_rating), {include_blank: ''}  %><br/>
+      <b>Overall Condition</b> <%= f.select :condition_rating, options_for_select(@cv[:overall_condition_rating], @physical_object.condition_rating), {include_blank: ''}  %><br/>
       <b>Condition Notes</b> <%= f.text_area :condition_notes, class: "_100" %>
     </div>
     <div class="left _50">
@@ -466,7 +469,7 @@
       <%= f.fields_for :value_conditions do |vc| %>
           <div class="left condition">
             <%= vc.select :condition_type, options_for_select(@cv[:value_condition], vc.object.condition_type) %>
-            <%= vc.select :value, options_for_select(@cv[:condition_rating], vc.object.value) %>
+            <%= vc.select :value, options_for_select(@cv[:rated_condition_rating], vc.object.value) %>
             <div class="clear">
               <b>Comment</b>
               <%= vc.text_area :comment %>
@@ -508,7 +511,7 @@
 <div id="overlay"></div>
 <div id="title_popup" title='Create New Title'>
   <div id="title_popup_header">
-    <h4>Create New Title</h4><%= link_to "X", "#", ffremote: true, button: true, id: 'title_popup_cancel_button' %>
+    <h4>Create New Title</h4><%= link_to "X", "#", remote: true, button: true, id: 'title_popup_cancel_button' %>
   </div>
   <div id="title_popup_content" class="clear"></div>
 </div>

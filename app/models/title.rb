@@ -1,5 +1,5 @@
 class Title < ActiveRecord::Base
-	has_many :physical_objects, autosave: true
+	#has_many :physical_objects, autosave: true
   has_many :title_creators, dependent: :delete_all, autosave: true
   has_many :title_dates, dependent: :delete_all, autosave: true
   has_many :title_genres, dependent: :delete_all, autosave: true
@@ -9,6 +9,8 @@ class Title < ActiveRecord::Base
   has_many :title_dates, dependent: :delete_all, autosave: true
   has_many :title_locations, dependent: :delete_all, autosave: true
 
+  has_many :physical_object_titles, dependent: :delete_all
+  has_many :physical_objects, through: :physical_object_titles
   has_many :component_groups
 
 	belongs_to :series, autosave: true
@@ -23,8 +25,6 @@ class Title < ActiveRecord::Base
   accepts_nested_attributes_for :title_publishers, allow_destroy: true
   accepts_nested_attributes_for :title_forms, allow_destroy: true
   accepts_nested_attributes_for :title_locations, allow_destroy: true
-
-
 
   # returns an array of distinct titles that appear in the specified spreadsheet
   scope :title_text_in_spreadsheet, -> (ss_id) {
@@ -67,6 +67,6 @@ class Title < ActiveRecord::Base
   end
 
   def alternative_titles
-    PhysicalObject.where(title_id: self.id).pluck(:alternative_title).uniq
+    PhysicalObject.joins(:physical_object_titles).where(physical_object_titles: {title_id: id}).pluck(:alternative_title).uniq
   end
 end

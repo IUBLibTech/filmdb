@@ -58,14 +58,14 @@ class TitlesController < ApplicationController
     po_ids = params[:pos][:po_ids].split(",")
     # make sure that all submitted po ids actually belong to the title
     pos = PhysicalObject.where(id: po_ids)
-    bad = pos.reject { |p| p.title_id == @title.id }.collect { |p| p.iu_barcode }
+    bad = pos.reject { |p| p.belongs_to_title? @title.id }.collect { |p| p.iu_barcode }
     respond_to do |format|
       if bad.size > 0
         format.html { render :show, warning: "The following Physical Objects do not belong to this title: #{bad.map(&:inspect).join(", ")}"}
       else
         cg = nil
         ComponentGroup.transaction do
-          cg = ComponentGroup.new(group_type: params[:pos][:group_type], title_id: @title.id)
+          cg = ComponentGroup.new(group_type: params[:pos][:group_type], title_id: @title.id, group_summary: params[:pos][:group_summary])
           cg.save
           pos.each do |p|
             ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save
