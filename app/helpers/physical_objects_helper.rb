@@ -9,6 +9,8 @@ module PhysicalObjectsHelper
     begin
       PhysicalObject.transaction do
         process_titles
+				#FIXME: determine if we need to do something other than setting workflow status on newly created physical objects to "in storage"
+				@physical_object.workflow_statuses << WorkflowStatus.new(physical_object_id: @physical_object.id, workflow_status_template_id: WorkflowStatusTemplate.order(:sort_order).last.id)
         respond_to do |format|
           if @physical_object.save
             @url = nil

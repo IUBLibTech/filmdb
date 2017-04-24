@@ -57,6 +57,7 @@ class CsvParser
 
   def parse_csv
     @csv = CSV.read(@filepath, headers: false)
+    @default_workflow_status_template = WorkflowStatusTemplate.all.order(:sort_order).last
     parse_headers(@csv[0])
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
@@ -621,6 +622,8 @@ class CsvParser
         end
       end
     end
+    #FIXME: determine if we need to have a default status other than in storage for spreadsheet created physical objects
+    po.workflow_statuses << WorkflowStatus.new(physical_object_id: po.id, workflow_status_template_id: @default_workflow_status_template.id)
     po
   end
 

@@ -5,8 +5,8 @@
     <th>Group Summary</th>
     <th>Gauge</th>
     <th>Generations</th>
+		<th>Workflow Status(es)</th>
     <th>Actions</th>
-		<th>Legend</th>
   </thead>
   <tbody>
   <% @title.component_groups.each do |cg| %>
@@ -15,17 +15,16 @@
       <td><%= cg.group_summary %></td>
       <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
+			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.name }.uniq.join(', ') %></td>
       <td>
-				<%= link_to 'Request From Storage', '#' %> <br>
+				<%= link_to 'Request From Storage', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
 				<%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
 			</td>
-			<td><i>Image Icon showing stauses</i></td>
     </tr>
   <% end %>
   </tbody>
 </table>
 <div id="cg_summary">
-asdadasda
 </div>
 
 <script type="text/javascript">
@@ -62,5 +61,27 @@ asdadasda
       }
     });
   }
+  $('.cg_pull_link').click(function(event) {
+		var id = $(this).attr('id').substring(3);
+		event.preventDefault();
+		$.ajax({
+			url: '../component_groups/'+id+'/ajax_queue_pull_request',
+			method: 'POST',
+			error: function() {
+				swal({
+					title: 'Ajax Error',
+					text: "Something bad happened while trying to queue this Component Group for a pull request"
+				})
+			},
+			success: function() {
+				swal({
+					title: 'Success',
+					text: 'Component Group queued for pull request'
+				})
+			}
+		});
+		return false;
+	});
 </script>
+
 

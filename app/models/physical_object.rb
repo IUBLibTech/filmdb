@@ -26,6 +26,7 @@ class PhysicalObject < ActiveRecord::Base
   has_many :value_conditions, autosave: true
   has_many :languages, autosave: true
   has_many :physical_object_original_identifiers
+	has_many :workflow_statuses
 
   accepts_nested_attributes_for :boolean_conditions, allow_destroy: true
   accepts_nested_attributes_for :value_conditions, allow_destroy: true
@@ -160,6 +161,9 @@ class PhysicalObject < ActiveRecord::Base
 		MEDIA_TYPE_MEDIUMS
 	end
 
+	def current_workflow_status
+		workflow_statuses.last
+	end
 
 	def title_text
 

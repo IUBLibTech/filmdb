@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170418141050) do
+ActiveRecord::Schema.define(version: 20170421211831) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -457,6 +457,22 @@ ActiveRecord::Schema.define(version: 20170418141050) do
     t.text     "fixed_comment",      limit: 65535
     t.integer  "fixed_user_id",      limit: 8
     t.boolean  "active",                           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflow_status_templates", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.integer  "sort_order",  limit: 4
+    t.text     "description", limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflow_statuses", force: :cascade do |t|
+    t.integer  "workflow_status_template_id", limit: 8
+    t.integer  "physical_object_id",          limit: 8
+    t.string   "notes",                       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end

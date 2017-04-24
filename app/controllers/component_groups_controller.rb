@@ -1,5 +1,5 @@
 class ComponentGroupsController < ApplicationController
-  before_action :set_component_group, only: [:show, :edit, :update, :destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects]
+  before_action :set_component_group, only: [:show, :edit, :update, :destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request]
 
   # GET /component_groups
   # GET /component_groups.json
@@ -58,6 +58,21 @@ class ComponentGroupsController < ApplicationController
       format.html { redirect_to :back, notice: 'Component group was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def ajax_queue_pull_request
+    PhysicalObject.transaction do
+      begin
+        @component_group.physical_objects.each do |p|
+          p.workflow_statuses << WorkflowStatus.new(physical_object_id: p.id, workflow_status_template_id: WorkflowStatusTemplate.order(:sort_order).first.id)
+          p.save
+        end
+        render text: 'Success'
+      rescue
+        render text: 'Failure'
+      end
+    end
+
   end
 
   def ajax_physical_objects_list
