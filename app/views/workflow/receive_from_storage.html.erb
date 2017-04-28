@@ -1,0 +1,15 @@
+<p>
+	These physical objects have been requested from storage (ALF) and are in some state of being processed by the storage
+	facility - either in transit or still waiting to be pulled from their shelves.
+</p>
+
+<h4 class="m_bottom_10px">
+	Physical Objects in Transit
+</h4>
+<%=  render partial: 'physical_objects_table' %>
+<%= render partial: 'ajax_javascript' %>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		hookAjax();
+	});
+</script>

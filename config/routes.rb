@@ -16,11 +16,24 @@ Rails.application.routes.draw do
   post '/component_groups/:id/ajax/remove_physical_object/:pid', to:'component_groups#remove_physical_object', as: 'remove_physical_object_from_component_group'
   post '/component_groups/:id/add_to_component_group/', to: 'component_groups#add_physical_objects', as: 'add_physical_objects_to_component_group'
 	post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
+	post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
+
   resources :controlled_vocabularies
 
   resources :collection_inventory_configurations do
     #get '/collection_inventory_configurations/:id/new_physical_object'
-  end
+	end
+
+  get '/inventory/', to: 'inventory#index', as: 'inventory'
+
+  resources :physical_objects
+  get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
+  post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
+  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
+  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
+  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+  get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
 
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
@@ -47,20 +60,20 @@ Rails.application.routes.draw do
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
 
-  resources :users
-
-  resources :physical_objects
-  get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
-  post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
-  get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
-  post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
-  get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
-  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
-  get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
-
   resources :units
 
-  get '/inventory/', to: 'inventory#index', as: 'inventory'
+	resources :users
+
+	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
+	post '/workflow/ajax/pull_requested/:id', to: 'workflow#ajax_mark_pull_requested', as: 'ajax_pull_requested'
+	get '/workflow/receive_from_strorage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
+	post '/workflow/ajax/received_from_storage/:id', to: 'workflow#ajax_mark_received_from_storage', as: 'ajax_received_from_storage'
+	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
+	post '/workflow/ajax/shipped_external/:id', to: 'workflow#ajax_mark_shipped_external', as: 'ajax_shipped_external'
+	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
+	post '/workflow/ajax/received_external/:id', to: 'workflow#ajax_mark_received_from_external', as: 'ajax_received_external'
+	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
+	post '/workflow/ajax/returned_to_storage/:id', to: 'workflow#ajax_mark_returned_to_storage', as: 'ajax_returned_to_storage'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

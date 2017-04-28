@@ -526,3 +526,23 @@ div#title_popup_header > h4 {
 #shelf_po_table {
     margin-top: 10px;
 }
+
+.edit_icon {
+    width: 20px;
+    border-left: none;
+}
+
+.no_border_right {
+    border-right: none;
+}
+
+#edit_summary_dialog {
+    display: none;
+}
+
+.m_bottom_10px {
+    margin-bottom: 10px;
+}
+.m_top_10px {
+    margin-top: 10px;
+}

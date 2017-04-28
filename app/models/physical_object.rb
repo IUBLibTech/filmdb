@@ -37,6 +37,18 @@ class PhysicalObject < ActiveRecord::Base
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
 	end
 
+	# grabs all physical objects where their current workflow status is the specified text - see WorkflowStatusTemplate
+	# statuses for what to pass to this scope
+	scope :where_current_workflow_status_is, lambda { |status|
+
+		sql = "SELECT physical_objects.* "+
+			"FROM (SELECT workflow_statuses.physical_object_id "+
+			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses	GROUP BY physical_object_id) AS x "+
+			    "INNER JOIN workflow_statuses on (workflow_statuses.physical_object_id = x.physical_object_id AND x.status = workflow_statuses.created_at) "+
+			    "WHERE workflow_status_template_id = #{WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[status]}) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"
+		PhysicalObject.find_by_sql(sql)
+	}
+
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 	MEDIA_TYPE_MEDIUMS = {
 		'Moving Image' => ['Film', 'Video', 'Digital'],
@@ -56,15 +68,15 @@ class PhysicalObject < ActiveRecord::Base
                     :generation_negative, :generation_positive, :generation_reversal, :generation_projection_print, :generation_answer_print, :generation_work_print,
                     :generation_composite, :generation_intermediate, :generation_mezzanine, :generation_kinescope, :generation_magnetic_track, :generation_optical_sound_track,
                     :generation_outs_and_trims, :generation_a_roll, :generation_b_roll, :generation_c_roll, :generation_d_roll, :generation_edited,
-                    :generation_edited_camera_original, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate
+                    :generation_original_camera, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate, :generation_master
                     ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",
       generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Soundtrack",
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
-      generation_edited: "Edited", generation_edited_camera_original: "Edited Camera Original", generation_original: "Original",
-      generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate"
+      generation_edited: "Edited", generation_original_camera: "Original Camera", generation_original: "Original",
+      generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate", generation_master: 'Master'
   }
 
   BASE_FIELDS =[:base_acetate, :base_polyester, :base_nitrate, :base_mixed]

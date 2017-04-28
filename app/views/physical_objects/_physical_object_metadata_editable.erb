@@ -2,7 +2,7 @@
   <h4>Core Metadata</h4>
   <div class="left _50">
     <div><b>* Title(s)</b></div>
-    <%= render partial: 'physical_object_title_form', locals: { f: f } %>
+    <%= render partial: 'physical_objects/physical_object_title_form', locals: { f: f } %>
     <div class="label"><b>Alternative Title</b></div>
     <div class="field"><%= f.text_field :alternative_title %></div>
     <div class="label">
@@ -142,6 +142,10 @@
           <%= f.check_box :generation_composite %>
           <div>Composite</div>
         </div>
+				<div class="check_box">
+					<%= f.check_box :generation_master %>
+					<div>Master</div>
+				</div>
         <div class="check_box">
           <%= f.check_box :generation_intermediate %>
           <div>Intermediate</div>
@@ -189,8 +193,8 @@
           <div>Edited</div>
         </div>
         <div class="check_box">
-          <%= f.check_box :generation_edited_camera_original %>
-          <div>Edited Camera Original</div>
+          <%= f.check_box :generation_original_camera %>
+          <div>Original Camera</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_original %>

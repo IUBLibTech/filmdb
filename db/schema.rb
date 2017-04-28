@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170421211831) do
+ActiveRecord::Schema.define(version: 20170428132105) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -203,7 +203,6 @@ ActiveRecord::Schema.define(version: 20170421211831) do
     t.boolean  "generation_composite"
     t.boolean  "generation_duplicate"
     t.boolean  "generation_edited"
-    t.boolean  "generation_edited_camera_original"
     t.boolean  "generation_fine_grain_master"
     t.boolean  "generation_intermediate"
     t.boolean  "generation_kinescope"
@@ -325,6 +324,8 @@ ActiveRecord::Schema.define(version: 20170421211831) do
     t.string   "anamorphic",                            limit: 255
     t.integer  "track_count",                           limit: 4
     t.integer  "cage_shelf_id",                         limit: 8
+    t.boolean  "generation_original_camera"
+    t.boolean  "generation_master"
   end
 
   create_table "series", force: :cascade do |t|

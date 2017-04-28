@@ -1,0 +1,13 @@
+<p>
+	These physical objects have been queued for pulling from storage (ALF).
+	The formal request from storage has not been made yet though. One the request has been made, mark the physicl object
+	record as requested from storage.
+</p>
+<h4 class="m_bottom_10px">Queued Physical Objects</h4>
+<%=  render partial: 'physical_objects_table' %>
+<%= render partial: 'ajax_javascript' %>
+<script type="text/javascript" charset="utf-8">
+ $(document).ready(function() {
+	 hookAjax();
+ });
+</script>

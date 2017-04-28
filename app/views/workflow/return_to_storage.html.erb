@@ -1,0 +1,12 @@
+<p>
+	These Physical Objects are in house (IULMIA facilities) and are ready to be returned to storage (ALF). Mark the object
+	as returned when it has left IULMIA.
+</p>
+<h4 class="m_bottom_10px">Physical Objects Ready to Return to Storage</h4>
+<%= render partial: 'physical_objects_table' %>
+<%= render partial: 'ajax_javascript' %>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		hookAjax();
+	});
+</script>

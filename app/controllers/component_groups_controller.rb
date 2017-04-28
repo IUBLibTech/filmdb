@@ -1,5 +1,7 @@
 class ComponentGroupsController < ApplicationController
-  before_action :set_component_group, only: [:show, :edit, :update, :destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request]
+  before_action :set_component_group, only:
+		[:show, :edit, :update, :destroy, :ajax_physical_objects_list,
+		 :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_edit_summary]
 
   # GET /component_groups
   # GET /component_groups.json
@@ -77,6 +79,17 @@ class ComponentGroupsController < ApplicationController
 
   def ajax_physical_objects_list
     render partial: 'ajax_physical_objects_list'
+  end
+
+  def ajax_edit_summary
+		update = params[:cg_summary_edit][:summary]
+		@component_group.update_attributes(group_summary: update)
+		render text: "success"
+  end
+
+  # place holder for ajax form to submit change to a component groups summary text
+  def cg_summary_edit
+    ''
   end
 
   def add_physical_objects
