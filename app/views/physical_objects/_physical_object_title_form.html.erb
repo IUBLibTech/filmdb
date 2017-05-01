@@ -7,14 +7,16 @@
         <%= t.title_text %>
       </div>
       <div  class="remove_title_button">
-        <%= link_to "x", '#', remote: true, class: 'button', id: "remove_title_button_#{t.id}", title: 'Click to remove this Physical Object/Title association' %>
+        <%= link_to "-", '#', remote: true, class: 'button', id: "remove_title_button_#{t.id}", title: 'Click to remove this Physical Object/Title association' %>
       </div>
     </li>
     <% end %>
   </ul>
 </div>
 <div>
-  <b class='title_label'>Add Title</b> <%= f.text_field :title_text, class: 'ajax_complete' %><%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remive this Physical Object/Title association' %>
+  <b class='title_label'>Add Title</b>
+	<%= f.text_field :title_text, class: 'ajax_complete' %>
+	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remive this Physical Object/Title association' %>
 </div>
 <script type="text/javascript">
   $('.button').click(function() { removeTitle($(this)); })

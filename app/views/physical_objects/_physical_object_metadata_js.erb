@@ -103,9 +103,9 @@
     <% unless controller.class == CollectionsController %>
     // collection controller should never enable the unit text field as this and collection are fixed
     el = $('#physical_object_unit_id');
-    if (el.attr('disabled') == 'disabled') {
-      el.attr('disabled', false);
-    }
+//    if (el.attr('disabled') == 'disabled') {
+//      el.attr('disabled', false);
+//    }
     <% end %>
   })
 
@@ -132,7 +132,7 @@
           $("#physical_object_unit_text").val(unit_title);
           $('#physical_object_unit_id').val(unit_id);
           // whenever a collection is selected we need to disable the Unit select element
-          $("#physical_object_unit_id").prop('disabled', true)
+          //$("#physical_object_unit_id").prop('disabled', true)
         }
         $("#physical_object_collection_text").val(ui.item.label);
         $('#physical_object_collection_id').val(ui.item.value);
@@ -242,7 +242,7 @@
       li = $(document.createElement('li')).attr({id: 'title_'+title_id, class: 'title_li' });
       $(document.createElement('div')).attr('class', 'title_text').html(title_text).appendTo(li);
       remove_div = $(document.createElement('div')).attr('class', 'remove_title_button');
-      $(document.createElement('a')).click(function() { removeTitle($(this)); }).html('X').attr({ id: 'remove_title_button_'+title_id, class: 'button', href: '#', 'data-remote': 'true', title: 'Click to remove this Physical Object/Title association' }).appendTo(remove_div);
+      $(document.createElement('a')).click(function() { removeTitle($(this)); }).html('-').attr({ id: 'remove_title_button_'+title_id, class: 'button', href: '#', 'data-remote': 'true', title: 'Click to remove this Physical Object/Title association' }).appendTo(remove_div);
       remove_div.appendTo(li);
       li.appendTo($('#existing_titles'));
     }
