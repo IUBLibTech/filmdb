@@ -6,26 +6,6 @@
     <div class="label"><b>Alternative Title</b></div>
     <div class="field"><%= f.text_field :alternative_title %></div>
     <div class="label">
-      <b>Series</b>
-    </div>
-    <div class="field">
-      <b><i>Disabled Pending Discussion</i></b>
-      <%# if @series %>
-          <%#= @series.title %><br/>
-          <%#= f.hidden_field :series_id, value: @series.id  %>
-      <%# else %>
-          <%#= f.hidden_field :series_id %>
-          <%#= f.text_field :series_title_text, disabled: true %>
-      <%# end %>
-    </div>
-    <div class="label">
-      <b>Series Part</b>
-    </div>
-    <div class="field">
-      <%#= f.text_field :series_part %>
-      <b><i>Disabled Pending Discussion</i></b>
-    </div>
-    <div class="label">
       <b>* Media Type</b>
     </div>
     <div class="field">
@@ -260,7 +240,7 @@
         <b>Edge Code</b>
       </div>
       <div class="value">
-        <i>currently not implemented</i>
+        <%= f.text_field :edge_code %>
       </div>
     </div>
     <div id="base_fields" class="left">
@@ -493,6 +473,7 @@
         <b>Comment</b>
         <%= bc.text_area :comment %>
       </div>
+			<%= bc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
     </div>
     <% end %>
     <%= f.link_to_add 'New Boolean Condition', :boolean_conditions %>
@@ -508,7 +489,6 @@
 <div id="conservation_actions_metadata" class="metadata_section">
   <h4>
     Conservation actions
-    <%= link_to "X", '#', remote: true, class: 'button', id: 'cancel_title_button' %>
   </h4>
   <%= f.text_area :conservation_actions, class: '_100' %>
 </div>

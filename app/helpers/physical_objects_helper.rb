@@ -53,41 +53,19 @@ module PhysicalObjectsHelper
     titles.each do |t|
       @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
     end
-    # old code - we can no longer do this because titles <-> series is a one to one by title <-> physical object is many to many: there's no uncomplicated user inteface
-    # that allows associating series and title together...
-
-    # @title = params[:physical_object][:title_id].blank? ? nil : Title.find(params[:physical_object][:title_id])
-    # return if @title.nil?
-    # existing_series = !params[:physical_object][:series_id].blank?
-    # if existing_series
-    #   @series = Series.find(params[:physical_object][:series_id])
-    # end
-    #
-    # if existing_series && !@title.series_id.nil? && @title.series_id != @series.id
-    #   @physical_object.errors.add(:title, "Title already has existing Series - attempt to assign another Series")
-    #   @other_message = "Attempt to assign a different Series to a Title that already has Series"
-    #   raise ManualRollBackException.new("Attemp to assign this title a different series when it has a series")
-    # else
-    #   @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: @title.id)
-    #   @other_message = "Additionally the new Title <i>#{@title.title_text}</i> was created."
-    #   params[:physical_object][:series_id] = @series.nil? ? nil : @series.id
-    #   params[:physical_object][:title_id] = @title.id
-    # end
-    # flash[:other_message] = @other_message
   end
 
   private
   def physical_object_params
     params.require(:physical_object).permit(
-        :location, :media_type, :medium, :iu_barcode, :copy_right, :format, :spreadsheet_id, :inventoried_by,
-        :series_production_number, :series_part, :alternative_title,
+        :location, :media_type, :medium, :iu_barcode, :copy_right, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
         :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
         :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
         :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
         :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
         :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
-        :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
+        :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative, :edge_code,
         :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
         :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :reel_number,
         :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
