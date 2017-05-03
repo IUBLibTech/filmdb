@@ -158,6 +158,9 @@
         success: function(result) {
           el = $('#title_popup_content');
           el.html(result);
+					// grab any partially typed text user was inputing when the title failed to match
+					pt = $('#physical_object_title_text').val();
+					$('#title_title_text').val(pt);
           $("#title_popup").showTitlePopup();
           // autocomplete for series
           $('#title_series_title_text').autocomplete({
@@ -245,6 +248,9 @@
       $(document.createElement('a')).click(function() { removeTitle($(this)); }).html('-').attr({ id: 'remove_title_button_'+title_id, class: 'button', href: '#', 'data-remote': 'true', title: 'Click to remove this Physical Object/Title association' }).appendTo(remove_div);
       remove_div.appendTo(li);
       li.appendTo($('#existing_titles'));
+			// clear title text
+			$('#physical_object_title_text').removeClass('bad_barcode');
+			$("#physical_object_title_text").val('');
     }
   }
 

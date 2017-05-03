@@ -3,7 +3,10 @@
 		<table id="stats_form" class="_50">
 			<tr>
 				<td><b>Unit</b></td>
-				<td class="stats_form_input"><%= select_tag :unit, options_for_select(Unit.all.collect{ |u| [u.abbreviation, u.id]}) %></td>
+				<td class="stats_form_input">
+					<%# options_for_select(Unit.all.collect{ |u| [u.abbreviation, u.id]}, include_blank: '')  %>
+					<%= select_tag :unit, options_from_collection_for_select(Unit.all, 'id', 'abbreviation' ), {include_blank: ''} %>
+				</td>
 			</tr>
 			<tr>
 				<td><b>Collection</b></td>
