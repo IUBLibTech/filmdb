@@ -39,7 +39,7 @@ class TitlesController < ApplicationController
     @title = Title.new(title_params)
     if @series
       @title.series_id = @series.id
-    else
+    elsif !params[:title][:series_title_text].blank?
       @series = Series.new(title: params[:title][:series_title_text])
       @series.save
       @title.series_id = @series.id
@@ -90,7 +90,7 @@ class TitlesController < ApplicationController
     @title = Title.new(title_params)
     if @series
       @title.series_id = @series.id
-    else
+    elsif !params[:title][:series_title_text].blank?
       @series = Series.new(title: params[:title][:series_title_text])
       @series.save
       @title.series_id = @series.id

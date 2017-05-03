@@ -15,6 +15,7 @@ class PhysicalObject < ActiveRecord::Base
   has_many :component_groups, through: :component_group_physical_objects
   has_many :physical_object_titles, dependent: :delete_all
   has_many :titles, through: :physical_object_titles
+	has_many :series, through: :titles
 
   #validates :physical_object_titles, presence: true
   validates :iu_barcode, iu_barcode: true
@@ -99,7 +100,6 @@ class PhysicalObject < ActiveRecord::Base
       picture_composite_picture: "Composite", picture_intertitles_only: "Intertitles Only", picture_credits_only: "Credits Only",
       picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope"
   }
-
   COLOR_BW_FIELDS = [
       :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_bw_black_and_white
   ]
@@ -113,7 +113,7 @@ class PhysicalObject < ActiveRecord::Base
       color_bw_bw_toned: "Toned (Black and White)", color_bw_bw_tinted: "Tinted (Black and White)", color_bw_color_ektachrome: "Ektachrome",
       color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_ansochrome: "Ansochrome",
       color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_bw: "Black and White", color_bw_bw_hand_coloring: "Hand Coloring",
-      color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color_color: "Color"
+      color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color_color: "Color", color_bw_bw_black_and_white: 'Black & White'
   }
 
   ASPECT_RATIO_FIELDS = [

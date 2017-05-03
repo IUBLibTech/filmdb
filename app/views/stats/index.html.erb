@@ -1,3 +1,4 @@
+<%= render partial: 'layouts/notice_div' %>
 <h4>Filters</h4>
 <%= form_tag stats_filter_index_path do %>
 		<table id="stats_form" class="_50">
@@ -17,11 +18,11 @@
 			</tr>
 			<tr>
 				<td><b>Start Date</b></td>
-				<td class="stats_form_input"><%= text_field_tag :start,'', {id: 'start_date'} %></td>
+				<td class="stats_form_input"><%= text_field_tag :start,'', {id: 'start_date', class: 'datapicker'} %></td>
 			</tr>
 			<tr>
 				<td><b>End Date</b></td>
-				<td class="stats_form_input"><%= text_field_tag :end, '', {id: 'end_date'} %></td>
+				<td class="stats_form_input"><%= text_field_tag :end, '', {id: 'end_date', class: 'datapicker'} %></td>
 			</tr>
 			<tr>
 				<td colspan="2">
@@ -31,7 +32,7 @@
 		</table>
 <% end  %>
 
-<h4>FilmbDB Statistics</h4>
+<h4>FilmbDB Statistics <%= @filter_msg %> <%= "[ #{@startTime.to_date.strftime("%m/%d/%Y")}: #{@endTime.to_date.strftime("%m/%d/%Y")}]" unless @startTime.nil? || @endTime.nil? %></h4>
 <table>
 	<tr>
 		<th>Physical Object Count</th>
@@ -42,16 +43,100 @@
 		<td><%= @title_count %></td>
 	</tr>
 	<tr>
-		<th>Series Count</th>
-		<td><%= @series_count %></td>
-	</tr>
-	<tr>
 		<th>Titles Without Physical Objects</th>
 		<td><%= @empty_title_count %></td>
 	</tr>
 	<tr>
+		<th>Series Count</th>
+		<td><%= @series_count %></td>
+	</tr>
+	<tr>
 		<th>Series Without Titles</th>
 		<td><%= @empty_series_count %></td>
+	</tr>
+</table>
+
+<h4>Physical Object Breakdown</h4>
+<table>
+	<tr>
+		<th>Media Type</th>
+		<td>
+			<ul>
+				<% @media_type_count.keys.sort.each do |m| %>
+				<li><%= "#{m}: #{@media_type_count[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Medium</th>
+		<td>
+			<ul>
+				<% @medium_count.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@medium_count[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Generations</th>
+		<td>
+			<ul>
+				<% @generations.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@generations[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Gauges</th>
+		<td>
+			<ul>
+				<% @gauges.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@gauges[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Bases</th>
+		<td>
+			<ul>
+				<% @bases.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@bases[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Sound</th>
+		<td>
+			<ul>
+				<% @sounds.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@sounds[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Color</th>
+		<td>
+			<ul>
+				<% @colors.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@colors[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Overall Conditions</th>
+		<td>
+			<ul>
+				<% @conditions.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@conditions[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
 	</tr>
 </table>
 
@@ -82,6 +167,7 @@
 				}
 			});
 		});
+		$('#start_date').datepicker();
+		$('#end_date').datepicker();
 	})
-
 </script>
