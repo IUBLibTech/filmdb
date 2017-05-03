@@ -50,6 +50,11 @@ Rails.application.routes.draw do
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
   post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
+	get '/stats/', to: 'stats#index', as: 'stats_index'
+	post '/stats/', to: 'stats#filter_index', as: 'stats_filter_index'
+	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
+	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
+
   resources :titles
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'

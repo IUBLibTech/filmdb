@@ -560,3 +560,19 @@ div#title_popup_header > h4 {
     float: left;
     height:20px;
 }
+
+div.check_box > div {
+    margin-left: 3px;
+    margin-right: 10px;
+}
+
+#stats_form > tbody > tr {
+    padding: 3px;
+}
+
+.stats_form_input {
+    padding: 3px 6px 3px 2px;
+}
+ .stats_form_input > input {
+     width: 100%;
+ }

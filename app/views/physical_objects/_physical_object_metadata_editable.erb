@@ -400,6 +400,7 @@
         <div class="left condition">
           <b>Language </b><%= l.select :language, options_for_select(@l_cv[:language], l.object.language) %><br/>
           <b>Type </b><%= l.select :language_type, options_for_select(@l_cv[:language_type], l.object.language_type) %>
+					<%= l.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
         </div>
     <% end %>
     <%= f.link_to_add 'New Language', :languages %>

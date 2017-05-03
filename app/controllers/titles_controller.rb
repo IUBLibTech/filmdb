@@ -1,6 +1,7 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
+  before_action :set_series, only: [:create, :create_ajax]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
@@ -36,8 +37,9 @@ class TitlesController < ApplicationController
   # POST /titles.json
   def create
     @title = Title.new(title_params)
-    @series = nil
-    if params[:title][:series_title_id].blank? && !params[:title][:series_title_text].blank?
+    if @series
+      @title.series_id = @series.id
+    else
       @series = Series.new(title: params[:title][:series_title_text])
       @series.save
       @title.series_id = @series.id
@@ -86,8 +88,9 @@ class TitlesController < ApplicationController
 
   def create_ajax
     @title = Title.new(title_params)
-    @series = nil
-    if params[:title][:series_title_id].blank? && !params[:title][:series_title_text].blank?
+    if @series
+      @title.series_id = @series.id
+    else
       @series = Series.new(title: params[:title][:series_title_text])
       @series.save
       @title.series_id = @series.id
@@ -173,6 +176,10 @@ class TitlesController < ApplicationController
   def set_title
     @title = Title.find(params[:id])
     @series = @title.series
+  end
+
+  def set_series
+    @series = Series.find(params[:title][:series_id]) unless params[:title][:series_id].blank?
   end
 
   def set_all_title_cv
