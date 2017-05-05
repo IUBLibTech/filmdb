@@ -91,6 +91,7 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+
   def duplicate
     @em = 'Duplicating Physical Object'
     @physical_object = PhysicalObject.find(params[:id]).dup

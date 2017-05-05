@@ -54,4 +54,10 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+	unless Unit.all.size > 0
+		config.before(:suite) do
+			Rails.application.load_seed
+		end
+	end
 end

@@ -24,23 +24,19 @@
   <div class="left _50">
     <b>Title</b> <%= @physical_object.titles_text %><br/>
     <b>Alternative Title</b> <%= @physical_object.alternative_title %><br/>
-    <b>Series</b> <b><i>Disabled Pending Discussion</i></b><%#= @physical_object.series_title_text %><br/>
-    <b>Series Part</b> <b><i>Disabled Pending Discussion</i></b> <%#= @physical_object.series_part %><br/>
     <b>Media Type</b> <%= @physical_object.media_type %><br/>
     <b>Medium</b> <%= @physical_object.medium %><br/>
+		<b class="block">Version</b>
+		<%= @physical_object.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS) %>
   </div>
   <div class="left _50">
     <b>Unit</b> <%= @physical_object.unit.abbreviation %><br/>
     <b>Collection</b> <%= @physical_object.collection&.name %><br/>
     <b>Current Location</b> <%= @physical_object.location %><br/>
-		<b>Workflow Status</b> <%= @physical_object.current_workflow_status.name %><br/>
+		<b>Workflow Status</b> <%= @physical_object.current_workflow_status&.name %><br/>
     <b>IU Barcode</b> <%= @physical_object.iu_barcode %><br/>
     <b>MDPI Barcode</b> <%= @physical_object.mdpi_barcode %><br/>
     <b>IUCAT Title No.</b> <%= @physical_object.title_control_number %><br/>
-  </div>
-  <div class="clear">
-    <b class="block">Version</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS) %>
   </div>
 </div>
 
