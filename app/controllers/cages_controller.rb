@@ -13,6 +13,10 @@ class CagesController < ApplicationController
   # GET /cages/1
   # GET /cages/1.json
   def show
+		respond_to do |format|
+			format.html
+			format.xml
+		end
   end
 
   # GET /cages/new
