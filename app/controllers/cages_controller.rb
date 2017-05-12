@@ -101,7 +101,6 @@ class CagesController < ApplicationController
 	def show_xml
 		# file_path = write_xml(@cage)
 		# render file: file_path, layout: false, status: 200
-		debugger
 		something = push_cage_to_pod(@cage.id)
 		render text: something.to_yaml, status: 200
 	end

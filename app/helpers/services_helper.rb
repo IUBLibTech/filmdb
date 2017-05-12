@@ -37,8 +37,9 @@ module ServicesHelper
 
 		# Send the request
 		puts "\n\n\nAbout to POST to localhost\n\n\n"
-		http.request(request)
-		puts "\n\n\nPOSTed to localhost\n\n\n"
+		result = http.request(request)
+		puts "\n\n\nPOSTed to localhost #{result}\n\n\n"
+		result
 	end
 
 

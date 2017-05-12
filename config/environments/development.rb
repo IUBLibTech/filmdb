@@ -41,4 +41,5 @@ Rails.application.configure do
 
 
 	config.pod_batch_url = 'http://sycamore.dlib.indiana.edu:8527/services/:batch_id'
+	config.web_console.whitelisted_ips = '129.79.34.168'
 end
