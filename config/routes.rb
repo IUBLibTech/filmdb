@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
 	post '/cages/cage_shelf/:id/ajax_physical_objects/:barcode', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
 	delete '/cages/cage_shelf/:id/ajax_remove_physical_object_from_shelf/:po_id', to: 'cages#remove_physical_object', as: 'remove_physical_object_from_shelf'
+	get '/cages/:id/show_xml', to: 'cages#show_xml', as: 'show_cage_xml'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -42,6 +43,9 @@ Rails.application.routes.draw do
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
 
   resources :series_titles
+
+	# services URLs
+	post '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'

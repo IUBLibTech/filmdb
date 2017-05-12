@@ -85,7 +85,7 @@ class Cage < ActiveRecord::Base
     bottom_shelf.notes
   end
 
-  def export_xml
+  def to_xml(options)
 
   end
 

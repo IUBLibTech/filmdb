@@ -1,5 +1,8 @@
 class CagesController < ApplicationController
-  before_action :set_cage, only: [:show, :edit, :update, :destroy]
+	include CagesHelper
+	include ServicesHelper
+
+  before_action :set_cage, only: [:show, :edit, :update, :destroy, :show_xml]
 
 	before_action :set_cage_shelf, only: [:shelf_physical_objects, :add_physical_object_to_shelf, :remove_physical_object]
 	before_action :set_physical_object, only: [:add_physical_object_to_shelf]
@@ -15,7 +18,6 @@ class CagesController < ApplicationController
   def show
 		respond_to do |format|
 			format.html
-			format.xml
 		end
   end
 
@@ -94,7 +96,15 @@ class CagesController < ApplicationController
       format.html { redirect_to cages_url, notice: 'Cage was successfully destroyed.' }
       format.json { head :no_content }
     end
-  end
+	end
+
+	def show_xml
+		# file_path = write_xml(@cage)
+		# render file: file_path, layout: false, status: 200
+		debugger
+		something = push_cage_to_pod(@cage.id)
+		render text: something.to_yaml, status: 200
+	end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -107,7 +117,7 @@ class CagesController < ApplicationController
 		end
 
 		def set_physical_object
-			@physical_object = PhysicalObject.where(mdpi_barcode: params[:barcode]).first
+			@physical_object = PhysicalObject.where(iu_barcode: params[:barcode]).first
 		end
 
     # Never trust parameters from the scary internet, only allow the white list through.

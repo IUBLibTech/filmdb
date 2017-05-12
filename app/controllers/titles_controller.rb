@@ -133,7 +133,6 @@ class TitlesController < ApplicationController
   def new_physical_object
     @em = 'Creating New Physical Object'
     @physical_object = PhysicalObject.new
-    #@physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object, title_id: @title.id)
     @physical_object.titles << @title
     render 'physical_objects/new_physical_object'
   end

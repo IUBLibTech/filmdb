@@ -38,4 +38,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+
+	config.pod_batch_url = 'http://sycamore.dlib.indiana.edu:8527/services/:batch_id'
 end
