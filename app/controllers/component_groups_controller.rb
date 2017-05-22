@@ -1,4 +1,6 @@
 class ComponentGroupsController < ApplicationController
+  include AlfHelper
+
   before_action :set_component_group, only:
 		[:show, :edit, :update, :destroy, :ajax_physical_objects_list,
 		 :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_edit_summary]
@@ -63,18 +65,8 @@ class ComponentGroupsController < ApplicationController
   end
 
   def ajax_queue_pull_request
-    PhysicalObject.transaction do
-      begin
-        @component_group.physical_objects.each do |p|
-          p.workflow_statuses << WorkflowStatus.new(physical_object_id: p.id, workflow_status_template_id: WorkflowStatusTemplate.order(:sort_order).first.id)
-          p.save
-        end
-        render text: 'Success'
-      rescue
-        render text: 'Failure'
-      end
-    end
-
+    result = pull_request([@component_group.id])
+    render text: result, status: (result == "failure" ? 500 : 200)
   end
 
   def ajax_physical_objects_list

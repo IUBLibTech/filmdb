@@ -36,7 +36,7 @@ module PhysicalObjectsHelper
         end
     end
     rescue Exception => error
-      unless error.class == ManualRollBackException
+      unless error.class == ManualRollBackError
         raise error
       end
       format.html { render 'physical_objects/new_physical_object' }
@@ -65,7 +65,7 @@ module PhysicalObjectsHelper
         :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
         :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
         :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
-        :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative, :edge_code,
+        :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
         :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
         :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :reel_number,
         :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
@@ -84,7 +84,7 @@ module PhysicalObjectsHelper
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
-        :sound_configuration_dual, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
+        :sound_configuration_dual_mono, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
         :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
@@ -92,7 +92,8 @@ module PhysicalObjectsHelper
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
         languages_attributes: [:id, :language, :language_type, :_destroy],
-        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy]
+        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
+        physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
     )
   end
 end

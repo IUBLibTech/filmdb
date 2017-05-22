@@ -8,7 +8,10 @@
 	</tr>
 	<% @cage_shelf.physical_objects.each do |p| %>
 		<tr>
-			<td><%= p.mdpi_barcode %></td>
+			<td>
+				IU: <%= p.iu_barcode %><br/>
+				MDPI: <%= p.mdpi_barcode %>
+			</td>
 			<td><%= p.titles_text %></td>
 			<td><%= p.gauge %></td>
 			<td>

@@ -5,9 +5,9 @@ module CagesHelper
 	def write_xml(cage)
 		xml = Builder::XmlMarkup.new(indent: 2)
 		cage_as_batches_xml(cage, xml)
-		xml_date = xml.target!
+		xml_data = xml.target!
 		file = File.new("tmp/cage_#{@cage.identifier}.xml", "wb")
-		file.write(xml_date)
+		file.write(xml_data)
 		file.close()
 		file.path
 	end

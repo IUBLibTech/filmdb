@@ -1,7 +1,7 @@
 # noinspection ALL
 class CsvParser
   require 'csv'
-  require 'manual_roll_back_exception'
+  require 'manual_roll_back_error'
 
   attr_accessor :percent_complete
 
@@ -14,7 +14,7 @@ class CsvParser
       'Sound Configuration', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
       'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
       'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
-      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary'
+      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes'
   ]
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
   TITLE, DURATION, SERIES_NAME, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
@@ -23,7 +23,7 @@ class CsvParser
   SOUND_CONFIGURATION, DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, FORMAT_NOTES, OVERALL_CONDITION, RESEARCH_VALUE ,OVERALL_CONDITION_NOTES, AD_STRIP = 31,32,33,34,35,36,37,38
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
-  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY = 54,55,56,57,58,59,60,61
+  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES = 54,55,56,57,58,59,60,61,62
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -97,14 +97,14 @@ class CsvParser
             end
           end
           if error_msg.length > 0
-            raise ManualRollBackException
+            raise ManualRollBackError
           else
             @spreadsheet_submission.update_attributes(successful_submission: true, submission_progress: 100)
             @spreadsheet.update_attributes(successful_upload: true)
           end
         end
       rescue Exception => error
-        unless error.class == ManualRollBackException
+        unless error.class == ManualRollBackError
           @em = error.message << "<br/>"
           error.backtrace.each do |line|
             @em << line << "<br/>"
@@ -277,6 +277,11 @@ class CsvParser
     title_summary = row[column_index TITLE_SUMMARY]
     unless title_summary.blank?
       title.summary = title_summary
+    end
+
+    title_notes = row[column_index TITLE_NOTES]
+    unless title_notes.blank?
+      title.notes = title_notes
     end
 
     dates = row[column_index DATE].to_s

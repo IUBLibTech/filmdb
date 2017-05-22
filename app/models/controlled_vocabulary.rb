@@ -33,6 +33,20 @@ class ControlledVocabulary < ActiveRecord::Base
     cv = ControlledVocabulary.where(model_type: 'ComponentGroup').select(:model_attribute, :value).order(:model_attribute, :menu_index)
     cv_map(cv)
   }
+
+  scope :physical_object_date_cv, -> {
+    cv = ControlledVocabulary.where(model_type: 'PhysicalObjectDate').select(:id, :model_attribute, :value).order(:menu_index)
+    map = {}
+    # map for these is slightly different as it should bind to the controlled vocabulary ID not copy the text :value
+    cv.each do |v|
+      id = v.id
+      value = v.value
+      sym = v.model_attribute.tr(':','').to_sym
+      map[sym] = [] if map[sym].nil?
+      map[sym].push [value, id]
+    end
+    map
+  }
   private
   def self.cv_map(scope_result)
     map = {}

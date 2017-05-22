@@ -237,10 +237,17 @@
         <%= f.text_field :duration %>
       </div>
       <div class="label">
-        <b>Edge Code</b>
+        <b>Dates</b>
       </div>
       <div class="value">
-        <%= f.text_field :edge_code %>
+        <%= f.fields_for :physical_object_dates do |pods| %>
+            <div class="left condition">
+              Date: <%= pods.text_field :date %><br/>
+              Type: <%= pods.select :controlled_vocabulary_id, options_for_select(@pod_cv[:type], pods.object.controlled_vocabulary_id) %>
+              <%= pods.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+            </div>
+        <% end %>
+        <%= f.link_to_add 'New Date', :physical_object_dates %>
       </div>
     </div>
     <div id="base_fields" class="left">
@@ -388,7 +395,7 @@
     </div>
     <div class="left _50">
       <%= f.check_box :sound_configuration_multi_track %>Multi-track (i.e. Maurer)<br/>
-      <%= f.check_box :sound_configuration_dual %>Dual Mono<br/>
+      <%= f.check_box :sound_configuration_dual_mono %>Dual Mono<br/>
     </div>
   </div>
   <div>

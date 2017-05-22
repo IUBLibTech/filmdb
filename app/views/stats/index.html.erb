@@ -149,7 +149,7 @@
 //				$(this).removeData("autocomplete");
 //			}
 			var unit_val = $('#unit :selected').attr('value');
-			var source = '../../../autocomplete_collection_for_unit/'+unit_val+"/";
+			var source = unit_val == "" ? "../../../autocomplete_collection" : '../../../autocomplete_collection_for_unit/'+unit_val+"/";
 			$(this).autocomplete({
 				minLength: 2,
 				source: source,
@@ -163,6 +163,7 @@
 					unit_title = ui.item.abbreviation
 					$("#collection_text").val(ui.item.label);
 					$('#collection_id').val(ui.item.value);
+          $('#unit').val(unit_id)
 					return false;
 				}
 			});

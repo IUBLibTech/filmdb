@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170428132105) do
+ActiveRecord::Schema.define(version: 20170519162052) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -129,6 +129,14 @@ ActiveRecord::Schema.define(version: 20170428132105) do
     t.datetime "updated_at"
   end
 
+  create_table "physical_object_dates", force: :cascade do |t|
+    t.integer  "physical_object_id",       limit: 8
+    t.integer  "controlled_vocabulary_id", limit: 8
+    t.string   "date",                     limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "physical_object_old_barcodes", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
     t.integer  "iu_barcode",         limit: 8
@@ -139,6 +147,13 @@ ActiveRecord::Schema.define(version: 20170428132105) do
   create_table "physical_object_original_identifiers", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
     t.string   "identifier",         limit: 255, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "physical_object_pull_requests", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "pull_request_id",    limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -279,7 +294,7 @@ ActiveRecord::Schema.define(version: 20170428132105) do
     t.boolean  "sound_configuration_stereo"
     t.boolean  "sound_configuration_surround"
     t.boolean  "sound_configuration_multi_track"
-    t.boolean  "sound_configuration_dual"
+    t.boolean  "sound_configuration_dual_mono"
     t.string   "ad_strip",                              limit: 255
     t.decimal  "shrinkage",                                           precision: 4, scale: 3
     t.string   "mold",                                  limit: 255
@@ -318,7 +333,6 @@ ActiveRecord::Schema.define(version: 20170428132105) do
     t.string   "channeling",                            limit: 255
     t.boolean  "color_bw_bw_hand_coloring"
     t.boolean  "color_bw_bw_stencil_coloring"
-    t.text     "edge_code",                             limit: 65535
     t.text     "captions_or_subtitles_notes",           limit: 65535
     t.boolean  "sound_format_optical"
     t.string   "anamorphic",                            limit: 255
@@ -326,6 +340,14 @@ ActiveRecord::Schema.define(version: 20170428132105) do
     t.integer  "cage_shelf_id",                         limit: 8
     t.boolean  "generation_original_camera"
     t.boolean  "generation_master"
+  end
+
+  create_table "pull_requests", force: :cascade do |t|
+    t.integer  "created_by_id", limit: 8
+    t.string   "filename",      limit: 255
+    t.text     "file_contents", limit: 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "series", force: :cascade do |t|

@@ -16,6 +16,10 @@ class PhysicalObject < ActiveRecord::Base
   has_many :physical_object_titles, dependent: :delete_all
   has_many :titles, through: :physical_object_titles
 	has_many :series, through: :titles
+	has_many :physical_object_dates
+
+	has_many :physical_object_pull_requests
+	has_many :pull_requests, through: :physical_object_pull_requests
 
   #validates :physical_object_titles, presence: true
   validates :iu_barcode, iu_barcode: true
@@ -33,6 +37,7 @@ class PhysicalObject < ActiveRecord::Base
   accepts_nested_attributes_for :value_conditions, allow_destroy: true
   accepts_nested_attributes_for :languages, allow_destroy: true
   accepts_nested_attributes_for :physical_object_original_identifiers, allow_destroy: true
+	accepts_nested_attributes_for :physical_object_dates, allow_destroy: true
 
 	trigger.after(:update).of(:iu_barcode) do
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
@@ -143,11 +148,11 @@ class PhysicalObject < ActiveRecord::Base
   }
 
   SOUND_CONFIGURATION_FIELDS = [
-      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track, :sound_configuration_dual
+      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track, :sound_configuration_dual_mono
   ]
   SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
       sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround",
-      sound_configuration_multi_track: "Multi-track (ie. Maurer)", sound_configuration_dual: "Dual Mono"
+      sound_configuration_multi_track: "Multi-track (ie. Maurer)", sound_configuration_dual_mono: "Dual Mono"
   }
 
   CONDITION_FIELDS = [
@@ -193,6 +198,10 @@ class PhysicalObject < ActiveRecord::Base
 		self.title.series.title if self.title && self.title.series
 	end
 
+	def dates_text
+		self.physical_object_dates.collect{ |d| "#{d.date} [#{d.type}]" }.join(', ') unless self.physical_object_dates.nil?
+	end
+
 	def series_id
 		self.title.series.id if self.title && self.title.series
   end
@@ -235,7 +244,7 @@ class PhysicalObject < ActiveRecord::Base
       ss = super - (hh * 3600) - (mm * 60)
       "#{hh}:#{mm}:#{ss}"
     end
-  end
+	end
 
   # overridden to provide for more human readable attribute names for things like :sample_rate_32k
   def self.human_attribute_name(attribute, options = {})
@@ -297,7 +306,6 @@ class PhysicalObject < ActiveRecord::Base
 			xml.conservationActions conservation_actions
 			xml.multipleItemsInCan multiple_items_in_can
 			xml.miscellaneous miscellaneous
-			xml.edgeCode edge_code
 			xml.captionedOrSubtitled captioned
 			xml.captionedOrSubtitleNotes captions_or_subtitles_notes
 			xml.anamorphic anamorphic
@@ -382,6 +390,14 @@ class PhysicalObject < ActiveRecord::Base
 				xml.pictureEffects picture_picture_effects
 				xml.pictureOuttakes picture_picture_outtakes
 				xml.kinescope picture_kinescope
+			end
+			xml.dates do
+				physical_object_dates.each do |pod|
+					xml.date do
+						xml.value pod.date
+						xml.type pod.controlled_vocabulary.value
+					end
+				end
 			end
 			xml.color do
 				xml.blackAndWhiteToned color_bw_bw_toned

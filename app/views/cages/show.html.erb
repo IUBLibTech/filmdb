@@ -11,8 +11,6 @@
 		<th>Cage Notes</th>
 		<td><%= @cage.notes %></td>
 	</tr>
-
-
 	<tr>
 		<th class='shelf' colspan="2" id="shelf_<%= @cage.top_shelf.id %>">Top Shelf [<%= @cage.top_shelf.physical_objects&.size %> - <%= @cage.top_shelf.duration %>]</th>
 	</tr>
@@ -46,7 +44,6 @@
 		<td><%= @cage.middle_shelf.notes %></td>
 	</tr>
 
-
 	<tr>
 		<th class='shelf' colspan="2" id="shelf_<%= @cage.bottom_shelf.id %>">Bottom Shelf [<%= @cage.bottom_shelf.physical_objects&.size %> - <%= @cage.bottom_shelf.duration %>]</th>
 	</tr>
@@ -75,7 +72,11 @@
 <div id="shelf_content">
 	<p><i>Click a shelf on the left to see its contents, or add physical objects.</i></p>
 </div>
-
+<div class="clear">
+	<%= form_for @cage, url: push_cage_to_pod_path(@cage.id), method: :post do |f| %>
+	<%= f.submit "Ship to Memnon", data: {confirm: "This will push the cage contents into the Physical Object Database. Do you wish to continue?"} %>
+	<% end  %>
+</div>
 <script type="text/javascript" charset="utf-8">
 	$('.shelf').click(function() {
 		id = $(this).attr('id').substring(6)

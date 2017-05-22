@@ -1,6 +1,5 @@
 class CagesController < ApplicationController
 	include CagesHelper
-	include ServicesHelper
 
   before_action :set_cage, only: [:show, :edit, :update, :destroy, :show_xml]
 
@@ -99,10 +98,8 @@ class CagesController < ApplicationController
 	end
 
 	def show_xml
-		# file_path = write_xml(@cage)
-		# render file: file_path, layout: false, status: 200
-		something = push_cage_to_pod(@cage.id)
-		render text: something.to_yaml, status: 200
+		file_path = write_xml(@cage)
+		render file: file_path, layout: false, status: 200
 	end
 
   private

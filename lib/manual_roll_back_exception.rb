@@ -1,3 +1,0 @@
-class ManualRollBackException < StandardError
-
-end

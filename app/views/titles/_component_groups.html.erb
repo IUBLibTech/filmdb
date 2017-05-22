@@ -115,10 +115,10 @@
 		$.ajax({
 			url: '../component_groups/'+id+'/ajax_queue_pull_request',
 			method: 'POST',
-			error: function() {
+			error: function(jqXHR, textStatus, error) {
 				swal({
 					title: 'Ajax Error',
-					text: "Something bad happened while trying to queue this Component Group for a pull request"
+					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
 				})
 			},
 			success: function() {

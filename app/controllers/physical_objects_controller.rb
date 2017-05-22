@@ -1,5 +1,5 @@
 class PhysicalObjectsController < ApplicationController
-  require 'manual_roll_back_exception'
+  require 'manual_roll_back_error'
 
   include PhysicalObjectsHelper
   include MailHelper
@@ -114,10 +114,10 @@ class PhysicalObjectsController < ApplicationController
     bc = params[:physical_object][:iu_barcode]
     adv = params[:physical_object][:ad_strip]
     @physical_object = PhysicalObject.where(iu_barcode: bc).first
-    nitrate = @physical_object.base_nitrate
     if @physical_object.nil?
       flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
     else
+      nitrate = @physical_object.base_nitrate
       @physical_object.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
       if @physical_object.base_nitrate && !nitrate
@@ -171,9 +171,9 @@ class PhysicalObjectsController < ApplicationController
     end
 
     def set_cv
-      #@series = Series.all.order(:title)
       @cv = ControlledVocabulary.physical_object_cv
       @l_cv = ControlledVocabulary.language_cv
+      @pod_cv = ControlledVocabulary.physical_object_date_cv
     end
 
 end

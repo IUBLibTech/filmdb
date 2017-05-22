@@ -73,7 +73,7 @@ class CollectionsController < ApplicationController
 
   def autocomplete_collection
     if params[:term]
-      json = Collection.where("name like ?", "%#{params[:term]}%").select(:id, :name).to_json
+      json = Collection.joins(:unit).where("collections.name like ?", "%#{params[:term]}%").select('collections.id, collections.name, unit_id, units.abbreviation').to_json
       json.gsub! "\"name\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       render json: json
@@ -105,6 +105,7 @@ class CollectionsController < ApplicationController
       @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id, modified_by: @user.id )
       @cv = ControlledVocabulary.physical_object_cv
       @l_cv = ControlledVocabulary.language_cv
+      @pod_cv = ControlledVocabulary.physical_object_date_cv
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

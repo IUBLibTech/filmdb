@@ -45,6 +45,9 @@ gem 'roo'
 # handle email notifications
 gem 'mail'
 
+# railsconfig/config - used to get yaml configuration in config/settings/[ENV].yaml files
+gem 'config'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

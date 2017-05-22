@@ -189,6 +189,7 @@ class TitlesController < ApplicationController
   def set_physical_object_cv
     @cv = ControlledVocabulary.physical_object_cv
     @l_cv = ControlledVocabulary.language_cv
+    @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
   def set_title_cv
     @title_cv = ControlledVocabulary.title_cv

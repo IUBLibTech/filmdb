@@ -70,7 +70,7 @@ class StatsController < ApplicationController
 			rescue
 			end
 		end
-		@filter_msg = (@collection ? "[#{@collection.unit.abbreviation} - #{@collection.name}]" : (@unit ? "[#{@unit.abbreviation}]" : "[Gloabl]"))
+		@filter_msg = (@collection ? "[#{@collection.unit.abbreviation} - #{@collection.name}]" : (@unit ? "[#{@unit.abbreviation}]" : "[Global]"))
 	end
 
 	def po_sql_where
