@@ -199,8 +199,7 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	def dates_text
-		self.physical_object_dates.collect{ |d| "#{d.date} [#{d.type}]" }.join(', ') unless self.physical_object_dates.nil?
-	end
+		self.physical_object_dates.collect{ |d| "#{d.date} [#{d.type}]" }.join(', ') unless self.physical_object_dates.nil?	end
 
 	def series_id
 		self.title.series.id if self.title && self.title.series
@@ -445,7 +444,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.stereo sound_configuration_stereo
 				xml.surround sound_configuration_surround
 				xml.multiTrack sound_configuration_multi_track
-				xml.dual sound_configuration_dual
+				xml.dual sound_configuration_dual_mono
 			end
 
 			xml.languages do
