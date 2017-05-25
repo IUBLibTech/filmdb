@@ -5,8 +5,8 @@
   <%= link_to 'Inventory This Series', series_new_physical_object_path(@series) %>
 </div>
 <div id="whodoneit">
-  <div><b>Creator</b></div><div><%= @series.creator&.name %></div>
-  <div><b>Last Modified By</b></div><div><%= @series.modifier&.name %></div>
+  <div><b>Creator</b></div><div><%= @series.creator&.type_and_location %></div>
+  <div><b>Last Modified By</b></div><div><%= @series.modifier&.type_and_location %></div>
 </div>
 <%= render partial: 'show' %>
 <h4>Titles in this Series</h4>

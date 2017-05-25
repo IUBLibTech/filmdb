@@ -1,8 +1,3 @@
-<p class="warning">
-<% unless flash[:warning].to_s.blank? %>
-    <%= flash[:warning] %>
-<% end %>
-</p>
 <%= render partial: 'layouts/notice_div' %>
 <%= form_for @physical_object, url: update_ad_strip_path do |f| %>
   <table>

@@ -32,8 +32,8 @@
   <div class="left _50">
     <b>Unit</b> <%= @physical_object.unit.abbreviation %><br/>
     <b>Collection</b> <%= @physical_object.collection&.name %><br/>
-    <b>Current Location</b> <%= @physical_object.location %><br/>
-		<b>Workflow Status</b> <%= @physical_object.current_workflow_status&.name %><br/>
+    <b>Current Location</b> <%= @physical_object.current_workflow_status.workflow_status_location %><br/>
+		<b>Workflow Status</b> <%= @physical_object.current_workflow_status.status_type %><br/>
     <b>IU Barcode</b> <%= @physical_object.iu_barcode %><br/>
     <b>MDPI Barcode</b> <%= @physical_object.mdpi_barcode %><br/>
     <b>IUCAT Title No.</b> <%= @physical_object.title_control_number %><br/>

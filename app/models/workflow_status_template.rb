@@ -1,14 +1,13 @@
 class WorkflowStatusTemplate < ActiveRecord::Base
 
-	# statuses:
-	PULL_REQUEST_QUEUED = 'Pull Request Queued'
-	PULL_REQUEST_PROCESSED = 'Pull Request Processed'
-	PULL_REQUEST_RECEIVED = 'Pull Request Received'
-	SHIPPED_TO_EXTERNAL = 'Shipped to Instition'
-	RETURNED_FROM_EXTERNAL = 'Returned From Institution'
+	# statuses - These values must match (case sensitive) all entries in the workflow_status_templates.name column
 	IN_STORAGE = 'In Storage'
+	PULL_REQUEST_QUEUED = 'Queued for Pull Request'
+	PULL_REQUESTED = 'Pull Requested'
+	ON_SITE = 'On Site'
+	SHIPPED_TO_EXTERNAL = 'Shipped External'
 
-	STATES = [PULL_REQUEST_QUEUED, PULL_REQUEST_PROCESSED, PULL_REQUEST_RECEIVED, SHIPPED_TO_EXTERNAL, RETURNED_FROM_EXTERNAL, IN_STORAGE]
+	STATES = [IN_STORAGE, PULL_REQUEST_QUEUED, PULL_REQUESTED, ON_SITE, SHIPPED_TO_EXTERNAL]
 	STATUS_TO_TEMPLATE_ID = {}
 	STATES.each do |s|
 		t = WorkflowStatusTemplate.where(name: s).first

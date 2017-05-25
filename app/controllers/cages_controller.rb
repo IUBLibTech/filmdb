@@ -63,10 +63,13 @@ class CagesController < ApplicationController
 	end
 
   def add_physical_object_to_shelf
-    if @physical_object.nil? || (!@physical_object.cage_shelf.nil? && @physical_object.cage_shelf != @cage_shelf)
-			@msg = @physical_object.nil? ? "Could not find Physical Object with barcode #{params[:barcode]}" : "Physical Object #{@physical_object.mdpi_barcode} already belongs to Shelf #{link_to @physical_object.cage_shelf.identifier cage_path(@physical_object.cage_shelf.cage) }"
+    if @physical_object.nil? || (!@physical_object.cage_shelf.nil? && @physical_object.cage_shelf != @cage_shelf) || !@physical_object.onsite?
+			@msg = @physical_object.nil? ? "Could not find Physical Object with barcode #{params[:barcode]}" :
+				!@physical_object.onsite? ?
+					"#{@physical_object.mdpi_barcode} is not. It is: #{@physical_object.current_workflow_status.type_and_location}" :
+					"#{@physical_object.mdpi_barcode} already belongs to Shelf #{link_to @physical_object.cage_shelf.identifier cage_path(@physical_object.cage_shelf.cage) }"
       render partial: 'ajax_add_po_failure'
-    else
+		else
       @physical_object.update_attributes(cage_shelf_id: @cage_shelf.id)
 			@msg = "Physical Object #{@physical_object.mdpi_barcode} was successfully added to Shelf #{@physical_object.cage_shelf.identifier}"
       render partial: 'ajax_add_po_success'

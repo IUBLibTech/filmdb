@@ -33,7 +33,7 @@
   <% @unit.collections.each do |col| %>
       <tr>
         <td>
-          <%= link_to "#{col.name}", collection_path(col) %>
+          <%= link_to "#{col.type_and_location}", collection_path(col) %>
         </td>
       </tr>
   <% end %>

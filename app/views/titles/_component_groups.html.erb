@@ -18,9 +18,9 @@
 			</td>
       <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
-			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.name }.uniq.join(', ') %></td>
+			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.type_and_location }.uniq.join(', ') %></td>
       <td>
-				<%= link_to 'Request From Storage', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
+				<%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
 				<%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
 			</td>
     </tr>
@@ -121,16 +121,27 @@
 					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
 				})
 			},
-			success: function() {
-				swal({
-					title: 'Success',
-					text: 'Component Group queued for pull request'
+			success: function(data, status, xhr) {
+        title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
+				msg = data == 'success' ? '<p>Component Group queued for pull request</p>': fillBadList(data)
+        swal({
+					title: title,
+					text: msg,
+          html: true
 				})
 			}
 		});
 		return false;
 	});
 
+  var fillBadList = function(data) {
+    ul = "<ul>"
+    Object.keys(data).forEach(function(e) {
+      ul += "<li>"+(data[e])+"</li>";
+    });
+    ul += "</ul>"
+    return ul;
+  }
 </script>
 
 

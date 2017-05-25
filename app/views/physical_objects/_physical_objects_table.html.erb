@@ -3,7 +3,8 @@
   <tr>
     <th>Barcode</th>
     <th>Title(s)</th>
-    <th>Series</th>
+    <th>Status</th>
+    <th>Location</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -16,7 +17,8 @@
       <td>
         <%= physical_object.titles_text %>
       </td>
-      <td><%= physical_object.titles.collect { |t| t.series&.title }.compact.join(', ') %></td>
+      <td><%= physical_object.current_workflow_status.status_type %></td>
+      <td><%= physical_object.current_workflow_status.workflow_status_location %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>

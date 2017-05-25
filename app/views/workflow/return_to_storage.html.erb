@@ -1,12 +1,21 @@
-<p>
-	These Physical Objects are in house (IULMIA facilities) and are ready to be returned to storage (ALF). Mark the object
-	as returned when it has left IULMIA.
-</p>
-<h4 class="m_bottom_10px">Physical Objects Ready to Return to Storage</h4>
+<% if @msg %>
+    <p class='notice'><%= @msg %></p>
+<% elsif @err  %>
+    <p class='warning'><%= @err %></p>
+<% end %>
+    <h4>Scan an IU Barcode to Return Item to Storage</h4>
+<%= form_for 'physical_object', url: process_return_to_storage_path do |f| %>
+    <table>
+      <tr>
+        <th>Scan IU Barcode</th>
+        <td><%= f.text_field :iu_barcode %></td>
+      </tr>
+      <tr>
+        <td><%= f.submit 'Mark Returned' %> </td>
+        <td>to <%= f.select :location_id, WorkflowStatusLocation.where(location_type: 'in_storage').order(:location_type).collect { |l| [l.facility, l.id] }  %></td>
+      </tr>
+    </table>
+<% end %>
+<h4 class="m_bottom_10px">Physical Objects <i>On Site</i></h4>
 <%= render partial: 'physical_objects_table' %>
-<%= render partial: 'ajax_javascript' %>
-<script type="text/javascript" charset="utf-8">
-	$(document).ready(function() {
-		hookAjax();
-	});
-</script>
+<%= render partial: 'physical_objects/physical_object_metadata_js' %>

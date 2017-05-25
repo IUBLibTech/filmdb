@@ -197,6 +197,7 @@ table.version_table > tbody > tr > td > input {
 .warning {
     background-color: red;
     color: black;
+    padding: 5px;
 
 }
 .notice {

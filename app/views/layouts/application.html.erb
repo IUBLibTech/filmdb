@@ -21,7 +21,8 @@
     <a href="#">Update</a>
     <ul class="nav">
       <li><%= link_to 'AD Strip', edit_ad_strip_path %></li>
-      <li><%= link_to 'Location', edit_location_path %></li>
+      <li><%= link_to 'Return to Storage', return_to_storage_path %></li>
+      <li><%= link_to 'Send for Mold Abatement', send_for_mold_abatement_path %></li>
     </ul>
   </div>
   <div class="menuItem">
@@ -52,11 +53,9 @@
 	<div class="menuItem">
 		<a href="#">Workflow</a>
 		<ul class="nav">
-			<li><%= link_to "Request From Storage", pull_request_path %></li>
-			<li><%= link_to "Receive From Storage", receive_from_storage_path %></li>
-			<li><%= link_to "Ship Externally", ship_external_path %></li>
-			<li><%= link_to "Receive From Shipping", receive_external_path %></li>
-			<li><%= link_to "Return To Storage", return_to_storage_path %></li>
+			<li><%= link_to "Pull Queued Component Groups", pull_request_path %></li>
+			<li><%= link_to "View On Site Objects", receive_from_storage_path %></li>
+			<li><%= link_to "View Shipped Objects", ship_external_path %></li>
 		</ul>
 	</div>
   <div class="menuItem">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170519162052) do
+ActiveRecord::Schema.define(version: 20170523135913) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -484,6 +484,15 @@ ActiveRecord::Schema.define(version: 20170519162052) do
     t.datetime "updated_at"
   end
 
+  create_table "workflow_status_locations", force: :cascade do |t|
+    t.string   "location_type",     limit: 255
+    t.string   "facility",          limit: 255
+    t.string   "physical_location", limit: 255
+    t.text     "notes",             limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "workflow_status_templates", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.integer  "sort_order",  limit: 4
@@ -498,6 +507,7 @@ ActiveRecord::Schema.define(version: 20170519162052) do
     t.string   "notes",                       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "workflow_status_location_id", limit: 8
   end
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).

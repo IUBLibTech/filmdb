@@ -54,6 +54,10 @@ class ComponentGroupsController < ApplicationController
     end
   end
 
+  def on_site
+
+  end
+
   # DELETE /component_groups/1
   # DELETE /component_groups/1.json
   def destroy
@@ -65,8 +69,29 @@ class ComponentGroupsController < ApplicationController
   end
 
   def ajax_queue_pull_request
-    result = pull_request([@component_group.id])
-    render text: result, status: (result == "failure" ? 500 : 200)
+    # result = pull_request([@component_group.id])
+    # render text: result, status: (result == "failure" ? 500 : 200)
+    @component_group = ComponentGroup.find(params[:id])
+    bad = {}
+    begin
+      PhysicalObject.transaction do
+        @component_group.physical_objects.each do |p|
+          status = p.current_workflow_status
+          if status.status_type != WorkflowStatusTemplate::IN_STORAGE
+            bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.type_and_location}</b>".html_safe
+          else
+            p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID(WorkflowStatusTemplate::PULL_REQUEST_QUEUED, physical_object_id: p.id, workflow_status_location_id: status.workflow_status_location_id))
+          end
+        end
+        if bad.size > 0
+          raise ManualRollBackError.new()
+        else
+          render text: 'success'
+        end
+      end
+    rescue ManualRollBackError => e
+      render json: bad.to_json
+    end
   end
 
   def ajax_physical_objects_list

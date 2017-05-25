@@ -186,6 +186,10 @@ class PhysicalObject < ActiveRecord::Base
 
 	end
 
+	def onsite?
+		current_workflow_status.status_type == WorkflowStatusTemplate::ON_SITE
+	end
+
 	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
 	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
 	# is set and passed as the param for assignment

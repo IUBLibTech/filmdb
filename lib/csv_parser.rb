@@ -316,12 +316,12 @@ class CsvParser
           name = matcher[1]
           role = matcher[2]
           if @title_cv[:title_creator_role_type].collect { |x| x[0] }.include?(role)
-            title.title_creators << TitleCreator.new(title_id: title.id, name: name, role: role)
+            title.title_creators << TitleCreator.new(title_id: title.id, type_and_location: name, role: role)
           else
             po.errors.add(:title_creator, "Undefined Title Creator Role: #{role}")
           end
         else
-          title.title_creators << TitleCreator.new(title_id: title.id, name: val, role: '')
+          title.title_creators << TitleCreator.new(title_id: title.id, type_and_location: val, role: '')
         end
       end
     end
@@ -334,12 +334,12 @@ class CsvParser
           name = matcher[1]
           role = matcher[2]
           if @title_cv[:title_publisher_role_type].collect { |x| x[0] }.include?(role)
-            title.title_publishers << TitlePublisher.new(title_id: title.id, name: name, publisher_type: role)
+            title.title_publishers << TitlePublisher.new(title_id: title.id, type_and_location: name, publisher_type: role)
           else
             po.errors.add(:title_publisher, "Undefined Title Publisher Role: #{role}")
           end
         else
-          title.title_publishers << TitlePublisher.new(title_id: title.id, name: pv, publisher_type: '')
+          title.title_publishers << TitlePublisher.new(title_id: title.id, type_and_location: pv, publisher_type: '')
         end
       end
     end

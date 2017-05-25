@@ -7,10 +7,10 @@ class Cage < ActiveRecord::Base
   accepts_nested_attributes_for :middle_shelf
   accepts_nested_attributes_for :bottom_shelf
 
-  # a place holder for the form submission of adding a physical object to a cage shelf: see cages_controller#add_physical_object_to_shelf
+  # place holders for the form submission of adding a physical object to a cage shelf: see cages_controller#add_physical_object_to_shelf
   attr_accessor :cage_shelf_id
-  # a place holder for the form submission of adding a physical object to a cage shelf: see cages_controller#add_physical_object_to_shelf
   attr_accessor :physical_object_mdpi_barcode
+  attr_accessor :physical_object_iu_barcode
 
   def initialize(*args)
     super

@@ -63,10 +63,23 @@
 
 <div id="shelf_content_form">
 	<%= form_for @cage, remote: true, html: {id: 'add_cage_shelf_form'} do |f| %>
-		<b class="block">Scan MDPI barcode to add to select Cage Shelf</b>
-		<%= f.hidden_field :cage_shelf_id %>
-		<%= f.text_field :physical_object_mdpi_barcode %>
-		<%= f.submit 'Add Physical Object' %>
+      <%= f.hidden_field :cage_shelf_id %>
+      <table>
+        <tr>
+          <th colspan="2">Scan IU and MDPI barcodes to add object to select Cage Shelf</th>
+        </tr>
+        <tr>
+          <th>IU Barcode</th>
+          <td><%= f.text_field :physical_object_iu_barcode %></td>
+        </tr>
+        <tr>
+          <th>MDPI Barcode</th>
+          <td><%= f.text_field :physical_object_mdpi_barcode %></td>
+        </tr>
+        <tr>
+          <td colspan="2"><%= f.submit 'Add Physical Object' %></td>
+        </tr>
+      </table>
 	<% end %>
 </div>
 <div id="shelf_content">

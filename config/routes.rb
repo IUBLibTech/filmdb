@@ -76,16 +76,24 @@ Rails.application.routes.draw do
 
 	resources :users
 
+	# browser routes for workflow
 	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
-	post '/workflow/ajax/pull_requested/:id', to: 'workflow#ajax_mark_pull_requested', as: 'ajax_pull_requested'
 	get '/workflow/receive_from_strorage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
-	post '/workflow/ajax/received_from_storage/:id', to: 'workflow#ajax_mark_received_from_storage', as: 'ajax_received_from_storage'
 	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
-	post '/workflow/ajax/shipped_external/:id', to: 'workflow#ajax_mark_shipped_external', as: 'ajax_shipped_external'
 	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
-	post '/workflow/ajax/received_external/:id', to: 'workflow#ajax_mark_received_from_external', as: 'ajax_received_external'
 	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
+	post '/workflow/return_to_storage', to: 'workflow#process_return_to_storage', as: 'process_return_to_storage'
+	get '/workflow/send_for_mold_abatement', to: 'workflow#send_for_mold_abatement', as: 'send_for_mold_abatement'
+	post '/workflow/process_send_for_mold_abatement', to: 'workflow#process_send_for_mold_abatement', as: 'process_send_for_mold_abatement'
+
+	# ajax routes for workflow
+	post '/workflow/ajax/shipped_external/:id', to: 'workflow#ajax_mark_shipped_external', as: 'ajax_shipped_external'
+	post '/workflow/ajax/received_from_storage/:id', to: 'workflow#ajax_mark_received_from_storage', as: 'ajax_received_from_storage'
+	post '/workflow/ajax/pull_requested/:id', to: 'workflow#ajax_mark_pull_requested', as: 'ajax_pull_requested'
+	post '/workflow/ajax/received_external/:id', to: 'workflow#ajax_mark_received_from_external', as: 'ajax_received_external'
 	post '/workflow/ajax/returned_to_storage/:id', to: 'workflow#ajax_mark_returned_to_storage', as: 'ajax_returned_to_storage'
+
+	resources :workflow_status_locations
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

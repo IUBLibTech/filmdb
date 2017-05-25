@@ -25,7 +25,6 @@ module AlfHelper
 					p.save
 				end
 				b = f.write(contents)
-				debugger
 				f.close();
 				deposit_pull_fill(f)
 				return "success"

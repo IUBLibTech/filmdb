@@ -1,3 +1,8 @@
+<% unless flash[:warning].to_s.blank? %>
+    <p class="warning">
+      <%= flash[:warning] %>
+    </p>
+<% end %>
 <% unless flash[:notice].blank? %>
   <div>
     <p class="notice"><%= flash[:notice].html_safe %></p>
