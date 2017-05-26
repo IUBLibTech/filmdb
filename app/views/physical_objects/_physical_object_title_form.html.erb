@@ -16,7 +16,7 @@
 <div>
   <b class='title_label'>Add Title</b>
 	<%= f.text_field :title_text, class: 'ajax_complete' %>
-	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remive this Physical Object/Title association' %>
+	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remove this Physical Object/Title association' %>
 </div>
 <script type="text/javascript">
   $('.button').click(function() { removeTitle($(this)); })

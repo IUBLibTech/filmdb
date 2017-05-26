@@ -31,7 +31,7 @@
     </div>
     <div class="field">
       <% if @collection %>
-          <%= @collection.type_and_location %>
+          <%= @collection.name%>
       <% else %>
           <%= f.text_field :collection_text%>
       <% end %>

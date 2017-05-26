@@ -28,7 +28,7 @@
 
     <% unless @title.title_creators.empty? %>
         <h4 class="ajax">Creators</h4>
-        <b><i><%= @title.title_creators.collect { |c| "#{c.role.blank? ? "#{c.type_and_location}" : "#{c.role} : #{c.name}"}" }.join(', ')%></i></b>
+        <b><i><%= @title.title_creators.collect { |c| "#{c.role.blank? ? "#{c.name}" : "#{c.role} : #{c.name}"}" }.join(', ')%></i></b>
     <% end %>
 
     <% unless @title.title_publishers.empty? %>

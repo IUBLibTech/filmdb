@@ -37,7 +37,7 @@
           <div class="left_div creator_div">
             <div class="label"><b>Creator</b></div>
             <div class="field">
-              <%= tc.type_and_location %>
+              <%= tc.name %>
             </div>
             <div class="label"><b>Role</b></div>
             <div class="field">
@@ -51,7 +51,7 @@
       <% @title.title_publishers.each do |tp| %>
           <div class="left_div creator_div">
             <div class="label"><b>Name</b></div>
-            <div class="field"><%= tp.type_and_location %></div>
+            <div class="field"><%= tp.name %></div>
             <div class="label"><b>Role</b></div>
             <div class="field"><%= tp.publisher_type %></div>
           </div>

@@ -15,9 +15,9 @@
   <tbody>
     <% @collections.each do |collection| %>
       <tr>
-        <td><%= collection.type_and_location %></td>
+        <td><%= collection.name %></td>
         <td><%= collection.unit.abbreviation unless collection.unit.nil? %></td>
-        <td><%= collection.unit.type_and_location unless collection.unit.nil? %></td>
+        <td><%= collection.unit.name unless collection.unit.nil? %></td>
         <td>
         	<%= link_to 'Show', collection %><br/>
 					<%= link_to 'Edit', edit_collection_path(collection) %><br/>

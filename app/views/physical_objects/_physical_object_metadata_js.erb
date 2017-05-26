@@ -153,6 +153,7 @@
       $.ajax({
         url: window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id,
         error: function(result) {
+          x = 237;
           alert("Error:\n"+result);
         },
         success: function(result) {

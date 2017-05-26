@@ -17,7 +17,7 @@ class UnitsController < ApplicationController
 		@unit = Unit.new(unit_params)
 		respond_to do |format|
 			if @unit.save
-				misc = Collection.new(type_and_location: Collection::MISC_COLLECTION_NAME)
+				misc = Collection.new(name: Collection::MISC_COLLECTION_NAME)
 				misc.unit = @unit
 				misc.save
 				format.html { redirect_to @unit, notice: 'Unit was successfully created.' }
@@ -58,6 +58,6 @@ class UnitsController < ApplicationController
 	end
 
 	def unit_params
-		params.require(:unit).permit(:type_and_location, :unit_id, :abbreviation, :institution, :campus, :menu_index)
+		params.require(:unit).permit(:name, :unit_id, :abbreviation, :institution, :campus, :menu_index)
 	end
 end
