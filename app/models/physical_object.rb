@@ -46,7 +46,6 @@ class PhysicalObject < ActiveRecord::Base
 	# grabs all physical objects where their current workflow status is the specified text - see WorkflowStatusTemplate
 	# statuses for what to pass to this scope
 	scope :where_current_workflow_status_is, lambda { |status|
-
 		sql = "SELECT physical_objects.* "+
 			"FROM (SELECT workflow_statuses.physical_object_id "+
 			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses	GROUP BY physical_object_id) AS x "+
@@ -186,9 +185,15 @@ class PhysicalObject < ActiveRecord::Base
 
 	end
 
+	# tests if the physical object is currently on IULMIA staff workflow space
 	def onsite?
 		current_workflow_status.status_type == WorkflowStatusTemplate::ON_SITE
 	end
+
+	def in_transit_from_storage?
+		current_workflow_status.status_type == WorkflowStatusTemplate::PULL_REQUESTED
+	end
+
 
 	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
 	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
@@ -220,7 +225,7 @@ class PhysicalObject < ActiveRecord::Base
     PhysicalObjectTitle.where(physical_object_id: id, title_id: title_id).size > 0
   end
 
-	# duration is input as hh:mm:ss
+	# duration is input as hh:mm:ss but stored as seconds
 	def duration=(time)
     if time.blank?
       super(nil)

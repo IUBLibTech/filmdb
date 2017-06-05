@@ -6,8 +6,9 @@ class WorkflowStatusTemplate < ActiveRecord::Base
 	PULL_REQUESTED = 'Pull Requested'
 	ON_SITE = 'On Site'
 	SHIPPED_TO_EXTERNAL = 'Shipped External'
+	MISSING = 'Missing'
 
-	STATES = [IN_STORAGE, PULL_REQUEST_QUEUED, PULL_REQUESTED, ON_SITE, SHIPPED_TO_EXTERNAL]
+	STATES = [IN_STORAGE, PULL_REQUEST_QUEUED, PULL_REQUESTED, ON_SITE, SHIPPED_TO_EXTERNAL, MISSING]
 	STATUS_TO_TEMPLATE_ID = {}
 	STATES.each do |s|
 		t = WorkflowStatusTemplate.where(name: s).first

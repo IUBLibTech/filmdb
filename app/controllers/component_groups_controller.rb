@@ -80,7 +80,10 @@ class ComponentGroupsController < ApplicationController
           if status.status_type != WorkflowStatusTemplate::IN_STORAGE
             bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.type_and_location}</b>".html_safe
           else
-            p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID(WorkflowStatusTemplate::PULL_REQUEST_QUEUED, physical_object_id: p.id, workflow_status_location_id: status.workflow_status_location_id))
+            p.workflow_statuses << WorkflowStatus.new(
+              workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::PULL_REQUEST_QUEUED],
+              physical_object_id: p.id,
+              workflow_status_location_id: status.workflow_status_location_id)
           end
         end
         if bad.size > 0

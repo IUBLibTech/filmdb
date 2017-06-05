@@ -1,9 +1,4 @@
-<% if @msg %>
-    <p class='notice'><%= @msg %></p>
-<% elsif @err  %>
-    <p class='warning'><%= @err %></p>
-<% end %>
-    <h4>Scan an IU Barcode to Return Item to Storage</h4>
+<h4>Scan an IU Barcode to Return Item to Storage</h4>
 <%= form_for 'physical_object', url: process_return_to_storage_path do |f| %>
     <table>
       <tr>

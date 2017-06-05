@@ -2,7 +2,6 @@
 <%= link_to 'Back', physical_objects_path %> |
 <%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %> |
 <%= link_to 'New Physical Object', new_physical_object_path %>
-<%= render partial: 'layouts/notice_div' %>
 
 <% if @continue_url %>
    &nbsp;|&nbsp;<%= link_to @continue_text, @continue_url %>

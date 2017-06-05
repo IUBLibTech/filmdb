@@ -4,7 +4,7 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
   include MailHelper
 
-  before_action :set_physical_object, only: [:show, :edit, :update, :destroy]
+  before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy]
   before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
                                 :edit_location, :update_location, :duplicate
   ]
@@ -12,7 +12,12 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-    @physical_objects = PhysicalObject.all
+		@statuses = WorkflowStatusTemplate.all
+	  if params[:status] && !params[:status].blank?
+		  @physical_objects = PhysicalObject.where_current_workflow_status_is(params[:status])
+	  else
+		  @physical_objects = PhysicalObject.all
+	  end
   end
 
   # GET /physical_objects/1
@@ -37,6 +42,13 @@ class PhysicalObjectsController < ApplicationController
       end
     end
     session[:physical_object_create_action] = nil
+  end
+
+  def show_xml
+    xml = Builder::XmlMarkup.new(indent: 2)
+    xml.instruct! :xml, :version=>"1.0"
+    @physical_object.to_xml(xml)
+    render xml: xml.target!
   end
 
   # GET /physical_objects/new_physical_object

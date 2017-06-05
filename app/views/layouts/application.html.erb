@@ -10,19 +10,32 @@
 <div id="branding">
   <div class="user">
 	  User: <b><%= current_username %></b><br/>
-    <%= link_to "Sign Out", signout_path, method: :delete, class: 'red' %>
+    <%= link_to 'Sign Out', signout_path, method: :delete, class: 'red' %>
   </div>
 </div>
 <div id="menu">
   <div class="menuItem">
     <%= link_to 'Inventory', inventory_path %>
   </div>
+	<div class="menuItem">
+		<a href="#">Workflow</a>
+		<ul class="nav">
+			<li><%= link_to 'Request Pull of Queued Objects', pull_request_path %></li>
+      <li><%= link_to 'Receive From Storage', receive_from_storage_path %></li>
+      <li><%= link_to 'Pack Items for Digitization', cages_path %></li>
+      <li><%= link_to 'Ship Items for Digitization', ship_cages_path %></li>
+      <li><%= link_to 'Return to Storage', return_to_storage_path %></li>
+
+    </ul>
+	</div>
   <div class="menuItem">
     <a href="#">Update</a>
     <ul class="nav">
       <li><%= link_to 'AD Strip', edit_ad_strip_path %></li>
-      <li><%= link_to 'Return to Storage', return_to_storage_path %></li>
       <li><%= link_to 'Send for Mold Abatement', send_for_mold_abatement_path %></li>
+      <li><%= link_to 'Send to Freexer', send_to_freezer_path %></li>
+      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
+      <li><%= link_to 'Mark Item Found', '' %></li>
     </ul>
   </div>
   <div class="menuItem">
@@ -44,21 +57,6 @@
     </ul>
   </div>
   <div class="menuItem">
-    <a href="#">Ship/Return Items</a>
-    <ul class="nav">
-      <li><a href="#">Ship Items</a></li>
-      <li><a href="#">Return Items</a></li>
-    </ul>
-  </div>
-	<div class="menuItem">
-		<a href="#">Workflow</a>
-		<ul class="nav">
-			<li><%= link_to "Pull Queued Component Groups", pull_request_path %></li>
-			<li><%= link_to "View On Site Objects", receive_from_storage_path %></li>
-			<li><%= link_to "View Shipped Objects", ship_external_path %></li>
-		</ul>
-	</div>
-  <div class="menuItem">
     <a href="#">Old Menus</a>
     <ul class="nav">
       <li><%= link_to "Physical Objects", physical_objects_path %></li>
@@ -71,6 +69,7 @@
     </ul>
   </div>
 </div>
+<%= render partial: 'layouts/notice_div' %>
 <%= yield %>
 
 <script type="text/javascript">

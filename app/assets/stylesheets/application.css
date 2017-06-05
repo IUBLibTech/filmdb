@@ -577,3 +577,7 @@ div.check_box > div {
  .stats_form_input > input {
      width: 100%;
  }
+
+ #physical_objects_filter_form {
+     margin: 20px 0 10px 0;
+ }

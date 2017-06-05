@@ -23,8 +23,9 @@ function markValid(barcodeEl) {
     barcodeEl.removeClass("bad_barcode");
 }
 
-function isValidBarcode(barcode) {
-    return barcode.length == 14 && barcode.charAt(0) == 3 && validCheckDigit(barcode);
+function isValidBarcode(barcode, mdpi = false) {
+    sd = mdpi == true ? 4 : 3
+    return barcode.length == 14 && barcode.charAt(0) == sd && validCheckDigit(barcode);
 }
 
 function validateIUBarcode(barcodeEl) {
@@ -34,3 +35,12 @@ function validateIUBarcode(barcodeEl) {
         markInvalid(barcodeEl);
     }
 }
+
+function validateMdpiBarcode(barcodeEl) {
+    if (isValidBarcode(barcodeEl.val(), true)) {
+        markValid(barcodeEl);
+    } else {
+        markInvalid(barcodeEl);
+    }
+}
+

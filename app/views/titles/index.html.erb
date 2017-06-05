@@ -1,8 +1,5 @@
 <%= link_to 'New Title', new_title_path %>
-<%= render partial: 'layouts/notice_div' %>
-
 <h1>Listing Titles</h1>
-
 <table>
   <thead>
     <tr>
@@ -12,7 +9,6 @@
       <th>Actions</th>
     </tr>
   </thead>
-
   <tbody>
     <% @titles.each do |title| %>
     <tr>

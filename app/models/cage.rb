@@ -85,6 +85,19 @@ class Cage < ActiveRecord::Base
     bottom_shelf.notes
   end
 
+  def can_by_shipped?
+    (!top_shelf.nil? || !middle_shelf.nil? || !bottom_shelf.nil?) &&
+      (top_shelf.physical_objects.size > 0 || middle_shelf.physical_objects.size > 0 || bottom_shelf.physical_objects.size > 0)
+  end
+
+  def can_be_destroyed?
+    top_shelf.physical_objects.size == 0 && middle_shelf.physical_objects.size == 0 && bottom_shelf.physical_objects.size == 0
+  end
+
+  def status
+    shipped? ? "Shipped" : (ready_to_ship? ? 'Ready to Ship' : (can_by_shipped? ? 'Packing' : 'Empty'))
+  end
+
   def to_xml(options)
 
   end

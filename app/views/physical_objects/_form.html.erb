@@ -12,7 +12,6 @@
           controller_name == "titles" ? "For Title: <i>#{@title.title_text}</i>".html_safe : "" %>
   <h2><%= @em %> <%= cm %></h2>
 </div>
-<%= render partial: 'layouts/notice_div' %>
 <% url =
        controller_name == 'physical_objects' && action_name == 'new' ? physical_objects_path :
        controller_name == 'physical_objects' && action_name == 'edit' ? physical_object_path :

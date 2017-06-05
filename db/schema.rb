@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523135913) do
+ActiveRecord::Schema.define(version: 20170602133340) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 20170523135913) do
     t.integer  "bottom_shelf_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "ready_to_ship",                 default: false
+    t.boolean  "shipped",                       default: false
   end
 
   create_table "collection_inventory_configurations", force: :cascade do |t|

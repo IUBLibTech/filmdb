@@ -11,6 +11,9 @@
   $("#physical_object_iu_barcode").bind("change keyup", function () {
     validateIUBarcode($(this));
   });
+  $("#physical_object_mdpi_barcode").bind("change keyup", function () {
+    validateMdpiBarcode($(this));
+  });
 
   // hook in handles for the event change on media type
   var media_type_mediums = <%= PhysicalObject::MEDIA_TYPE_MEDIUMS.to_json.html_safe %>;

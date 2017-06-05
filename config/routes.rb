@@ -2,9 +2,13 @@ Rails.application.routes.draw do
 
   resources :cages
 	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
-	post '/cages/cage_shelf/:id/ajax_physical_objects/:barcode', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
+	post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
+	patch '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_patch'
 	delete '/cages/cage_shelf/:id/ajax_remove_physical_object_from_shelf/:po_id', to: 'cages#remove_physical_object', as: 'remove_physical_object_from_shelf'
 	get '/cages/:id/show_xml', to: 'cages#show_xml', as: 'show_cage_xml'
+  post '/cages/mark_ready_to_ship/:id', to: 'cages#mark_ready_to_ship', as: 'mark_ready_to_ship'
+  post '/cages/unmark_ready_to_ship/:id', to: 'cages#unmark_ready_to_ship', as: 'unmark_ready_to_ship'
+  post '/cages/mark_shipped/:id', to: 'cages#mark_shipped', as: 'mark_shipped'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -28,6 +32,7 @@ Rails.application.routes.draw do
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 
   resources :physical_objects
+	get '/physical_objects_filter', to: 'physical_objects#index', as: 'physical_objects_filter_default'
   get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
   post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
@@ -35,6 +40,7 @@ Rails.application.routes.draw do
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
   post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
+	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
 
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
@@ -76,22 +82,22 @@ Rails.application.routes.draw do
 
 	resources :users
 
-	# browser routes for workflow
+	# routes for workflow
 	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
+	post '/workflow/process_pull_request', to: 'workflow#process_pull_requested', as: 'process_pull_requested'
 	get '/workflow/receive_from_strorage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
+	post '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
 	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
 	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
 	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
 	post '/workflow/return_to_storage', to: 'workflow#process_return_to_storage', as: 'process_return_to_storage'
 	get '/workflow/send_for_mold_abatement', to: 'workflow#send_for_mold_abatement', as: 'send_for_mold_abatement'
 	post '/workflow/process_send_for_mold_abatement', to: 'workflow#process_send_for_mold_abatement', as: 'process_send_for_mold_abatement'
-
-	# ajax routes for workflow
-	post '/workflow/ajax/shipped_external/:id', to: 'workflow#ajax_mark_shipped_external', as: 'ajax_shipped_external'
-	post '/workflow/ajax/received_from_storage/:id', to: 'workflow#ajax_mark_received_from_storage', as: 'ajax_received_from_storage'
-	post '/workflow/ajax/pull_requested/:id', to: 'workflow#ajax_mark_pull_requested', as: 'ajax_pull_requested'
-	post '/workflow/ajax/received_external/:id', to: 'workflow#ajax_mark_received_from_external', as: 'ajax_received_external'
-	post '/workflow/ajax/returned_to_storage/:id', to: 'workflow#ajax_mark_returned_to_storage', as: 'ajax_returned_to_storage'
+	get '/workflow/send_to_freezer', to: 'workflow#send_to_freezer', as: 'send_to_freezer'
+	post '/workflow/process_send_to_freezer', to: 'workflow#process_send_to_freezer', as: 'process_send_to_freezer'
+	get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
+	post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
+  get '/workflow/ship_cages', to: 'workflow#ship_cages', as: 'ship_cages'
 
 	resources :workflow_status_locations
 

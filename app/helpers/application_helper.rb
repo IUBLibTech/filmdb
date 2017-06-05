@@ -3,7 +3,7 @@ module ApplicationHelper
 	# this method is based on the Luhn algorithm (aka Mod 10)
 	# wikipedia provides a clear explanation of it:
 	# http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
-	def ApplicationHelper.valid_barcode?(barcode)
+	def ApplicationHelper.valid_barcode?(barcode, mdpi=false)
 		if barcode.is_a? Fixnum
 			barcode = barcode.to_s
 		end
@@ -16,8 +16,9 @@ module ApplicationHelper
 		# if barcode == "0"
 		# 	return true
 		# end
+		mode = mdpi == true ? '4' : '3'
 
-		if barcode.nil? or barcode.length != 14 or barcode[0] != "3"
+		if barcode.nil? or barcode.length != 14 or barcode[0] != mode
 			return false
 		end
 
@@ -50,6 +51,5 @@ module ApplicationHelper
 		end
 		false
 	end
-
 
 end

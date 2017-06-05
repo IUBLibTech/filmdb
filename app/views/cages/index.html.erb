@@ -2,28 +2,6 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Cages</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Cage Identifier</th>
-      <th>Shelf Identifiers</th>
-      <th>Notes</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @cages.each do |cage| %>
-      <tr>
-        <td><%= cage.identifier %></td>
-        <td><%= "#{cage.top_shelf.identifier}" %><br><%= "#{cage.middle_shelf.identifier}" %><br><%= "#{cage.bottom_shelf.identifier}" %></td>
-        <td><%= cage.notes %></td>
-        <td><%= link_to 'Show', cage %><br><%= link_to 'Edit', edit_cage_path(cage) %><br><%= link_to 'Destroy', cage, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
+<%= render partial: 'cages_table' %>
 <br>
 
