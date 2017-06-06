@@ -1,0 +1,29 @@
+<%= form_for(@collection) do |f| %>
+  <% if @collection.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@collection.errors.count, "error") %> prohibited this collection from being saved:</h2>
+      <ul>
+      <% @collection.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+	<table>
+	  <tr>
+	    <th>Collection Name</th>
+	    <td>
+		    <%= f.text_field :name %>
+	    </td>
+	  </tr>
+    <tr>
+      <th>Unit</th>
+      <td>
+        <%= f.select :unit_id, Unit.order('menu_index').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
+      </td>
+    </tr>
+	</table>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,34 @@
+<%= form_for :pos, url: create_component_group_path, format: :html, html: {id: "component_group_form"} do |f| %>
+    <%= f.hidden_field :po_ids %>
+    <div>
+      <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
+      <div>
+        <b class="block">Group Summary</b>
+        <%= f.text_area :group_summary %>
+      </div>
+      <div>
+        <%= f.submit "Create Component Group", title: 'Create Component Group from the Physical Objects selected above' %>
+        <i>Select physical objects above and click to create a new component group.</i>
+      </div>
+    </div>
+<% end %>
+
+<script type="text/javascript">
+  $("#component_group_form").submit(function(event) {
+    vals = [];
+    $("input:checked").each(function() {
+      vals.push($(this).attr("id").substring("physical_object_".length));
+    });
+    $("#pos_po_ids").attr("value", vals.toString());
+  });
+
+  var hook_cg_add = function () {
+    $('#add_to_component_group_form').submit(function(e) {
+      vals = [];
+      $("input:checked").each(function() {
+        vals.push($(this).attr("id").substring("physical_object_".length));
+      });
+      $("#cg_pos_po_ids").attr("value", vals.toString());
+    });
+  }
+</script>

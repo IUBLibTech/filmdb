@@ -1,0 +1,43 @@
+<%#
+  This partial is used by 4 different controllers: PhysicalObject, Collections, Titles, and Series. It needs to determine
+  which controller to post the form submission to, as well as locking out editability of Collection/Title/Series if the
+  physical object is being created through that object. Additionally, div#controller_info is responsible for displaying
+  information relevant to what action you are actually taking: creating a physical object with specific title, series,
+  collection, or making a generic object from scratch.
+%>
+
+<div id="controller_info">
+  <% cm = controller_name == 'collections' ? "For Collection: <i>#{@collection.name}</i>".html_safe :
+      controller_name == 'series' ? "For Series: <i>#{@series.title}</i>".html_safe :
+          controller_name == "titles" ? "For Title: <i>#{@title.title_text}</i>".html_safe : "" %>
+  <h2><%= @em %> <%= cm %></h2>
+</div>
+<% url =
+       controller_name == 'physical_objects' && action_name == 'new' ? physical_objects_path :
+       controller_name == 'physical_objects' && action_name == 'edit' ? physical_object_path :
+       controller_name == 'physical_objects' && action_name == 'duplicate' ? create_duplicate_physical_object_path :
+       controller_name == 'collections' ?  collection_create_physical_object_path  :
+       controller_name == 'titles' ? titles_create_physical_object_path :
+       controller_name == 'series' ? series_create_physical_object_path : ''
+%>
+<%= nested_form_for @physical_object, url: url do |f| %>
+  <% if @physical_object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
+      <ul>
+      <% @physical_object.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <% unless flash[:other_message].blank? %>
+      <div id="other_message">
+        <%= flash[:other_message].html_safe %>
+      </div>
+  <% end %>
+  <%= render partial: 'physical_objects/physical_object_metadata_editable', locals: {f: f} %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

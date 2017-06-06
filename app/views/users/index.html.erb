@@ -1,0 +1,48 @@
+<h1>Listing Users</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Last Name</th>
+      <th>First Name</th>
+      <th>Username</th>
+      <th>Email Address</th>
+      <th>Active?</th>
+	    <th>Can Delete?</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td>
+          <%= user.last_name %>
+        </td>
+        <td>
+	        <%= user.first_name %>
+        </td>
+        <td>
+	        <%= user.username %>
+        </td>
+        <td>
+	        <%= user.email_address %>
+        </td>
+        <td class="<%= user.active ? 'green' : 'red' %>">
+          <%= user.active? ? 'Yes' : 'No' %>
+        </td>
+	      <td class="<%= user.can_delete? ? 'green' : 'red' %>">
+		      <%= user.can_delete? ? 'Yes' : 'No' %>
+	      </td>
+        <td>
+        	<%= link_to 'Show', user %>
+          <%= link_to 'Edit', edit_user_path(user) %>
+          <%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User', new_user_path %>

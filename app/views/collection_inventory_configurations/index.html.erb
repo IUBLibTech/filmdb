@@ -1,0 +1,22 @@
+<h1>Listing Collection Inventory Configurations</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Collection Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @collection_inventory_configurations.each do |collection_inventory_configuration| %>
+      <tr>
+        <td><%= collection_inventory_configuration.collection.name %></td>
+        <td><%= link_to 'Show', collection_inventory_configuration %> <%= link_to 'Edit', edit_collection_inventory_configuration_path(collection_inventory_configuration) %> <%= link_to 'Destroy', collection_inventory_configuration, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Collection inventory configuration', new_collection_inventory_configuration_path %>

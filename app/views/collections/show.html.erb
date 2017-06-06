@@ -1,0 +1,31 @@
+<%= link_to 'Edit', edit_collection_path(@collection) %> |
+<%= link_to 'Back', collections_path %>
+
+<table>
+  <tr>
+    <th>Collection Name</th>
+    <td>
+	    <%= @collection.name %>
+    </td>
+  </tr>
+  <tr>
+    <th>Unit</th>
+    <td>
+      <%= @collection.unit.abbreviation %>
+    </td>
+  </tr>
+  <tr>
+    <th></th>
+    <td><%= link_to "Inventory This Collection", collection_new_physical_object_path %></td>
+  </tr>
+</table>
+
+<h4>Collection Inventory Configuration</h4>
+<% if @collection.collection_inventory_configuration.nil? %>
+    None
+    <br/>
+    <%= link_to "Create Collection Inventory Configuration", new_collection_inventory_configuration_path %>
+<% else %>
+    <%= link_to "Edit Collection Inventory Configuration", edit_collection_inventory_configuration_path(@collection.collection_inventory_configuration) %>
+    <%= render partial: 'collection_inventory_configurations/metadata_fields' %>
+<% end %>

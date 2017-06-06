@@ -1,14 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Filmdb</title>
+  <title><%= controller.controller_name.to_s.titleize %>: <%= controller.action_name.to_s.titleize %></title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div id="branding">
+  <div class="user">
+	  User: <b><%= current_username %></b><br/>
+    <%= link_to 'Sign Out', signout_path, method: :delete, class: 'red' %>
+  </div>
+</div>
+<div id="menu">
+  <div class="menuItem">
+    <%= link_to 'Inventory', inventory_path %>
+  </div>
+	<div class="menuItem">
+		<a href="#">Workflow</a>
+		<ul class="nav">
+			<li><%= link_to 'Request Pull of Queued Objects', pull_request_path %></li>
+      <li><%= link_to 'Receive From Storage', receive_from_storage_path %></li>
+      <li><%= link_to 'Pack Items for Digitization', cages_path %></li>
+      <li><%= link_to 'Ship Items for Digitization', ship_cages_path %></li>
+      <li><%= link_to 'Return to Storage', return_to_storage_path %></li>
 
+    </ul>
+	</div>
+  <div class="menuItem">
+    <a href="#">Update</a>
+    <ul class="nav">
+      <li><%= link_to 'AD Strip', edit_ad_strip_path %></li>
+      <li><%= link_to 'Send for Mold Abatement', send_for_mold_abatement_path %></li>
+      <li><%= link_to 'Send to Freexer', send_to_freezer_path %></li>
+      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
+      <li><%= link_to 'Mark Item Found', '' %></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Search</a>
+    <ul class="nav">
+      <li><a href="#">Title</a></li>
+      <li><a href="#">Barcode</a></li>
+      <li><a href="#">Series</a></li>
+      <li><a href="#">Collection</a></li>
+      <li><a href="#">Advanced Search</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Import/Export</a>
+    <ul class="nav">
+      <li><%= link_to 'Import Spreadsheet', spreadsheets_path %></li>
+      <li><a href="#">Export Metadata</a></li>
+      <li><a href="#">Reports</a></li>
+    </ul>
+  </div>
+  <div class="menuItem">
+    <a href="#">Old Menus</a>
+    <ul class="nav">
+      <li><%= link_to "Physical Objects", physical_objects_path %></li>
+      <li><%= link_to "Units", units_path %></li>
+      <li><%= link_to "Collections", collections_path %></li>
+      <li><%= link_to "Series", series_index_path %></li>
+      <li><%= link_to "Titles", titles_path %></li>
+      <li><%= link_to "Spreadsheets", spreadsheets_path %></li>
+      <li><%= link_to "Users", users_path %></li>
+    </ul>
+  </div>
+</div>
+<%= render partial: 'layouts/notice_div' %>
 <%= yield %>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    //menu stuff
+    $('.menuItem').each(function() {
+      $(this).children('ul').css({
+        'min-width': $(this).css('width')
+      });
+    });
+    $('.menuItem').hoverIntent(
+        function() {
+          $(this).children('ul').slideDown(200);
+        },
+        function() {
+          $(this).children('ul').slideUp(200);
+        }
+    );
+  });
+  $(document).ready(function() {
+    $("form").keypress(function(e) {
+      e = e || event;
+      var txtArea = /textarea/i.test((e.target || e.srcElement).tagName);
+      return txtArea || (e.keyCode || e.which || e.charCode || 0) !== 13
+    });
+  })
+</script>
 </body>
 </html>

@@ -19,7 +19,7 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  # Raise an error on page load if there are pending migrations.
+  # Raise an error on page load if there are pending migrations migrations.
   config.active_record.migration_error = :page_load
 
   # Debug mode disables concatenation and preprocessing of assets.
@@ -38,4 +38,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+
+	config.pod_batch_url = 'https://pod-dev.mdpi.iu.edu/responses/objects/push_filmdb_objects'
+	# so I can tail log file output from dev server while ssh'd in from local
+	config.web_console.whitelisted_ips = '129.79.34.168'
+
 end

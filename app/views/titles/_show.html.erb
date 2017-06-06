@@ -1,0 +1,103 @@
+<div id="whodoneit">
+  <div><b>Creator</b></div><div><%= @title.creator&.name %></div>
+  <div><b>Last Modified By</b></div><div><%= @title.modifier&.name %></div>
+</div>
+<div id="main">
+  <div class="left_div">
+    <div class="label"><b>Title</b></div><div class="field"><%= @title.title_text %></div>
+    <div class="label"><b>Series Title</b></div><div class="field"><%= @title.series_title_text %></div>
+    <div class="label"><b>Series Part</b></div><div class="field"><%= @title.series_part %></div>
+  </div>
+  <div class="right_div">
+    <div class="block_label"><b>Summary</b></div>
+    <div class="block_label"><%= @title.summary %></div>
+  </div>
+</div>
+<h4 class="clear">Alternative Titles</h4>
+<div>
+  <% @title.alternative_titles.each do |at| %>
+      <%= at %>&nbsp;&nbsp;
+  <% end %>
+</div>
+<div class="clear">
+  <% unless @title.title_original_identifiers.empty? %>
+      <h4>Orginal Identifiers</h4>
+      <% @title.title_original_identifiers.each do |toi| %>
+          <div class="left_div creator_div">
+            <div class="label"><b>Identifier</b></div>
+            <div class="field"><%= toi.identifier %></div>
+            <div class="label"><b>Type</b></div>
+            <div class="field"><%= toi.identifier_type %></div>
+          </div>
+      <% end %>
+  <% end %>
+  <% unless @title.title_creators.empty? %>
+      <h4>Creators</h4>
+      <% @title.title_creators.each do |tc| %>
+          <div class="left_div creator_div">
+            <div class="label"><b>Creator</b></div>
+            <div class="field">
+              <%= tc.name %>
+            </div>
+            <div class="label"><b>Role</b></div>
+            <div class="field">
+              <%= tc.role %>
+            </div>
+          </div>
+      <% end %>
+  <% end %>
+  <% unless @title.title_publishers.empty? %>
+      <h4>Publishers</h4>
+      <% @title.title_publishers.each do |tp| %>
+          <div class="left_div creator_div">
+            <div class="label"><b>Name</b></div>
+            <div class="field"><%= tp.name %></div>
+            <div class="label"><b>Role</b></div>
+            <div class="field"><%= tp.publisher_type %></div>
+          </div>
+      <% end %>
+  <% end %>
+
+  <% unless @title.title_genres.empty? %>
+      <h4>Genres</h4>
+      <% @title.title_genres.each do |tg| %>
+          <div class="left_div creator_div">
+            <div class="field"><%= tg.genre %></div>
+          </div>
+      <% end %>
+  <% end %>
+
+  <% unless @title.title_forms.empty? %>
+      <h4>Forms</h4>
+      <% @title.title_forms.each do |tf| %>
+          <div class="left_div creator_div">
+            <div class="field"><%= tf.form %></div>
+          </div>
+      <% end %>
+  <% end %>
+
+  <% unless @title.title_locations.empty? %>
+      <h4>Locations</h4>
+      <% @title.title_locations.each do |tl| %>
+          <div class="left_div creator_div">
+            <div class="field"><%= tl.location %></div>
+          </div>
+      <% end %>
+  <% end %>
+
+  <% unless @title.title_dates.empty? %>
+      <h4>Dates</h4>
+      <% @title.title_dates.each do |td| %>
+          <div class="left_div creator_div">
+            <div class="label"><b>Date</b></div>
+            <div class="field"><%= td.date %></div>
+            <div class="label"><b>Type</b></div>
+            <div class="field"><%= td.date_type %></div>
+          </div>
+      <% end %>
+  <% end %>
+  <h4>Notes</h4>
+  <div>
+    <%= @title.notes %>
+  </div>
+</div>

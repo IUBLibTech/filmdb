@@ -1,0 +1,12 @@
+<div>
+  <%= link_to 'Edit', edit_title_path(@title) %> |
+  <%= link_to 'Back', titles_path %> |
+  <%= link_to 'Inventory This Title', title_new_physical_object_path %>
+</div>
+<%= render partial: "show" %>
+
+<%= render partial: 'component_groups' %>
+
+<%= render partial: 'physical_objects' %>
+
+<%= render partial: 'component_group_form' %>

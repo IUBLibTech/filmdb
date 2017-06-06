@@ -1,0 +1,173 @@
+<h4>Filters</h4>
+<%= form_tag stats_filter_index_path do %>
+		<table id="stats_form" class="_50">
+			<tr>
+				<td><b>Unit</b></td>
+				<td class="stats_form_input">
+					<%# options_for_select(Unit.all.collect{ |u| [u.abbreviation, u.id]}, include_blank: '')  %>
+					<%= select_tag :unit, options_from_collection_for_select(Unit.all, 'id', 'abbreviation' ), {include_blank: ''} %>
+				</td>
+			</tr>
+			<tr>
+				<td><b>Collection</b></td>
+				<td class="stats_form_input">
+					<%= text_field_tag :collection, '', {id: 'collection_text'} %>
+					<%= hidden_field_tag 'collection_id' %>
+				</td>
+			</tr>
+			<tr>
+				<td><b>Start Date</b></td>
+				<td class="stats_form_input"><%= text_field_tag :start,'', {id: 'start_date', class: 'datapicker'} %></td>
+			</tr>
+			<tr>
+				<td><b>End Date</b></td>
+				<td class="stats_form_input"><%= text_field_tag :end, '', {id: 'end_date', class: 'datapicker'} %></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<%= submit_tag "Filter Results" %>
+				</td>
+			</tr>
+		</table>
+<% end  %>
+
+<h4>FilmbDB Statistics <%= @filter_msg %> <%= "[ #{@startTime.to_date.strftime("%m/%d/%Y")}: #{@endTime.to_date.strftime("%m/%d/%Y")}]" unless @startTime.nil? || @endTime.nil? %></h4>
+<table>
+	<tr>
+		<th>Physical Object Count</th>
+		<td><%= @physical_object_count %></td>
+	</tr>
+	<tr>
+		<th>Title Count</th>
+		<td><%= @title_count %></td>
+	</tr>
+	<tr>
+		<th>Titles Without Physical Objects</th>
+		<td><%= @empty_title_count %></td>
+	</tr>
+	<tr>
+		<th>Series Count</th>
+		<td><%= @series_count %></td>
+	</tr>
+	<tr>
+		<th>Series Without Titles</th>
+		<td><%= @empty_series_count %></td>
+	</tr>
+</table>
+
+<h4>Physical Object Breakdown</h4>
+<table>
+	<tr>
+		<th>Media Type</th>
+		<td>
+			<ul>
+				<% @media_type_count.keys.sort.each do |m| %>
+				<li><%= "#{m}: #{@media_type_count[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Medium</th>
+		<td>
+			<ul>
+				<% @medium_count.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@medium_count[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Generations</th>
+		<td>
+			<ul>
+				<% @generations.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@generations[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Gauges</th>
+		<td>
+			<ul>
+				<% @gauges.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@gauges[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Bases</th>
+		<td>
+			<ul>
+				<% @bases.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@bases[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Sound</th>
+		<td>
+			<ul>
+				<% @sounds.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@sounds[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Color</th>
+		<td>
+			<ul>
+				<% @colors.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@colors[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th>Overall Conditions</th>
+		<td>
+			<ul>
+				<% @conditions.keys.sort.each do |m| %>
+						<li><%= "#{m}: #{@conditions[m]}" %></li>
+				<% end  %>
+			</ul>
+		</td>
+	</tr>
+</table>
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		//autcomplete for collections
+		$('#collection_text').focus(function() {
+//			if ($(this).data('autocomplete')) {
+//				$(this).autocomplete("destroy");
+//				$(this).removeData("autocomplete");
+//			}
+			var unit_val = $('#unit :selected').attr('value');
+			var source = unit_val == "" ? "../../../autocomplete_collection" : '../../../autocomplete_collection_for_unit/'+unit_val+"/";
+			$(this).autocomplete({
+				minLength: 2,
+				source: source,
+				focus: function (event, ui) {
+					//$(".ui-autocomplete > li").attr("title", ui.item.description);
+					return false;
+				},
+				select: function (event, ui) {
+					// need to set the unit if a collection is selected
+					unit_id = ui.item.unit_id
+					unit_title = ui.item.abbreviation
+					$("#collection_text").val(ui.item.label);
+					$('#collection_id').val(ui.item.value);
+          $('#unit').val(unit_id)
+					return false;
+				}
+			});
+		});
+		$('#start_date').datepicker();
+		$('#end_date').datepicker();
+	})
+</script>

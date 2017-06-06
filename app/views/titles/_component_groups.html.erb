@@ -1,0 +1,147 @@
+<h4>Component Groups</h4>
+<table id="component_group_table" class="sel-table _100">
+  <thead>
+    <th>Group Type</th>
+    <th colspan="2">Group Summary</th>
+    <th>Gauge</th>
+    <th>Generations</th>
+		<th>Workflow Status(es)</th>
+    <th>Actions</th>
+  </thead>
+  <tbody>
+  <% @title.component_groups.each do |cg| %>
+    <tr id="<%= cg.id %>">
+      <td id="cg_<%= cg.id %>_group_type" title="<%= cg.group_type %>"><%= cg.group_type %> (<%= cg.physical_objects.size %>)</td>
+      <td class="no_border_right"><%= cg.group_summary %></td>
+			<td class="edit_icon">
+				<%= link_to image_tag('edit2.png'), '#', class: 'edit_summary_link', id: "edit_summary_#{cg.id}", title: 'Click to edit the Component Group Summary' %>
+			</td>
+      <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
+      <td><%= cg.generations %></td>
+			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.type_and_location }.uniq.join(', ') %></td>
+      <td>
+				<%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
+				<%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+			</td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<div id="cg_summary">
+</div>
+<div id="edit_summary_dialog">
+	<%= form_for :cg_summary_edit, remote: true, html: {id: 'summary_form'} do |f| %>
+		<input type="hidden" name="cg_id" id="summary_form_cg_id" />
+		<b class="block">Update Summary</b>
+		<%= f.text_area 'summary', id: 'popup_summary' %>
+	<% end  %>
+</div>
+
+<script type="text/javascript">
+	$('.edit_summary_link').click(function(event) {
+		event.preventDefault();
+		id = $(this).attr('id').substring(13);
+		sum_field = $(this).parent().prev();
+		$('#popup_summary').val(sum_field.html());
+		$('#edit_summary_dialog').dialog({
+			title: 'Update '+$('#cg_'+id+'_group_type').attr('title'),
+			width: 600,
+			height: 250,
+			modal: true,
+			buttons: [{
+				text: 'Update',
+				click: function () {
+					$.ajax({
+						url: "../component_groups/" + id + "/ajax_edit_summary",
+						type: "POST",
+						data: $('#summary_form').serialize(),
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							$('#edit_summary_dialog').dialog("close");
+							swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+						},
+						success: function (data) {
+							if (data == 'success') {
+								sum_field.html($('#popup_summary').val());
+								$('#edit_summary_dialog').dialog("close");
+							}
+						}
+					})
+				}},
+				{
+					text: "Cancel",
+					click: function () {
+						$(this).dialog("close");
+					}
+				}]
+		});
+		return false;
+	});
+  $('#cg_summary').toggle('slide');
+  $("#component_group_table>tbody>tr").click(function() {
+    if ($(this).hasClass('ui-selected')) {
+      $(this).removeClass('ui-selected');
+      removeCgSummary();
+    } else {
+      $('.ui-selected').removeClass('ui-selected');
+      removeCgSummary();
+      $(this).addClass('ui-selected');
+      showCgSummary($(this).attr('id'));
+    }
+  });
+
+  var removeCgSummary = function() {
+    $('#cg_summary').slideUp().delay(200);
+    $('#cg_summary').html('');
+  };
+
+  var showCgSummary = function(id) {
+    var url = '../../component_groups/ajax/'+id;
+    $.ajax({
+      url: url,
+      error: function(result) {
+        alert('Something bad happened when trying to call the component group summary...');
+      },
+      success: function(result) {
+        el = $('#cg_summary');
+        el.html(result);
+        $('#cg_summary').slideDown();
+        hook_cg_add();
+      }
+    });
+  }
+  $('.cg_pull_link').click(function(event) {
+		var id = $(this).attr('id').substring(3);
+		event.preventDefault();
+		$.ajax({
+			url: '../component_groups/'+id+'/ajax_queue_pull_request',
+			method: 'POST',
+			error: function(jqXHR, textStatus, error) {
+				swal({
+					title: 'Ajax Error',
+					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
+				})
+			},
+			success: function(data, status, xhr) {
+        title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
+				msg = data == 'success' ? '<p>Component Group queued for pull request</p>': fillBadList(data)
+        swal({
+					title: title,
+					text: msg,
+          html: true
+				})
+			}
+		});
+		return false;
+	});
+
+  var fillBadList = function(data) {
+    ul = "<ul>"
+    Object.keys(data).forEach(function(e) {
+      ul += "<li>"+(data[e])+"</li>";
+    });
+    ul += "</ul>"
+    return ul;
+  }
+</script>
+
+

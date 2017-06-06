@@ -1,0 +1,20 @@
+<h4>Scan IU Barcode to Mark as Received From Storage</h4>
+<%= form_for 'physical_object', url: process_received_from_storage_url do |f| %>
+<table>
+  <tr>
+    <th>IU Barocde</th>
+    <td>
+      <%= f.text_field :iu_barcode %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><%= f.submit "Mark Received" %></td>
+  </tr>
+</table>
+<% end %>
+
+<h4 class="m_bottom_10px">
+	Physical Objects in Transit
+</h4>
+<%=  render partial: 'physical_objects_table' %>
+<%= render partial: 'physical_objects/physical_object_metadata_js' %>

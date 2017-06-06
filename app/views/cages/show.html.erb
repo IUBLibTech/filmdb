@@ -1,0 +1,197 @@
+  <p id="notice"><%= notice %></p>
+  <%= link_to 'Edit', edit_cage_path(@cage) %> |
+  <%= link_to 'Back', cages_path %>
+  <div class="clear h_45px"></div>
+  <h2><%= "#{@cage.identifier} is #{@cage.status}" %></h2>
+  <table id="cage_table" class="left">
+    <tr>
+      <th>Cage Identifier</th>
+      <td><%= @cage.identifier %></td>
+    </tr>
+    <tr>
+      <th>Cage Notes</th>
+      <td><%= @cage.notes %></td>
+    </tr>
+    <tr>
+      <th class='shelf' colspan="2" id="shelf_<%= @cage.top_shelf.id %>">Top Shelf [<%= @cage.top_shelf.physical_objects&.size %> - <%= @cage.top_shelf.duration %>]</th>
+    </tr>
+    <tr>
+      <th>Identifier</th>
+      <td><%= @cage.top_shelf.identifier %></td>
+    </tr>
+    <tr>
+      <th>MDPI Barcode</th>
+      <td><%= @cage.top_shelf.mdpi_barcode %></td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td><%= @cage.top_shelf.notes %></td>
+    </tr>
+
+
+    <tr>
+      <th class='shelf' colspan="2" id="shelf_<%= @cage.middle_shelf.id %>">Middle Shelf [<%= @cage.middle_shelf.physical_objects&.size %> - <%= @cage.middle_shelf.duration %>]</th>
+    </tr>
+    <tr>
+      <th>Identifier</th>
+      <td><%= @cage.middle_shelf.identifier %></td>
+    </tr>
+    <tr>
+      <th>MDPI Barcode</th>
+      <td><%= @cage.middle_shelf.mdpi_barcode %></td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td><%= @cage.middle_shelf.notes %></td>
+    </tr>
+
+    <tr>
+      <th class='shelf' colspan="2" id="shelf_<%= @cage.bottom_shelf.id %>">Bottom Shelf [<%= @cage.bottom_shelf.physical_objects&.size %> - <%= @cage.bottom_shelf.duration %>]</th>
+    </tr>
+    <tr>
+      <th>Identifier</th>
+      <td><%= @cage.bottom_shelf.identifier %></td>
+    </tr>
+    <tr>
+      <th>MDPI Barcode</th>
+      <td><%= @cage.bottom_shelf.mdpi_barcode %></td>
+    </tr>
+    <tr>
+      <th>Notes</th>
+      <td><%= @cage.bottom_shelf.notes %></td>
+    </tr>
+  </table>
+  <% unless @cage.ready_to_ship %>
+  <div id="shelf_content_form">
+    <%= form_for @cage, remote: true, html: {id: 'add_cage_shelf_form'} do |f| %>
+        <%= f.hidden_field :cage_shelf_id %>
+        <table>
+          <tr>
+            <th colspan="2">Scan IU and MDPI barcodes to add object to select Cage Shelf</th>
+          </tr>
+          <tr>
+            <th>IU Barcode</th>
+            <td><%= f.text_field :physical_object_iu_barcode %></td>
+          </tr>
+          <tr>
+            <th>MDPI Barcode</th>
+            <td><%= f.text_field :physical_object_mdpi_barcode %></td>
+          </tr>
+          <tr>
+            <td colspan="2"><%= f.submit 'Add Physical Object' %></td>
+          </tr>
+        </table>
+    <% end %>
+  </div>
+  <% end %>
+  <div id="shelf_content">
+    <p><i>Click a shelf on the left to see its contents, or add physical objects.</i></p>
+  </div>
+  <% if @cage.ready_to_ship && !@cage.shipped? %>
+    <div class="clear">
+      <%= form_for @cage, url: unmark_ready_to_ship_path(@cage.id), method: :post do |f| %>
+        <%= f.submit "Mark Not Ready to Ship" %>
+      <% end  %>
+    </div>
+  <% elsif @cage.can_by_shipped? && !@cage.shipped? %>
+    <div class="clear">
+      <%= form_for @cage, url: mark_ready_to_ship_path(@cage.id), method: :post do |f| %>
+        <%= f.submit "Mark Ready to Ship" %>
+      <% end  %>
+    </div>
+  <% end  %>
+  <script type="text/javascript" charset="utf-8">
+    $('.shelf').click(function() {
+      id = $(this).attr('id').substring(6)
+      $.ajax({
+        url: './cage_shelf/'+id+'/ajax_physical_objects',
+        error: function(result) {
+          swal({
+            title: 'Ajax Error',
+            text: 'Something unexpected happened while trying to retreive the list of physical objects in the shelf',
+            type: 'error'
+          });
+        },
+        success: function(result) {
+          setShelfContent(result);
+          $('#cage_cage_shelf_id').attr('value', id)
+        }
+      });
+    });
+
+    $('#add_cage_shelf_form').submit(function(event) {
+      event.preventDefault();
+      cage_id = $('#cage_cage_shelf_id').attr('value');
+      mdpi_bc = $('#cage_physical_object_mdpi_barcode').val();
+      iu_bc = $('#cage_physical_object_iu_barcode').val();
+      if (cage_id == null || cage_id.length < 1) {
+        swal('You must first select a shelf on the left');
+      } else if (mdpi_bc == null || mdpi_bc == '') {
+        swal('You did not specify an MDPI barcode')
+      } else if (iu_bc == null || iu_bc == '') {
+        swal('You did not specify an IU barcode')
+      }	else {
+        $.ajax({
+          url: './cage_shelf/'+id+'/ajax_physical_objects/',
+          method: 'POST',
+          data: $('#add_cage_shelf_form').serializeArray(),
+          error: function(result) {
+            $('#cage_physical_object_mdpi_barcode').val('');
+            swal({
+              title: 'Ajax Error',
+              text: 'Something unexpected happened while trying to add the physical object to the shelf',
+              type: 'error'
+            })
+          },
+          success: function(result) {
+            setShelfContent(result);
+          }
+        });
+      }
+      return false;
+    });
+
+    function setShelfContent(content) {
+      $('#shelf_content').html(content);
+      $('#cage_physical_object_mdpi_barcode').val('')
+      installAjaxDelete();
+    }
+    function installAjaxDelete() {
+      $('.cage_shelf_po_delete_link').click(function(event) {
+        event.preventDefault();
+        cage_id = $('#cage_cage_shelf_id').attr('value');
+        po_id = $(this).attr('id').substring(3);
+        swal({
+          title: 'Remove Physical Object from Shelf',
+          text: 'Are you sure?',
+          type: 'info',
+          showCancelButton: 'true'
+        },
+        function() {
+          $.ajax({
+            url: './cage_shelf/'+cage_id+'/ajax_remove_physical_object_from_shelf/'+po_id,
+            method: 'DELETE',
+            error: function(result) {
+              swal({
+                title: 'Ajax Error',
+                text: "Something went wrong when trying to remove the physical object from the Shelf:\n" + response,
+                type: error
+              });
+            },
+            success: function(result) {
+              setShelfContent(result);
+            }
+          });
+        });
+        return false;
+        }
+      );
+    }
+
+    $("#cage_physical_object_iu_barcode").bind("change keyup", function () {
+      validateIUBarcode($(this));
+    });
+    $("#cage_physical_object_mdpi_barcode").bind("change keyup", function () {
+      validateMdpiBarcode($(this));
+    });
+  </script>
