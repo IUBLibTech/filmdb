@@ -123,6 +123,7 @@ class TitlesController < ApplicationController
   # DELETE /titles/1
   # DELETE /titles/1.json
   def destroy
+    authorize Title
     @title.destroy
     respond_to do |format|
       format.html { redirect_to titles_url, notice: 'Title was successfully destroyed.' }

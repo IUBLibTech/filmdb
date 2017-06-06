@@ -40,7 +40,9 @@
 	        </td>
 	        <td>
 	          <%= link_to_unless !spreadsheet.successful_upload, 'Show', spreadsheet %>
-	          <%= link_to_unless false, 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
+		        <% if policy(Spreadsheet).destroy? %>
+			        <%= link_to_unless false, 'Destroy', spreadsheet, method: :delete, data: { confirm: 'Are you sure?' } %>
+		        <% end %>
 	        </td>
 	      </tr>
 	    <% end %>

@@ -12,9 +12,13 @@
     <% @series.each do |series| %>
       <tr>
         <td><%= series.title %></td>
-        <td><%= link_to 'Show', series %></td>
-        <td><%= link_to 'Edit', edit_series_path(series) %></td>
-        <td><%= link_to 'Destroy', series, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+	        <%= link_to 'Show', series %><br/>
+	        <%= link_to 'Edit', edit_series_path(series) %>
+		      <% if policy(Series).destroy? %>
+		        <br/><%= link_to 'Destroy', series, method: :delete, data: { confirm: 'Are you sure?' } %>
+		      <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

@@ -32,7 +32,9 @@
       <td>
         <%= link_to 'Show', unit %>
         <%= link_to 'Edit', edit_unit_path(unit) %>
-        <%= link_to 'Destroy', unit, method: :delete, data: { confirm: 'Are you sure?' } %>
+	      <% if policy(Unit).destroy? %>
+		      <%= link_to 'Destroy', unit, method: :delete, data: { confirm: 'Are you sure?' } %>
+	      <% end %>
       </td>
     </tr>
   <% end %>

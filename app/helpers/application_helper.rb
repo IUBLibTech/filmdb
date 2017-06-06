@@ -52,4 +52,8 @@ module ApplicationHelper
 		false
 	end
 
+	def ApplicationHelper.current_user_object
+		User.current_user_object
+	end
+
 end

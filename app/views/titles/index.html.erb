@@ -18,11 +18,13 @@
       <td>
         <%= link_to 'Show', title_path(title) %><br/>
         <%= link_to 'Edit', edit_title_path(title) %><br/>
-        <% if title.physical_objects.size == 0 %>
+        <% if policy(Title).destroy? %>
+		      <% if title.physical_objects.size == 0  %>
             <%= link_to 'Destroy', title, method: :delete, data: { confirm: 'Are you sure?' } %>
-        <% else %>
-        <b class="gray" title="This title cannot be deleted, it has physical objects which must be reassigned or deleted first">Destroy</b>
-        <% end %>
+		      <% else %>
+			      <b class="gray" title="This title cannot be deleted, it has physical objects which must be reassigned or deleted first">Destroy</b>
+		      <% end %>
+	      <% end %>
       </td>
     </tr>
     <% end %>

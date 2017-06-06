@@ -159,6 +159,7 @@ class PhysicalObjectsController < ApplicationController
   # DELETE /physical_objects/1
   # DELETE /physical_objects/1.json
   def destroy
+    authorize PhysicalObject
     @physical_object.destroy
     respond_to do |format|
       format.html { redirect_to physical_objects_url, notice: 'Physical object was successfully destroyed.' }

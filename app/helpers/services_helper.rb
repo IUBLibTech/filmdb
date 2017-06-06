@@ -32,7 +32,4 @@ module ServicesHelper
 		result
 	end
 
-	def parse_result
-		@result.status == 200
-	end
 end

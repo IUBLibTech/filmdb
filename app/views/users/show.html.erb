@@ -22,11 +22,13 @@
   <tr>
     <th>Active</th>
     <td>
-      <%= @user.active %>
+      <%= @user.active? ? 'Yes' : 'No' %>
     </td>
   </tr>
   <tr>
-    <th>Role</th>
-    <td>To be implemented...</td>
+    <th>Can Delete?</th>
+    <td>
+	    <%= @user.can_delete? ? 'Yes' : 'No' %>
+    </td>
   </tr>
 </table>

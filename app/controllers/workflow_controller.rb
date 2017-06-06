@@ -138,15 +138,6 @@ class WorkflowController < ApplicationController
 		render :mark_missing
 	end
 
-	def ship_cages
-		@cages = Cage.where(ready_to_ship: true, shipped: false)
-	end
-
-	def ship_external
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatusTemplate::PULL_REQUEST_RECEIVED)
-		@action_text = 'Mark Shipped To External'
-		@url = '/workflow/ajax/shipped_external/'
-	end
 	def receive_from_external
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatusTemplate::SHIPPED_TO_EXTERNAL)
 		@action_text = 'Returned From External'

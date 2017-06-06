@@ -58,6 +58,7 @@ class SeriesController < ApplicationController
   # DELETE /series/1.json
   # noinspection RubyArgCount
   def destroy
+    authorize Series
     @series.destroy
     respond_to do |format|
       format.html { redirect_to series_index_url, notice: 'Series was successfully destroyed.' }

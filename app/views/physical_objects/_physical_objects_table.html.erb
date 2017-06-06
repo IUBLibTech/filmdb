@@ -21,8 +21,11 @@
       <td><%= physical_object.current_workflow_status.workflow_status_location %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
-        <%= link_to 'Edit', edit_physical_object_path(physical_object) %> <br/>
-        <%= link_to 'Destroy', physical_object, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'Edit', edit_physical_object_path(physical_object) %>
+	      <% if policy(physical_object).destroy? %>
+		      <br/>
+	        <%= link_to 'Destroy', physical_object, method: :delete, data: { confirm: 'Are you sure?' } %>
+	      <% end  %>
       </td>
     </tr>
   <% end %>

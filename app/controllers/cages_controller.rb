@@ -77,28 +77,32 @@ class CagesController < ApplicationController
 
 	def mark_shipped
 		if @cage.ready_to_ship
-			PhysicalObject.transaction do
-				@cage.update_attributes(shipped: true)
-				flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
-				location = WorkflowStatusLocation.memnon_location
-				template_id = WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::SHIPPED_TO_EXTERNAL]
-				@cage.top_shelf.physical_objects.each do |p|
-					p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-					p.save
+			begin
+				PhysicalObject.transaction do
+					@cage.update_attributes(shipped: true)
+					flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
+					location = WorkflowStatusLocation.memnon_location
+					template_id = WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::SHIPPED_TO_EXTERNAL]
+					@cage.top_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.save
+					end
+					@cage.middle_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.save
+					end
+					@cage.bottom_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.save
+					end
+					result = push_cage_to_pod(@cage)
+					unless result.status == 200
+						@msg = "POD did not receive the push correctly - Responded with HTML status: #{result.status}"
+						raise ManualRollBackError, @msg
+					end
 				end
-				@cage.middle_shelf.physical_objects.each do |p|
-					p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-					p.save
-				end
-				@cage.bottom_shelf.physical_objects.each do |p|
-					p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-					p.save
-				end
-				begin
-					push_cage_to_pod(@cage)
-				rescue
-
-				end
+			rescue ManualRollBackError => e
+				flash.now[:warning] = @msg
 			end
 		else
 			flash.now[:warning] = "#{@cage.identifier} could not be shipped to Memnon - it is not ready."
@@ -169,6 +173,7 @@ class CagesController < ApplicationController
   # DELETE /cages/1
   # DELETE /cages/1.json
   def destroy
+	  authorize Cage
     @cage.destroy
     respond_to do |format|
       format.html { redirect_to cages_url, notice: 'Cage was successfully destroyed.' }

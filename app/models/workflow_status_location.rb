@@ -17,7 +17,7 @@ class WorkflowStatusLocation < ActiveRecord::Base
 	end
 
 	def self.digi_prep_location
-		WorkflowStatusLocation.where(physical_location: 'Digitization Prep').first
+		WorkflowStatusLocation.where(physical_location: '2k/4k Shelves').first
 	end
 	def self.digi_prep_location_id
 		digi_prep_location.id

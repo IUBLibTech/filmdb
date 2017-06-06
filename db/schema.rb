@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602133340) do
+ActiveRecord::Schema.define(version: 20170606154605) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -472,6 +472,7 @@ ActiveRecord::Schema.define(version: 20170602133340) do
     t.boolean  "active",                             default: false
     t.string   "email_address",          limit: 255
     t.integer  "created_in_spreadsheet", limit: 8
+    t.boolean  "can_delete",                         default: false
   end
 
   create_table "value_conditions", force: :cascade do |t|

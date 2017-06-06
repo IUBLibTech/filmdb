@@ -17,7 +17,7 @@
 			<td><%= cage.status %></td>
 			<td>
 				<%= link_to 'Show', cage %><br><%= link_to 'Edit', edit_cage_path(cage) %><br>
-				<% if cage.can_be_destroyed? %>
+				<% if cage.can_be_destroyed? && policy(Cage).destroy? %>
 					<%= link_to 'Destroy', cage, method: :delete, data: { confirm: 'Are you sure?' } %>
 				<% elsif cage.ready_to_ship? && !cage.shipped? %>
 					<%= link_to 'Mark Shipped to Memnon', mark_shipped_path(cage), method: :post %>

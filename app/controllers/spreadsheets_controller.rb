@@ -26,6 +26,7 @@ class SpreadsheetsController < ApplicationController
   # DELETE /spreadsheets/1
   # DELETE /spreadsheets/1.json
   def destroy
+    authorize Spreadsheet
     @spreadsheet.physical_objects.destroy_all
     @spreadsheet.titles.destroy_all
     @spreadsheet.series.destroy_all

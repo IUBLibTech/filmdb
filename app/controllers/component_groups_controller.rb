@@ -61,6 +61,7 @@ class ComponentGroupsController < ApplicationController
   # DELETE /component_groups/1
   # DELETE /component_groups/1.json
   def destroy
+    authorize ComponentGroup
     @component_group.destroy
     respond_to do |format|
       format.html { redirect_to :back, notice: 'Component group was successfully destroyed.' }

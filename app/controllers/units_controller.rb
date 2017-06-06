@@ -45,6 +45,7 @@ class UnitsController < ApplicationController
 	end
 
 	def destroy
+		authorize Unit
 		@unit.destroy
 		respond_to do |format|
 			format.html { redirect_to units_url, notice: 'Unit was successfully destroyed.' }
