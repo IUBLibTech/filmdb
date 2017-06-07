@@ -76,4 +76,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.pod_batch_url = 'https://pod-dev.mdpi.iu.edu/responses/objects/push_filmdb_objects'
+
 end

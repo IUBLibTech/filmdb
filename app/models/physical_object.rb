@@ -26,6 +26,7 @@ class PhysicalObject < ActiveRecord::Base
   validates :unit, presence: true
   validates :media_type, presence: true
   validates :medium, presence: true
+	validates :gauge, presence: true
 
   has_many :boolean_conditions, autosave: true
   has_many :value_conditions, autosave: true

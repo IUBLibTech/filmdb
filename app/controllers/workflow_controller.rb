@@ -37,7 +37,7 @@ class WorkflowController < ApplicationController
 						end
 					end
 					if bad_req.size > 0
-						flash[:warning] = "The following Physical Objects are note Queued for Pull Requests: #{bad_req.join(', ')}"
+						flash[:warning] = "Request was cancelled because the following Physical Objects are not Queued for Pull Requests: #{bad_req.join(', ')}"
 						raise ManualRollBackError "Some physical objects were not in proper state to make pull request"
 					else
 						flash[:notice] = "Storage has been notified to pull #{pos.size} records."

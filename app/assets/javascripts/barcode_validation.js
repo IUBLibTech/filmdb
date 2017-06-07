@@ -22,8 +22,10 @@ function markInvalid(barcodeEl) {
 function markValid(barcodeEl) {
     barcodeEl.removeClass("bad_barcode");
 }
-
-function isValidBarcode(barcode, mdpi = false) {
+function isValidBarcode(barcode) {
+	isValidBarcode(barcode, false);
+}
+function isValidBarcode(barcode, mdpi) {
     sd = mdpi == true ? 4 : 3
     return barcode.length == 14 && barcode.charAt(0) == sd && validCheckDigit(barcode);
 }
