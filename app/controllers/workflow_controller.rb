@@ -2,6 +2,7 @@
 # a pair of of controller actions; one action to display all physical objects currently in that state, and a second action to
 # provide ajax functionality to move individual physical objects on to the next workflow state
 class WorkflowController < ApplicationController
+	include AlfHelper
 
 	before_action :set_physical_object, only: [:process_receive_from_storage, :process_return_to_storage ]
 	before_action :set_onsite_pos, only: [:return_to_storage, :process_return_to_storage, :send_for_mold_abatement,
@@ -24,29 +25,21 @@ class WorkflowController < ApplicationController
 			begin
 				PhysicalObject.transaction do
 					pos.each do |p|
-						cw = p.current_workflow_status
-						if cw.status_type != WorkflowStatusTemplate::PULL_REQUEST_QUEUED
-							bad_req.push(p.iu_barcode)
-						else
-							ws = WorkflowStatus.new(
-								workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::PULL_REQUESTED],
-								physical_object_id: p.id,
-								workflow_status_location_id: cw.workflow_status_location_id
-							)
-							p.workflow_statuses << ws
-						end
+						ws = WorkflowStatus.new(
+							workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::PULL_REQUESTED],
+							physical_object_id: p.id,
+							workflow_status_location_id: p.current_workflow_status.workflow_status_location_id
+						)
+						p.workflow_statuses << ws
+						p.save!
 					end
-					if bad_req.size > 0
-						flash[:warning] = "Request was cancelled because the following Physical Objects are not Queued for Pull Requests: #{bad_req.join(', ')}"
-						raise ManualRollBackError "Some physical objects were not in proper state to make pull request"
-					else
-						flash[:notice] = "Storage has been notified to pull #{pos.size} records."
-					end
+					push_pull_request(pos)
+					flash[:notice] = "Storage has been notified to pull #{pos.size} records."
 				end
-				# FIXME: write the ALF file to their directory
-
-			# only want to catch this type of error, everything else is something unintentially wrong
-			rescue ManualRollBackError => e
+			rescue Exception => e
+				logger.error e.message
+				logger.error e.backtrace.join('\n')
+				flash[:warning] = "An error occured when trying to push the request to the ALF system: #{e.message} (see log files for full details)"
 			end
 		end
 		redirect_to :pull_request
@@ -60,6 +53,8 @@ class WorkflowController < ApplicationController
 			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[:physical_object][:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage?
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
+		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank?
+			flash[:warning] = "You must specify footage for #{@physical_object.iu_barcode}"
 		else
 			ws = WorkflowStatus.new(
 				physical_object_id: @physical_object,
@@ -67,8 +62,15 @@ class WorkflowController < ApplicationController
 				workflow_status_location_id: WorkflowStatusLocation.digi_prep_location_id
 			)
 			@physical_object.workflow_statuses << ws
+			@physical_object.footage = params[:physical_object][:footage] unless params[:physical_object][:footage].blank?
 			@physical_object.save
-			flash[:notice] = "#{@physical_object.iu_barcode} has been marked received and updated to location: #{ws.type_and_location}"
+			list = @physical_object.waiting_active_component_group_members?
+			if list
+				flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"+
+					"<br/>Additional Physical Objects expected: #{ list.collect{ |p| p.iu_barcode }.join(', ')}"
+			else
+				flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"
+			end
 		end
 		redirect_to :receive_from_storage
 	end
@@ -76,13 +78,18 @@ class WorkflowController < ApplicationController
 	def return_to_storage
 	end
 	def process_return_to_storage
-		ws = WorkflowStatus.new(
-			workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE],
-			physical_object_id: @po.id,
-			workflow_status_location_id: params[:physical_object][:location_id]) unless @po.nil?
-		if update_onsite(ws)
+		if @po.onsite? && !@po.packed?
+			ws = WorkflowStatus.new(
+				workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE],
+				physical_object_id: @po.id,
+				workflow_status_location_id: params[:physical_object][:location_id]) unless @po.nil?
+			@po.workflow_statuses << ws
+			@po.active_component_group = nil?
+			@po.save
 			location = WorkflowStatusLocation.find(params[:physical_object][:location_id])
-			flash[:notice] = "#{@po.iu_barcode} was returned to #{ws.type_and_location}"
+			flash[:notice] = "#{@po.iu_barcode} was marked #{ws.type_and_location}"
+		else
+			flash[:warning] = "Cannot return #{@po.iu_barcode}, its current status is: #{@po.current_workflow_status.type_and_location}"
 		end
 		redirect_to :return_to_storage
 	end

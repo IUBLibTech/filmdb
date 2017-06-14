@@ -12,4 +12,18 @@ class ComponentGroup < ActiveRecord::Base
     end
     gen_set.to_a.sort.join(', ').tr('"', '')
   end
+
+  def can_be_pulled?
+    physical_objects.each do |p|
+      if !p.in_storage?
+        return false
+      end
+    end
+    true
+  end
+
+  def is_reformating?
+    group_type == 'Reformating'
+  end
+
 end

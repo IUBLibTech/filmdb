@@ -29,3 +29,7 @@ pasenger.*.lock
 /config/settings/production.yml
 /config/secrets.yml
 /config/cedar.yml
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml

@@ -11,4 +11,8 @@ class WorkflowStatus < ActiveRecord::Base
 		workflow_status_template.name
 	end
 
+	def ==(other)
+		self.class == other.class && self.workflow_status_location_id == other.workflow_status_location_id && self.workflow_status_template_id == other.workflow_status_template_id
+	end
+
 end
