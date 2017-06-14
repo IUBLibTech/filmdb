@@ -55,7 +55,14 @@ class WorkflowStatusLocation < ActiveRecord::Base
 		WorkflowStatusLocation.where(physical_location: 'Missing').first
 	end
 	def self.missing_location_id
+		missing_location.id
+	end
 
+	def self.alf_storage_location
+		WorkflowStatusLocation.where(facility: 'ALF').first
+	end
+	def self.alf_storage_location_id
+		alf_storage_location.id
 	end
 
 	def to_s
