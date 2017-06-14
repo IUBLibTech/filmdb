@@ -28,7 +28,7 @@ class CsvParser
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
       COLUMN_HEADERS[IUCAT_TITLE_NO] => :title_control_number=, COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
-      COLUMN_HEADERS[EDGE_CODE_DATE] => :edge_code=, COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
+      COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
       COLUMN_HEADERS[MISSING_FOOTAGE] => :missing_footage=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
@@ -170,6 +170,13 @@ class CsvParser
       po.created_at = d
     rescue
       po.errors.add(:date, "Unable to parse date created")
+    end
+
+    if !row[column_index EDGE_CODE_DATE].blank?
+      edge_codes = row[column_index EDGE_CODE_DATE].split(' ; ')
+      edge_codes.each do |d|
+        po.physical_object_dates << PhysicalObjectDate.new(physical_object_id: po.id, controlled_vocabulary_id: ControlledVocabulary.physical_object_date_cv[:type][0][1].to_i, date: d)
+      end
     end
 
     # manually parse the other values to ensure conformance to controlled vocabulary
