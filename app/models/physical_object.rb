@@ -313,6 +313,7 @@ class PhysicalObject < ActiveRecord::Base
 		xml = options[:builder]
 		xml.physicalObject do
 			xml.filmdbId id
+			xml.groupIdentifier physical_object_titles.first.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
 			xml.format medium

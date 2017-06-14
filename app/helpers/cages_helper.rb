@@ -16,7 +16,7 @@ module CagesHelper
 		builder.instruct! :xml, :version=>"1.0"
 		builder.batches do
 			builder.batch do
-				# need to figure out out to generate an identifier for a cage
+				# need to figure out how to generate an identifier for a cage
 				builder.identifier cage.top_shelf.identifier
 				builder.description cage.top_shelf.notes
 				builder.bin do
@@ -32,6 +32,10 @@ module CagesHelper
 						end
 					end
 				end
+			end
+			builder.batch do
+				builder.identifier cage.middle_shelf.identifier
+				builder.description cage.middle_shelf.notes
 				builder.bin do
 					builder.identifier cage.middle_shelf.identifier
 					builder.mdpiBarcode cage.middle_shelf.mdpi_barcode
@@ -45,6 +49,10 @@ module CagesHelper
 						end
 					end
 				end
+			end
+			builder.batch do
+				builder.identifier cage.bottom_shelf.identifier
+				builder.description cage.bottom_shelf.notes
 				builder.bin do
 					builder.identifier cage.bottom_shelf.identifier
 					builder.mdpiBarcode cage.bottom_shelf.mdpi_barcode

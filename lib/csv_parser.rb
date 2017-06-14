@@ -57,7 +57,6 @@ class CsvParser
 
   def parse_csv
     @csv = CSV.read(@filepath, headers: false)
-    @default_workflow_status_template = WorkflowStatusTemplate.all.order(:sort_order).last
     parse_headers(@csv[0])
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
@@ -205,7 +204,9 @@ class CsvParser
 
 
     location = row[column_index CURRENT_LOCATION]
-    set_value(:location, location, po)
+    # for now we are just storing the value in a text field, later this will be parsed
+    #set_value(:location, location, po)
+    po.location = location
 
     gauge = row[column_index GAUGE]
     set_value(:gauge, gauge, po)
@@ -638,8 +639,13 @@ class CsvParser
         end
       end
     end
-    #FIXME: determine if we need to have a default status other than in storage for spreadsheet created physical objects
-    po.workflow_statuses << WorkflowStatus.new(physical_object_id: po.id, workflow_status_template_id: @default_workflow_status_template.id)
+
+    # location for now is
+    #FIXME: determine vocab to parse between onsite locations and ALF in storage locations
+    po.workflow_statuses << WorkflowStatus.new(
+	    physical_object_id: po.id,
+	    workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE],
+	    workflow_status_location_id: WorkflowStatusLocation.alf_storage_location_id)
     po
   end
 
