@@ -37,6 +37,13 @@ class WorkflowStatusLocation < ActiveRecord::Base
 		in_cage_location.id
 	end
 
+	def self.packed_location
+		WorkflowStatusLocation.where(physical_location: 'Packed for Shipping').first
+	end
+	def self.packed_location_id
+		packed_location.id
+	end
+
 	def self.memnon_location
 		WorkflowStatusLocation.where(facility: 'Memnon').first
 	end

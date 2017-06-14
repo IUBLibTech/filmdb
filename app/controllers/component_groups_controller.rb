@@ -85,6 +85,8 @@ class ComponentGroupsController < ApplicationController
               workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::PULL_REQUEST_QUEUED],
               physical_object_id: p.id,
               workflow_status_location_id: status.workflow_status_location_id)
+            p.active_component_group = @component_group
+	          p.save!
           end
         end
         if bad.size > 0
@@ -117,7 +119,7 @@ class ComponentGroupsController < ApplicationController
     params[:cg_pos][:po_ids].split(',').collect { |p| p.to_i }.each do |po_id|
       ComponentGroupPhysicalObject.transaction do
         if !@component_group.physical_objects.exists?(po_id)
-          ComponentGroupPhysicalObject.new(physical_object_id: po_id, component_group_id: @component_group.id).save
+          ComponentGroupPhysicalObject.new(physical_object_id: po_id, component_group_id: @component_group.id).save!
         end
       end
     end

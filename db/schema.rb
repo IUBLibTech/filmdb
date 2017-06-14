@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170606154605) do
+ActiveRecord::Schema.define(version: 20170612155547) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -106,11 +106,12 @@ ActiveRecord::Schema.define(version: 20170606154605) do
   end
 
   create_table "component_groups", force: :cascade do |t|
-    t.integer  "title_id",      limit: 8,     null: false
-    t.string   "group_type",    limit: 255,   null: false
+    t.integer  "title_id",        limit: 8,     null: false
+    t.string   "group_type",      limit: 255,   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "group_summary", limit: 65535
+    t.text     "group_summary",   limit: 65535
+    t.text     "scan_resolution", limit: 65535
   end
 
   create_table "controlled_vocabularies", force: :cascade do |t|
@@ -342,6 +343,7 @@ ActiveRecord::Schema.define(version: 20170606154605) do
     t.integer  "cage_shelf_id",                         limit: 8
     t.boolean  "generation_original_camera"
     t.boolean  "generation_master"
+    t.integer  "component_group_id",                    limit: 8
   end
 
   create_table "pull_requests", force: :cascade do |t|

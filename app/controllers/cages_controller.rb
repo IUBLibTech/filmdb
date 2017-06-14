@@ -85,15 +85,15 @@ class CagesController < ApplicationController
 					template_id = WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::SHIPPED_TO_EXTERNAL]
 					@cage.top_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-						p.save
+						p.save!
 					end
 					@cage.middle_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-						p.save
+						p.save!
 					end
 					@cage.bottom_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
-						p.save
+						p.save!
 					end
 					result = push_cage_to_pod(@cage)
 					unless result.status == 200
@@ -146,6 +146,10 @@ class CagesController < ApplicationController
       render partial: 'ajax_add_po_failure'
 		else
 			@msg = "Physical Object #{po.mdpi_barcode} was successfully added to Shelf #{po.cage_shelf.identifier}"
+			list = po.waiting_active_component_group_members?
+			if list && list.size > 0
+				@msg += "<br/>Additional Reels for this title: #{ list.collect{ |p| p.iu_barcode }.join(', ') }".html_safe
+			end
       render partial: 'ajax_add_po_success'
 		end
 	end

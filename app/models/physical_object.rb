@@ -7,17 +7,16 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :unit, autosave: true
 	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by", autosave: true
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
-  belongs_to :component_group
   belongs_to :cage_shelf
-	has_many :physical_object_old_barcodes
+	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
 
+	has_many :physical_object_old_barcodes
   has_many :component_group_physical_objects, dependent: :delete_all
   has_many :component_groups, through: :component_group_physical_objects
   has_many :physical_object_titles, dependent: :delete_all
   has_many :titles, through: :physical_object_titles
 	has_many :series, through: :titles
 	has_many :physical_object_dates
-
 	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
 
@@ -195,6 +194,19 @@ class PhysicalObject < ActiveRecord::Base
 		current_workflow_status.status_type == WorkflowStatusTemplate::PULL_REQUESTED
 	end
 
+	def can_be_returned_to_storage?
+		current_workflow_status.workflow_status_template_id == WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE] && !packed?
+	end
+
+	def packed?
+		cs = current_workflow_status
+		cs.workflow_status_location_id == WorkflowStatusLocation.packed_location_id || cs.workflow_status_location_id == WorkflowStatusLocation.in_cage_location_id
+	end
+
+	def in_storage?
+		current_workflow_status.workflow_status_template_id == WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE]
+	end
+
 
 	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
 	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
@@ -225,6 +237,18 @@ class PhysicalObject < ActiveRecord::Base
   def belongs_to_title?(title_id)
     PhysicalObjectTitle.where(physical_object_id: id, title_id: title_id).size > 0
   end
+
+	# checks to see if any other physical objects that belong to this objects active component group are not at the same point in the workflow
+	# returns either false if there are no other physical objects in this objects active component group that are at different workflow statuses
+	# or an array of those physical objects at different workflow statuses
+	def waiting_active_component_group_members?
+		if active_component_group.nil?
+			false
+		else
+			list = active_component_group.physical_objects.select{ |p| p != self && self.current_workflow_status != p.current_workflow_status }
+			return list.size == 0 ? false : list
+		end
+	end
 
 	# duration is input as hh:mm:ss but stored as seconds
 	def duration=(time)

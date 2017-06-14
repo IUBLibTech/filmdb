@@ -2,6 +2,9 @@
     <%= f.hidden_field :po_ids %>
     <div>
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
+	    <div id="scan_div">
+		    <b>Scan Resolution: </b><%= f.select :scan_resolution, options_for_select([['2k', '2k'],['4k', '4k']]), include_blank: true %>
+	    </div>
       <div>
         <b class="block">Group Summary</b>
         <%= f.text_area :group_summary %>
@@ -31,4 +34,12 @@
       $("#cg_pos_po_ids").attr("value", vals.toString());
     });
   }
+
+  $('#pos_group_type').on('change', function() {
+	  if (this.value == 'Reformating') {
+		  $('#scan_div').show()
+	  } else {
+		  $('#scan_div').hide();
+	  }
+  })
 </script>
