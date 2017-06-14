@@ -21,7 +21,7 @@ config/database.yml
 /.idea/*
 
 # files from Passenger
-pasenger.*.lock
+passenger.*
 
 # settings contains the service credentials for push/pull pod/filmdb accounts, so don't include
 /config/settings/development.yml
