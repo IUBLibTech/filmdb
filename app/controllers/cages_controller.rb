@@ -18,7 +18,8 @@ class CagesController < ApplicationController
 
   # GET /cages/new
   def new
-    @cage = Cage.new
+	  max = Cage.maximum('id')
+    @cage = Cage.new(identifier: "Cage #{max.nil? ? 1 : max + 1}")
   end
 
   # POST /cages

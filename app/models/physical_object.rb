@@ -185,6 +185,11 @@ class PhysicalObject < ActiveRecord::Base
 
 	end
 
+	def group_identifier
+		t_id = titles.first.id
+		"FDB#{"%08d" % t_id}"
+	end
+
 	# tests if the physical object is currently on IULMIA staff workflow space
 	def onsite?
 		current_workflow_status.status_type == WorkflowStatusTemplate::ON_SITE
@@ -313,7 +318,7 @@ class PhysicalObject < ActiveRecord::Base
 		xml = options[:builder]
 		xml.physicalObject do
 			xml.filmdbId id
-			xml.groupIdentifier physical_object_titles.first.id
+			xml.groupIdentifier group_identifier
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
 			xml.format medium
