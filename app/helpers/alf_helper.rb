@@ -40,7 +40,7 @@ module AlfHelper
 		physical_objects.each do |po|
 			str << populate_line(po)
 		end
-		str.join('\n')
+		str.join("\n")
 	end
 
 	def populate_line(po)
