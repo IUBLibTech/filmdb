@@ -8,6 +8,9 @@
 </head>
 <body>
 <div id="branding">
+	<% if Rails.env != 'production'  %>
+		<div id="environment"><%= Rails.env.upcase %></div>
+	<% end %>
   <div class="user">
 	  User: <b><%= current_username %></b><br/>
     <%= link_to 'Sign Out', signout_path, method: :delete, class: 'red' %>
