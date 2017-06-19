@@ -15,7 +15,7 @@ class CreateWorkflowStatusLocations < ActiveRecord::Migration
 
         [:on_site, 'IULMIA-Wells', 'Best Copy'], [:on_site, 'IULMIA-Wells', 'In Freezer'], [:on_site, 'IULMIA-Wells', 'Sent for Mold Abatement'],
         [:on_site, 'IULMIA-Wells', 'Packed for Shipping'], [:on_site, 'IULMIA-ALF', 'In Freezer'], [:on_site, 'IULMIA-ALF', 'Digitization Prep'],
-        [:on_site, 'IULMIA-ALF', 'Packed in Cage'], [:on_site, 'IULMIA-ALF', 'Just Inventoried', 'Items start at this location immediately after inventory']
+        [:on_site, 'IULMIA-ALF', 'Packed in Cage'], [:on_site, 'IULMIA-Wells', 'Just Inventoried', 'Items start at this location immediately after inventory']
       ].each do |l|
         notes = ''
         if l.size > 3
