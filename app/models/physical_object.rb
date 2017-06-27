@@ -20,8 +20,9 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
 
-  #validates :physical_object_titles, presence: true
+  validates :physical_object_titles, physical_object_titles: true
   validates :iu_barcode, iu_barcode: true
+	validates :mdpi_barcode, mdpi_barcode: true
   validates :unit, presence: true
   validates :media_type, presence: true
   validates :medium, presence: true
@@ -39,18 +40,20 @@ class PhysicalObject < ActiveRecord::Base
   accepts_nested_attributes_for :physical_object_original_identifiers, allow_destroy: true
 	accepts_nested_attributes_for :physical_object_dates, allow_destroy: true
 
+	attr_accessor :workflow
+	attr_accessor :updated
+
 	trigger.after(:update).of(:iu_barcode) do
 		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
 	end
 
-	# grabs all physical objects where their current workflow status is the specified text - see WorkflowStatusTemplate
-	# statuses for what to pass to this scope
-	scope :where_current_workflow_status_is, lambda { |status|
+	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
+	scope :where_current_workflow_status_is, lambda { |*status|
 		sql = "SELECT physical_objects.* "+
-			"FROM (SELECT workflow_statuses.physical_object_id "+
-			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses	GROUP BY physical_object_id) AS x "+
+			"FROM ( SELECT workflow_statuses.physical_object_id "+
+			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses GROUP BY physical_object_id) AS x "+
 			    "INNER JOIN workflow_statuses on (workflow_statuses.physical_object_id = x.physical_object_id AND x.status = workflow_statuses.created_at) "+
-			    "WHERE workflow_status_template_id = #{WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[status]}) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"
+			    "WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"
 		PhysicalObject.find_by_sql(sql)
 	}
 
@@ -185,6 +188,10 @@ class PhysicalObject < ActiveRecord::Base
 
 	end
 
+	def workflow
+		current_workflow_status&.workflow_type
+	end
+
 	def group_identifier
 		t_id = titles.first.id
 		"FDB#{"%08d" % t_id}"
@@ -192,24 +199,29 @@ class PhysicalObject < ActiveRecord::Base
 
 	# tests if the physical object is currently on IULMIA staff workflow space
 	def onsite?
-		current_workflow_status.status_type == WorkflowStatusTemplate::ON_SITE
+		current_workflow_status.workflow_type
 	end
 
 	def in_transit_from_storage?
-		current_workflow_status.status_type == WorkflowStatusTemplate::PULL_REQUESTED
-	end
-
-	def can_be_returned_to_storage?
-		current_workflow_status.workflow_status_template_id == WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE] && !packed?
+		current_workflow_status.status_name == WorkflowStatus::PULL_REQUESTED
 	end
 
 	def packed?
-		cs = current_workflow_status
-		cs.workflow_status_location_id == WorkflowStatusLocation.packed_location_id || cs.workflow_status_location_id == WorkflowStatusLocation.in_cage_location_id
+		current_workflow_status.status_name == WorkflowStatus::IN_CAGE
 	end
 
-	def in_storage?
-		current_workflow_status.workflow_status_template_id == WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE]
+	# where (IN ALF!!!) the PO is currently stored
+	def storage_location
+		ingested = WorkflowStatus.where(physical_object_id: id, status_name: WorkflowStatus::IN_STORAGE_INGESTED).size > 0
+		if awaiting_freezer?
+			return WorkflowStatus::AWAITING_FREEZER
+		elsif in_freezer?
+			return WorkflowStatus::IN_FREEZER
+		elsif ingested
+			return WorkflowStatus::IN_STORAGE_INGESTED
+		else
+			return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
+		end
 	end
 
 
@@ -252,6 +264,15 @@ class PhysicalObject < ActiveRecord::Base
 		else
 			list = active_component_group.physical_objects.select{ |p| p != self && self.current_workflow_status != p.current_workflow_status }
 			return list.size == 0 ? false : list
+		end
+	end
+
+	def same_active_component_group_members?
+		if active_component_group.nil?
+			false
+		else
+			li = active_component_group.physical_objects.select{ |p| p != self && self.current_workflow_status == p.current_workflow_status }
+			return li.size == 0 ? false : li
 		end
 	end
 
@@ -396,10 +417,10 @@ class PhysicalObject < ActiveRecord::Base
 				xml.outsAndTrims generation_outs_and_trims
 				xml.positive generation_positive
 				xml.reversal generation_reversal
-				xml.seperationMaster generation_separation_master
+				xml.separationMaster generation_separation_master
 				xml.workPrint generation_work_print
 				xml.mixed generation_mixed
-				xml.originalCamrea generation_original_camera
+				xml.originalCamera generation_original_camera
 				xml.master generation_master
 			end
 			xml.bases do

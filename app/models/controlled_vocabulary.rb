@@ -30,7 +30,7 @@ class ControlledVocabulary < ActiveRecord::Base
   }
 
   scope :component_group_cv, -> {
-    cv = ControlledVocabulary.where(model_type: 'ComponentGroup').select(:model_attribute, :value).order(:model_attribute, :menu_index)
+    cv = ControlledVocabulary.where(model_type: 'ComponentGroup').select(:model_attribute, :value).order(:value, :menu_index)
     cv_map(cv)
   }
 

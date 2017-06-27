@@ -640,12 +640,18 @@ class CsvParser
       end
     end
 
-    # location for now is
-    #FIXME: determine vocab to parse between onsite locations and ALF in storage locations
-    po.workflow_statuses << WorkflowStatus.new(
-	    physical_object_id: po.id,
-	    workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::IN_STORAGE],
-	    workflow_status_location_id: WorkflowStatusLocation.alf_storage_location_id)
+    location = row[column_index LOCATION]
+    ws = nil
+    if location.blank?
+	    ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_STORAGE_INGESTED, po)
+    else
+	    if WorkflowStatus.is_storage_status?(location)
+		    ws = WorkflowStatus.build_workflow_status(location, po)
+	    else
+		    po.errors.add(:condition, "Undefined Location: #{cf}")
+	    end
+    end
+    po.workflow_statuses << ws unless ws.nil?
     po
   end
 

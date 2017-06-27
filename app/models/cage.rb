@@ -86,8 +86,11 @@ class Cage < ActiveRecord::Base
   end
 
   def can_by_shipped?
-    (!top_shelf.nil? || !middle_shelf.nil? || !bottom_shelf.nil?) &&
-      (top_shelf.physical_objects.size > 0 || middle_shelf.physical_objects.size > 0 || bottom_shelf.physical_objects.size > 0)
+    total_physical_objects > 0 && top_shelf.can_ship? && middle_shelf.can_ship? && bottom_shelf.can_ship?
+  end
+
+  def total_physical_objects
+    top_shelf.physical_objects.size + middle_shelf.physical_objects.size + bottom_shelf.physical_objects.size
   end
 
   def can_be_destroyed?

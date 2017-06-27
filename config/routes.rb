@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
 	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
+  get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
 
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
@@ -85,8 +86,10 @@ Rails.application.routes.draw do
 	# routes for workflow
 	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
 	post '/workflow/process_pull_request', to: 'workflow#process_pull_requested', as: 'process_pull_requested'
-	get '/workflow/receive_from_strorage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
-	post '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
+	get '/workflow/receive_from_storage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
+	patch '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
+  post '/workflow/receive_from_storage_wells/', to: 'workflow#process_receive_from_storage_wells', as: 'process_received_from_storage_wells'
+  get '/workflow/ajax_alf_barcode/:iu_barcode', to: 'workflow#ajax_alf_receive_iu_barcode', as: 'ajax_alf_receive_iu_barcode'
 	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
 	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
 	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
@@ -98,8 +101,9 @@ Rails.application.routes.draw do
 	get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
 	post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
   get '/workflow/ship_cages', to: 'workflow#ship_cages', as: 'ship_cages'
+  post '/workflow/ajax_cancel_queued_pull_request/:id', to: 'workflow#ajax_cancel_queued_pull_request', as: 'cancel_queued_pull_request'
 
-	resources :workflow_status_locations
+  get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

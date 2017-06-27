@@ -12,7 +12,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-		@statuses = WorkflowStatusTemplate.all
+		@statuses = WorkflowStatus::WORKFLOW_TYPES.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
 		  @physical_objects = PhysicalObject.where_current_workflow_status_is(params[:status])
 	  else
@@ -164,6 +164,15 @@ class PhysicalObjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to physical_objects_url, notice: 'Physical object was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def ajax_show_storage
+    po = PhysicalObject.where(params[:iu_barcode]).first
+    if po.nil?
+      render text: "Could Not Find Physical Object With IU Barcode: #{params[:iu_barcode]}"
+    else
+      render text: "#{params[:iu_barcode]} Should Be Returned to <b>#{po.storage_location}</b>".html_safe
     end
   end
 

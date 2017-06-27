@@ -8,10 +8,10 @@
 %>
 <script type="text/javascript">
   // hook in validator for the IU barcode field
-  $("#physical_object_iu_barcode").bind("change keyup", function () {
+  $("#physical_object_iu_barcode").bind("input", function () {
     validateIUBarcode($(this));
   });
-  $("#physical_object_mdpi_barcode").bind("change keyup", function () {
+  $("#physical_object_mdpi_barcode").bind("input", function () {
     validateMdpiBarcode($(this));
   });
 

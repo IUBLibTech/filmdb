@@ -1,0 +1,16 @@
+<table>
+	<tr>
+		<th>Status</th>
+		<th>Can Move Into</th>
+	</tr>
+	<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+		<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
+		<tr>
+			<td><%= index == 0 ? "#{status}" : ''  %></td>
+			<td>
+				<%= match %>
+			</td>
+		</tr>
+		<% end %>
+	<% end %>
+</table>

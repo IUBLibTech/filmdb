@@ -20,6 +20,9 @@ class CagesController < ApplicationController
   def new
 	  max = Cage.maximum('id')
     @cage = Cage.new(identifier: "Cage #{max.nil? ? 1 : max + 1}")
+	  @cage.top_shelf.identifier = "TS_#{max.nil? ? 1 : max + 1}"
+	  @cage.middle_shelf.identifier ="MS_#{max.nil? ? 1 : max + 1}"
+	  @cage.bottom_shelf.identifier = "BS_#{max.nil? ? 1 : max + 1}"
   end
 
   # POST /cages
@@ -61,7 +64,7 @@ class CagesController < ApplicationController
 			flash[:notice] = "Cage #{@cage.identifier} is ready to ship to Memnon"
 			redirect_to :cages
 		else
-			flash.now[:warning] = "Cage #{@cage.identifier} cannot be marked ready to ship. It contains 0 physical objects."
+			flash.now[:warning] = "Cage #{@cage.identifier} cannot be marked ready to ship. It either contains 0 physical objects, or 1 or more shelves with physical objects does not have an MDPI barcode assigned."
 			render :show
 		end
 	end
@@ -82,18 +85,16 @@ class CagesController < ApplicationController
 				PhysicalObject.transaction do
 					@cage.update_attributes(shipped: true)
 					flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
-					location = WorkflowStatusLocation.memnon_location
-					template_id = WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::SHIPPED_TO_EXTERNAL]
 					@cage.top_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
 					@cage.middle_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
 					@cage.bottom_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.new(workflow_status_template_id: template_id, workflow_status_location_id: location.id, physical_object_id: p.id)
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
 					result = push_cage_to_pod(@cage)
@@ -117,37 +118,35 @@ class CagesController < ApplicationController
 
   def add_physical_object_to_shelf
 		bc = params[:cage][:physical_object_iu_barcode]
-		po =  PhysicalObject.where(iu_barcode: bc).first
-		if po.nil?
-			@msg = "Could not find Physical Object with barcode #{bc}"
-		elsif !po.cage_shelf.nil?
-			@msg = "#{bc} has already been added to Cage #{po.cage_shelf.cage.identifier}"
-		elsif !po.onsite?
-			@msg = "#{bc} is not On Site. It is: #{po.current_workflow_status.type_and_location}"
+		@physical_object =  PhysicalObject.where(iu_barcode: bc).first
+		if @physical_object.nil?
+			@physical_object = PhysicalObject.new
+			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{bc}")
+		elsif !@physical_object.cage_shelf.nil?
+			@physical_object.errors.add(:cage_shelf, "#{bc} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
 		else
 			# need to check validity of both barcodes
 			mbc = params[:cage][:physical_object_mdpi_barcode]
 			if mbc.blank?
-				@msg = "No MDPI barcode provided."
+				@physical_object.errors.add(:mdpi_barcode, "Cannot pack a physical object without an MDPI barcode")
 			elsif !ApplicationHelper.valid_barcode?(mbc, true)
-				@msg = "#{mbc} is not a valid MDPI barcode"
-			elsif !po.mdpi_barcode.nil? && po.mdpi_barcode != mbc.to_i
-				@msg = "#{po.iu_barcode} has already been assigned an MDPI barcode: #{po.mdpi_barcode}"
+				@physical_object.errors.add(:mdpi_barcode, "#{mbc} is not a valid MDPI barcode")
+			elsif !@physical_object.mdpi_barcode.nil? && @physical_object.mdpi_barcode != mbc.to_i
+				@physical_object.errors.add(:mdpi_barcode, "#{@physical_object.iu_barcode} has already been assigned an MDPI barcode: #{@physical_object.mdpi_barcode}")
+			elsif !@physical_object.current_workflow_status.status_name == WorkflowStatus::TWO_K_FOUR_K_SHELVES
+				@physical_object.errors.add(:current_workflow_status, "is invalid. Cannot pack a physical object with workflow status #{@physical_object.current_workflow_status.type_and_location}")
 			else
-				po.mdpi_barcode = mbc.to_i if po.mdpi_barcode.nil?
-				po.cage_shelf_id = @cage_shelf.id
-				location = WorkflowStatusLocation.in_cage_location
-				ws = WorkflowStatus.new(workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE], workflow_status_location_id: location.id, physical_object_id: po.id
-				)
-				po.workflow_statuses << ws
-				po.save
+				@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
+				@physical_object.cage_shelf_id = @cage_shelf.id
+				@physical_object.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
+				@physical_object.save
 			end
 		end
-		if @msg
+		if @physical_object.errors.any?
       render partial: 'ajax_add_po_failure'
 		else
-			@msg = "Physical Object #{po.mdpi_barcode} was successfully added to Shelf #{po.cage_shelf.identifier}"
-			list = po.waiting_active_component_group_members?
+			@msg = "Physical Object #{@physical_object.mdpi_barcode} was successfully added to Shelf #{@physical_object.cage_shelf.identifier}"
+			list = @physical_object.waiting_active_component_group_members?
 			if list && list.size > 0
 				@msg += "<br/>Additional Reels for this title: #{ list.collect{ |p| p.iu_barcode }.join(', ') }".html_safe
 			end
@@ -158,16 +157,13 @@ class CagesController < ApplicationController
 	def remove_physical_object
 		# don't add this call to before_action :set_physical_object - the PO is determined by different passed params (mdpi_barcode vs po.id)
 		@physical_object = PhysicalObject.find(params[:po_id])
-		if @physical_object.nil? || (@physical_object.cage_shelf != @cage_shelf)
-			@msg = "Physical Object #{params[:barcode]} either doesn't exist, or is not contained in this Shelf"
+		if @physical_object.cage_shelf != @cage_shelf
+			@msg = "Physical Object #{params[:barcode]} is not contained in this Shelf"
 			render partial: 'ajax_add_po_failure'
 		else
 			@msg = "Physical Object #{@physical_object.mdpi_barcode} successfully removed from Shelf #{@cage_shelf.identifier}"
 			@physical_object.cage_shelf = nil
-			ws = WorkflowStatus.new(
-				workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE],
-				workflow_status_location_id: WorkflowStatusLocation.digi_prep_location_id,
-				physical_object_id: @physical_object.id)
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, @physical_object)
 			@physical_object.workflow_statuses << ws
 			@physical_object.save
 			@cage_shelf.reload

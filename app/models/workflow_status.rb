@@ -1,18 +1,135 @@
 class WorkflowStatus < ActiveRecord::Base
-	belongs_to :physical_object
-	belongs_to :workflow_status_template
-	belongs_to :workflow_status_location
 
-	def type_and_location
-		"#{workflow_status_template.name}"+(workflow_status_location.nil? ? '' : " [#{workflow_status_location.to_s}]")
+	belongs_to :physical_object
+	belongs_to :component_group
+
+	WORKFLOW_TYPES = ['Storage', 'In Workflow', 'Shipped', 'Deaccessioned']
+
+	MDPI = 'MDPI'
+	IULMIA = 'IULMIA'
+
+	IN_STORAGE_INGESTED = 'In Storage (Ingested)'
+	IN_STORAGE_AWAITING_INGEST = 'In Storage (Awaiting Ingest)'
+	IN_FREEZER = 'In Freezer'
+	AWAITING_FREEZER = 'Awaiting Freezer'
+	MOLD_ABATEMENT = 'Mold Abatement'
+	MISSING = 'Missing'
+	IN_CAGE = 'In Cage'
+	QUEUED_FOR_PULL_REQUEST = 'Queued for Pull Request'
+	PULL_REQUESTED = 'Pull Requested'
+	RECEIVED_FROM_STORAGE_STAGING = 'Received from Storage Staging'
+	TWO_K_FOUR_K_SHELVES = "2k/4k Shelves"
+	ISSUES_SHELF = 'Issues Shelf'
+	BEST_COPY = 'Best Copy'
+	IN_WORKFLOW_WELLS = 'In Workflow (IULMIA)'
+	SHIPPED_EXTERNALLY = 'Shipped Externally'
+	DEACCESSIONED = 'Deaccessioned'
+	JUST_INVENTORIED = 'Just Inventoried'
+	STATUS_TYPES_TO_STATUSES = {
+		# physical location is ALF
+		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING ],
+		#physical location is either ALF-IULMIA or Wells-IULMIA differentiated by WHICH_WORKFLOW values
+		'In Workflow' => [QUEUED_FOR_PULL_REQUEST, PULL_REQUESTED, RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY, IN_CAGE, IN_WORKFLOW_WELLS, JUST_INVENTORIED],
+	  # physical location is the external_entity_id foreign key reference
+		'Shipped' => [SHIPPED_EXTERNALLY],
+		# physical location is the dumpster out back
+	  'Deaccessioned' => [DEACCESSIONED]
+	}
+
+	PULLABLE_STORAGE = [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER]
+
+	STATUSES_TO_NEXT_WORKFLOW = {
+		IN_STORAGE_INGESTED => [QUEUED_FOR_PULL_REQUEST],
+		IN_STORAGE_AWAITING_INGEST => [QUEUED_FOR_PULL_REQUEST, IN_STORAGE_INGESTED],
+		IN_FREEZER => [QUEUED_FOR_PULL_REQUEST, DEACCESSIONED],
+		AWAITING_FREEZER => [QUEUED_FOR_PULL_REQUEST, IN_FREEZER, DEACCESSIONED],
+		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, DEACCESSIONED],
+		MISSING => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, DEACCESSIONED],
+		IN_CAGE => [SHIPPED_EXTERNALLY, TWO_K_FOUR_K_SHELVES],
+		QUEUED_FOR_PULL_REQUEST => ([PULL_REQUESTED] + PULLABLE_STORAGE),
+		PULL_REQUESTED => (PULLABLE_STORAGE + [IN_WORKFLOW_WELLS, BEST_COPY, ISSUES_SHELF, TWO_K_FOUR_K_SHELVES, DEACCESSIONED, MOLD_ABATEMENT]),
+		RECEIVED_FROM_STORAGE_STAGING => [TWO_K_FOUR_K_SHELVES],
+		TWO_K_FOUR_K_SHELVES => [IN_CAGE],
+		ISSUES_SHELF => ((PULLABLE_STORAGE << MOLD_ABATEMENT) + [RECEIVED_FROM_STORAGE_STAGING, DEACCESSIONED]),
+		BEST_COPY => (PULLABLE_STORAGE << MOLD_ABATEMENT) + [RECEIVED_FROM_STORAGE_STAGING, DEACCESSIONED],
+		IN_WORKFLOW_WELLS => ((PULLABLE_STORAGE << MOLD_ABATEMENT) + [SHIPPED_EXTERNALLY, DEACCESSIONED]),
+		SHIPPED_EXTERNALLY => (PULLABLE_STORAGE << IN_WORKFLOW_WELLS),
+		DEACCESSIONED => [],
+		JUST_INVENTORIED => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, RECEIVED_FROM_STORAGE_STAGING]
+	}
+
+	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
+	# permits movement into status_name
+	def self.build_workflow_status(status_name, physical_object)
+		if (physical_object.current_workflow_status.nil? && status_name != JUST_INVENTORIED) ||	(!physical_object.current_workflow_status.nil? && !physical_object.current_workflow_status.valid_next_workflow?(status_name))
+			raise WorkflowStatusError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
+		end
+		if status_name == JUST_INVENTORIED
+			ws = WorkflowStatus.new(
+				physical_object_id: physical_object.id,
+				whose_workflow: IULMIA,
+				status_name: status_name,
+				component_group_id: nil)
+		else
+			ws = WorkflowStatus.new(
+				physical_object_id: physical_object.id,
+				whose_workflow: find_workflow(status_name, physical_object),
+				status_name: status_name,
+				component_group_id: ((STATUS_TYPES_TO_STATUSES['Storage'] << DEACCESSIONED).include? status_name ? nil? : physical_object.current_workflow_status.component_group_id))
+			if !physical_object.current_workflow_status.external_entity_id.nil?
+				ws.external_entity_id = previous_workflow_status.external_entity_id
+			end
+		end
+		ws
 	end
 
-	def status_type
-		workflow_status_template.name
+	def valid_next_workflow?(next_workflow)
+		STATUSES_TO_NEXT_WORKFLOW[status_name].include? next_workflow
+	end
+
+	def self.mdpi_receive_options(storage_string)
+		# when a physical object is returned to storage it should determine storage_string based on its location (storage ingested, storage awaiting ingest, freezer, awaiting freezer)
+		[BEST_COPY, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, storage_string].each.collect { |s| [s, s] }
+	end
+
+	def self.workflow_type_from_status(status_name)
+		STATUS_TYPES_TO_STATUSES.each do |key|
+			if STATUS_TYPES_TO_STATUSES[key].include? status_name
+				return key
+			end
+		end
+		nil
+	end
+
+	def self.is_storage_status?(status)
+		s = workflow_type_from_status(status)
+		s != nil && s == 'Storage'
+	end
+
+	def can_be_pulled?
+		STATUS_TYPES_TO_STATUSES['Storage'].include?(status_name) && status_name != MISSING && status_name != MOLD_ABATEMENT
+	end
+
+	def type_and_location
+		"#{status_name}#{whose_workflow.blank? ? '' : " (#{whose_workflow})"}"
 	end
 
 	def ==(other)
-		self.class == other.class && self.workflow_status_location_id == other.workflow_status_location_id && self.workflow_status_template_id == other.workflow_status_template_id
+		self.class == other.class && self.status_name == other.status_name && self.whose_workflow == other.whose_workflow
+	end
+
+	private
+	def self.find_workflow(status_name, po)
+		if po.active_component_group.nil?
+			#clear the MDPI IULMIA workflow when it is no longer in their workflow
+			if [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING, MOLD_ABATEMENT, JUST_INVENTORIED].include? status_name
+				''
+			else
+				raise WorkflowError 'Missing active component group!!!'
+			end
+		else
+			po.active_component_group.which_workflow
+		end
 	end
 
 end
