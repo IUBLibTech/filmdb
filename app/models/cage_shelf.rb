@@ -24,6 +24,10 @@ class CageShelf < ActiveRecord::Base
 		physical_objects.nil? ? 0 : calc_duration_from_footage(physical_objects.sum(:footage))
 	end
 
+  def can_ship?
+	  (!mdpi_barcode.blank? && physical_objects.size > 0) || (physical_objects.size == 0 && mdpi_barcode.blank?)
+  end
+
 	private
 	def calc_duration_from_footage(ft)
 		format_time_code(ft * SECONDS_PER_FOOT[:gauge])

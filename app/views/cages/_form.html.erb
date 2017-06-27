@@ -2,7 +2,6 @@
   <% if @cage.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@cage.errors.count, "error") %> prohibited this cage from being saved:</h2>
-
       <ul>
       <% @cage.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -11,28 +10,29 @@
     </div>
   <% end %>
   <h4>New Cage</h4>
-  <b>Cage Identifier</b> <%= f.text_field :identifier %> <br>
+  <b>Cage Identifier</b> <%= @cage.identifier %> <br>
+	<%= f.hidden_field :identifier %>
   <b>Cage Notes</b> <%= f.text_area :notes %> <br>
 
 	<h4>Top Shelf Fields</h4>
 	<%= f.fields_for :top_shelf do |ts| %>
-		<b>Top Shelf Identifier</b> <%= ts.text_field :identifier %> <br>
+		<b>Top Shelf Identifier</b> <%= @cage.top_shelf.identifier %> <br>
+		<%= ts.hidden_field :identifier %>
 		<b>Top Shelf MDPI Barcode</b> <%= ts.text_field :mdpi_barcode %> <br>
-		<b>Top Shelf Notes</b> <%= ts.text_area :notes %>
 	<% end %>
 
 	<h4>Middle Shelf Fields</h4>
 	<%= f.fields_for :middle_shelf do |ms| %>
-		<b>Middle Shelf Identifier</b> <%= ms.text_field :identifier %> <br>
+		<%= ms.hidden_field :identifier %>
+		<b>Middle Shelf Identifier</b> <%= @cage.middle_shelf.identifier %> <br>
 		<b>Middle Shelf MDPI Barcode</b> <%= ms.text_field :mdpi_barcode %> <br>
-		<b>Middle Shelf Notes</b> <%= ms.text_area :notes %>
 	<% end %>
 
   <h4>Bottom Shelf</h4>
 	<%= f.fields_for :bottom_shelf do |bs| %>
-		<b>Bottom Shelf Identifier</b> <%= bs.text_field :identifier %> <br>
+		<%= bs.hidden_field :identifier %>
+		<b>Bottom Shelf Identifier</b> <%= @cage.bottom_shelf.identifier %> <br>
 		<b>Bottom Shelf MDPI Barcode</b> <%= bs.text_field :mdpi_barcode %> <br>
-		<b>Bottom Shelf Notes</b> <%= bs.text_area :notes %>
 	<% end %>
 
 	<div class="actions">

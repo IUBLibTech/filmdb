@@ -26,7 +26,7 @@ module CagesHelper
 					builder.destination 'Memnon'
 					builder.format cage.top_shelf.physical_objects.first&.medium
 					builder.objectsCount cage.top_shelf.physical_objects.size
-					builder.physicalObjecst do
+					builder.physicalObjects do
 						cage.top_shelf.physical_objects.each do |p|
 							p.to_xml(builder: builder)
 						end
@@ -43,7 +43,7 @@ module CagesHelper
 					builder.destination 'Memnon'
 					builder.format cage.middle_shelf.physical_objects.first&.medium
 					builder.objectsCount cage.middle_shelf.physical_objects.size
-					builder.physicalObjecst do
+					builder.physicalObjects do
 						cage.middle_shelf.physical_objects.each do |p|
 							p.to_xml(builder: builder)
 						end
@@ -60,7 +60,7 @@ module CagesHelper
 					builder.destination 'Memnon'
 					builder.format cage.bottom_shelf.physical_objects.first&.medium
 					builder.objectsCount cage.bottom_shelf.physical_objects.size
-					builder.physicalObjecst do
+					builder.physicalObjects do
 						cage.bottom_shelf.physical_objects.each do |p|
 							p.to_xml(builder: builder)
 						end

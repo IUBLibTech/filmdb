@@ -2,7 +2,7 @@ module AlfHelper
 	require 'net/scp'
 
 	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"AL\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
-	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"Wells\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
+	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"MI\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
@@ -12,8 +12,6 @@ module AlfHelper
 			upload_request_file(physical_objects)
 		end
 	end
-
-
 
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
@@ -29,7 +27,7 @@ module AlfHelper
 			cedar = Rails.configuration.cedar
 			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
 				# FIXME: when ready to move into production testing change this to cedar['upload_dir']
-				scp.upload!(file_name, cedar['upload_test_dir'])
+				scp.upload!(file_name, "#{cedar['upload_test_dir']}")
 			end
 			pr.save!
 		end

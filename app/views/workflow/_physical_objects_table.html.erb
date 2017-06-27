@@ -3,17 +3,25 @@
 		<th>IU Barcode</th>
 		<th>Title(s)</th>
     <th>Status</th>
+		<th>Workflow</th>
     <% if action_name == 'pull_request' %>
       <th>Select To Pull</th>
+			<th>Cancel</th>
     <% end %>
 	</tr>
 <% @physical_objects.each do |p| %>
 	<tr>
 		<td><%=  p.iu_barcode %></td>
-		<td><%= p.titles_text %></td>
+		<td>
+			<% p.titles.each do |t| %>
+				<%= link_to "#{t.title_text}", title_path(t) %> <br>
+			<% end %>
+		</td>
     <td><%=  p.current_workflow_status.type_and_location %></td>
+		<td><%= p.current_workflow_status.workflow_type %></td>
     <% if action_name == 'pull_request' %>
-        <td><%= check_box_tag "po_#{p.id}", ''%></td>
+      <td><%= check_box_tag "po_#{p.id}", ''%></td>
+			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
     <% end %>
 	</tr>
 <% end %>
@@ -46,6 +54,38 @@
       setChecked();
       lastChecked = this;
     });
+	  $('.remove_from_queue').click(function(event) {
+		  event.preventDefault();
+		  clicked = $(this);
+		  swal({
+			  title: 'Remove from Queue',
+			  text: 'Are you sure you want to remove this Physical Object from the Queue?',
+			  type: 'warning',
+			  showCancelButton: true,
+			  confirmButtonText: 'Remove from Queue',
+			  closeOnConfirm: false
+		  },
+		  function(isConfirm){
+			  if (isConfirm) {
+				  id = clicked.attr('id').substring(3)
+				  $.ajax({
+					  url: './ajax_cancel_queued_pull_request/' + id,
+					  method: 'POST',
+					  error: function (XMLHttpRequest, textStatus, errorThrown) {
+						  swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+					  },
+					  success: function (result) {
+
+						  swal({
+							  title: 'Reponse',
+							  text: result,
+							  html: true
+						  })
+					  }
+				  })
+			  }
+		  })
+	  });
   })
   // sets the hidden po ids attribute on the form
   function setChecked() {

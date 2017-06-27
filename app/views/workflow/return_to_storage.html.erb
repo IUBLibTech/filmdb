@@ -3,14 +3,39 @@
     <table>
       <tr>
         <th>Scan IU Barcode</th>
-        <td><%= f.text_field :iu_barcode %></td>
+        <td><%= f.text_field :iu_barcode, class: 'ajax_barcode_lookup' %></td>
       </tr>
       <tr>
         <td><%= f.submit 'Mark Returned' %> </td>
-        <td>to <%= f.select :location_id, WorkflowStatusLocation.where(location_type: 'in_storage').order(:location_type).collect { |l| [l.facility, l.id] }  %></td>
+        <td id="ajax_show_storage_message"></td>
       </tr>
     </table>
 <% end %>
+<script type="text/javascript" charset="utf-8">
+
+
+	$(document).ready(function() {
+		$('.ajax_barcode_lookup').bind('input', function () {
+			$('#ajax_show_storage_message').html('');
+			valid = validateIUBarcode($(this));
+			if (valid) {
+				$.ajax({
+					url: '../physical_objects/ajax_show_storage/' + $(this).val(),
+					error: function (result) {
+						swal({
+							title: 'Ajax Error',
+							text: 'Something unexpected happened while trying to retreive the storage location',
+							type: 'error'
+						})
+					},
+					success: function (result) {
+						$('#ajax_show_storage_message').html(result)
+					}
+				});
+			}
+		});
+	})
+</script>
 <h4 class="m_bottom_10px">Physical Objects <i>On Site</i></h4>
 <%= render partial: 'physical_objects_table' %>
 <%= render partial: 'physical_objects/physical_object_metadata_js' %>

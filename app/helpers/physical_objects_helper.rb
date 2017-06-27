@@ -9,10 +9,7 @@ module PhysicalObjectsHelper
     begin
       PhysicalObject.transaction do
         process_titles
-        ws = WorkflowStatus.new(
-          physical_object_id: @physical_object.id,
-          workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE],
-          workflow_status_location_id: WorkflowStatusLocation.just_inventoried_location_id)
+        ws = WorkflowStatus.build_workflow_status(WorkflowStatus::JUST_INVENTORIED, @physical_object)
 				@physical_object.workflow_statuses << ws
         respond_to do |format|
           if @physical_object.save

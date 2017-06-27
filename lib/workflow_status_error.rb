@@ -1,0 +1,3 @@
+class WorkflowStatusXSError < StandardError
+
+end

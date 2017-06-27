@@ -3,8 +3,7 @@
   <tr>
     <th>Barcode</th>
     <th>Title(s)</th>
-    <th>Status</th>
-    <th>Location</th>
+    <th>Workflow Location</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -15,10 +14,11 @@
 	      <%= physical_object.iu_barcode %>
       </td>
       <td>
-        <%= physical_object.titles_text %>
+        <% physical_object.titles.each do |t| %>
+		      <%= link_to "#{t.title_text}", title_path(t) %> <br>
+	      <% end %>
       </td>
-      <td><%= physical_object.current_workflow_status.status_type %></td>
-      <td><%= physical_object.current_workflow_status.workflow_status_location %></td>
+      <td><%= physical_object.current_workflow_status.type_and_location %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %>

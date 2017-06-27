@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612155547) do
+ActiveRecord::Schema.define(version: 20170623153930) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 20170612155547) do
     t.string   "location",                              limit: 255
     t.integer  "collection_id",                         limit: 8
     t.string   "media_type",                            limit: 255
-    t.integer  "iu_barcode",                            limit: 8,                             null: false
+    t.integer  "iu_barcode",                            limit: 8,                                             null: false
     t.integer  "copy_right",                            limit: 4
     t.string   "format",                                limit: 255
     t.integer  "spreadsheet_id",                        limit: 4
@@ -344,6 +344,8 @@ ActiveRecord::Schema.define(version: 20170612155547) do
     t.boolean  "generation_original_camera"
     t.boolean  "generation_master"
     t.integer  "component_group_id",                    limit: 8
+    t.boolean  "in_freezer",                                                                  default: false
+    t.boolean  "awaiting_freezer",                                                            default: false
   end
 
   create_table "pull_requests", force: :cascade do |t|
@@ -475,6 +477,7 @@ ActiveRecord::Schema.define(version: 20170612155547) do
     t.string   "email_address",          limit: 255
     t.integer  "created_in_spreadsheet", limit: 8
     t.boolean  "can_delete",                         default: false
+    t.string   "worksite_location",      limit: 255
   end
 
   create_table "value_conditions", force: :cascade do |t|
@@ -489,30 +492,16 @@ ActiveRecord::Schema.define(version: 20170612155547) do
     t.datetime "updated_at"
   end
 
-  create_table "workflow_status_locations", force: :cascade do |t|
-    t.string   "location_type",     limit: 255
-    t.string   "facility",          limit: 255
-    t.string   "physical_location", limit: 255
-    t.text     "notes",             limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "workflow_status_templates", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.integer  "sort_order",  limit: 4
-    t.text     "description", limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "workflow_statuses", force: :cascade do |t|
-    t.integer  "workflow_status_template_id", limit: 8
-    t.integer  "physical_object_id",          limit: 8
-    t.string   "notes",                       limit: 255
+    t.integer  "physical_object_id", limit: 8
+    t.string   "notes",              limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "workflow_status_location_id", limit: 8
+    t.string   "workflow_type",      limit: 255
+    t.string   "whose_workflow",     limit: 255
+    t.string   "status_name",        limit: 255
+    t.integer  "component_group_id", limit: 4
+    t.integer  "external_entity_id", limit: 4
   end
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
