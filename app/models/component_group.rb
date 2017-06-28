@@ -29,8 +29,8 @@ class ComponentGroup < ActiveRecord::Base
     group_type == 'Reformating'
   end
 
-  def which_workflow
-    ALF_GROUP_TYPES.include? group_type ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
+  def whose_workflow
+    ALF_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
   end
 
 end

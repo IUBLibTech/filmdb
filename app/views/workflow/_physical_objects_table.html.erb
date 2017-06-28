@@ -4,6 +4,7 @@
 		<th>Title(s)</th>
     <th>Status</th>
 		<th>Workflow</th>
+		<th>Component Group</th>
     <% if action_name == 'pull_request' %>
       <th>Select To Pull</th>
 			<th>Cancel</th>
@@ -18,7 +19,8 @@
 			<% end %>
 		</td>
     <td><%=  p.current_workflow_status.type_and_location %></td>
-		<td><%= p.current_workflow_status.workflow_type %></td>
+		<td><%= p.current_workflow_status.whose_workflow%></td>
+		<td><%= p.active_component_group&.group_type %></td>
     <% if action_name == 'pull_request' %>
       <td><%= check_box_tag "po_#{p.id}", ''%></td>
 			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>

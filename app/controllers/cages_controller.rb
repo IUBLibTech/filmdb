@@ -136,10 +136,13 @@ class CagesController < ApplicationController
 			elsif !@physical_object.current_workflow_status.status_name == WorkflowStatus::TWO_K_FOUR_K_SHELVES
 				@physical_object.errors.add(:current_workflow_status, "is invalid. Cannot pack a physical object with workflow status #{@physical_object.current_workflow_status.type_and_location}")
 			else
-				@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
-				@physical_object.cage_shelf_id = @cage_shelf.id
-				@physical_object.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
-				@physical_object.save
+				PhysicalObject.transaction do
+					@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
+					@physical_object.cage_shelf_id = @cage_shelf.id
+					ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
+					@physical_object.workflow_statuses << ws
+					@physical_object.save
+				end
 			end
 		end
 		if @physical_object.errors.any?

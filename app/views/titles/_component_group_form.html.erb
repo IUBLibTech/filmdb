@@ -4,6 +4,7 @@
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
 	    <div id="scan_div">
 		    <b>Scan Resolution: </b><%= f.select :scan_resolution, options_for_select([['2k', '2k'],['4k', '4k']]), include_blank: true %>
+		    <b>Clean: </b><%= f.check_box :clean, checked: true %>
 	    </div>
       <div>
         <b class="block">Group Summary</b>
@@ -36,7 +37,7 @@
   }
 
   $('#pos_group_type').on('change', function() {
-	  if (this.value == 'Reformating') {
+	  if (this.value == 'Reformatting (MDPI)') {
 		  $('#scan_div').show()
 	  } else {
 		  $('#scan_div').hide();

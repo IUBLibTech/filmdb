@@ -1,5 +1,4 @@
 class WorkflowStatus < ActiveRecord::Base
-
 	belongs_to :physical_object
 	belongs_to :component_group
 
@@ -8,6 +7,7 @@ class WorkflowStatus < ActiveRecord::Base
 	MDPI = 'MDPI'
 	IULMIA = 'IULMIA'
 
+	# all status names
 	IN_STORAGE_INGESTED = 'In Storage (Ingested)'
 	IN_STORAGE_AWAITING_INGEST = 'In Storage (Awaiting Ingest)'
 	IN_FREEZER = 'In Freezer'
@@ -25,6 +25,7 @@ class WorkflowStatus < ActiveRecord::Base
 	SHIPPED_EXTERNALLY = 'Shipped Externally'
 	DEACCESSIONED = 'Deaccessioned'
 	JUST_INVENTORIED = 'Just Inventoried'
+
 	STATUS_TYPES_TO_STATUSES = {
 		# physical location is ALF
 		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING ],
@@ -61,18 +62,21 @@ class WorkflowStatus < ActiveRecord::Base
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
 	def self.build_workflow_status(status_name, physical_object)
-		if (physical_object.current_workflow_status.nil? && status_name != JUST_INVENTORIED) ||	(!physical_object.current_workflow_status.nil? && !physical_object.current_workflow_status.valid_next_workflow?(status_name))
-			raise WorkflowStatusError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
+		current = physical_object.current_workflow_status
+		if ((current.nil? && status_name != JUST_INVENTORIED) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
+			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
 		if status_name == JUST_INVENTORIED
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
+				workflow_type: which_workflow_type(status_name),
 				whose_workflow: IULMIA,
 				status_name: status_name,
 				component_group_id: nil)
 		else
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
+				workflow_type: which_workflow_type(status_name),
 				whose_workflow: find_workflow(status_name, physical_object),
 				status_name: status_name,
 				component_group_id: ((STATUS_TYPES_TO_STATUSES['Storage'] << DEACCESSIONED).include? status_name ? nil? : physical_object.current_workflow_status.component_group_id))
@@ -84,7 +88,7 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	def valid_next_workflow?(next_workflow)
-		STATUSES_TO_NEXT_WORKFLOW[status_name].include? next_workflow
+		STATUSES_TO_NEXT_WORKFLOW[self.status_name].include? next_workflow
 	end
 
 	def self.mdpi_receive_options(storage_string)
@@ -128,8 +132,17 @@ class WorkflowStatus < ActiveRecord::Base
 				raise WorkflowError 'Missing active component group!!!'
 			end
 		else
-			po.active_component_group.which_workflow
+			po.active_component_group.whose_workflow
 		end
+	end
+
+	def self.which_workflow_type(status_name)
+		STATUS_TYPES_TO_STATUSES.keys.each do |k|
+			if STATUS_TYPES_TO_STATUSES[k].include? status_name
+				return k
+			end
+		end
+		return ''
 	end
 
 end
