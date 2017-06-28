@@ -2,13 +2,19 @@ class ServicesController < ApplicationController
 	require 'net/http'
 	require 'uri'
 	include CagesHelper
+	include BasicAuthenticationHelper
+
+	before_action :authenticate, only: [:receive]
 
 	def receive
-		render xml: "<filmdbResponse><url>#{update_batch_path}</url><success>true</success></filmdbResponse>", layout: false
+		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
+		@success = true
+		@msg = "Filmdb received the batch update"
+		render template: 'services/receive', layout: false
 	end
 
 
-	def push_cage_to_pod
+	def show_push_cage_to_pod_xml
 		begin
 			@cage = Cage.find(params[:cage_id])
 			file_path = write_xml(@cage)

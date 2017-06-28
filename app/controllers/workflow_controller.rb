@@ -75,6 +75,8 @@ class WorkflowController < ApplicationController
 			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[:physical_object][:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage?
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
+		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.whose_workflow != WorkflowStatus::MDPI
+			flash[:warning] = "#{@physical_object.iu_barcode} should have been delivered to Wells 052, Component Group type: #{@physical_object.active_component_group.group_type}"
 		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank?
 			flash[:warning] = "You must specify footage for #{@physical_object.iu_barcode}"
 		elsif !@physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow])
@@ -107,22 +109,21 @@ class WorkflowController < ApplicationController
 	def process_receive_from_storage_wells
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
 		if @physical_object.nil?
-			flash[:warning] = "Could not find Physical Object with barcode #{params[:physical_object][:iu_barcode]}"
-		elsif @physical_object.current_workflow_status.workflow_type != WorkflowStatus::IULMIA
-			flash[:warning] = "#{@physical_object.iu_barcode} is not assigned to IULMIA-Wells workflow. It was pulled for #{@physical_object.active_component_group.group_type}"
+			flash.now[:warning] = "Could not find Physical Object with barcode #{params[:physical_object][:iu_barcode]}"
+		elsif @physical_object.current_workflow_status.whose_workflow != WorkflowStatus::IULMIA
+			flash.now[:warning] = "#{@physical_object.iu_barcode} is not assigned to IULMIA-Wells workflow. It was pulled for #{@physical_object.active_component_group.group_type}"
 		elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_WORKFLOW_WELLS)
-			flash[:warning] = "#{@physical_object.iu_barcode} cannot be received. Its current workflow status is #{@physical_object.current_workflow_status.type_and_location}"
+			flash.now[:warning] = "#{@physical_object.iu_barcode} cannot be received. Its current workflow status is #{@physical_object.current_workflow_status.type_and_location}"
 		else
 			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_WORKFLOW_WELLS, @physical_object)
 			@physical_object.workflow_statuses << ws
 			@physical_object.save
 			others = @physical_object.waiting_active_component_group_members?
-			extra_msg = nil
-			if !others
+			if others
 				others = others.collect{ |p| p.iu_barcode }.join(', ')
 			end
-			flash[:notice] = "#{@physical_object.iu_barcode} workflow status was updated to <b>#{WorkflowStatus::IN_WORKFLOW_WELLS}</b> "+
-				"#{!extra_msg.nil? ? " #{others} are also part of this objects pull request and have not yet been received at Wells" : ''}".html_safe
+			flash.now[:notice] = "#{@physical_object.iu_barcode} workflow status was updated to <b>#{WorkflowStatus::IN_WORKFLOW_WELLS}</b> "+
+				"#{others ? " #{others} are also part of this objects pull request and have not yet been received at Wells" : ''}".html_safe
 		end
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::PULL_REQUESTED)
 		redirect_to :receive_from_storage

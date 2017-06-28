@@ -370,7 +370,13 @@ class PhysicalObject < ActiveRecord::Base
 			xml.captionedOrSubtitleNotes captions_or_subtitles_notes
 			xml.anamorphic anamorphic
 			xml.trackCount track_count
-
+			xml.returnTo storage_location
+			if active_component_group != nil
+				xml.resolution active_component_group.scan_resolution
+			end
+			if active_component_group != nil
+				xml.clean active_component_group.clean
+			end
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
 					xml.identifier oi.identifier
@@ -514,6 +520,8 @@ class PhysicalObject < ActiveRecord::Base
 				end
 			end
 			xml.conditions do
+				xml.mold mold
+				xml.adStrip ad_strip
 				value_conditions.each do |vc|
 					xml.condition do
 						xml.type vc.condition_type

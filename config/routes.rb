@@ -54,7 +54,7 @@ Rails.application.routes.draw do
 	# services URLs
 	post '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch'
 	get '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch_test'
-	post '/services/push_cage_to_pod/:cage_id', to: 'services#push_cage_to_pod', as: 'push_cage_to_pod'
+	post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
 	get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
