@@ -2,17 +2,25 @@
 <table>
 	<tr>
 		<th>Title(s)</th>
-		<td colspan="3"><%= @physical_object.titles_text %></td>
+		<td colspan="5"><%= @physical_object.titles_text %></td>
 	</tr>
 	<tr>
 		<th>IU Barcode</th>
-		<td colspan="3"><%= @physical_object.iu_barcode %></td>
+		<td colspan="5"><%= @physical_object.iu_barcode %></td>
 	</tr>
-	<% @physical_object.workflow_statuses.order(:created_at).each do |s| %>
-		<tr>
+	<% @physical_object.workflow_statuses.order(created_at: :desc).each_with_index do |s, i| %>
+		<% if i == 0%>
+			<tr style="color: #red; font-weight: bold">
+		<% else %>
+			<tr>
+		<% end %>
 			<th>Physical Location</th>
 			<td>
 				<%= s.status_name %>
+			</td>
+			<th>Date</th>
+			<td>
+				<%= s.created_at.strftime("%B %d, %Y") %>
 			</td>
 			<th>User</th>
 			<td></td>

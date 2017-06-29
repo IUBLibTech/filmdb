@@ -206,7 +206,13 @@ class CsvParser
     location = row[column_index CURRENT_LOCATION]
     # for now we are just storing the value in a text field, later this will be parsed
     #set_value(:location, location, po)
-    po.location = location
+    #po.location = location
+    if WorkflowStatus::SPREADSHEET_START_LOCATIONS.include?(location)
+      ws = WorkflowStatus.build_workflow_status(location, po)
+      po.workflow_statuses << ws
+    else
+      po.errors.add(:location, "Unknown or malformed Current Location field: #{location}")
+    end
 
     gauge = row[column_index GAUGE]
     set_value(:gauge, gauge, po)

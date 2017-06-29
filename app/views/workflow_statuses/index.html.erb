@@ -1,40 +1,58 @@
-<table>
-	<tr>
-		<th colspan="2" style="background: red">Wells Workflow</th>
-	</tr>
-	<tr>
-		<th>Physical Location</th>
-		<th>Can Move To</th>
-	</tr>
-	<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
-		<% if status.include? '(ALF)'%><% next %><% end %>
-		<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
-			<% if status.include? '(ALF)'%><% next %><% end %>
+<div class="left">
+	<table>
 		<tr>
-			<td><%= index == 0 ? "#{status}" : ''  %></td>
-			<td>
-				<%= match %>
-			</td>
+			<th colspan="2" style="background: #496d89; color: white">Wells Workflow</th>
 		</tr>
-		<% end %>
-	<% end %>
-	<tr>
-		<th colspan="2" style="background: red">MDPI Workflow</th>
-	</tr>
-	<tr>
-		<th>Physical Location</th>
-		<th>Can Move To</th>
-	</tr>
-	<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
-		<% if status.include? '(Wells)'%><% next %><% end %>
-		<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
-			<% if status.include? '(Wells)'%><% next %><% end %>
+		<tr>
+			<th>Physical Location</th>
+			<th>Can Move To</th>
+		</tr>
+		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+			<% if status.include? '(ALF)'%><% next %><% end %>
+			<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
+				<% if status.include? '(ALF)'%><% next %><% end %>
 			<tr>
 				<td><%= index == 0 ? "#{status}" : ''  %></td>
 				<td>
 					<%= match %>
 				</td>
 			</tr>
+			<% end %>
 		<% end %>
-	<% end %>
-</table>
+	</table>
+</div>
+<div class="left" style="margin-left: 10px;">
+	<table>
+		<tr>
+			<th colspan="2" style="background: #496d89; color: white">MDPI Workflow</th>
+		</tr>
+		<tr>
+			<th>Physical Location</th>
+			<th>Can Move To</th>
+		</tr>
+		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+			<% if status.include? '(Wells)'%><% next %><% end %>
+			<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
+				<% if status.include? '(Wells)'%><% next %><% end %>
+				<tr>
+					<td><%= index == 0 ? "#{status}" : ''  %></td>
+					<td>
+						<%= match %>
+					</td>
+				</tr>
+			<% end %>
+		<% end %>
+	</table>
+</div>
+<div class="clear">
+	<table>
+		<tr>
+			<th style="background: #496d89; color: white">Spreadsheet Locations</th>
+		</tr>
+		<% WorkflowStatus::SPREADSHEET_START_LOCATIONS.each do |l| %>
+			<tr>
+				<td><%= l %></td>
+			</tr>
+		<% end %>
+	</table>
+</div>
