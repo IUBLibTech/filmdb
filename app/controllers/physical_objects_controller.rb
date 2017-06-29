@@ -156,6 +156,10 @@ class PhysicalObjectsController < ApplicationController
     redirect_to edit_location_path
   end
 
+  def workflow_history
+    @physical_object = PhysicalObject.find(params[:id])
+  end
+
   # DELETE /physical_objects/1
   # DELETE /physical_objects/1.json
   def destroy

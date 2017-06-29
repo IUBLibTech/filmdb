@@ -130,7 +130,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def return_to_storage
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::JUST_INVENTORIED, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
 		ws = WorkflowStatus.build_workflow_status(@po.storage_location, @po)

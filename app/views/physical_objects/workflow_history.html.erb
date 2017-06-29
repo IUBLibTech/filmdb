@@ -1,0 +1,21 @@
+<h4>Workflow History</h4>
+<table>
+	<tr>
+		<th>Title(s)</th>
+		<td colspan="3"><%= @physical_object.titles_text %></td>
+	</tr>
+	<tr>
+		<th>IU Barcode</th>
+		<td colspan="3"><%= @physical_object.iu_barcode %></td>
+	</tr>
+	<% @physical_object.workflow_statuses.order(:created_at).each do |s| %>
+		<tr>
+			<th>Physical Location</th>
+			<td>
+				<%= s.status_name %>
+			</td>
+			<th>User</th>
+			<td></td>
+		</tr>
+	<% end %>
+</table>
