@@ -10,7 +10,7 @@
 		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
 			<% if status.include? '(ALF)'%><% next %><% end %>
 			<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
-				<% if status.include? '(ALF)'%><% next %><% end %>
+				<% if match.include? '(ALF)'%><% next %><% end %>
 			<tr>
 				<td><%= index == 0 ? "#{status}" : ''  %></td>
 				<td>
@@ -33,7 +33,7 @@
 		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
 			<% if status.include? '(Wells)'%><% next %><% end %>
 			<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
-				<% if status.include? '(Wells)'%><% next %><% end %>
+				<% if match.include? '(Wells)'%><% next %><% end %>
 				<tr>
 					<td><%= index == 0 ? "#{status}" : ''  %></td>
 					<td>
