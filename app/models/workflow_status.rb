@@ -14,23 +14,24 @@ class WorkflowStatus < ActiveRecord::Base
 	AWAITING_FREEZER = 'Awaiting Freezer'
 	MOLD_ABATEMENT = 'Mold Abatement'
 	MISSING = 'Missing'
-	IN_CAGE = 'In Cage'
+	IN_CAGE = 'In Cage (ALF)'
 	QUEUED_FOR_PULL_REQUEST = 'Queued for Pull Request'
 	PULL_REQUESTED = 'Pull Requested'
-	RECEIVED_FROM_STORAGE_STAGING = 'Received from Storage Staging'
-	TWO_K_FOUR_K_SHELVES = "2k/4k Shelves"
-	ISSUES_SHELF = 'Issues Shelf'
-	BEST_COPY = 'Best Copy'
-	IN_WORKFLOW_WELLS = 'In Workflow (IULMIA)'
+	RECEIVED_FROM_STORAGE_STAGING = 'Received from Storage Staging (ALF)'
+	TWO_K_FOUR_K_SHELVES = "2k/4k Shelves (ALF)"
+	ISSUES_SHELF = 'Issues Shelf (ALF)'
+	BEST_COPY = 'Best Copy (ALF)'
+	IN_WORKFLOW_WELLS = 'In Workflow (Wells)'
 	SHIPPED_EXTERNALLY = 'Shipped Externally'
 	DEACCESSIONED = 'Deaccessioned'
-	JUST_INVENTORIED = 'Just Inventoried'
+	JUST_INVENTORIED_WELLS = 'Just Inventoried (Wells)'
+	JUST_INVENTORIED_ALF = 'Just Inventoried (ALF)'
 
 	STATUS_TYPES_TO_STATUSES = {
 		# physical location is ALF
 		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING ],
 		#physical location is either ALF-IULMIA or Wells-IULMIA differentiated by WHICH_WORKFLOW values
-		'In Workflow' => [QUEUED_FOR_PULL_REQUEST, PULL_REQUESTED, RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY, IN_CAGE, IN_WORKFLOW_WELLS, JUST_INVENTORIED],
+		'In Workflow' => [QUEUED_FOR_PULL_REQUEST, PULL_REQUESTED, RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY, IN_CAGE, IN_WORKFLOW_WELLS, JUST_INVENTORIED_WELLS, JUST_INVENTORIED_ALF],
 	  # physical location is the external_entity_id foreign key reference
 		'Shipped' => [SHIPPED_EXTERNALLY],
 		# physical location is the dumpster out back
@@ -42,8 +43,8 @@ class WorkflowStatus < ActiveRecord::Base
 	STATUSES_TO_NEXT_WORKFLOW = {
 		IN_STORAGE_INGESTED => [QUEUED_FOR_PULL_REQUEST],
 		IN_STORAGE_AWAITING_INGEST => [QUEUED_FOR_PULL_REQUEST, IN_STORAGE_INGESTED],
-		IN_FREEZER => [QUEUED_FOR_PULL_REQUEST, DEACCESSIONED],
-		AWAITING_FREEZER => [QUEUED_FOR_PULL_REQUEST, IN_FREEZER, DEACCESSIONED],
+		IN_FREEZER => [QUEUED_FOR_PULL_REQUEST],
+		AWAITING_FREEZER => [QUEUED_FOR_PULL_REQUEST, IN_FREEZER],
 		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, DEACCESSIONED],
 		MISSING => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, DEACCESSIONED],
 		IN_CAGE => [SHIPPED_EXTERNALLY, TWO_K_FOUR_K_SHELVES],
@@ -56,17 +57,18 @@ class WorkflowStatus < ActiveRecord::Base
 		IN_WORKFLOW_WELLS => ((PULLABLE_STORAGE + [MOLD_ABATEMENT]) + [SHIPPED_EXTERNALLY, DEACCESSIONED]),
 		SHIPPED_EXTERNALLY => (PULLABLE_STORAGE + [IN_WORKFLOW_WELLS]),
 		DEACCESSIONED => [],
-		JUST_INVENTORIED => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, RECEIVED_FROM_STORAGE_STAGING]
+		JUST_INVENTORIED_WELLS => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, IN_WORKFLOW_WELLS],
+		JUST_INVENTORIED_ALF => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, RECEIVED_FROM_STORAGE_STAGING, BEST_COPY]
 	}
 
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
 	def self.build_workflow_status(status_name, physical_object)
 		current = physical_object.current_workflow_status
-		if ((current.nil? && status_name != JUST_INVENTORIED) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
+		if ((current.nil? && status_name != JUST_INVENTORIED_WELLS) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
 			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
-		if status_name == JUST_INVENTORIED
+		if status_name == JUST_INVENTORIED_WELLS
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
 				workflow_type: which_workflow_type(status_name),
@@ -126,7 +128,7 @@ class WorkflowStatus < ActiveRecord::Base
 	def self.find_workflow(status_name, po)
 		if po.active_component_group.nil?
 			#clear the MDPI IULMIA workflow when it is no longer in their workflow
-			if [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING, MOLD_ABATEMENT, JUST_INVENTORIED].include? status_name
+			if [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING, MOLD_ABATEMENT, JUST_INVENTORIED_WELLS].include? status_name
 				''
 			else
 				raise WorkflowError 'Missing active component group!!!'

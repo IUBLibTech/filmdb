@@ -1,16 +1,40 @@
 <table>
 	<tr>
-		<th>Status</th>
-		<th>Can Move Into</th>
+		<th colspan="2" style="background: red">Wells Workflow</th>
+	</tr>
+	<tr>
+		<th>Physical Location</th>
+		<th>Can Move To</th>
 	</tr>
 	<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+		<% if status.include? '(ALF)'%><% next %><% end %>
 		<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
+			<% if status.include? '(ALF)'%><% next %><% end %>
 		<tr>
 			<td><%= index == 0 ? "#{status}" : ''  %></td>
 			<td>
 				<%= match %>
 			</td>
 		</tr>
+		<% end %>
+	<% end %>
+	<tr>
+		<th colspan="2" style="background: red">MDPI Workflow</th>
+	</tr>
+	<tr>
+		<th>Physical Location</th>
+		<th>Can Move To</th>
+	</tr>
+	<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+		<% if status.include? '(Wells)'%><% next %><% end %>
+		<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].each_with_index do |match, index| %>
+			<% if status.include? '(Wells)'%><% next %><% end %>
+			<tr>
+				<td><%= index == 0 ? "#{status}" : ''  %></td>
+				<td>
+					<%= match %>
+				</td>
+			</tr>
 		<% end %>
 	<% end %>
 </table>

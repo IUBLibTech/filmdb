@@ -184,9 +184,6 @@ class PhysicalObject < ActiveRecord::Base
 		workflow_statuses.last
 	end
 
-	def title_text
-
-	end
 
 	def workflow
 		current_workflow_status&.workflow_type
