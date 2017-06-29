@@ -39,6 +39,7 @@ class WorkflowStatus < ActiveRecord::Base
 	}
 
 	PULLABLE_STORAGE = [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER]
+	SPREADSHEET_START_LOCATIONS = [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, JUST_INVENTORIED_ALF, JUST_INVENTORIED_WELLS, MOLD_ABATEMENT]
 
 	STATUSES_TO_NEXT_WORKFLOW = {
 		IN_STORAGE_INGESTED => [QUEUED_FOR_PULL_REQUEST],
@@ -65,7 +66,7 @@ class WorkflowStatus < ActiveRecord::Base
 	# permits movement into status_name
 	def self.build_workflow_status(status_name, physical_object)
 		current = physical_object.current_workflow_status
-		if ((current.nil? && status_name != JUST_INVENTORIED_WELLS) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
+		if ((current.nil? && !SPREADSHEET_START_LOCATIONS.include?(status_name)) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
 			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
 		if status_name == JUST_INVENTORIED_WELLS
