@@ -207,6 +207,11 @@ class PhysicalObject < ActiveRecord::Base
 		current_workflow_status.status_name == WorkflowStatus::IN_CAGE
 	end
 
+	# need this for the ajax form that creates new titles for this physical object
+	def title_text
+
+	end
+
 	# where (IN ALF!!!) the PO is currently stored
 	def storage_location
 		ingested = WorkflowStatus.where(physical_object_id: id, status_name: WorkflowStatus::IN_STORAGE_INGESTED).size > 0

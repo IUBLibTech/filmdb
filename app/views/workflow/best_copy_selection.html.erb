@@ -1,0 +1,29 @@
+<h4>Best Copy Selection</h4>
+<p>Scan an IU barcode below to retrieve its Best Copy component group</p>
+<table>
+	<tr>
+		<th>IU Barcode</th>
+		<td><input type="text" id="iu_barcode"/></td>
+	</tr>
+</table>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('#iu_barcode').bind('input', function(){
+			valid = validateIUBarcode($(this));
+			if (valid) {
+				$.ajax({
+					url: './ajax_best_copy_selection_barcode/' + $(this).val(),
+					method: 'POST',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+						$('#cg').html('');
+					},
+					success: function (result) {
+						$('#cg').html(result);
+					}
+				});
+			}
+		});
+	});
+</script>
+<div id="cg"></div>
