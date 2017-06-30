@@ -52,8 +52,6 @@ module ApplicationHelper
 		b = false
 		if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
 			b = po[0]
-		elsif (cs = CageShelf.where(iu_barcode: barcode).limit(1)).size == 1
-			b = cs[0]
 		end
 		return b
 	end
