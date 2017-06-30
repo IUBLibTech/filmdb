@@ -1,7 +1,7 @@
 class IuBarcodeValidator < ActiveModel::EachValidator
 
 	def validate_each(record, attribute, value)
-		assigned = ApplicationHelper.barcode_assigned?(value)
+		assigned = ApplicationHelper.iu_barcode_assigned?(value)
 		if !ApplicationHelper.valid_barcode?(value)
 			record.errors.add(attribute, options[:message] || "is not valid.")
 		elsif (assigned and assigned != record)

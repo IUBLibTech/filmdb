@@ -38,11 +38,21 @@ module ApplicationHelper
 		ApplicationHelper.valid_barcode?(barcode) && barcode.to_s != "0"
 	end
 
-	def ApplicationHelper.barcode_assigned?(barcode)
+	def ApplicationHelper.mdpi_barcode_assigned?(barcode)
 		b = false
 		if (po = PhysicalObject.where(mdpi_barcode: barcode).limit(1)).size == 1
 			b = po[0]
 		elsif (cs = CageShelf.where(mdpi_barcode: barcode).limit(1)).size == 1
+			b = cs[0]
+		end
+		return b
+	end
+
+	def ApplicationHelper.iu_barcode_assigned?(barcode)
+		b = false
+		if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
+			b = po[0]
+		elsif (cs = CageShelf.where(iu_barcode: barcode).limit(1)).size == 1
 			b = cs[0]
 		end
 		return b
