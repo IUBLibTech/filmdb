@@ -1,0 +1,24 @@
+<h4><%= @cg.group_type %> Component Group for <b><i><%= @cg.title.title_text %></i></b></h4>
+<%= form_for @cg, url: best_copy_selection_update_url do |f| %>
+	<table>
+		<tr>
+			<th>IU Barcode</th>
+			<th>Default Storage Location</th>
+			<th>Action</th>
+		</tr>
+		<% @cg.physical_objects.each do |p| %>
+			<tr>
+				<td><%= p.iu_barcode %></td>
+				<td><%= p.storage_location %></td>
+				<td>
+					<select name="action" id="loc_<%= p.id %>" >
+						<option disabled selected value>-- select a destination or leave blank to return to storage --</option>
+						<% (['New Reformating Component Group (MDPI)', 'New Reformating Component Group (Wells)']+WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::BEST_COPY]).each do |s| %>
+							<option value="<%= s %>"><%= s %></option>
+						<% end %>
+					</select>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+<% end %>

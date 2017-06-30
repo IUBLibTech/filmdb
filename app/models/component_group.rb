@@ -4,6 +4,10 @@ class ComponentGroup < ActiveRecord::Base
   has_many :physical_objects, through: :component_group_physical_objects
 
   ALF_GROUP_TYPES = ['Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)']
+  BEST_COPY_WELLS = 'Best Copy (Wells)'
+  BEST_COPY_MDPI = 'Best Copy (MDPI)'
+  BEST_COPY_TYPES = [BEST_COPY_MDPI, BEST_COPY_WELLS]
+
 
 
   def generations

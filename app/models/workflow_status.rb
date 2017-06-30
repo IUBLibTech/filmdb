@@ -17,7 +17,7 @@ class WorkflowStatus < ActiveRecord::Base
 	IN_CAGE = 'In Cage (ALF)'
 	QUEUED_FOR_PULL_REQUEST = 'Queued for Pull Request'
 	PULL_REQUESTED = 'Pull Requested'
-	RECEIVED_FROM_STORAGE_STAGING = 'Received from Storage Staging (ALF)'
+	RECEIVED_FROM_STORAGE_STAGING = 'Returned to Pull Requested'
 	TWO_K_FOUR_K_SHELVES = "2k/4k Shelves (ALF)"
 	ISSUES_SHELF = 'Issues Shelf (ALF)'
 	BEST_COPY = 'Best Copy (ALF)'
@@ -46,7 +46,7 @@ class WorkflowStatus < ActiveRecord::Base
 		IN_STORAGE_AWAITING_INGEST => [QUEUED_FOR_PULL_REQUEST, IN_STORAGE_INGESTED],
 		IN_FREEZER => [QUEUED_FOR_PULL_REQUEST],
 		AWAITING_FREEZER => [QUEUED_FOR_PULL_REQUEST, IN_FREEZER],
-		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER],
+		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, RECEIVED_FROM_STORAGE_STAGING],
 		MISSING => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER],
 		IN_CAGE => [SHIPPED_EXTERNALLY, TWO_K_FOUR_K_SHELVES],
 		QUEUED_FOR_PULL_REQUEST => ([PULL_REQUESTED] + PULLABLE_STORAGE),
@@ -61,6 +61,7 @@ class WorkflowStatus < ActiveRecord::Base
 		JUST_INVENTORIED_WELLS => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, IN_WORKFLOW_WELLS],
 		JUST_INVENTORIED_ALF => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, RECEIVED_FROM_STORAGE_STAGING, BEST_COPY]
 	}
+
 
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
@@ -95,8 +96,7 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	def self.mdpi_receive_options(storage_string)
-		# when a physical object is returned to storage it should determine storage_string based on its location (storage ingested, storage awaiting ingest, freezer, awaiting freezer)
-		[BEST_COPY, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, storage_string].each.collect { |s| [s, s] }
+		[BEST_COPY, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF].each.collect { |s| [s, s] }
 	end
 
 	def self.workflow_type_from_status(status_name)

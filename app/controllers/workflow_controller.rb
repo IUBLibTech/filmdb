@@ -180,6 +180,35 @@ class WorkflowController < ApplicationController
 		@url = '/workflow/ajax/received_external/'
 	end
 
+
+	def best_copy_selection
+	end
+
+	def ajax_best_copy_selection_barcode
+		bc = params[:iu_barcode]
+		@cg = nil
+		@physical_object = PhysicalObject.where(iu_barcode: bc).first
+		if @physical_object.nil?
+			@msg = "Could not find Physical Object with IU Barcode: #{parms[:iu_barcode]}"
+			render partial: 'ajax_best_copy_selection_error'
+		else
+			@cg = @physical_object.active_component_group
+			if @cg.nil?
+				@msg = "Physical Object #{params[:iu_barcode]} is not in active workflow. It currently should be #{@physical_object.current_workflow_status.type_and_location}"
+				render partial: 'ajax_best_copy_selection_error'
+			elsif !ComponentGroup::BEST_COPY_TYPES.include?(@cg.group_type)
+				@msg = "Physical Object #{params[:iu_barcode]}'s current active component group is not Best Copy. It is: #{@physical_object.active_component_group.group_type}'"
+				render partial: 'ajax_best_copy_selection_error'
+			else
+				render partial: 'ajax_best_copy_selection_component_group'
+			end
+		end
+	end
+
+	def best_copy_selection_update
+		render 'best_copy_selection'
+	end
+
 	private
 	def set_physical_object
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first

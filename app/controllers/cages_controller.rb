@@ -183,7 +183,7 @@ class CagesController < ApplicationController
       format.html { redirect_to cages_url, notice: 'Cage was successfully destroyed.' }
       format.json { head :no_content }
     end
-	end
+  end
 
 	def show_xml
 		file_path = write_xml(@cage)
