@@ -70,7 +70,9 @@ class WorkflowStatus < ActiveRecord::Base
 		if ((current.nil? && !SPREADSHEET_START_LOCATIONS.include?(status_name)) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
 			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
-		if status_name == JUST_INVENTORIED_WELLS
+
+		# just inventoried or ingested from spreadsheet
+		if current.nil?
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
 				workflow_type: which_workflow_type(status_name),
