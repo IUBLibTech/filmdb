@@ -646,18 +646,18 @@ class CsvParser
       end
     end
 
-    location = row[column_index LOCATION]
-    ws = nil
-    if location.blank?
-	    ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_STORAGE_INGESTED, po)
-    else
-	    if WorkflowStatus.is_storage_status?(location)
-		    ws = WorkflowStatus.build_workflow_status(location, po)
-	    else
-		    po.errors.add(:condition, "Undefined Location: #{cf}")
-	    end
-    end
-    po.workflow_statuses << ws unless ws.nil?
+    # location = row[column_index LOCATION]
+    # ws = nil
+    # if location.blank?
+	   #  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_STORAGE_INGESTED, po)
+    # else
+	   #  if WorkflowStatus.is_storage_status?(location)
+		 #    ws = WorkflowStatus.build_workflow_status(location, po)
+	   #  else
+		 #    po.errors.add(:condition, "Undefined Location: #{cf}")
+	   #  end
+    # end
+    # po.workflow_statuses << ws unless ws.nil?
     po
   end
 
