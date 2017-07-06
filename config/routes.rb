@@ -83,6 +83,8 @@ Rails.application.routes.draw do
   resources :units
 
 	resources :users
+  get '/users/worksite_location/:id', to: 'users#show_update_location', as: 'show_worksite_location'
+  patch '/users/worksite_location/:id', to: 'users#update_location', as: 'update_worksite_location'
 
 	# routes for workflow
 	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
@@ -107,6 +109,9 @@ Rails.application.routes.draw do
   post '/workflow/ajax_best_copy_selection_barcode/:iu_barcode', to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode'
   get '/workflow/ajax_best_copy_selection_barcode/:iu_barcode',  to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode_test'
   post '/workflow/best_copy_selection_update', to: 'workflow#best_copy_selection_update', as: 'best_copy_selection_update'
+  get '/workflow/issues_shelf', to: 'workflow#issues_shelf', as: 'issues_shelf'
+  post '/workflow/ajax_issues_shelf_barcode/:iu_barcode', to: 'workflow#ajax_issues_shelf_barcode', as: 'ajax_issues_shelf_barocde'
+  patch '/workflow/ajax_issues_shelf_update/:id', to: 'workflow#ajax_issues_shelf_update', as: 'ajax_issues_shelf_update'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 

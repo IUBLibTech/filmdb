@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   before_action :signed_in_user
+  before_action :update_user_loc, except: [:show_update_location, :update_location]
   around_filter :scope_current_username
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -28,5 +29,14 @@ class ApplicationController < ActionController::Base
 
   def meaningful_action_name(name)
     name == 'index' ? 'View' : (name == 'destroy' ? 'Delete' : name)
+  end
+
+  def update_user_loc
+    # if session[:username]
+		 #  @user = User.where(username: session[:username]).first
+		 #  if @user.works_in_both_locations && (@user.updated_at + 1.hour < Time.now)
+			#   redirect_to show_worksite_location_path(@user.id)
+		 #  end
+    # end
   end
 end

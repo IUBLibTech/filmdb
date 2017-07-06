@@ -8,6 +8,7 @@
       <th>Email Address</th>
       <th>Active?</th>
 	    <th>Can Delete?</th>
+	    <th>Works at Wells and ALF?</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -32,6 +33,9 @@
         </td>
 	      <td class="<%= user.can_delete? ? 'green' : 'red' %>">
 		      <%= user.can_delete? ? 'Yes' : 'No' %>
+	      </td>
+	      <td>
+		      <%= user.works_in_both_locations? ? 'Yes' : 'No' %>
 	      </td>
         <td>
         	<%= link_to 'Show', user %>

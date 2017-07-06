@@ -301,23 +301,24 @@ class CsvParser
     dates = row[column_index DATE].to_s
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
-        date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
-        date_only = /^([0-9\/?~]+)$/
-        if date_type.match(date)
-          matcher = date_type.match(date)
-          d = matcher[1]
-          type = matcher[2]
-          if @title_date_cv[:date_type].collect { |x| x[0] }.include? type
-            TitleDate.new(title_id: title.id, date: d, date_type: type).save
-          else
-            po.errors.add(:title_date, "Invalid date_type: #{type}")
-          end
-        elsif date_only.match(date)
-          d = date_only.match(date)[1]
-          title.title_dates << TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown')
-        else
-          po.errors.add(:title_date, "Invalid date/date_type format: #{date}")
-        end
+	      title.title_dates << TitleDate.new(title_id: title.id, date: date, date_type: 'Unknown')
+        # date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
+        # date_only = /^([0-9\/?~]+)$/
+        # if date_type.match(date)
+        #   matcher = date_type.match(date)
+        #   d = matcher[1]
+        #   type = matcher[2]
+        #   if @title_date_cv[:date_type].collect { |x| x[0] }.include? type
+        #     TitleDate.new(title_id: title.id, date: d, date_type: type).save
+        #   else
+        #     po.errors.add(:title_date, "Invalid date_type: #{type}")
+        #   end
+        # elsif date_only.match(date)
+        #   d = date_only.match(date)[1]
+        #   title.title_dates << TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown')
+        # else
+        #   po.errors.add(:title_date, "Invalid date/date_type format: #{date}")
+        # end
       end
     end
 

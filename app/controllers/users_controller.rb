@@ -67,6 +67,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def show_update_location
+    @user = User.find(params[:id])
+    render 'update_location'
+  end
+
+  def update_location
+    @user = User.find(params[:id])
+    @user.worksite_location = params[:user][:worksite_location]
+	  @user.save
+	  redirect_to :root
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -75,6 +87,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :email_address, :first_name, :last_name, :active, :can_delete)
+      params.require(:user).permit(:username, :email_address, :first_name, :last_name, :active, :can_delete, :works_in_both_locations)
     end
 end

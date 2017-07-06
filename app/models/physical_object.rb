@@ -269,6 +269,7 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	# checks whether there are any other physical objects in this objects active component group who are at the same place in the workflow
 	def same_active_component_group_members?
 		if active_component_group.nil?
 			false
