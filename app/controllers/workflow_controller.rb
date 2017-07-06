@@ -209,6 +209,46 @@ class WorkflowController < ApplicationController
 		render 'best_copy_selection'
 	end
 
+	def issues_shelf
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::ISSUES_SHELF)
+	end
+
+	def ajax_issues_shelf_barcode
+		bc = params[:iu_barcode]
+		@physical_object = PhysicalObject.where(iu_barcode: bc).first
+		if @physical_object.nil?
+			@msg = "Could not find Physical Object with IU barcode: #{bc}"
+			# we can use ajax_best_copy_selection_error partial because it just renders the msg
+			render partial: 'workflow/ajax_best_copy_selection_error'
+		elsif @physical_object.current_workflow_status.status_name != WorkflowStatus::ISSUES_SHELF
+			@msg = "Physical Object #{bc} is not currently on the Issues Shelf! It is #{@physical_object.current_workflow_status.status_name}"
+			render partial: 'workflow/ajax_best_copy_selection_error'
+		else
+			@others = @physical_object.same_active_component_group_members?
+			render partial: 'workflow/ajax_issues_shelf_barcode'
+		end
+	end
+
+	def ajax_issues_shelf_update
+		@physical_object = PhysicalObject.find(params[:id])
+		status_name = params[:physical_object][:current_workflow_status]
+		if WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::ISSUES_SHELF].include?(status_name)
+			if params[:physical_object][:updated] == '1'
+				ws = WorkflowStatus.build_workflow_status(status_name, @physical_object)
+				@physical_object.workflow_statuses << ws
+				@physical_object.save
+				flash.now[:notice] = "Physical Object #{@physical_object.iu_barcode} updated to #{@physical_object.current_workflow_status.status_name}"
+			else
+				flash.now[:warning] = "Please update the Physical Objects condition metadata before updating it's workflow location."
+			end
+		else
+			flash.now[:warning] = "Physical Object not updated! Invalid workflow status location: '#{status_name}'"
+		end
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::ISSUES_SHELF)
+		render 'issues_shelf'
+	end
+
+
 	private
 	def set_physical_object
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first

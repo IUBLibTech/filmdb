@@ -31,4 +31,10 @@
 	    <%= @user.can_delete? ? 'Yes' : 'No' %>
     </td>
   </tr>
+	<tr>
+		<th>Works at Wells and ALF?</th>
+		<td>
+			<%= @user.works_in_both_locations? ? 'Yes' : 'No' %>
+		</td>
+	</tr>
 </table>

@@ -77,11 +77,13 @@
 						  swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
 					  },
 					  success: function (result) {
-
 						  swal({
 							  title: 'Reponse',
-							  text: result,
+							  text: "Queued pull requests were cancelled for the following physical objects: "+result,
 							  html: true
+						  },
+						  function() {
+							  location.reload();
 						  })
 					  }
 				  })

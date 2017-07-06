@@ -1,0 +1,30 @@
+<% if @others != false  %>
+	<p>These physical objects belong to the same component group and are also on the Issues Shelf</p>
+	<ul>
+		<% @others.each do |p| %>
+		<li><%= p.iu_barcode %></li>
+		<% end %>
+	</ul>
+<% end %>
+<div>
+	<%= form_for @physical_object, url: ajax_issues_shelf_update_path(@physical_object.id) do |f| %>
+		<table>
+			<tr>
+				<th colspan="2">Workflow Status updated to</th>
+			</tr>
+			<tr>
+				<th>Status</th>
+				<td><%= f.select :current_workflow_status, options_for_select(WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::ISSUES_SHELF].collect { |s| [s, s] }), {include_blank: 'Select Next Workflow Location'} %></td>
+			</tr>
+			<tr>
+				<th><%= link_to "Update Physical Object Metadata", edit_physical_object_path(@physical_object.id), target: '_blank' %></th>
+				<td>
+					<%= f.check_box 'updated' %>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Update Location"%></td>
+			</tr>
+		</table>
+	<% end %>
+</div>
