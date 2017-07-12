@@ -139,7 +139,6 @@
         }
         $("#physical_object_collection_text").val(ui.item.label);
         $('#physical_object_collection_id').val(ui.item.value);
-
         return false;
       }
     });
@@ -209,6 +208,13 @@
         }
       })
     }
+  });
+
+  $('#physical_object_form').submit(function(event) {
+	  if ($('#physical_object_collection_id').val() == null && !$('#physical_object_no_collection').is(':checked') ) {
+		  event.preventDefault();
+		  swal('Cannot Submit Physical Object', "You must either specify a collection or check the 'No Collect?' checkbox.")
+	  }
   });
 
   jQuery.fn.showTitlePopup = function() {

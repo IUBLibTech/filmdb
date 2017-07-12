@@ -56,7 +56,12 @@ class CsvParser
   end
 
   def parse_csv
-    @csv = CSV.read(@filepath, headers: false)
+    begin
+      @csv = CSV.read(@filepath, headers: false)
+    rescue
+      opened_file = File.open(@filepath, "r:ISO-8859-1:UTF-8")
+      @csv = CSV.parse(opened_file, headers: false)
+    end
     parse_headers(@csv[0])
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)

@@ -33,8 +33,11 @@
       <% if @collection %>
           <%= @collection.name%>
       <% else %>
-          <%= f.text_field :collection_text%>
-      <% end %>
+		    <%= f.text_field :collection_text%>
+		    <div>
+			    No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection">
+		    </div>
+	    <% end %>
       <%= f.hidden_field :collection_id %>
     </div>
     <div class="label">

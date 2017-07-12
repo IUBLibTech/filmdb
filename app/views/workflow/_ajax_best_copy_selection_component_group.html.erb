@@ -13,7 +13,7 @@
 				<td>
 					<select name="action" id="loc_<%= p.id %>" >
 						<option disabled selected value>-- select a destination or leave blank to return to storage --</option>
-						<% (['New Reformating Component Group (MDPI)', 'New Reformating Component Group (Wells)']+WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::BEST_COPY]).each do |s| %>
+						<% (['New Reformating Component Group (MDPI)', 'New Reformating Component Group (Wells)']+WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::BEST_COPY_ALF]).each do |s| %>
 							<option value="<%= s %>"><%= s %></option>
 						<% end %>
 					</select>
