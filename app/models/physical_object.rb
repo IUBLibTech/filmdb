@@ -211,6 +211,9 @@ class PhysicalObject < ActiveRecord::Base
 	def title_text
 
 	end
+	def no_collection
+		self.collection.blank?
+	end
 
 	# where (IN ALF!!!) the PO is currently stored
 	def storage_location

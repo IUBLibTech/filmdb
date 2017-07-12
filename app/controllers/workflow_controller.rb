@@ -182,6 +182,7 @@ class WorkflowController < ApplicationController
 
 
 	def best_copy_selection
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::BEST_COPY_ALF)
 	end
 
 	def ajax_best_copy_selection_barcode

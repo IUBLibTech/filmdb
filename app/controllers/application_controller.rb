@@ -32,11 +32,11 @@ class ApplicationController < ActionController::Base
   end
 
   def update_user_loc
-    # if session[:username]
-		 #  @user = User.where(username: session[:username]).first
-		 #  if @user.works_in_both_locations && (@user.updated_at + 1.hour < Time.now)
-			#   redirect_to show_worksite_location_path(@user.id)
-		 #  end
-    # end
+    if session[:username]
+		  @user = User.where(username: session[:username]).first
+		  if (@user.works_in_both_locations && (@user.updated_at + 1.hour < Time.now)) || (!@user.works_in_both_locations && @user.worksite_location.blank?)
+			  redirect_to show_worksite_location_path(@user.id)
+		  end
+    end
   end
 end

@@ -7,7 +7,6 @@ module PhysicalObjectsHelper
     @physical_object.inventoried_by = user.id
     @physical_object.modified_by = user.id
     begin
-      debugger
       PhysicalObject.transaction do
         process_titles
         ws = WorkflowStatus.build_workflow_status(WorkflowStatus::JUST_INVENTORIED_WELLS, @physical_object)

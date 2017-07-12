@@ -48,6 +48,12 @@
       </td>
     </tr>
 	  <tr>
+		  <th>Worksite</th>
+		  <td>
+			  <%= f.select :worksite_location, options_for_select(WorkflowStatus::WORK_LOCATIONS.collect{ |l| [l,l]}) %>
+		  </td>
+	  </tr>
+	  <tr>
 		  <th>Works at Wells and Alf?</th>
 		  <td>
 			  <%= f.check_box :works_in_both_locations %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706172651) do
+ActiveRecord::Schema.define(version: 20170712135952) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -442,7 +442,7 @@ ActiveRecord::Schema.define(version: 20170706172651) do
   end
 
   create_table "titles", force: :cascade do |t|
-    t.string   "title_text",         limit: 255
+    t.string   "title_text",         limit: 1024
     t.text     "summary",            limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -504,6 +504,7 @@ ActiveRecord::Schema.define(version: 20170706172651) do
     t.string   "status_name",        limit: 255
     t.integer  "component_group_id", limit: 4
     t.integer  "external_entity_id", limit: 4
+    t.integer  "created_by",         limit: 8
   end
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).

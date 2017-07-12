@@ -32,6 +32,12 @@
     </td>
   </tr>
 	<tr>
+		<th>Worksite</th>
+		<td>
+			<%= @user.worksite_location %>
+		</td>
+	</tr>
+	<tr>
 		<th>Works at Wells and ALF?</th>
 		<td>
 			<%= @user.works_in_both_locations? ? 'Yes' : 'No' %>
