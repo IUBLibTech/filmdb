@@ -1,24 +1,32 @@
 <h4><%= @cg.group_type %> Component Group for <b><i><%= @cg.title.title_text %></i></b></h4>
 <%= form_for @cg, url: best_copy_selection_update_url do |f| %>
+	<%= hidden_field_tag 'pos' %>
 	<table>
 		<tr>
 			<th>IU Barcode</th>
-			<th>Default Storage Location</th>
+			<th>Location</th>
 			<th>Action</th>
 		</tr>
+		<% all_here = @cg.all_present? %>
 		<% @cg.physical_objects.each do |p| %>
 			<tr>
 				<td><%= p.iu_barcode %></td>
-				<td><%= p.storage_location %></td>
+				<td><%= p.current_workflow_status.type_and_location %></td>
 				<td>
-					<select name="action" id="loc_<%= p.id %>" >
-						<option disabled selected value>-- select a destination or leave blank to return to storage --</option>
-						<% (['New Reformating Component Group (MDPI)', 'New Reformating Component Group (Wells)']+WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[WorkflowStatus::BEST_COPY_ALF]).each do |s| %>
-							<option value="<%= s %>"><%= s %></option>
-						<% end %>
-					</select>
+					<% if all_here %>
+						Reformating (MDPI) Component Group<%= check_box_tag "po_#{p.id}", "po_#{p.id}", false, class: 'best_copy_check' %>
+					<% else %>
+					  Cannot create reformating group. Not all physical objects are present.
+					<% end %>
 				</td>
 			</tr>
 		<% end %>
+		<tr>
+			<td colspan="2">
+				<% if all_here %>
+					<%= f.submit "Create Component Group" %> (Remaining Physical Objects will be returned to their storage location)
+				<% end %>
+			</td>
+		</tr>
 	</table>
 <% end %>

@@ -220,7 +220,7 @@ table.version_table > tbody > tr > td > input {
     font-weight: bold;
     padding: 5px;
     color: white;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 #image_metadata > table, #sound_metadata > table {
@@ -616,4 +616,8 @@ div.check_box > div {
 
  #cg {
 	 margin-top: 15px;
+ }
+
+ .po_error_div {
+	 margin-bottom:10px;
  }

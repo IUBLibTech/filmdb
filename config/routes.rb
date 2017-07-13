@@ -44,6 +44,8 @@ Rails.application.routes.draw do
   get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
   get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
 
+  get '/search', to: 'search#barcode_search', as: 'barcode_search'
+
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
   post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
@@ -53,8 +55,8 @@ Rails.application.routes.draw do
   resources :series_titles
 
 	# services URLs
-	post '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch'
-	get '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch_test'
+	post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
+	get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
 	post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
 	get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
 

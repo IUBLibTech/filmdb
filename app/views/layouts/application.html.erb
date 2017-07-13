@@ -73,6 +73,12 @@
       <li><%= link_to "Users", users_path %></li>
     </ul>
   </div>
+	<div class="right">
+		<%= form_tag barcode_search_path, method: 'get' do  %>
+			<%= text_field_tag :barcode, params[:barcode] %>
+			<%= submit_tag 'Search Barcode', name: nil %>
+		<% end %>
+	</div>
 </div>
 <%= render partial: 'layouts/notice_div' %>
 <%= yield %>

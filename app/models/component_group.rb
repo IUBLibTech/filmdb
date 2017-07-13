@@ -33,6 +33,13 @@ class ComponentGroup < ActiveRecord::Base
     group_type == 'Reformating'
   end
 
+  def all_present?
+	  all = true
+	  if physical_objects.size > 0
+		  all &= (physical_objects.first.waiting_active_component_group_members? == false)
+	  end
+  end
+
   def whose_workflow
     ALF_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
   end
