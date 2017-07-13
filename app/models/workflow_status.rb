@@ -41,6 +41,8 @@ class WorkflowStatus < ActiveRecord::Base
 	  'Deaccessioned' => [DEACCESSIONED]
 	}
 
+	CLEAR_ACTIVE_COMPONENT_GROUP = (STATUS_TYPES_TO_STATUSES['Storage']+STATUS_TYPES_TO_STATUSES['Deaccessioned'])
+
 	PULLABLE_STORAGE = [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER]
 	SPREADSHEET_START_LOCATIONS = [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, JUST_INVENTORIED_ALF, JUST_INVENTORIED_WELLS, MOLD_ABATEMENT]
 
@@ -94,6 +96,10 @@ class WorkflowStatus < ActiveRecord::Base
 			end
 		end
 		ws.user = User.current_user_object
+		# need to clear the active component group if the physical object is being updated to a status that is not in workflow
+		if CLEAR_ACTIVE_COMPONENT_GROUP.include? status_name
+			physical_object.active_component_group = nil
+		end
 		ws
 	end
 

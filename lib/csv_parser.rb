@@ -11,7 +11,7 @@ class CsvParser
       'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode', 'MDPI Barcode', 'IUCat Title No.',
       'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can', 'Can Size', 'Footage', 'Edge Code Date', 'Base',
       'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type',
-      'Sound Configuration', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
+      'Sound Field', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
       'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
       'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
       'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes'
@@ -264,12 +264,11 @@ class CsvParser
 
     cr = row[column_index OVERALL_CONDITION]
     unless cr.blank?
-      @cv[:overall_condition_rating].collect { |x| x[0] }.each do |k|
-        if k.include?(cr)
-          po.send(:condition_rating=, k)
-        end
-      end
-      if po.condition_rating.blank?
+      vals = @cv[:overall_condition_rating].collect { |x| x[0] }
+      if vals.include?(cr)
+        po.send(:condition_rating=, cr)
+      else
+        debugger
         po.errors.add(:condition_rating, "Invalid Overall Condition Rating: #{cr}")
       end
     end
@@ -471,9 +470,9 @@ class CsvParser
     # generation
     gen_fields = row[column_index GENERATION].blank? ? [] : row[column_index GENERATION].split(DELIMITER)
     gen_fields.each do |gf|
-      field = "generation #{gf}".parameterize.underscore
-      if PhysicalObject::GENERATION_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+      if PhysicalObject::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
+        sym = PhysicalObject::GENERATION_FIELDS_HUMANIZED.key(gf)
+        po.send((sym.to_s << "=").to_sym, true)
       else
         po.errors.add(:generation, "Undefined generation: #{gf}")
       end
@@ -607,7 +606,7 @@ class CsvParser
     end
     lang_fields = row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].blank? ? [] : row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].split(DELIMITER)
     lang_fields.each do |lf|
-      index = langs.find_index(lf)
+      index = langs.find_index(lf.downcase)
       if !index.nil?
         po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][1][0], physical_object_id: po.id)
       else
@@ -642,7 +641,7 @@ class CsvParser
         po.boolean_conditions << BooleanCondition.new(condition_type: cf.titleize, physical_object_id: po.id)
       else
         # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
-        pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
+        pattern = /([a-zA-Z ]+) \(([1-4]{1})\)/
         matcher = pattern.match(cf)
         if matcher && val_conditions.include?(matcher[1].downcase)
           po.value_conditions << ValueCondition.new(condition_type: matcher[1].titleize, value: cv[:rated_condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
@@ -682,13 +681,13 @@ class CsvParser
   end
 
   def error_msg(row, physical_object)
-    msg = "<div>Physical Object at row #{row} has the following problem(s):</div><ul>".html_safe
+    msg = "<div class='po_error_div'>Physical Object at row #{row} has the following problem(s):<ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
       problems = physical_object.errors[k].map(&:inspect).join(', ')
       msg << "<li>#{attr}: #{problems}</li>".html_safe
     end
-    msg << "</ul>".html_safe
+    msg << "</ul></div>".html_safe
   end
 
   # feed this method a column constant (STOCK, BASE, TITLE, etc) and it returns the column index of the current spreadsheet

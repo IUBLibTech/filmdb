@@ -43,7 +43,7 @@
 				</td>
 			</tr>
 			<tr id="rejected_options" class="hidden">
-				<th>Did You Update Physical Object Condition?</th>
+				<th>Did You Update <%= link_to "#{@physical_object.iu_barcode}'s", edit_physical_object_path(@physical_object), target: '_blank' %> Condition?</th>
 				<td>
 					<%= f.check_box :updated %>
 				</td>

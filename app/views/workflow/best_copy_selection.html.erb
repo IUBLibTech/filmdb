@@ -20,6 +20,13 @@
 					},
 					success: function (result) {
 						$('#cg').html(result);
+						$('.best_copy_check').change(function() {
+							pos = [];
+							$('.best_copy_check:checked').each(function() {
+								pos.push($(this).attr("value").substring(3));
+							});
+							$('#pos').attr('value', pos.join(','));
+						});
 					}
 				});
 			}

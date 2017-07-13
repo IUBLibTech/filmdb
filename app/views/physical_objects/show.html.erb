@@ -1,12 +1,17 @@
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
 <%= link_to 'Back', physical_objects_path %> |
-<%= link_to 'Duplicate Physical Object', duplicate_physical_object_path %> |
+<%= link_to 'Duplicate Physical Object', duplicate_physical_object_path(@physical_object) %> |
 <%= link_to 'New Physical Object', new_physical_object_path %>
 
 <% if @continue_url %>
    &nbsp;|&nbsp;<%= link_to @continue_text, @continue_url %>
 <% end %>
 <div>
+	<% unless @physical_object.active_component_group.nil? %>
+		<div class="left" style="height: 30px; padding-top: 10px;">
+			<b>In Workflow For:</b> <%= @physical_object.active_component_group.group_type %>
+		</div>
+	<% end %>
   <div style="height: 20px">
     <div class="right _35">
       <b>Inventoried By: </b><%= @physical_object.inventorier.name %>&nbsp;(<%= @physical_object.created_at.strftime('%Y-%m-%d') %>)
@@ -187,4 +192,4 @@
   <h4>Conservation actions</h4>
   <%= @physical_object.conservation_actions %>
 </div>
-<%= render partial: 'physical_object_old_barcodes' %>
+<%= render partial: 'physical_objects/physical_object_old_barcodes' %>

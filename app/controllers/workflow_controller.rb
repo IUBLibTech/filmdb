@@ -51,7 +51,6 @@ class WorkflowController < ApplicationController
 			PhysicalObject.transaction do
 				@physical_object.active_component_group.physical_objects.each do |p|
 					p.workflow_statuses << WorkflowStatus.build_workflow_status(p.storage_location, p)
-					p.active_component_group = nil
 					p.save
 				end
 			end
@@ -86,9 +85,6 @@ class WorkflowController < ApplicationController
 			ws = WorkflowStatus.build_workflow_status(params[:physical_object][:workflow], @physical_object)
 			@physical_object.workflow_statuses << ws
 			@physical_object.footage = params[:physical_object][:footage] unless params[:physical_object][:footage].blank?
-			if WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include? params[:physical_object][:workflow]
-				@physical_object.active_component_group = nil
-			end
 			@physical_object.save
 			flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"
 		end
@@ -135,7 +131,6 @@ class WorkflowController < ApplicationController
 	def process_return_to_storage
 		ws = WorkflowStatus.build_workflow_status(@po.storage_location, @po)
 		@po.workflow_statuses << ws
-		@po.active_component_group = nil?
 		@po.save
 		flash[:notice] = "#{@po.iu_barcode} was returned to #{ws.status_name}"
 		redirect_to :return_to_storage
