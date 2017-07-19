@@ -131,10 +131,12 @@ class CagesController < ApplicationController
 				@physical_object.errors.add(:mdpi_barcode, "Cannot pack a physical object without an MDPI barcode")
 			elsif !ApplicationHelper.valid_barcode?(mbc, true)
 				@physical_object.errors.add(:mdpi_barcode, "#{mbc} is not a valid MDPI barcode")
+			elsif CageShelf.where(mdpi_barcode: mbc.to_i).size > 0
+				@physical_object.errors.add(:mdpi_barcode, "MDPI barcode #{mbc} has already beed assigned to a cage shelf!")
 			elsif !@physical_object.mdpi_barcode.nil? && @physical_object.mdpi_barcode != mbc.to_i
 				@physical_object.errors.add(:mdpi_barcode, "#{@physical_object.iu_barcode} has already been assigned an MDPI barcode: #{@physical_object.mdpi_barcode}")
-			elsif !@physical_object.current_workflow_status.status_name == WorkflowStatus::TWO_K_FOUR_K_SHELVES
-				@physical_object.errors.add(:current_workflow_status, "is invalid. Cannot pack a physical object with workflow status #{@physical_object.current_workflow_status.type_and_location}")
+			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
+				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
 			else
 				PhysicalObject.transaction do
 					@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?

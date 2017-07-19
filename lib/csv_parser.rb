@@ -268,7 +268,6 @@ class CsvParser
       if vals.include?(cr)
         po.send(:condition_rating=, cr)
       else
-        debugger
         po.errors.add(:condition_rating, "Invalid Overall Condition Rating: #{cr}")
       end
     end

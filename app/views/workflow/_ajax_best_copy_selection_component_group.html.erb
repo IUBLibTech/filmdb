@@ -1,5 +1,6 @@
 <h4><%= @cg.group_type %> Component Group for <b><i><%= @cg.title.title_text %></i></b></h4>
-<%= form_for @cg, url: best_copy_selection_update_url do |f| %>
+<%= form_for @cg, url: best_copy_selection_update_url, method: :post, html: {id: 'best_copy_update_form'} do |f| %>
+	<%= f.hidden_field :id  %>
 	<%= hidden_field_tag 'pos' %>
 	<table>
 		<tr>
@@ -22,7 +23,14 @@
 			</tr>
 		<% end %>
 		<tr>
-			<td colspan="2">
+			<th colspan="2">Scan Resolution</th>
+			<td>
+				2k <%= check_box_tag '2k', '2k', false, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2"></th>
+			<td>
 				<% if all_here %>
 					<%= f.submit "Create Component Group" %> (Remaining Physical Objects will be returned to their storage location)
 				<% end %>

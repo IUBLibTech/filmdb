@@ -32,9 +32,9 @@ class WorkflowStatus < ActiveRecord::Base
 
 	STATUS_TYPES_TO_STATUSES = {
 		# physical location is ALF
-		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING ],
+		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING ],
 		#physical location is either ALF-IULMIA or Wells-IULMIA differentiated by WHICH_WORKFLOW values
-		'In Workflow' => [QUEUED_FOR_PULL_REQUEST, PULL_REQUESTED, RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY_ALF, IN_CAGE, IN_WORKFLOW_WELLS, JUST_INVENTORIED_WELLS, JUST_INVENTORIED_ALF],
+		'In Workflow' => [QUEUED_FOR_PULL_REQUEST, PULL_REQUESTED, RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY_ALF, IN_CAGE, IN_WORKFLOW_WELLS, JUST_INVENTORIED_WELLS, JUST_INVENTORIED_ALF, MOLD_ABATEMENT],
 	  # physical location is the external_entity_id foreign key reference
 		'Shipped' => [SHIPPED_EXTERNALLY],
 		# physical location is the dumpster out back
@@ -51,7 +51,7 @@ class WorkflowStatus < ActiveRecord::Base
 		IN_STORAGE_AWAITING_INGEST => [QUEUED_FOR_PULL_REQUEST, IN_STORAGE_INGESTED],
 		IN_FREEZER => [QUEUED_FOR_PULL_REQUEST],
 		AWAITING_FREEZER => [QUEUED_FOR_PULL_REQUEST, IN_FREEZER],
-		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, RECEIVED_FROM_STORAGE_STAGING],
+		MOLD_ABATEMENT => [RECEIVED_FROM_STORAGE_STAGING, IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, BEST_COPY_ALF],
 		MISSING => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER],
 		IN_CAGE => [SHIPPED_EXTERNALLY, TWO_K_FOUR_K_SHELVES],
 		QUEUED_FOR_PULL_REQUEST => ([PULL_REQUESTED] + PULLABLE_STORAGE),
@@ -59,7 +59,7 @@ class WorkflowStatus < ActiveRecord::Base
 		RECEIVED_FROM_STORAGE_STAGING => [TWO_K_FOUR_K_SHELVES],
 		TWO_K_FOUR_K_SHELVES => [IN_CAGE],
 		ISSUES_SHELF =>  ([TWO_K_FOUR_K_SHELVES, DEACCESSIONED] + (PULLABLE_STORAGE + [MOLD_ABATEMENT])),
-		BEST_COPY_ALF => (PULLABLE_STORAGE + [MOLD_ABATEMENT] + [RECEIVED_FROM_STORAGE_STAGING, DEACCESSIONED]),
+		BEST_COPY_ALF => (PULLABLE_STORAGE + [MOLD_ABATEMENT] + [TWO_K_FOUR_K_SHELVES, DEACCESSIONED]),
 		IN_WORKFLOW_WELLS => ((PULLABLE_STORAGE + [MOLD_ABATEMENT]) + [SHIPPED_EXTERNALLY, DEACCESSIONED]),
 		SHIPPED_EXTERNALLY => (PULLABLE_STORAGE + [IN_WORKFLOW_WELLS]),
 		DEACCESSIONED => [],
@@ -75,7 +75,6 @@ class WorkflowStatus < ActiveRecord::Base
 		if ((current.nil? && !SPREADSHEET_START_LOCATIONS.include?(status_name)) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
 			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
-
 		# just inventoried or ingested from spreadsheet
 		if current.nil?
 			ws = WorkflowStatus.new(
@@ -96,7 +95,7 @@ class WorkflowStatus < ActiveRecord::Base
 			end
 		end
 		ws.user = User.current_user_object
-		# need to clear the active component group if the physical object is being updated to a status that is not in workflow
+		# need to clear the active component group if the physical object is being updated to a status that is not "in workflow" - mold abatement in this case does not count as 'storage'
 		if CLEAR_ACTIVE_COMPONENT_GROUP.include? status_name
 			physical_object.active_component_group = nil
 		end
@@ -130,7 +129,7 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	def type_and_location
-		"#{status_name}#{whose_workflow.blank? ? '' : " (#{whose_workflow})"}"
+		"#{status_name}"
 	end
 
 	def ==(other)

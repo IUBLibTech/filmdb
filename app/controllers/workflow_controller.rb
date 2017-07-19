@@ -67,12 +67,18 @@ class WorkflowController < ApplicationController
 
 	def receive_from_storage
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::PULL_REQUESTED)
+		u = User.current_user_object
+		if u.worksite_location == 'ALF'
+			@alf = true
+		else
+			@wells = true
+		end
 	end
 	# this action handles the beginning of ALF workflow
 	def process_receive_from_storage
 		if @physical_object.nil?
 			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[:physical_object][:iu_barcode]}"
-		elsif !@physical_object.in_transit_from_storage?
+		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
 		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.whose_workflow != WorkflowStatus::MDPI
 			flash[:warning] = "#{@physical_object.iu_barcode} should have been delivered to Wells 052, Component Group type: #{@physical_object.active_component_group.group_type}"
@@ -95,7 +101,7 @@ class WorkflowController < ApplicationController
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
 		if @physical_object.nil?
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
-		elsif !@physical_object.in_transit_from_storage?
+		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT
 			@msg = "Error: #{@physical_object.iu_barcode} has not been Requested From Storage. Current Workflow status/location: #{@physical_object.current_workflow_status.type_and_location}"
 		end
 		render partial: 'ajax_alf_receive_iu_barcode'
@@ -202,6 +208,37 @@ class WorkflowController < ApplicationController
 	end
 
 	def best_copy_selection_update
+		@component_group = ComponentGroup.find(params[:component_group][:id])
+		po_ids = params[:pos].split(',')
+		@pos = PhysicalObject.where(id: po_ids)
+		@cg_pos = []
+		@returned = []
+		if @pos.size > 0
+			ComponentGroup.transaction do
+				@new_cg = ComponentGroup.new(title_id: @component_group.title_id, group_type: 'Reformatting (MDPI)', group_summary: '* Created from Best Copy Selection *')
+				if params['4k']
+					@new_cg.scan_resolution = '4k'
+				else
+					@new_cg.scan_resolution = '2k'
+				end
+				@new_cg.save!
+				@pos.each do |p|
+					@cg_pos << p
+					ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: @new_cg).save!
+					p.active_component_group = @new_cg
+					p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
+					p.save!
+				end
+			end
+		end
+		@component_group.physical_objects.each do |p|
+			if !po_ids.include?(p.id.to_s)
+				@returned << p
+				p.workflow_statuses << WorkflowStatus.build_workflow_status(p.storage_location, p)
+				p.save!
+			end
+		end
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::BEST_COPY_ALF)
 		render 'best_copy_selection'
 	end
 
@@ -244,6 +281,22 @@ class WorkflowController < ApplicationController
 		render 'issues_shelf'
 	end
 
+	def cancel_pulled
+		@physical_object = PhysicalObject.find(params[:id])
+		if @physical_object.active_component_group.physical_objects.size > 0
+
+			
+		else
+
+		end
+		render 'workflow/receive_from_storage'
+	end
+	def re_queue_pulled
+
+	end
+	def mark_pulled_missing
+
+	end
 
 	private
 	def set_physical_object

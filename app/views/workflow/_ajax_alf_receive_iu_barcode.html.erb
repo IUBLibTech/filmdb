@@ -2,7 +2,7 @@
 	<% if @msg %>
 	<p class="warning"><%= @msg %></p>
 	<% else  %>
-		<h4><%= @physical_object.iu_barcode %></h4>
+		<h4><%= @physical_object.iu_barcode %><% if @physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT %><%= "[Back From Mold Abatement]" %><% end %></h4>
 		<% if @physical_object.same_active_component_group_members? != false %>
 			<p class="notice">
 				<% bcs = @physical_object.same_active_component_group_members?&.collect{|p| p.iu_barcode}  %>
