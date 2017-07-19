@@ -105,7 +105,6 @@ Rails.application.routes.draw do
 	post '/workflow/process_send_to_freezer', to: 'workflow#process_send_to_freezer', as: 'process_send_to_freezer'
 	get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
 	post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
-  get '/workflow/ship_cages', to: 'workflow#ship_cages', as: 'ship_cages'
   post '/workflow/ajax_cancel_queued_pull_request/:id', to: 'workflow#ajax_cancel_queued_pull_request', as: 'cancel_queued_pull_request'
   get '/workflow/best_copy_selection', to: 'workflow#best_copy_selection', as: 'workflow_best_copy_selection'
   post '/workflow/ajax_best_copy_selection_barcode/:iu_barcode', to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode'

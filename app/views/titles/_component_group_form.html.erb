@@ -3,7 +3,7 @@
     <div>
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
 	    <div id="scan_div">
-		    <b>Scan Resolution: </b><%= f.select :scan_resolution, options_for_select([['2k', '2k'],['4k', '4k']]), include_blank: true %>
+		    <b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', false, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %>
 		    <b>Clean: </b><%= f.check_box :clean, checked: true %>
 	    </div>
       <div>
@@ -42,5 +42,25 @@
 	  } else {
 		  $('#scan_div').hide();
 	  }
-  })
+  });
+
+	$(document).ready(function() {
+		$('.mutually_exclusive').click(function() {
+			checked_state = $(this).is(':checked');
+			$(this).parent('div').children('.mutually_exclusive').each(function() {
+				$(this).prop('checked', false);
+			})
+			$(this).prop('checked', checked_state);
+		});
+
+		$('#component_group_form').submit(function(event) {
+			event.preventDefault();
+			resolution_selected = $('.mutually_exclusive:checked').length == 1
+			if (!resolution_selected) {
+				swal('You Must Select a Scan Resolution!')
+			} else {
+				document.getElementById('component_group_form').submit();
+			}
+		});
+	})
 </script>

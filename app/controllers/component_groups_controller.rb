@@ -29,6 +29,7 @@ class ComponentGroupsController < ApplicationController
   # POST /component_groups.json
   def create
     @component_group = ComponentGroup.new(component_group_params)
+    @component_group.scan_resolution(params['2k'] ? '2k' : (params['4k'] ? '4k' : '5k'))
     respond_to do |format|
       if @component_group.save
         format.html { redirect_to @component_group, notice: 'Component group was successfully created.' }

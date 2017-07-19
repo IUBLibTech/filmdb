@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  skip_before_action :signed_in_user, only: [:show_update_location, :update_location]
 
   # GET /users
   # GET /users.json
@@ -13,6 +14,7 @@ class UsersController < ApplicationController
   def show
     authorize User
   end
+
 
   # GET /users/new_physical_object
   def new
@@ -74,9 +76,13 @@ class UsersController < ApplicationController
 
   def update_location
     @user = User.find(params[:id])
-    @user.worksite_location = params[:user][:worksite_location]
-	  @user.save
-	  redirect_to :root
+    # rails will not actually save the record if nothing has been altered... need to call touch if the user simply timed out and the location remains the same
+    if @user.worksite_location == params[:user][:worksite_location]
+	    @user.touch
+    else
+	    @user.update(worksite_location: params[:user][:worksite_location])
+    end
+    redirect_back_or_to root_url
   end
 
   private
