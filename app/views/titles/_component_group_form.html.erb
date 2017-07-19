@@ -18,6 +18,7 @@
 <% end %>
 
 <script type="text/javascript">
+	var group_type = 'Best Copy';
   $("#component_group_form").submit(function(event) {
     vals = [];
     $("input:checked").each(function() {
@@ -42,6 +43,7 @@
 	  } else {
 		  $('#scan_div').hide();
 	  }
+	  group_type = this.value;
   });
 
 	$(document).ready(function() {
@@ -55,7 +57,7 @@
 
 		$('#component_group_form').submit(function(event) {
 			event.preventDefault();
-			resolution_selected = $('.mutually_exclusive:checked').length == 1
+			resolution_selected = ($('.mutually_exclusive:checked').length == 1 && group_type == 'Reformating (MDPI)') || group_type != 'Reformating (MDPI)'
 			if (!resolution_selected) {
 				swal('You Must Select a Scan Resolution!')
 			} else {

@@ -209,7 +209,7 @@ class WorkflowController < ApplicationController
 
 	def best_copy_selection_update
 		@component_group = ComponentGroup.find(params[:component_group][:id])
-		po_ids = params[:pos].split(',')
+		po_ids = params[:pos].split(',').collect { |p| p.to_i }
 		@pos = PhysicalObject.where(id: po_ids)
 		@cg_pos = []
 		@returned = []
@@ -222,9 +222,12 @@ class WorkflowController < ApplicationController
 					@new_cg.scan_resolution = '2k'
 				end
 				@new_cg.save!
+
+			end
+			if @new_cg.persisted?
 				@pos.each do |p|
 					@cg_pos << p
-					ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: @new_cg).save!
+					ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: @new_cg.id).save!
 					p.active_component_group = @new_cg
 					p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
 					p.save!
@@ -232,7 +235,7 @@ class WorkflowController < ApplicationController
 			end
 		end
 		@component_group.physical_objects.each do |p|
-			if !po_ids.include?(p.id.to_s)
+			if !po_ids.include?(p.id)
 				@returned << p
 				p.workflow_statuses << WorkflowStatus.build_workflow_status(p.storage_location, p)
 				p.save!
@@ -285,7 +288,7 @@ class WorkflowController < ApplicationController
 		@physical_object = PhysicalObject.find(params[:id])
 		if @physical_object.active_component_group.physical_objects.size > 0
 
-			
+
 		else
 
 		end
