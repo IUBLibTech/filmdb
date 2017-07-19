@@ -110,10 +110,12 @@ class TitlesController < ApplicationController
   # PATCH/PUT /titles/1.json
   def update
     respond_to do |format|
-	    if !params[:title][:series_title_text].blank? && !@series
+	    if @series
+		    @title.series_id = @series.id
+	    elsif !params[:title][:series_title_text].blank? && !@series
 		    @series = Series.new(title: params[:title][:series_title_text])
 		    @series.save
-		    params[:title][:series_id] = @series.id
+		    @title.series_id = @series.id
 	    end
       if @title.update(title_params)
         format.html { redirect_to @title, notice: 'Title was successfully updated.' }
