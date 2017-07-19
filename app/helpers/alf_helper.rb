@@ -3,7 +3,7 @@ module AlfHelper
 
 	# 4th field after AL/MI is patron id, not email address, try to figure out which field is email address and use the IULMIA account that Andy monitors
 	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"DP\",\"1\",\"iulmia@indiana.edu\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\",\"PHY\""
-	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"MI\",\"\",\"iulmia@indiana.edu\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
+	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"MI\",\"1\",\"iulmia@indiana.edu\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\",\"PHY\""
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
