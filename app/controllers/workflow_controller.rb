@@ -12,7 +12,16 @@ class WorkflowController < ApplicationController
 
 
 	def pull_request
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
+		physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
+		@ingested = []
+		@not_ingested = []
+		physical_objects.each do |p|
+			if p.storage_location == WorkflowStatus::IN_STORAGE_INGESTED
+				@ingested << p
+			else
+				@not_ingested << p
+			end
+		end
 	end
 	def process_pull_requested
 		ids = params[:ids]
@@ -33,9 +42,11 @@ class WorkflowController < ApplicationController
 					flash[:notice] = "Storage has been notified to pull #{pos.size} records."
 				end
 			rescue Exception => e
-				logger.error e.message
-				logger.error e.backtrace.join('\n')
-				flash[:warning] = "An error occured when trying to push the request to the ALF system: #{e.message} (see log files for full details)"
+				#logger.error e.message
+				#logger.error e.backtrace.join("\n")
+				puts e.message
+				puts e.backtrace.join("\n")
+				flash[:warning] = "An error occurred when trying to push the request to the ALF system: #{e.message} (see log files for full details)"
 			end
 		end
 		redirect_to :pull_request
@@ -101,7 +112,7 @@ class WorkflowController < ApplicationController
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
 		if @physical_object.nil?
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
-		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT
+		elsif !@physical_object.in_transit_from_storage? || !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT
 			@msg = "Error: #{@physical_object.iu_barcode} has not been Requested From Storage. Current Workflow status/location: #{@physical_object.current_workflow_status.type_and_location}"
 		end
 		render partial: 'ajax_alf_receive_iu_barcode'
@@ -299,6 +310,29 @@ class WorkflowController < ApplicationController
 	end
 	def mark_pulled_missing
 
+	end
+
+	# main page for scanning a barcode to update it's workflow status location
+	def update_location
+	end
+	# ajax call that handles the lookup of the barcode scanned into the above
+	def ajax_update_location
+		bc = params[:barcode]
+		@physical_object = PhysicalObject.where("iu_barcode = #{bc} OR mdpi_barcode = #{bc}").first
+		render partial: 'workflow/ajax_update_location'
+	end
+	#ajax call that handles the updating of the PO based on what was selected from the form submission of #ajax_update_location
+	def ajax_update_location_post
+		@physical_object = PhysicalObject.where(iu_barcode: params[:barcode]).first
+		if @physical_object
+			ws = WorkflowStatus.build_workflow_status(params[:location], @physical_object, true)
+			@physical_object.workflow_statuses << ws
+			@physical_object.save
+			flash.now[:notice] = "#{@physical_object.iu_barcode} has been updated to #{@physical_object.current_workflow_status.status_name}"
+		else
+			flash.now[:warning] = "Could not find Physical Object with barcode #{params[:barcode]}"
+		end
+		render 'workflow/update_location'
 	end
 
 	private

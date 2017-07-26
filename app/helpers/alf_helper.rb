@@ -21,7 +21,7 @@ module AlfHelper
 		file_name = gen_file_name
 		PullRequest.transaction do
 			File.write(file_name, file_contents)
-			pr = PullRequest.new(filename: file_name,file_contents: file_contents)
+			pr = PullRequest.new(filename: file_name,file_contents: file_contents, requester: User.current_user_object)
 			pos.each do |p|
 				pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: pr.id)
 			end
@@ -37,7 +37,9 @@ module AlfHelper
 	def generate_pull_file_contents(physical_objects)
 		str = []
 		physical_objects.each do |po|
-			str << populate_line(po)
+			if po.storage_location == WorkflowStatus::IN_STORAGE_INGESTED
+				str << populate_line(po)
+			end
 		end
 		str.join("\n")
 	end

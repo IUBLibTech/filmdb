@@ -114,18 +114,32 @@
 <% end %>
 <% if controller_name == 'titles' %>
 <script type="text/javascript">
-  // autocomplete for series
-  $('#title_series_title_text').autocomplete({
-    source: '../../../autocomplete_series',
-    focus: function (event, ui) {
-      $(".ui-autocomplete > li").attr("title", ui.item.summary);
-      return false;
-    },
-    select: function (event, ui) {
-      $("#title_series_title_text").val(ui.item.label);
-      $('#title_series_id').val(ui.item.value);
-      return false;
-    }
+  $(document).ready(function() {
+	  // autocomplete for series
+	  $('#title_series_title_text').autocomplete({
+		  source: '../../../autocomplete_series',
+		  focus: function (event, ui) {
+			  $(".ui-autocomplete > li").attr("title", ui.item.summary);
+			  return false;
+		  },
+		  open: function(event, ui) {
+			  $('#title_series_title_text').unbind('keydown.remove_series');
+		  },
+		  select: function (event, ui) {
+			  $("#title_series_title_text").val(ui.item.label);
+			  $('#title_series_id').val(ui.item.value);
+			  return false;
+		  },
+		  close: function(event, ui) {
+			  $('#title_series_title_text').bind('keydown.remove_series', function() {
+				  $('#title_series_id').val('')
+			  });
+		  }
+	  });
+
+	  $('#title_series_title_text').bind('keydown.remove_series', function() {
+		  $('#title_series_id').val('')
+	  });
   });
 </script>
 <% end %>

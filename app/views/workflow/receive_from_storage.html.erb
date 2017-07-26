@@ -16,13 +16,14 @@
 			$(document).ready(function() {
 				$('#alf_iu_barcode').bind("input",function(event) {
 					valid = validateIUBarcode($(this));
+					$('#alf_form_div').replaceWith('')
 					if (valid) {
 						$.ajax({
 							url: './ajax_alf_barcode/'+$(this).val(),
-							error: function(result) {
+							error: function(jqxhr, status, error) {
 								swal({
 									title: 'Ajax Error',
-									text: 'Something unexpected happened while trying to retreive the list of physical objects in the shelf',
+									text: 'Something unexpected happened while trying to receive the item'+error,
 									type: 'error'
 								});
 							},

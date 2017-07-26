@@ -42,11 +42,15 @@
       </td>
     </tr>
     <tr>
-      <th>Roles</th>
+      <th>Can Delete?</th>
       <td>
-	      Can Delete? <%= f.check_box :can_delete %>
+	      <%= f.check_box :can_delete %>
       </td>
     </tr>
+	  <tr>
+		  <th>Can Update Physical Object Location?</th>
+	    <td><%= f.check_box :can_update_physical_object_location %></td>
+	  </tr>
 	  <tr>
 		  <th>Worksite</th>
 		  <td>

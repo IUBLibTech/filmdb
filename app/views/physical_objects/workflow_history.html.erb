@@ -6,7 +6,7 @@
 	</tr>
 	<tr>
 		<th>IU Barcode</th>
-		<td colspan="5"><%= @physical_object.iu_barcode %></td>
+		<td colspan="5"><%= link_to @physical_object.iu_barcode, physical_object_path(@physical_object) %></td>
 	</tr>
 	<% @physical_object.workflow_statuses.order(created_at: :desc).each_with_index do |s, i| %>
 		<% if i == 0%>
@@ -18,12 +18,14 @@
 			<td>
 				<%= s.status_name %>
 			</td>
+			<th>Updater</th>
+			<td>
+				<%= s&.user.name %>
+			</td>
 			<th>Date</th>
 			<td>
 				<%= s.created_at.strftime("%B %d, %Y") %>
 			</td>
-			<th>User</th>
-			<td></td>
 		</tr>
 	<% end %>
 </table>
