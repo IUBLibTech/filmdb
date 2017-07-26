@@ -1,0 +1,19 @@
+<h4>Pull Requests</h4>
+<table>
+	<tr>
+		<th>Date Requested</th>
+		<th>Who Requested</th>
+		<th>Object Count</th>
+		<th>Actions</th>
+	</tr>
+	<% @pull_requests.each do |pr| %>
+		<tr>
+			<td><%= pr.created_at %></td>
+			<td><%= pr.requester %></td>
+			<td><%= pr.physical_objects.size %></td>
+			<td>
+				<%= link_to 'View Request', '#' %>
+			</td>
+		</tr>
+	<% end %>
+</table>

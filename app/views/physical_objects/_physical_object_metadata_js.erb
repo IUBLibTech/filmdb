@@ -211,7 +211,7 @@
   });
 
   $('#physical_object_form').submit(function(event) {
-	  if ($('#physical_object_collection_id').val() == null && !$('#physical_object_no_collection').is(':checked') ) {
+	  if ((!$('#physical_object_collection_id').val() || $('#physical_object_collection_id').val() == "") && !$('#physical_object_no_collection').is(':checked') ) {
 		  event.preventDefault();
 		  swal('Cannot Submit Physical Object', "You must either specify a collection or check the 'No Collect?' checkbox.")
 	  }

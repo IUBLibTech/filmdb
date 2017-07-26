@@ -1,6 +1,6 @@
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
-<table>
+<table class="_50">
   <tr>
     <th>Username</th>
     <td>
@@ -28,9 +28,15 @@
   <tr>
     <th>Can Delete?</th>
     <td>
-	    <%= @user.can_delete? ? 'Yes' : 'No' %>
+	    <%= @user.can_delete? ? 'Yes' : 'No' %> <br>
     </td>
   </tr>
+	<tr>
+		<th>Can Update Physical Object Location?</th>
+		<td>
+			<%= @user.can_update_physical_object_location? ? 'Yes' : 'No' %>
+		</td>
+	</tr>
 	<tr>
 		<th>Worksite</th>
 		<td>

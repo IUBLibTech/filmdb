@@ -11,7 +11,9 @@
   <% @physical_objects.each do |physical_object| %>
     <tr>
       <td>
-	      <%= physical_object.iu_barcode %> <br><%= physical_object.mdpi_barcode %>
+	      <%= link_to physical_object do %>
+		      <%= physical_object&.iu_barcode %> <br/><%= physical_object&.mdpi_barcode %>
+	      <% end %>
       </td>
       <td>
         <% physical_object.titles.each do |t| %>
@@ -26,6 +28,10 @@
 		      <br/>
 	        <%= link_to 'Destroy', physical_object, method: :delete, data: { confirm: 'Are you sure?' } %>
 	      <% end  %>
+	      <% if policy(physical_object).update_location? && physical_object.current_workflow_status.status_name == WorkflowStatus::PULL_REQUESTED %>
+		      <br/>
+		      <%= link_to 'Mark Missing', physical_object_mark_missing_path(physical_object), method: :post, data: { confirm: 'Are you sure?'} %>
+	      <% end %>
       </td>
     </tr>
   <% end %>

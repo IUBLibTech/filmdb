@@ -30,7 +30,11 @@ class WorkflowStatus < ActiveRecord::Base
 	JUST_INVENTORIED_WELLS = 'Just Inventoried (Wells)'
 	JUST_INVENTORIED_ALF = 'Just Inventoried (ALF)'
 
-	STATUS_TYPES_TO_STATUSES = {
+	ALL_STATUSES = [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING,	IN_CAGE, QUEUED_FOR_PULL_REQUEST,	PULL_REQUESTED,
+	                RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY_ALF, IN_WORKFLOW_WELLS, SHIPPED_EXTERNALLY, DEACCESSIONED, JUST_INVENTORIED_WELLS,
+	                JUST_INVENTORIED_ALF]
+
+  STATUS_TYPES_TO_STATUSES = {
 		# physical location is ALF
 		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING ],
 		#physical location is either ALF-IULMIA or Wells-IULMIA differentiated by WHICH_WORKFLOW values
@@ -70,9 +74,9 @@ class WorkflowStatus < ActiveRecord::Base
 
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
-	def self.build_workflow_status(status_name, physical_object)
+	def self.build_workflow_status(status_name, physical_object, override=false)
 		current = physical_object.current_workflow_status
-		if ((current.nil? && !SPREADSHEET_START_LOCATIONS.include?(status_name)) ||	(!current.nil? && !current.valid_next_workflow?(status_name)))
+		if ((current.nil? && !SPREADSHEET_START_LOCATIONS.include?(status_name)) ||	(!current.nil? && !current.valid_next_workflow?(status_name, override)))
 			raise RuntimeError, "#{physical_object.current_workflow_status.type_and_location} cannot be moved into workflow status #{status_name}"
 		end
 		# just inventoried or ingested from spreadsheet
@@ -94,6 +98,13 @@ class WorkflowStatus < ActiveRecord::Base
 				ws.external_entity_id = previous_workflow_status.external_entity_id
 			end
 		end
+		if ws.status_name == IN_FREEZER
+			physical_object.in_freezer = true
+			physical_object.awaiting_freezer = false
+		elsif ws.status_name == AWAITING_FREEZER
+			physical_object.in_freezer = false
+			physical_object.awaiting_freezer=true
+		end
 		ws.user = User.current_user_object
 		# need to clear the active component group if the physical object is being updated to a status that is not "in workflow" - mold abatement in this case does not count as 'storage'
 		if CLEAR_ACTIVE_COMPONENT_GROUP.include? status_name
@@ -102,8 +113,8 @@ class WorkflowStatus < ActiveRecord::Base
 		ws
 	end
 
-	def valid_next_workflow?(next_workflow)
-		STATUSES_TO_NEXT_WORKFLOW[self.status_name].include? next_workflow
+	def valid_next_workflow?(next_workflow, override=false)
+		STATUSES_TO_NEXT_WORKFLOW[self.status_name].include? next_workflow if !override else true
 	end
 
 	def self.mdpi_receive_options(storage_string)

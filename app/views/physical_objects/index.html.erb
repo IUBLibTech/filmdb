@@ -5,8 +5,7 @@
       <tr>
         <th>Status</th>
         <td>
-	        <i>Temporarily disabled...</i>
-          <%#= select_tag 'status', options_for_select(@statuses), include_blank: true %>
+          <%= select_tag 'status', options_for_select(@statuses), include_blank: true %>
         </td>
       </tr>
       <tr>

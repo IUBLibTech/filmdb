@@ -1,7 +1,7 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
-  before_action :set_series, only: [:create, :create_ajax]
+  before_action :set_series, only: [:create, :create_ajax, :update]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
@@ -110,14 +110,13 @@ class TitlesController < ApplicationController
   # PATCH/PUT /titles/1.json
   def update
     respond_to do |format|
-	    if @series
-		    @title.series_id = @series.id
-	    elsif !params[:title][:series_title_text].blank? && !@series
+	    @tp = title_params
+	    if !@series && !params[:title][:series_title_text].blank?
 		    @series = Series.new(title: params[:title][:series_title_text])
 		    @series.save
-		    @title.series_id = @series.id
+		    @tp[:series_id] = @series.id
 	    end
-      if @title.update(title_params)
+      if @title.update(@tp)
         format.html { redirect_to @title, notice: 'Title was successfully updated.' }
         format.json { render :show, status: :ok, location: @title }
       else

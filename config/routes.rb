@@ -38,11 +38,16 @@ Rails.application.routes.draw do
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
-  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+  #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
 	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
   get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
   get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
+  post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
+
+  # pull requests
+  get '/pull_requests', to: 'pull_requests#index', as: 'pull_requests'
+  get '/pull_requests/:id', to: 'pull_requests#show', as: 'show_pull_request'
 
   get '/search', to: 'search#barcode_search', as: 'barcode_search'
 
@@ -113,6 +118,9 @@ Rails.application.routes.draw do
   get '/workflow/issues_shelf', to: 'workflow#issues_shelf', as: 'issues_shelf'
   post '/workflow/ajax_issues_shelf_barcode/:iu_barcode', to: 'workflow#ajax_issues_shelf_barcode', as: 'ajax_issues_shelf_barocde'
   patch '/workflow/ajax_issues_shelf_update/:id', to: 'workflow#ajax_issues_shelf_update', as: 'ajax_issues_shelf_update'
+  get '/workflow/update_location', to: 'workflow#update_location', as: 'update_location'
+  get '/workflow/ajax_update_location_get/:barcode', to: 'workflow#ajax_update_location', as: 'ajax_update_location_get'
+  post '/workflow/ajax_update_location_post', to: 'workflow#ajax_update_location_post', as: 'ajax_update_location_post'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 

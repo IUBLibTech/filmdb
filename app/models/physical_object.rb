@@ -222,6 +222,8 @@ class PhysicalObject < ActiveRecord::Base
 			return WorkflowStatus::AWAITING_FREEZER
 		elsif in_freezer?
 			return WorkflowStatus::IN_FREEZER
+		# because of how 'ingested' is determined (if there are any ingested states), we need to test after AFTER testing for
+		# freezer because an item may have been previously ingest but later determined to be stored in the freezer/awaiting freezer
 		elsif ingested
 			return WorkflowStatus::IN_STORAGE_INGESTED
 		else

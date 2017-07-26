@@ -15,7 +15,7 @@
 			<tr>
 				<th>Reason Pulled</th>
 				<td>
-					<%= @physical_object.active_component_group.group_type %>
+					<%= @physical_object.active_component_group&.group_type %>
 				</td>
 			</tr>
 			<tr>
@@ -28,7 +28,7 @@
 					<%= f.text_field :footage %>
 				</td>
 			</tr>
-			<% if !@physical_object.active_component_group.scan_resolution.blank? %>
+			<% if !@physical_object.active_component_group&.scan_resolution.blank? %>
 			<tr>
 				<th>Scan Resolution</th>
 				<td>
