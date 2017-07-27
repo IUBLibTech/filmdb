@@ -99,7 +99,6 @@ class CagesController < ApplicationController
 					end
 					result = push_cage_to_pod(@cage)
 					body = result.body
-					debugger
 					unless body == 'SUCCESS'
 						@msg = "POD did not receive the push correctly - Responded with message #{body}".html_safe
 						raise ManualRollBackError, @msg
