@@ -2,56 +2,58 @@ module AlfHelper
 	require 'net/scp'
 
 	# 4th field after AL/MI is patron id, not email address, try to figure out which field is email address and use the IULMIA account that Andy monitors
-	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"DP\",\"1\",\"iulmia@indiana.edu\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\",\"PHY\""
-	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"MI\",\"1\",\"iulmia@indiana.edu\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"10\",\"PHY\""
+	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"DP\",\"\",\"\",\":EMAIL_ADDRESS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
+	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"RM\",\"MI\",\"\",\"\",\":EMAIL_ADDRESS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
 	# this method is responsible for generating and upload the ALF system pull request file
-	def push_pull_request(physical_objects)
+	def push_pull_request(physical_objects, user)
 		if physical_objects.length > 0
-			upload_request_file(physical_objects)
+			upload_request_file(physical_objects, user)
 		end
 	end
 
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
-	def upload_request_file(pos)
-		file_contents = generate_pull_file_contents(pos)
+	def upload_request_file(pos, user)
+		file_contents = generate_pull_file_contents(pos, user)
 		file_name = gen_file_name
 		PullRequest.transaction do
 			File.write(file_name, file_contents)
-			pr = PullRequest.new(filename: file_name,file_contents: file_contents, requester: User.current_user_object)
+			@pr = PullRequest.new(filename: file_name,file_contents: file_contents, requester: User.current_user_object)
 			pos.each do |p|
-				pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: pr.id)
+				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			cedar = Rails.configuration.cedar
 			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
-				# FIXME: when ready to move into production testing change this to cedar['upload_dir']
+				# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
+				# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
 				scp.upload!(file_name, "#{cedar['upload_test_dir']}")
 			end
-			pr.save!
+			@pr.save!
+			@pr
 		end
 	end
 
-	def generate_pull_file_contents(physical_objects)
+	def generate_pull_file_contents(physical_objects, user)
 		str = []
 		physical_objects.each do |po|
 			if po.storage_location == WorkflowStatus::IN_STORAGE_INGESTED
-				str << populate_line(po)
+				str << populate_line(po, user)
 			end
 		end
 		str.join("\n")
 	end
 
-	def populate_line(po)
+	def populate_line(po, user)
 		pl = nil
 		if po.active_component_group.is_reformating?
 			pl = PULL_LINE_MDPI
 		else
 			pl = PULL_LINE_WELLS
 		end
-		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: ''))
+		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: '').gsub(':EMAIL_ADDRESS', user.email_address))
 	end
 
 	# generates a filename including path of the format <path>/<date>.<process_number>.webform.file where date is the

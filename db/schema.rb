@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726181929) do
+ActiveRecord::Schema.define(version: 20170727162718) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -347,6 +347,7 @@ ActiveRecord::Schema.define(version: 20170726181929) do
     t.integer  "component_group_id",                    limit: 8
     t.boolean  "in_freezer",                                                                  default: false
     t.boolean  "awaiting_freezer",                                                            default: false
+    t.string   "alf_shelf",                             limit: 255
   end
 
   create_table "pull_requests", force: :cascade do |t|
