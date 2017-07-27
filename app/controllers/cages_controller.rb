@@ -98,8 +98,10 @@ class CagesController < ApplicationController
 						p.save!
 					end
 					result = push_cage_to_pod(@cage)
-					unless result.status == 200
-						@msg = "POD did not receive the push correctly - Responded with HTML status: #{result.status}"
+					body = result.body
+					debugger
+					unless body == 'SUCCESS'
+						@msg = "POD did not receive the push correctly - Responded with message #{body}".html_safe
 						raise ManualRollBackError, @msg
 					end
 				end
@@ -109,7 +111,7 @@ class CagesController < ApplicationController
 		else
 			flash.now[:warning] = "#{@cage.identifier} could not be shipped to Memnon - it is not ready."
 		end
-		redirect_to '/workflow/ship_cages'
+		redirect_to '/cages'
 	end
 
 	def shelf_physical_objects

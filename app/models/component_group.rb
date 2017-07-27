@@ -44,4 +44,12 @@ class ComponentGroup < ActiveRecord::Base
     ALF_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
   end
 
+  def alf_delivery?
+
+  end
+
+  def wells_delivery?
+
+  end
+
 end

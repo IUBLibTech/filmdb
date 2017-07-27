@@ -38,8 +38,8 @@ class WorkflowController < ApplicationController
 						p.workflow_statuses << ws
 						p.save!
 					end
-					push_pull_request(pos)
-					flash[:notice] = "Storage has been notified to pull #{pos.size} records."
+					@pr = push_pull_request(pos, User.current_user_object)
+					flash[:notice] = "Storage has been notified to pull #{@pr.automated_pull_physical_objects.size} records."
 				end
 			rescue Exception => e
 				#logger.error e.message
@@ -49,7 +49,11 @@ class WorkflowController < ApplicationController
 				flash[:warning] = "An error occurred when trying to push the request to the ALF system: #{e.message} (see log files for full details)"
 			end
 		end
-		redirect_to :pull_request
+		if @pr
+			redirect_to show_pull_request_path(@pr)
+		else
+			redirect_to :pull_request
+		end
 	end
 
 	def ajax_cancel_queued_pull_request
