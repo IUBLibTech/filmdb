@@ -121,6 +121,9 @@ Rails.application.routes.draw do
   get '/workflow/update_location', to: 'workflow#update_location', as: 'update_location'
   get '/workflow/ajax_update_location_get/:barcode', to: 'workflow#ajax_update_location', as: 'ajax_update_location_get'
   post '/workflow/ajax_update_location_post', to: 'workflow#ajax_update_location_post', as: 'ajax_update_location_post'
+  get '/workflow/cancel_after_pull_request', to: 'workflow#cancel_after_pull_request', as: 'cancel_after_pull_request'
+  post '/workflow/process_cancel_after_pull_request/:id', to: 'workflow#process_cancel_after_pull_request', as: 'process_cancel_after_pull_request'
+  post '/workflow/process_requeue_after_pull_request/:id', to: 'workflow#process_requeue_after_pull_request', as: 'process_requeue_after_pull_request'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 

@@ -196,6 +196,51 @@ class WorkflowController < ApplicationController
 		@url = '/workflow/ajax/received_external/'
 	end
 
+	# when items have been requested from ALF, it's possible that either ALF cannot find them or that someone else has the
+	# item checked out already. This page lists all items in transit from storage and provides links to either cancel the
+	# pull request (which puts the item back in storage), or to requeue the item so that it appears on the "Request Pull From Storage" page
+	def cancel_after_pull_request
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::PULL_REQUESTED)
+	end
+
+	def process_cancel_after_pull_request
+		@physical_object = PhysicalObject.find(params[:id])
+		if @physical_object.current_workflow_status.status_name != WorkflowStatus::PULL_REQUESTED
+			flash.now[:warning] = "Physical Object #{@physical_object.iu_barcode} cannot be cancelled from a pull request. It's current status is: #{@physical_object.current_workflow_status.status_name}"
+		else
+			if @physical_object.same_active_component_group_members?
+				flash[:notice] = "#{@physical_object.iu_barcode} was returned to storage [#{@physical_object.storage_location}] but belongs to a component group with other physical objects: "+
+					"#{@physical_object.active_component_group.physical_objects.select{|p| p.iu_barcode != @physical_object.iu_barcode}.collect{|p| p.iu_barcode }.join(', ')}. They are still in active workflow."
+			else
+				flash[:notice] = "#{@physical_object.iu_barcode} was marked returned to storage [#{@physical_object.storage_location}]"
+			end
+			ws = WorkflowStatus.build_workflow_status(@physical_object.storage_location, @physical_object)
+			ws.notes = 'Pull request cancelled after requested (most likely ALF reported the item missing or already checked out)'
+			@physical_object.workflow_statuses << ws
+			@physical_object.save
+		end
+		redirect_to cancel_after_pull_request_path
+	end
+
+	def process_requeue_after_pull_request
+		@physical_object = PhysicalObject.find(params[:id])
+		if @physical_object.current_workflow_status.status_name != WorkflowStatus::PULL_REQUESTED
+			flash.now[:warning] = "Physical Object #{@physical_object.iu_barcode} cannot be cancelled from a pull request. It's current status is: #{@physical_object.current_workflow_status.status_name}"
+		else
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, @physical_object, true)
+			ws.notes = "#{@physical_object.iu_barcode} was requeued for pull request (most likely ALF reported the item missing or already checked out)"
+			@physical_object.workflow_statuses << ws
+			@physical_object.save
+			if @physical_object.waiting_active_component_group_members?
+				flash[:notice] = "#{@physical_object.iu_barcode} was marked #{@physical_object.current_workflow_status.status_name} but belongs to a component group with other physical objects: "+
+					"#{@physical_object.active_component_group.physical_objects.select{|p| p.iu_barcode != self.iu_barcode}.join(', ')}. They are still in active workflow."
+			else
+				flash[:notice] = "#{@physical_object.iu_barcode} was marked #{@physical_object.current_workflow_status.status_name}"
+			end
+		end
+		redirect_to cancel_after_pull_request_path
+	end
+
 
 	def best_copy_selection
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::BEST_COPY_ALF)
