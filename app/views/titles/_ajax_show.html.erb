@@ -33,7 +33,7 @@
 
     <% unless @title.title_publishers.empty? %>
         <h4>Publishers</h4>
-        <b><i><%= @title.title_publishers.collect { |c| "#{c.publisher_type.blank? ? "#{c.type_and_location}" : "#{c.publisher_type} : #{c.name}"}" }.join(', ') %></i></b>
+        <b><i><%= @title.title_publishers.collect { |c| "#{c.publisher_type.blank? ? "#{c.location}" : "#{c.publisher_type} : #{c.name}"}" }.join(', ') %></i></b>
     <% end %>
 
     <% unless @title.title_genres.empty? %>
