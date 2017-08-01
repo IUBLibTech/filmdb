@@ -53,7 +53,7 @@ module AlfHelper
 		else
 			pl = PULL_LINE_WELLS
 		end
-		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: '').gsub(':EMAIL_ADDRESS', user.email_address))
+		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: '').gsub(':EMAIL_ADDRESS', User.current_user_object.email_address))
 	end
 
 	# generates a filename including path of the format <path>/<date>.<process_number>.webform.file where date is the
