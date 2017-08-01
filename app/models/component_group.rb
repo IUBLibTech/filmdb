@@ -30,7 +30,8 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def is_reformating?
-    group_type == 'Reformating'
+	  # FIXME: this needs to be more robust...
+    group_type.include? 'MDPI'
   end
 
   def all_present?

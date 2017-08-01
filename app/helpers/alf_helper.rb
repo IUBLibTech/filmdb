@@ -20,10 +20,8 @@ module AlfHelper
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
 		PullRequest.transaction do
-			puts "About to write the file to tmp: #{file}"
 			File.write(file, file_contents)
-			puts "File written"
-			@pr = PullRequest.new(filename: file,file_contents: file_contents, requester: User.current_user_object)
+			@pr = PullRequest.new(filename: file, file_contents: file_contents, requester: User.current_user_object)
 			pos.each do |p|
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
@@ -31,7 +29,8 @@ module AlfHelper
 			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
 				# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 				# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-				scp.upload!(file, "#{cedar['upload_dir']}")
+				puts "\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_dir']}"
+				scp.upload!(file, "#{cedar['upload_test_dir']}")
 			end
 			@pr.save!
 			@pr
@@ -55,7 +54,7 @@ module AlfHelper
 		else
 			pl = PULL_LINE_WELLS
 		end
-		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: '').gsub(':EMAIL_ADDRESS', User.current_user_object.email_address))
+		pl.gsub(':IU_BARCODE', po.iu_barcode.to_s).gsub(':TITLE', po.titles_text.truncate(20, omission: '')).gsub(':EMAIL_ADDRESS', user.email_address)
 	end
 
 	# generates a filename including path of the format <path>/<date>.<process_number>.webform.file where date is the
