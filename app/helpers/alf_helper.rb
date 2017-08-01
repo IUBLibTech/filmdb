@@ -18,10 +18,12 @@ module AlfHelper
 	# generates an array containing lines to be written to the ALF batch ingest file
 	def upload_request_file(pos, user)
 		file_contents = generate_pull_file_contents(pos, user)
-		file_name = gen_file_name
+		file = gen_file
 		PullRequest.transaction do
-			File.write(file_name, file_contents)
-			@pr = PullRequest.new(filename: file_name,file_contents: file_contents, requester: User.current_user_object)
+			puts "About to write the file to tmp: #{file}"
+			File.write(file, file_contents)
+			puts "File written"
+			@pr = PullRequest.new(filename: file,file_contents: file_contents, requester: User.current_user_object)
 			pos.each do |p|
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
@@ -29,7 +31,7 @@ module AlfHelper
 			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
 				# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 				# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-				scp.upload!(file_name, "#{cedar['upload_dir']}")
+				scp.upload!(file, "#{cedar['upload_dir']}")
 			end
 			@pr.save!
 			@pr
@@ -59,8 +61,9 @@ module AlfHelper
 	# generates a filename including path of the format <path>/<date>.<process_number>.webform.file where date is the
 	# date the function is called and formated yyyymmdd, and process_number is a 0 padded 5 digit number repesenting the
 	# (hopefully) id of the PullRequest the file will be associated with
-	def gen_file_name
-		"./tmp/#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file"
+	def gen_file
+		file = File.join(Rails.root, 'tmp', "#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file")
+		#"./tmp/#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file"
 	end
 
 	def gen_process_number
