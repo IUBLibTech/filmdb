@@ -29,7 +29,7 @@ module AlfHelper
 			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
 				# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 				# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-				scp.upload!(file_name, "#{cedar['upload_test_dir']}")
+				scp.upload!(file_name, "#{cedar['upload_dir']}")
 			end
 			@pr.save!
 			@pr

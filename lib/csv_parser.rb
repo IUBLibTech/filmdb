@@ -599,7 +599,7 @@ class CsvParser
     lang_fields.each do |lf|
       index = langs.find_index(lf.downcase)
       if ! index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][0][0], physical_object_id: po.id)
+	      po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::ORIGINAL_DIALOG, physical_object_id: po.id)
       else
         po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
       end
@@ -608,7 +608,7 @@ class CsvParser
     lang_fields.each do |lf|
       index = langs.find_index(lf.downcase)
       if !index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][1][0], physical_object_id: po.id)
+        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::CAPTIONS, physical_object_id: po.id)
       else
         po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: #{lf}")
       end
