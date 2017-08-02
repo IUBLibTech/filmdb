@@ -20,17 +20,21 @@ module AlfHelper
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
 		PullRequest.transaction do
-			File.write(file, file_contents)
-			@pr = PullRequest.new(filename: file, file_contents: file_contents, requester: User.current_user_object)
+			if file_contents.size > 0
+				File.write(file, file_contents.join("\n"))
+			end
+			@pr = PullRequest.new(filename: file, file_contents: (file_contents.size > 0 ? file_contents.join("\n") : ''), requester: User.current_user_object)
 			pos.each do |p|
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
-			cedar = Rails.configuration.cedar
-			Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
-				# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
-				# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-				puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_dir']}\n\n\n\n\n"
-				scp.upload!(file, "#{cedar['upload_dir']}")
+			if file_contents.size > 0
+				cedar = Rails.configuration.cedar
+				Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
+					# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
+					# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
+					puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_dir']}\n\n\n\n\n"
+					scp.upload!(file, "#{cedar['upload_test_dir']}")
+				end
 			end
 			@pr.save!
 			@pr
@@ -44,7 +48,7 @@ module AlfHelper
 				str << populate_line(po, user)
 			end
 		end
-		str.join("\n")
+		str
 	end
 
 	def populate_line(po, user)

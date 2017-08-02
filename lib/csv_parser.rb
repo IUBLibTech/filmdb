@@ -87,7 +87,7 @@ class CsvParser
               po = parse_physical_object(row, i)
               all_physical_objects << po
               if po.errors.any?
-                error_msg << error_msg(i, po)
+                error_msg << gen_error_msg(i, po)
               end
             end
           end
@@ -97,7 +97,7 @@ class CsvParser
           if error_msg.nil? || error_msg.length == 0
             all_physical_objects.each_with_index do |po, index|
               unless po.save
-                error_msg << error_msg(index + 1, po)
+                error_msg << gen_error_msg(index + 1, po)
               end
             end
           end
@@ -202,7 +202,7 @@ class CsvParser
       po.send(:media_type=, media_type)
       medium = row[column_index MEDIUM]
       if medium.blank? || ! po.media_type_mediums[media_type].include?(medium)
-        po.errors.add(:medium, "Medium blank or malformed: '#{medium}'")
+        po.errors.add(:medium, "Medium: '#{medium}' is malformed for Media Type: '#{media_type}'")
       else
         po.send(:medium=, medium)
       end
@@ -680,8 +680,8 @@ class CsvParser
     po.send((attr_symbol.to_s << "=").to_sym, ! val.blank?)
   end
 
-  def error_msg(row, physical_object)
-    msg = "<div class='po_error_div'>Physical Object at row #{row} has the following problem(s):<ul>".html_safe
+  def gen_error_msg(row, physical_object)
+    msg = "<div class='po_error_div'>Physical Object at row #{row + 1} has the following problem(s):<ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
       problems = physical_object.errors[k].map(&:inspect).join(', ')

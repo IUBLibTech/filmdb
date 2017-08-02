@@ -1,6 +1,7 @@
 class CagesController < ApplicationController
 	include CagesHelper
 	include ServicesHelper
+	require 'manual_roll_back_error'
 
 	before_action :set_cages, only: [:index, :mark_shipped]
   before_action :set_cage, only: [:show, :edit, :update, :destroy, :show_xml, :mark_ready_to_ship, :unmark_ready_to_ship, :mark_shipped]
@@ -100,7 +101,7 @@ class CagesController < ApplicationController
 					result = push_cage_to_pod(@cage)
 					body = result.body
 					unless body == 'SUCCESS'
-						@msg = "POD did not receive the push correctly - Responded with message #{body}".html_safe
+						@msg = "POD did not receive the push correctly - Responded with message<br/><pre>#{body}</pre>".html_safe
 						raise ManualRollBackError, @msg
 					end
 				end
