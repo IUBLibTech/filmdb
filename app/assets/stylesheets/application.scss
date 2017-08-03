@@ -368,6 +368,9 @@ td#color {
 .h_400px {
     height: 400px;
 }
+.mr_10 {
+	margin-right: 10px;
+}
 .pl_10px {
     padding-left: 10px;
 }
@@ -618,4 +621,18 @@ div.check_box > div {
 
  .po_error_div {
 	 margin-bottom:10px;
+ }
+
+ #cg_attributes_form {
+	 margin-top: 20px;
+	 border: 1px solid #84b8e0;
+	 padding: 5px;
+ }
+ #cg_attributes_form > div {
+	 margin-bottom: 10px;
+ }
+ .boxsizingBorder {
+	 -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	 box-sizing: border-box;
  }
