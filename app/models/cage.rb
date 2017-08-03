@@ -2,6 +2,7 @@ class Cage < ActiveRecord::Base
   belongs_to :top_shelf, foreign_key: "top_shelf_id", class_name: "CageShelf", dependent: :delete
   belongs_to :middle_shelf, foreign_key: "middle_shelf_id", class_name: "CageShelf", dependent: :delete
   belongs_to :bottom_shelf, foreign_key: "bottom_shelf_id", class_name: "CageShelf", dependent: :delete
+  has_many :pod_pushes
 
   accepts_nested_attributes_for :top_shelf
   accepts_nested_attributes_for :middle_shelf
