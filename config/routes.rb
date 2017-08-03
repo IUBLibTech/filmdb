@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post '/cages/mark_ready_to_ship/:id', to: 'cages#mark_ready_to_ship', as: 'mark_ready_to_ship'
   post '/cages/unmark_ready_to_ship/:id', to: 'cages#unmark_ready_to_ship', as: 'unmark_ready_to_ship'
   post '/cages/mark_shipped/:id', to: 'cages#mark_shipped', as: 'mark_shipped'
+  get '/cages/push_result/:id', to: 'cages#push_result', as: 'cage_push_result'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'

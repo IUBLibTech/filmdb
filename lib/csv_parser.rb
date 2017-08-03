@@ -610,7 +610,7 @@ class CsvParser
       if !index.nil?
         po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::CAPTIONS, physical_object_id: po.id)
       else
-        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: #{lf}")
+        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: '#{lf}'")
       end
     end
 
@@ -622,8 +622,13 @@ class CsvParser
     end
 
     mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
+    mold_vals = @cv[:mold].collect{ |cv| cv[0]}
     if mold.length > 0
-      po.send(:mold=, mold)
+	    if mold_vals.include?(mold)
+		    po.send(:mold=, mold)
+	    else
+		    po.errors.add(:mold, "Invalid mold value: '#{mold}'")
+	    end
     end
 
     shrink = row[column_index SHRINKAGE]

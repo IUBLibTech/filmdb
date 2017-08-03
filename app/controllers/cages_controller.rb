@@ -98,8 +98,8 @@ class CagesController < ApplicationController
 						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
-					result = push_cage_to_pod(@cage)
-					body = result.body
+					@result = push_cage_to_pod(@cage)
+					body = @result.body
 					unless body == 'SUCCESS'
 						@msg = "POD did not receive the push correctly - Responded with message<br/><pre>#{body}</pre>".html_safe
 						raise ManualRollBackError, @msg
@@ -107,6 +107,8 @@ class CagesController < ApplicationController
 				end
 			rescue ManualRollBackError => e
 				flash.now[:warning] = @msg
+			ensure
+				PodPush.new(cage_id: @cage.id, response: @result.body).save
 			end
 		else
 			flash.now[:warning] = "#{@cage.identifier} could not be shipped to Memnon - it is not ready."
@@ -159,6 +161,10 @@ class CagesController < ApplicationController
 			end
       render partial: 'ajax_add_po_success'
 		end
+  end
+
+	def push_result
+		@cage = Cage.find(params[:id])
 	end
 
 	def remove_physical_object
