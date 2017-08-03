@@ -1,10 +1,10 @@
 <%= form_for :pos, url: create_component_group_path, format: :html, html: {id: "component_group_form"} do |f| %>
     <%= f.hidden_field :po_ids %>
-    <div>
+	<div id="cg_attributes_form" class="boxsizingBorder">
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
 	    <div id="scan_div">
-		    <b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', false, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %>
-		    <b>Clean: </b><%= f.check_box :clean, checked: true %>
+		    <b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', false, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %> | 5k <%= check_box_tag '5k', '5k', false, class: 'mutually_exclusive' %> | HD <%= check_box_tag 'HD', 'HD', false, class: 'mutually_exclusive' %>
+		    <b>Clean: </b><%= f.select :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand Clean Only', 'Hand Clean Only']]) %>
 	    </div>
       <div>
         <b class="block">Group Summary</b>
@@ -12,14 +12,29 @@
       </div>
       <div>
         <%= f.submit "Create Component Group", title: 'Create Component Group from the Physical Objects selected above' %>
-        <i>Select physical objects above and click to create a new component group.</i>
+        <i><b>Select physical objects from the list above to create a new component group.</b></i>
       </div>
     </div>
 <% end %>
 
 <script type="text/javascript">
 	var group_type = 'Best Copy';
-  $("#component_group_form").submit(function(event) {
+	function resolution_selected() {
+		res_needed = (group_type == 'Reformatting (MDPI)' || group_type == 'Reformatting Replacement (MDPI)');
+		if (res_needed) {
+			return $('.mutually_exclusive:checked').length == 1;
+		} else {
+			return true;
+		}
+	}
+
+	function pos_selected() {
+		false
+	}
+	function can_submit() {
+		resolution_selected() && pos_selected();
+	}
+	$("#component_group_form").submit(function(event) {
     vals = [];
     $("input:checked").each(function() {
       vals.push($(this).attr("id").substring("physical_object_".length));
@@ -35,7 +50,7 @@
       });
       $("#cg_pos_po_ids").attr("value", vals.toString());
     });
-  }
+  };
 
   $('#pos_group_type').on('change', function() {
 	  if (this.value == 'Reformatting (MDPI)') {
@@ -45,24 +60,26 @@
 	  }
 	  group_type = this.value;
   });
-
 	$(document).ready(function() {
 		$('.mutually_exclusive').click(function() {
 			checked_state = $(this).is(':checked');
 			$(this).parent('div').children('.mutually_exclusive').each(function() {
 				$(this).prop('checked', false);
-			})
+			});
 			$(this).prop('checked', checked_state);
 		});
 
 		$('#component_group_form').submit(function(event) {
 			event.preventDefault();
-			resolution_selected = ($('.mutually_exclusive:checked').length == 1 && group_type == 'Reformating (MDPI)') || group_type != 'Reformating (MDPI)'
-			if (!resolution_selected) {
-				swal('You Must Select a Scan Resolution!')
-			} else {
+			if (can_submit()) {
 				document.getElementById('component_group_form').submit();
+			} else {
+				if (!resolution_selected()) {
+					swal('You Must Select a Scan Resolution!')
+				} else {
+					swal('No Physical Objects Selected!')
+				}
 			}
 		});
-	})
+	});
 </script>

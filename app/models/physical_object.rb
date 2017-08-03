@@ -92,10 +92,10 @@ class PhysicalObject < ActiveRecord::Base
     base_acetate: "Acetate", base_polyester: "Polyester", base_nitrate: "Nitrate", base_mixed: "Mixed"
   }
 
-  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_mixed]
+  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_3_m, :stock_agfa_gevaert, :stock_pathe, :stock_unknown]
   STOCK_FIELDS_HUMANIZED = {
       stock_agfa: 'Agfa', stock_ansco: "Ansco", stock_dupont: 'Dupont', stock_orwo: "Orwo", stock_fuji: "Fuji", stock_gevaert: "Gevaert",
-      stock_kodak: "Kodak", stock_ferrania: "Ferrania", stock_mixed: "Mixed"
+      stock_kodak: "Kodak", stock_ferrania: "Ferrania", stock_3_m: '3M', stock_agfa_gevaert: 'Agfa-Gevaert', stock_pathe: 'Pathe', stock_unknown: "Unknown"
   }
 
   PICTURE_TYPE_FIELDS = [
@@ -124,23 +124,24 @@ class PhysicalObject < ActiveRecord::Base
   }
 
   ASPECT_RATIO_FIELDS = [
-      :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1, :aspect_ratio_2_39_1, :aspect_ratio_2_59_1
+      :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1, :aspect_ratio_2_39_1, :aspect_ratio_2_59_1,
+      :aspect_ratio_2_66_1
   ]
   ASPECT_RATIO_FIELDS_HUMANIZED = {
       aspect_ratio_1_33_1: "1.33:1", aspect_ratio_1_37_1: "1.37:1", aspect_ratio_1_66_1: "1.66:1", aspect_ratio_1_85_1: "1.85:1",
-      aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1"
+      aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1", aspect_ratio_2_66_1: "2.66:1"
   }
 
   SOUND_FORMAT_FIELDS = [
       :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
-      :sound_format_mixed, :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
-      :sound_format_sound_on_separate_media
+      :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
+      :sound_format_sound_on_separate_media, :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a
   ]
   SOUND_FORMAT_FIELDS_HUMANIZED = {
       sound_format_optical: 'Optical', sound_format_optical_variable_area: "Optical: Variable Area", sound_format_optical_variable_density: "Optical: Variable Density",
-      sound_format_magnetic: "Magnetic", sound_format_type_mixed: "Mixed", sound_format_digital_sdds: "Digital: SDDS",
-      sound_format_digital_dts: "Digital: DTS", sound_format_digital_dolby_digital: "Digital: Dolby Digital",
-      sound_format_sound_on_separate_media: "Sound on Separate Media"
+      sound_format_magnetic: "Magnetic", sound_format_digital_sdds: "Digital: SDDS", sound_format_digital_dts: "Digital: DTS", sound_format_digital_dolby_digital: "Digital: Dolby Digital",
+      sound_format_sound_on_separate_media: "Sound on Separate Media", sound_format_digital_dolby_digital_sr: 'Digital: Dolby SR',
+      sound_format_digital_dolby_digital_a: 'Digital: Dolby A'
   }
 
   SOUND_CONTENT_FIELDS = [:sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes]
@@ -343,6 +344,7 @@ class PhysicalObject < ActiveRecord::Base
     puts "\n\nAfter Save: #{self.created_at}\n\n"
 	end
 
+	# noinspection RubyResolve,RubyResolve
 	def to_xml(options)
 		xml = options[:builder]
 		xml.physicalObject do
@@ -352,7 +354,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.iucatBarcode iu_barcode
 			xml.format medium
 			xml.unit unit.abbreviation
-			xml.title titles.collect { |t| t.title_text }.join(", ")
+			xml.title titles.collect { |t| t.title_text }.join(', ')
 			xml.alternativeTitle alternative_title unless alternative_title.nil?
 			xml.collectionName collection&.name
 			xml.accompanyingDocumentation accompanying_documentation

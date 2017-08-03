@@ -67,7 +67,10 @@ class TitlesController < ApplicationController
       else
         cg = nil
         ComponentGroup.transaction do
-          cg = ComponentGroup.new(group_type: params[:pos][:group_type], title_id: @title.id, group_summary: params[:pos][:group_summary],  scan_resolution: (params['5k'] ? '5k' : (params['4k'] ? '4k' : '2k')), clean: params[:pos][:clean])
+          cg = ComponentGroup.new(
+            group_type: params[:pos][:group_type], title_id: @title.id, group_summary: params[:pos][:group_summary],
+            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : '2k'))),
+            clean: params[:pos][:clean])
           cg.save!
           pos.each do |p|
             ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save!
