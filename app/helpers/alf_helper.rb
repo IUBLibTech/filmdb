@@ -33,7 +33,7 @@ module AlfHelper
 					# FIXME: when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 					# FIXME: when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
 					puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_dir']}\n\n\n\n\n"
-					scp.upload!(file, "#{cedar['upload_dir']}")
+					scp.upload!(file, "#{cedar['upload_test_dir']}")
 				end
 			end
 			@pr.save!
