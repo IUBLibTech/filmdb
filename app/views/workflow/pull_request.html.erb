@@ -3,13 +3,15 @@
 		<th>Select To Pull</th>
 		<th>Title(s)</th>
 		<th>IU Barcode</th>
+		<th>Can Size</th>
+		<th>Gauge</th>
 		<th>Location</th>
 		<th>Pulled For</th>
 		<th>Cancel</th>
 	</tr>
 	<% if @ingested.size > 0 %>
 	<tr>
-		<th colspan="6">Queued Physical Objects (Ingested)</th>
+		<th colspan="8">Queued Physical Objects (Ingested)</th>
 	</tr>
 	<% end %>
 	<% @ingested.each do |p| %>
@@ -21,6 +23,8 @@
 			<% end %>
 		</td>
 		<td><%=  p.iu_barcode %></td>
+		<td><%= p.can_size %></td>
+		<td><%= p.gauge %></td>
 		<td><%=  p.storage_location %></td>
 		<td><%= p.active_component_group&.group_type %></td>
 		<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
@@ -28,7 +32,7 @@
 	<% end %>
 	<% if @not_ingested.size > 0 %>
 	<tr>
-		<th colspan="6">Queued Physical Objects (Not Ingested)</th>
+		<th colspan="8">Queued Physical Objects (Not Ingested)</th>
 	</tr>
 	<% end %>
 	<% @not_ingested.each do |p| %>
@@ -40,6 +44,8 @@
 				<% end %>
 			</td>
 			<td><%=  p.iu_barcode %></td>
+			<td><%= p.can_size %></td>
+			<td><%= p.gauge %></td>
 			<td><%=  p.storage_location %></td>
 			<td><%= p.active_component_group&.group_type %></td>
 			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
