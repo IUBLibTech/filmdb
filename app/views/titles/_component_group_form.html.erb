@@ -4,7 +4,7 @@
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
 	    <div id="scan_div">
 		    <b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', false, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %> | 5k <%= check_box_tag '5k', '5k', false, class: 'mutually_exclusive' %> | HD <%= check_box_tag 'HD', 'HD', false, class: 'mutually_exclusive' %>
-		    <b>Clean: </b><%= f.select :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand Clean Only', 'Hand Clean Only']]) %>
+		    <b>Clean: </b><%= f.select :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand clean only', 'Hand clean only']]) %>
 	    </div>
       <div>
         <b class="block">Group Summary</b>
@@ -29,10 +29,10 @@
 	}
 
 	function pos_selected() {
-		false
+		return $('.po_check_box:checked').size() > 0
 	}
 	function can_submit() {
-		resolution_selected() && pos_selected();
+		return resolution_selected() && pos_selected();
 	}
 	$("#component_group_form").submit(function(event) {
     vals = [];
