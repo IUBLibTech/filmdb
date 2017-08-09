@@ -29,7 +29,7 @@ class ComponentGroup < ActiveRecord::Base
     true
   end
 
-  def is_reformating?
+  def is_mdpi_workflow?
 	  # FIXME: this needs to be more robust...
     group_type.include? 'MDPI'
   end

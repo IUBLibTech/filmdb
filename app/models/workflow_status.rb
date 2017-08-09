@@ -147,6 +147,26 @@ class WorkflowStatus < ActiveRecord::Base
 		self.class == other.class && self.status_name == other.status_name && self.whose_workflow == other.whose_workflow
 	end
 
+	def previous_sibling
+		ws = self.physical_object.workflow_statuses
+		index = ws.index(self)
+		prev = nil
+		if index > 0
+			prev = ws[index - 1]
+		end
+		prev
+	end
+
+	def next_sibling
+		ws = self.physical_object.workflow_statuses
+		index = ws.index(self)
+		n = nil
+		if index < ws.size - 1
+			n = ws[index+1]
+		end
+		n
+	end
+
 	private
 	def self.find_workflow(status_name, po)
 		if po.active_component_group.nil?

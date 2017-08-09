@@ -125,6 +125,9 @@ Rails.application.routes.draw do
   get '/workflow/cancel_after_pull_request', to: 'workflow#cancel_after_pull_request', as: 'cancel_after_pull_request'
   post '/workflow/process_cancel_after_pull_request/:id', to: 'workflow#process_cancel_after_pull_request', as: 'process_cancel_after_pull_request'
   post '/workflow/process_requeue_after_pull_request/:id', to: 'workflow#process_requeue_after_pull_request', as: 'process_requeue_after_pull_request'
+  get '/workflow/return_from_mold_abatement/', to: 'workflow#return_from_mold_abatement', as: 'return_from_mold_abatement'
+  get '/workflow/ajax_mold_abatement_barcode/:bc', to: 'workflow#ajax_mold_abatement_barcode', as: 'ajax_mold_abatement_barcode'
+  post '/workflow/update_return_from_mold_abatement/:id', to: 'workflow#update_return_from_mold_abatement', as: 'update_return_from_mold_abatement'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 
