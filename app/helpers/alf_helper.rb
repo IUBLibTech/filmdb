@@ -2,7 +2,7 @@ module AlfHelper
 	require 'net/scp'
 
 	# 4th field after AL/MI is patron id, not email address, try to figure out which field is email address and use the IULMIA account that Andy monitors
-	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"AM\",\"DP\",\"\",\"\",\":EMAIL_ADDRESS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
+	PULL_LINE_MDPI = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"AM\",\"AM\",\"\",\"\",\":EMAIL_ADDRESS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
 	PULL_LINE_WELLS = "\"REQI\",\":IU_BARCODE\",\"IULMIA – MDPI\",\":TITLE\",\"MI\",\"MI\",\"\",\"\",\":EMAIL_ADDRESS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PHY\""
 	ALF = "ALF"
 	WELLS_052 = "Wells"
@@ -53,7 +53,7 @@ module AlfHelper
 
 	def populate_line(po, user)
 		pl = nil
-		if po.active_component_group.is_reformating?
+		if po.active_component_group.is_mdpi_workflow?
 			pl = PULL_LINE_MDPI
 		else
 			pl = PULL_LINE_WELLS

@@ -384,6 +384,24 @@ class WorkflowController < ApplicationController
 		render 'workflow/update_location'
 	end
 
+	def return_from_mold_abatement
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::MOLD_ABATEMENT)
+	end
+
+	def ajax_mold_abatement_barcode
+		@physical_object = PhysicalObject.where(iu_barcode: params[:bc].to_i).first
+		render partial: 'workflow/ajax_mold_abatement_barcode'
+	end
+
+	def update_return_from_mold_abatement
+		@physical_object = PhysicalObject.find(params[:id])
+		s = WorkflowStatus.build_workflow_status(params[:physical_object][:current_workflow_status], @physical_object)
+		@physical_object.workflow_statuses << s
+		@physical_object.update_attributes(mold: params[:physical_object][:mold])
+		flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_workflow_status.status_name}, with Mold attribute set to: #{@physical_object.mold}"
+		redirect_to :return_from_mold_abatement
+	end
+
 	private
 	def set_physical_object
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
