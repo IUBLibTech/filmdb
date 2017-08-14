@@ -320,7 +320,7 @@ class WorkflowController < ApplicationController
 			@msg = "Physical Object #{bc} is not currently on the Issues Shelf! It is #{@physical_object.current_workflow_status.status_name}"
 			render partial: 'workflow/ajax_best_copy_selection_error'
 		else
-			@others = @physical_object.same_active_component_group_members?
+			@others = @physical_object.active_component_group.physical_objects.select{ |p| @physical_object != p }
 			render partial: 'workflow/ajax_issues_shelf_barcode'
 		end
 	end
@@ -347,7 +347,6 @@ class WorkflowController < ApplicationController
 	def cancel_pulled
 		@physical_object = PhysicalObject.find(params[:id])
 		if @physical_object.active_component_group.physical_objects.size > 0
-
 
 		else
 
