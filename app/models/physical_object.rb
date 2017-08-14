@@ -443,7 +443,6 @@ class PhysicalObject < ActiveRecord::Base
 				xml.acetate base_acetate
 				xml.polyester base_polyester
 				xml.nitrate base_nitrate
-
 			end
 			xml.stocks do
 				xml.agfa stock_agfa
@@ -506,11 +505,12 @@ class PhysicalObject < ActiveRecord::Base
 				xml.opticalVariableArea sound_format_optical_variable_area
 				xml.opticalVariableDensity sound_format_optical_variable_density
 				xml.magnetic sound_format_magnetic
-				xml.mixed sound_format_mixed
 				xml.digitalSdds sound_format_digital_sdds
 				xml.digitalDts sound_format_digital_dts
 				xml.dolbyDigital sound_format_digital_dolby_digital
 				xml.soundOnSeparateMedia sound_format_sound_on_separate_media
+				xml.digitalDolbySR sound_format_digital_dolby_digital_sr
+				xml.digitalDolbyA sound_format_digital_dolby_digital_a
 			end
 			xml.soundContent do
 				xml.musicTrack sound_content_music_track
