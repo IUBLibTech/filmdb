@@ -97,7 +97,7 @@ class WorkflowController < ApplicationController
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
 		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.whose_workflow != WorkflowStatus::MDPI
 			flash[:warning] = "#{@physical_object.iu_barcode} should have been delivered to Wells 052, Component Group type: #{@physical_object.active_component_group.group_type}"
-		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank?
+		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank? && @physical_object.active_component_group.group_type != ComponentGroup::BEST_COPY_ALF
 			flash[:warning] = "You must specify footage for #{@physical_object.iu_barcode}"
 		elsif !@physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow])
 			flash[:warning] = "#{@physical_object.iu_barcode} cannot be moved to status: #{params[:physical_object][:workflow]}. "+

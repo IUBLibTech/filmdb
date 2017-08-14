@@ -5,8 +5,8 @@ class ComponentGroup < ActiveRecord::Base
 
   ALF_GROUP_TYPES = ['Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)']
   BEST_COPY_WELLS = 'Best Copy (Wells)'
-  BEST_COPY_MDPI = 'Best Copy (MDPI)'
-  BEST_COPY_TYPES = [BEST_COPY_MDPI, BEST_COPY_WELLS]
+  BEST_COPY_ALF = 'Best Copy (MDPI)'
+  BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_WELLS]
 
 
 
