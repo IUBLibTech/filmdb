@@ -443,7 +443,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.acetate base_acetate
 				xml.polyester base_polyester
 				xml.nitrate base_nitrate
-				xml.mixed base_mixed
+
 			end
 			xml.stocks do
 				xml.agfa stock_agfa
@@ -454,7 +454,10 @@ class PhysicalObject < ActiveRecord::Base
 				xml.gevaert stock_gevaert
 				xml.kodak stock_kodak
 				xml.ferrania stock_ferrania
-				xml.mixed stock_mixed
+				xml.agfa_gevaert stock_agfa_gevaert
+				xml.three_m stock_3_m
+				xml.pathe stock_pathe
+				xml.unknown stock_unknown
 			end
 			xml.pictureTypes do
 				xml.notApplicable picture_not_applicable
