@@ -5,6 +5,7 @@ class ServicesController < ApplicationController
 	include BasicAuthenticationHelper
 
 	before_action :authenticate, only: [:receive]
+	skip_before_action :signed_in_user
 
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
