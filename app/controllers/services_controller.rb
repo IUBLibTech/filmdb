@@ -9,9 +9,8 @@ class ServicesController < ApplicationController
 
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
-		@success = true
-		@msg = "Filmdb received the batch update"
-		render template: 'services/receive', layout: false
+		data = {success: 'SUCCESS'}
+		render xml: data.to_xml(root: 'filmdbService')
 	end
 
 
