@@ -9,7 +9,31 @@ class ServicesController < ApplicationController
 
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
-		data = {success: 'SUCCESS'}
+		bc = params[:bin_barcode]
+		shelf = CageShelf.where(mdpi_barcode: bc.to_i).first
+		if shelf.nil?
+			@success = 'FAIURE'
+			@reason = "Could not find cage shelf with MDPI Barcode: '#{bc}'"
+		elsif !shelf.cage.shipped
+			@success = 'FAILURE'
+			@reason = "#{bc}'s cage has not been shipped to Memnon yet!"
+		else
+			begin
+				PhysicalObject.transaction do
+					shelf.physical_objects.each do |p|
+						ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
+						p.workflow_statues << ws
+						p.save
+					end
+					@success = 'SUCCESS'
+				end
+			rescue Exception => error
+				@sucess = 'FAILURE'
+				@reason = 'Unexpected failure in Filmdb updating physical objects to Returned to Storage - Please contact Andrew Albrecht'
+				logger.debug $!
+			end
+		end
+		data = {success: @success, error: (@reason.nil? ? '' : @reason)}
 		render xml: data.to_xml(root: 'filmdbService')
 	end
 
