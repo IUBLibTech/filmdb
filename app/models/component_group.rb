@@ -9,6 +9,11 @@ class ComponentGroup < ActiveRecord::Base
   BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_WELLS]
 
 
+  COLOR_SPACE_LIN_10 = 'Lin 10bit'
+  COLOR_SPACE_LIN_16 = 'Lin 16bit'
+  COLOR_SPACE_LOG_10 = 'Log 10bit'
+  COLOR_SPACES = ['', COLOR_SPACE_LOG_10, COLOR_SPACE_LIN_10, COLOR_SPACE_LIN_16]
+
 
   def generations
     gen_set = Set.new
@@ -32,6 +37,10 @@ class ComponentGroup < ActiveRecord::Base
   def is_mdpi_workflow?
 	  # FIXME: this needs to be more robust...
     group_type.include? 'MDPI'
+  end
+
+  def is_reformating?
+	  group_type.include? 'Reformatting'
   end
 
   def all_present?

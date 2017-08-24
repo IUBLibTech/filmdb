@@ -62,6 +62,24 @@ class Title < ActiveRecord::Base
     Title.where(title_text: title_text).where('spreadsheet_id IS NULL OR spreadsheet_id != ?', ss_id)
   }
 
+  scope :titles_selected_for_digitization, -> {
+    sql = "SELECT titles.* FROM titles WHERE titles.id in ("+
+      "SELECT distinct(titles.id) FROM workflow_statuses inner join component_groups on workflow_statuses.component_group_id = component_groups.id "+
+      "inner join physical_objects on workflow_statuses.physical_object_id = physical_objects.id inner join physical_object_titles on "+
+      "physical_objects.id = physical_object_titles.physical_object_id inner join titles on physical_object_titles.title_id = titles.id "+
+      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)'))) ORDER BY title_text"
+    Title.find_by_sql(sql)
+  }
+  scope :titles_not_selected_for_digitization, -> {
+    sql = "SELECT * FROM titles WHERE id not in ("+
+      "(SELECT titles.id FROM titles WHERE titles.id in ("+
+      "SELECT distinct(titles.id) FROM workflow_statuses inner join component_groups on workflow_statuses.component_group_id = component_groups.id "+
+      "inner join physical_objects on workflow_statuses.physical_object_id = physical_objects.id inner join physical_object_titles on "+
+      "physical_objects.id = physical_object_titles.physical_object_id inner join titles on physical_object_titles.title_id = titles.id "+
+      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)'))))) ORDER BY title_text"
+    Title.find_by_sql(sql)
+  }
+
 	def series_title_text
 		self.series.title if self.series
   end

@@ -1,20 +1,31 @@
 <%= link_to 'New Title', new_title_path %>
-<h1>Listing Titles</h1>
+<h1>Listing Titles <%= params[:selected] && params[:selected] == 'true' ? 'Selected' : 'Not Yet Select' %> For Digitization</h1>
+<%= form_tag titles_path do %>
+<%= link_to "Not Yet Selected For Digitization", selected_titles_path('false') %> | <%= link_to "Selected For Digitization", selected_titles_path('true') %>
+<% end %>
 <table>
   <thead>
     <tr>
       <th>Title</th>
       <th>Series</th>
-      <th>Object Count</th>
+      <th>Physical Object Workflow Statuses</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <% @titles.each do |title| %>
     <tr>
-      <td><%= title.title_text %></td>
+      <td><%= link_to title.title_text, title_path(title), target: '_blank' %></td>
       <td><%= title.series&.title %></td>
-      <td><%= title.physical_objects.size %></td>
+      <td>
+	      <ul>
+		      <% title.physical_objects.each do |p| %>
+		      <li>
+			      <%= link_to "#{p.iu_barcode}", physical_object_path(p) %> [<%= "#{p.current_workflow_status.status_name}" %>]
+		      </li>
+		      <% end %>
+	      </ul>
+      </td>
       <td>
         <%= link_to 'Show', title_path(title) %><br/>
         <%= link_to 'Edit', edit_title_path(title) %><br/>

@@ -8,7 +8,11 @@ class TitlesController < ApplicationController
   # GET /titles
   # GET /titles.json
   def index
-    @titles = Title.all
+    if params[:selected] && params[:selected] == 'true'
+      @titles = Title.titles_selected_for_digitization
+    else
+      @titles = Title.titles_not_selected_for_digitization
+    end
   end
 
   # GET /titles/1
@@ -72,7 +76,9 @@ class TitlesController < ApplicationController
             group_summary: params[:pos][:group_summary],
             scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : '2k'))),
             return_on_reel: (params[:pos][:return_on_reel] == 'Yes' ? true : false),
-            clean: params[:pos][:clean])
+            clean: params[:pos][:clean],
+            color_space: params[:pos][:color_space]
+          )
           cg.save!
           pos.each do |p|
             ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save!
