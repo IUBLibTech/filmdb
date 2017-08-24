@@ -82,8 +82,10 @@ class ComponentGroupsController < ApplicationController
           if !status.can_be_pulled?
             bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.status_name}</b>".html_safe
           else
+            # must set active component group BEFORE building the next workflow status, WorkflowStatus needs to set the component group id on it
             p.active_component_group = @component_group
-            p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
+            ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
+            p.workflow_statuses << ws
 	          p.save!
           end
         end

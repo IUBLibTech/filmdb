@@ -6,6 +6,7 @@
     <th>Gauge</th>
     <th>Generations</th>
 		<th>Workflow Status(es)</th>
+    <th>Type Specific Attributes</th>
     <th>Actions</th>
   </thead>
   <tbody>
@@ -20,6 +21,16 @@
       <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
 			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.type_and_location }.uniq.join(', ') %></td>
+	    <td>
+		    <% if cg.is_reformating? %>
+		    <ul>
+			    <li>Scan resolution: <%= cg.scan_resolution %></li>
+			    <li>Color space: <%= cg.color_space %></li>
+			    <li>Clean: <%= cg.clean %></li>
+			    <li>Return on Original Reel: <%= cg.return_on_reel ? 'Yes' : 'No' %></li>
+		    </ul>
+		    <% end %>
+	    </td>
       <td>
 	      <% if policy(cg).destroy? %>
 		      <% if cg.can_be_pulled? %>

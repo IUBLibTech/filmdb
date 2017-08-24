@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818194741) do
+ActiveRecord::Schema.define(version: 20170821195545) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -29,8 +29,9 @@ ActiveRecord::Schema.define(version: 20170818194741) do
     t.integer  "mdpi_barcode", limit: 8
     t.string   "identifier",   limit: 255
     t.text     "notes",        limit: 65535
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "returned",                   default: false
   end
 
   create_table "cages", force: :cascade do |t|
@@ -116,6 +117,7 @@ ActiveRecord::Schema.define(version: 20170818194741) do
     t.boolean  "hand_clean_only",               default: false
     t.boolean  "hd"
     t.boolean  "return_on_reel",                default: false
+    t.string   "color_space",     limit: 255
   end
 
   create_table "controlled_vocabularies", force: :cascade do |t|

@@ -57,6 +57,7 @@ class PhysicalObject < ActiveRecord::Base
 		PhysicalObject.find_by_sql(sql)
 	}
 
+
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 	MEDIA_TYPE_MEDIUMS = {
 		'Moving Image' => ['Film', 'Video', 'Digital'],

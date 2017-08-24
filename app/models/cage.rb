@@ -90,6 +90,10 @@ class Cage < ActiveRecord::Base
     total_physical_objects > 0 && top_shelf.can_ship? && middle_shelf.can_ship? && bottom_shelf.can_ship?
   end
 
+  def all_shelves_returned?
+    can_by_shipped? && (top_shelf.returned || top_shelf.MDPI)
+  end
+
   def total_physical_objects
     top_shelf.physical_objects.size + middle_shelf.physical_objects.size + bottom_shelf.physical_objects.size
   end

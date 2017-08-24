@@ -66,8 +66,8 @@ class SpreadsheetsController < ApplicationController
   end
 
   def merge_series_candidates
-    @series_candidates = Series.series_in_spreadsheet(Series.find(params[:series]).title, @spreadsheet.id)
-    @existing_series = Series.series_not_in_spreadsheet(params[:series], @spreadsheet)
+    @series_candidates = Series.series_in_spreadsheet(Series.find(params[:series].to_i).title, @spreadsheet.id)
+    @existing_series = Series.series_not_in_spreadsheet(Series.find(params[:series].to_i).title, @spreadsheet.id)
   end
 
   def merge_series

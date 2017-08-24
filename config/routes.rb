@@ -79,6 +79,7 @@ Rails.application.routes.draw do
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
   resources :titles
+  get '/titles/filter_seected/:selected', to: 'titles#index', as: 'selected_titles'
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'

@@ -7,6 +7,7 @@ class ServicesController < ApplicationController
 	before_action :authenticate, only: [:receive]
 	skip_before_action :signed_in_user
 
+
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
 		bc = params[:bin_barcode]
@@ -22,8 +23,11 @@ class ServicesController < ApplicationController
 				PhysicalObject.transaction do
 					shelf.physical_objects.each do |p|
 						ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
-						p.workflow_statues << ws
+						p.workflow_statuses << ws
 						p.save
+					end
+					if shelf.cage.all_returned?
+						shelf.cage.update(shipped: false, ready_to_ship: false, returned: true)
 					end
 					@success = 'SUCCESS'
 				end
