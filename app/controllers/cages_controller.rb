@@ -9,9 +9,6 @@ class CagesController < ApplicationController
 
 	before_action :set_cage_shelf, only: [:shelf_physical_objects, :add_physical_object_to_shelf, :remove_physical_object]
 
-	# these gauges should not be sent to Memnon
-	NONPACKABLE_GAUAGES = ['9.5mm', '28mm', '70mm', '35/32mm', 'Other']
-
 	# GET /cages/1
   # GET /cages/1.json
   def show
@@ -145,7 +142,7 @@ class CagesController < ApplicationController
 			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
 				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
 			else
-				if NONPACKABLE_GAUAGES.include?(@physical_object.gauge)
+				if NONPACKABLE_GAUGES.include?(@physical_object.gauge)
 					@physical_object.errors.add(:gauge, "#{@physical_object.gauge} cannot be sent to Memnon. #{@physical_object.iu_barcode} was not added to cage shelf")
 				else
 					PhysicalObject.transaction do
