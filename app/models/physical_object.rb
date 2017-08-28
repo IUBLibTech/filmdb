@@ -1,5 +1,6 @@
 class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
+	include PhysicalObjectsHelper
 
 	belongs_to :title
 	belongs_to :spreadhsheet
@@ -308,10 +309,7 @@ class PhysicalObject < ActiveRecord::Base
   # duration is viewed as hh:mm:ss
   def duration
     unless super.nil?
-      hh = (super / 3600).floor
-      mm = ((super - (hh * 3600)) / 60).floor
-      ss = super - (hh * 3600) - (mm * 60)
-      "#{hh}:#{mm}:#{ss}"
+      hh_mm_sec(super)
     end
 	end
 

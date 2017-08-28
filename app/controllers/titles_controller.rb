@@ -74,7 +74,7 @@ class TitlesController < ApplicationController
           cg = ComponentGroup.new(
             group_type: params[:pos][:group_type], title_id: @title.id,
             group_summary: params[:pos][:group_summary],
-            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : '2k'))),
+            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
             return_on_reel: (params[:pos][:return_on_reel] == 'Yes' ? true : false),
             clean: params[:pos][:clean],
             color_space: params[:pos][:color_space]

@@ -1,6 +1,7 @@
 class CagesController < ApplicationController
 	include CagesHelper
 	include ServicesHelper
+	include PhysicalObjectsHelper
 	require 'manual_roll_back_error'
 
 	before_action :set_cages, only: [:index, :mark_shipped]
@@ -8,8 +9,10 @@ class CagesController < ApplicationController
 
 	before_action :set_cage_shelf, only: [:shelf_physical_objects, :add_physical_object_to_shelf, :remove_physical_object]
 
+	# these gauges should not be sent to Memnon
+	NONPACKABLE_GAUAGES = ['9.5mm', '28mm', '70mm', '35/32mm', 'Other']
 
-  # GET /cages/1
+	# GET /cages/1
   # GET /cages/1.json
   def show
 		respond_to do |format|
@@ -142,12 +145,16 @@ class CagesController < ApplicationController
 			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
 				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
 			else
-				PhysicalObject.transaction do
-					@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
-					@physical_object.cage_shelf_id = @cage_shelf.id
-					ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
-					@physical_object.workflow_statuses << ws
-					@physical_object.save
+				if NONPACKABLE_GAUAGES.include?(@physical_object.gauge)
+					@physical_object.errors.add(:gauge, "#{@physical_object.gauge} cannot be sent to Memnon. #{@physical_object.iu_barcode} was not added to cage shelf")
+				else
+					PhysicalObject.transaction do
+						@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
+						@physical_object.cage_shelf_id = @cage_shelf.id
+						ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
+						@physical_object.workflow_statuses << ws
+						@physical_object.save
+					end
 				end
 			end
 		end
@@ -198,6 +205,35 @@ class CagesController < ApplicationController
 	def show_xml
 		file_path = write_xml(@cage)
 		render file: file_path, layout: false, status: 200
+	end
+
+	def ajax_cage_shelf_stats
+		cs = CageShelf.where(id: params[:id]).first
+		stats = {}
+		if cs.nil?
+			stats[:error] = "Could not find cage shelf with ID #{params[:cage_shelf_id]}"
+		else
+			pos = cs.physical_objects
+			stats[:count] = pos.size
+			twoK = 0
+			fourK = 0
+			durationSec = 0
+			pos.each do |p|
+				if p.active_component_group.scan_resolution == '2k'
+					twoK += 1
+				end
+				if p.active_component_group.scan_resolution == '4k'
+					fourK += 1
+				end
+				durationSec += ((PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24)
+			end
+			stats[:count_2k] = twoK
+			stats[:percent_2k] = (twoK + fourK > 0) ? twoK / (twoK + fourK) : 0
+			stats[:count_4k] =  fourK
+			stats[:percent_4k] = (twoK + fourK > 0) ? fourK / (twoK + fourK) : 0
+			stats[:total_duration] = hh_mm_sec(durationSec)
+		end
+		render json: stats.to_json
 	end
 
   private
