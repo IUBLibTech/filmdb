@@ -522,8 +522,13 @@ div#title_popup_header > h4 {
 }
 #shelf_content, #shelf_content_form {
     float: left;
-    width: 65%;
     margin-left: 15px;
+}
+#shelf_content {
+	width: 65%;
+}
+#shelf_content_form {
+	width: 40%;
 }
 #shelf_content H4 {
     margin-top: 0;

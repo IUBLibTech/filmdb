@@ -34,6 +34,14 @@
 								} else {
 									$('#alf_scan_div').after($(result));
 								}
+								$('#receive_physical_object_form').submit(function(event) {
+									event.preventDefault();
+									if ($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked")) {
+										swal("You Must Update the Physical Object's Condition Notes Before Continuing");
+									} else {
+										document.getElementById('receive_physical_object_form').submit();
+									}
+								});
 							},
 							complete: function() {
 								$('#physical_object_workflow').change(function() {

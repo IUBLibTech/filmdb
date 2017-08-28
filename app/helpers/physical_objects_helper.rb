@@ -1,5 +1,17 @@
 module PhysicalObjectsHelper
   include MailHelper
+
+  GAUGES_TO_FRAMES_PER_FOOT = {
+	  '8mm' => 72, 'Super 8mm' => 72, '9.5 mm' => 40.5, '16mm' => 40, 'Super 16mm' => 40, '28mm' => 20.5, '35mm' => 16, '35/32mm' => 40, '70mm' => 12.8
+  }
+
+  def hh_mm_sec(totalSeconds)
+	  hh = (totalSeconds / 3600).floor
+	  mm = ((totalSeconds - (hh * 3600)) / 60).floor
+	  ss = totalSeconds - (hh * 3600) - (mm * 60)
+	  "#{hh}:#{mm}:#{ss}"
+  end
+
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)

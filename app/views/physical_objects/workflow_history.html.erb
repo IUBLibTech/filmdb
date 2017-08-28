@@ -18,6 +18,10 @@
 			<td>
 				<%= s.status_name %>
 			</td>
+		<th>Reason in Workflow</th>
+		<td>
+			<%= s.component_group.nil? ? 'N/A' : "#{s.component_group.group_type}" %>
+		</td>
 			<th>Updater</th>
 			<td>
 				<%= s&.user.name %>

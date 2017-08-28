@@ -9,7 +9,7 @@
 				<%= "#{bcs.join(', ')} also #{bcs.size == 1 ? 'belongs' : 'belong'} to this title and #{bcs.size == 1 ? 'has' : 'have'} not yet been received from storage." %>
 			</p>
 		<% end %>
-		<%= form_for @physical_object, url: receive_from_storage_path do |f| %>
+		<%= form_for @physical_object, url: receive_from_storage_path, html: { id: 'receive_physical_object_form'} do |f| %>
 			<%= f.hidden_field :iu_barcode %>
 		<table>
 			<tr>
