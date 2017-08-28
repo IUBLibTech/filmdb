@@ -1,6 +1,9 @@
 module CagesHelper
 	require "builder"
 
+	# these gauges should not be sent to Memnon
+	NONPACKABLE_GAUGES = ['9.5mm', '28mm', '70mm', '35/32mm', 'Other']
+
 	# creates an xml file containing the "batch" contents of the specified cage and returns the path to the temp file created
 	def write_xml(cage)
 		xml = Builder::XmlMarkup.new(indent: 2)
