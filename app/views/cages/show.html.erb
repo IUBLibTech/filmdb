@@ -180,12 +180,12 @@
     });
 
     function validate_shippable(iu_barcode) {
-	    
+
     }
 
     function update_shelf_stats() {
 	    $.ajax({
-		    url: 'http://localhost:3000/cages/cage_shelf/'+id+'/ajax_cage_shelf_stats',
+		    url: './cage_shelf/'+id+'/ajax_cage_shelf_stats',
 		    error: function (XMLHttpRequest, textStatus, errorThrown) {
 			    $('#edit_summary_dialog').dialog("close");
 			    swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
