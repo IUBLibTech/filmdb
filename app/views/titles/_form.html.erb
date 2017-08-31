@@ -53,7 +53,7 @@
     <h4>Publishers</h4>
     <div id="publishers_div" class="fields_for_div">
       <%= f.fields_for :title_publishers do |tp| %>
-          <div class="label"><b>Publisher</b></div> <div class="field"><%= tp.text_field :name %></div>
+          <div class="label"><b>Publisher</b></div> <div class="field"><%= tp.text_field :name, class: 'title_publisher' %></div>
           <div class="label"><b>Role</b></div>
           <div class="field"><%= tp.select :publisher_type, options_for_select(@title_cv[:title_publisher_role_type], tp.object.publisher_type), {include_blank: ''} %></div>
           <div class="clear"><%= tp.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
@@ -89,8 +89,8 @@
     <h4>Dates</h4>
     <div id="dates_div">
       <%= f.fields_for :title_dates do |td| %>
-          <div class="label"><b>Date</b></div> <div class="field"><%= td.text_field :date %></div>
-          <div class="label"><b>Type</b></div> <div class="field"><i>No Controlled Vocab yet...</i></div>
+          <div class="label"><b>Type</b> <%= td.select :date_type, options_for_select(@title_date_cv[:date_type], td.object.date_type) %></div>
+          <div class="label"><b>Date</b> <%= td.text_field :year, class: 'title_date_year' %></div>
           <div class="clear"><%= td.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Date", :title_dates %>

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   post '/cages/mark_shipped/:id', to: 'cages#mark_shipped', as: 'mark_shipped'
   get '/cages/push_result/:id', to: 'cages#push_result', as: 'cage_push_result'
   get '/cages/cage_shelf/:id/ajax_cage_shelf_stats', to: 'cages#ajax_cage_shelf_stats', as: 'ajax_cage_shelf_stats'
+  get '/cages/ajax_add_physical_object_iu_barcode_scan/:iu_barcode', to: 'cages#ajax_add_physical_object_iu_barcode_scan', as: 'ajax_add_physical_object_iu_barcode_scan'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'

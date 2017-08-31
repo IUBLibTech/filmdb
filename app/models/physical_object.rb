@@ -83,7 +83,7 @@ class PhysicalObject < ActiveRecord::Base
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite Print", generation_intermediate: "Intermediate",
-      generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Magnetic Track", generation_optical_sound_track: "Optical Soundtrack",
+      generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Separate Magnetic Track", generation_optical_sound_track: "Separate Optical Track",
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_original_camera: "Camera Original", generation_original: "Original",
       generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate", generation_master: 'Master'
@@ -326,6 +326,9 @@ class PhysicalObject < ActiveRecord::Base
     str
   end
 
+	def sound_only?
+		return (medium == 'Film' && (generation_separation_master || generation_optical_sound_track))
+	end
 
   def test_after_create
     puts "\n\nAfter Creation: #{self.created_at}\n\n"
@@ -382,7 +385,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.trackCount track_count
 			xml.returnTo storage_location
 			if active_component_group != nil
-				xml.resolution active_component_group.scan_resolution
+				xml.resolution (sound_only? ? 'Audio Only' : active_component_group.scan_resolution)
 			end
 			if active_component_group != nil
 				xml.clean active_component_group.clean

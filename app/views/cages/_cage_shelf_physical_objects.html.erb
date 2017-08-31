@@ -1,4 +1,4 @@
-<h4>Physical Objects in <i><%= @cage_shelf.identifier %></i></h4>
+<h4 id="shelf_objects_header">Physical Objects in <i><%= @cage_shelf.identifier %></i></h4>
 <table id="shelf_po_table">
 	<tr>
 		<th>Barcode</th>
@@ -6,7 +6,7 @@
 		<th>Gauge</th>
 		<th>Actions</th>
 	</tr>
-	<% @cage_shelf.physical_objects.each do |p| %>
+	<% @cage_shelf.physical_objects.order('updated_at DESC').each do |p| %>
 		<tr>
 			<td>
 				IU: <%= p.iu_barcode %><br/>

@@ -9,7 +9,7 @@ module PhysicalObjectsHelper
 	  hh = (totalSeconds / 3600).floor
 	  mm = ((totalSeconds - (hh * 3600)) / 60).floor
 	  ss = totalSeconds - (hh * 3600) - (mm * 60)
-	  "#{hh}:#{mm}:#{ss}"
+	  "#{hh}:#{"%02d" % mm}:#{"%02d" % ss}"
   end
 
   # this should be used by any action that a creates a physical object from form submission
