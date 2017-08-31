@@ -1,9 +1,4 @@
 <% if @physical_object != nil && @physical_object.errors.any? %>
-	<h2 class="warning"><%= pluralize(@physical_object.errors.count, "error") %> prevented this physical object from being added to the cage shelf</h2>
-	<ul>
-		<% @physical_object.errors.full_messages.each do |message| %>
-			<li><%= message %></li>
-		<% end %>
-	</ul>
+	<%= render partial: 'ajax_add_po_failure_errors' %>
 <% end %>
 <%= render partial: 'cage_shelf_physical_objects' %>

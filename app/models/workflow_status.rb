@@ -114,7 +114,11 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	def valid_next_workflow?(next_workflow, override=false)
-		STATUSES_TO_NEXT_WORKFLOW[self.status_name].include? next_workflow if !override else true
+		if !override
+			STATUSES_TO_NEXT_WORKFLOW[self.status_name].include?(next_workflow)
+		else
+			true
+		end
 	end
 
 	def self.mdpi_receive_options(storage_string)

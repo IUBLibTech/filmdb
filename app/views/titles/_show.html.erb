@@ -88,16 +88,11 @@
   <% unless @title.title_dates.empty? %>
       <h4>Dates</h4>
       <% @title.title_dates.each do |td| %>
-          <div class="left_div creator_div">
-            <div class="label"><b>Date</b></div>
-            <div class="field"><%= td.date %></div>
-            <div class="label"><b>Type</b></div>
-            <div class="field"><%= td.date_type %></div>
-          </div>
+        <div class="date"><b><%= td.date_type %>:</b> <%= td.year %></div>
       <% end %>
   <% end %>
   <h4>Notes</h4>
-  <div>
+	<div class="title_notes">
     <%= @title.notes %>
   </div>
 </div>

@@ -255,6 +255,12 @@ div.title_text {
     line-height: 20px;
     padding-left: 5px;
 }
+div.title_notes {
+	min-height: 10px;
+}
+input.title_date_year {
+	width: 115px;
+}
 li.title_li {
     overflow: hidden;
 }
@@ -640,4 +646,9 @@ div.check_box > div {
 	 -webkit-box-sizing: border-box;
 	 -moz-box-sizing: border-box;
 	 box-sizing: border-box;
+ }
+ div.date {
+	 width: 25%;
+	 float: left;
+	 margin-bottom: 10px;
  }

@@ -1,8 +1,8 @@
   <p id="notice"><%= notice %></p>
   <%= link_to 'Edit', edit_cage_path(@cage) %> |
   <%= link_to 'Back', cages_path %>
-  <div class="clear h_45px"></div>
-  <h2><%= "#{@cage.identifier} is #{@cage.status}" %></h2>
+  <div class="clear"></div>
+  <h2><%= "#{@cage.identifier}" %></h2>
   <table id="cage_table" class="left">
     <tr>
       <th>Cage Identifier</th>
@@ -144,6 +144,26 @@
         }
       });
 	    update_shelf_stats();
+    });
+
+    $('#cage_physical_object_iu_barcode').bind('input', function() {
+	    cage_id = $('#cage_cage_shelf_id').attr('value');
+	    if (cage_id == null || cage_id.length < 1) {
+		    swal('You must first select a shelf on the left');
+	    } else if (isValidBarcode($(this).val())) {
+		    $.ajax({
+			    url: './ajax_add_physical_object_iu_barcode_scan/'+$(this).val(),
+				    error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    $('#edit_summary_dialog').dialog("close");
+				    swal({title: 'Ajax Error', text: "An error occurred during IU Barcode scan: " + errorThrown});
+			    },
+			    success: function(result) {
+				    h = $('#shelf_objects_header');
+				    h.prevAll().remove();
+				    h.before(result);
+			    }
+		    });
+	    }
     });
 
     $('#add_cage_shelf_form').submit(function(event) {

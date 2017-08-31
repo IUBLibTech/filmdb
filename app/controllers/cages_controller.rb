@@ -121,49 +121,28 @@ class CagesController < ApplicationController
 	end
 
   def add_physical_object_to_shelf
-		bc = params[:cage][:physical_object_iu_barcode]
-		@physical_object =  PhysicalObject.where(iu_barcode: bc).first
-		if @physical_object.nil?
-			@physical_object = PhysicalObject.new
-			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{bc}")
-		elsif !@physical_object.cage_shelf.nil?
-			@physical_object.errors.add(:cage_shelf, "#{bc} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
-		else
-			# need to check validity of both barcodes
-			mbc = params[:cage][:physical_object_mdpi_barcode]
-			if mbc.blank?
-				@physical_object.errors.add(:mdpi_barcode, "Cannot pack a physical object without an MDPI barcode")
-			elsif !ApplicationHelper.valid_barcode?(mbc, true)
-				@physical_object.errors.add(:mdpi_barcode, "#{mbc} is not a valid MDPI barcode")
-			elsif CageShelf.where(mdpi_barcode: mbc.to_i).size > 0
-				@physical_object.errors.add(:mdpi_barcode, "MDPI barcode #{mbc} has already beed assigned to a cage shelf!")
-			elsif !@physical_object.mdpi_barcode.nil? && @physical_object.mdpi_barcode != mbc.to_i
-				@physical_object.errors.add(:mdpi_barcode, "#{@physical_object.iu_barcode} has already been assigned an MDPI barcode: #{@physical_object.mdpi_barcode}")
-			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
-				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
-			else
-				if NONPACKABLE_GAUGES.include?(@physical_object.gauge)
-					@physical_object.errors.add(:gauge, "#{@physical_object.gauge} cannot be sent to Memnon. #{@physical_object.iu_barcode} was not added to cage shelf")
-				else
-					PhysicalObject.transaction do
-						@physical_object.mdpi_barcode = mbc.to_i if @physical_object.mdpi_barcode.nil?
-						@physical_object.cage_shelf_id = @cage_shelf.id
-						ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
-						@physical_object.workflow_statuses << ws
-						@physical_object.save
-					end
-				end
-			end
-		end
+		bc = set_po(params[:cage][:physical_object_iu_barcode])
 		if @physical_object.errors.any?
       render partial: 'ajax_add_po_failure'
 		else
-			@msg = "Physical Object #{@physical_object.mdpi_barcode} was successfully added to Shelf #{@physical_object.cage_shelf.identifier}"
-			list = @physical_object.waiting_active_component_group_members?
-			if list && list.size > 0
-				@msg += "<br/>Additional Reels for this title: #{ list.collect{ |p| p.iu_barcode }.join(', ') }".html_safe
+			begin
+				PhysicalObject.transaction do
+					@physical_object.mdpi_barcode = params[:cage][:physical_object_mdpi_barcode].to_i if @physical_object.mdpi_barcode.nil?
+					@physical_object.cage_shelf_id = @cage_shelf.id
+					ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
+					@physical_object.workflow_statuses << ws
+					@physical_object.save
+				end
+				@msg = "Physical Object #{@physical_object.mdpi_barcode} was successfully added to Shelf #{@physical_object.cage_shelf.identifier}"
+				list = @physical_object.waiting_active_component_group_members?
+				if list && list.size > 0
+					@msg += "<br/>Additional Reels for this title: #{ list.collect{ |p| p.iu_barcode }.join(', ') }".html_safe
+				end
+				render partial: 'ajax_add_po_success'
+			rescue
+				@physical_object.errors.add(:save_failed, "Something went wrong when trying to to save Physical Object #{@physical_object.iu_barcode}")
+				render partial: 'ajax_add_po_failure'
 			end
-      render partial: 'ajax_add_po_success'
 		end
   end
 
@@ -233,6 +212,15 @@ class CagesController < ApplicationController
 		render json: stats.to_json
 	end
 
+	def ajax_add_physical_object_iu_barcode_scan
+		@physical_object = set_po(params[:iu_barcode], false)
+		if @physical_object.errors.any?
+			render partial: 'ajax_add_po_failure_errors'
+		else
+			render text: ''
+		end
+	end
+
   private
 	# Use callbacks to share common setup or constraints between actions.
 	def set_cage
@@ -249,6 +237,38 @@ class CagesController < ApplicationController
 
 	def set_physical_object
 		@physical_object = PhysicalObject.where(iu_barcode: params[:barcode]).first
+	end
+
+	# differs from set_physical_object in that this one may find an actual physical object based on the barcode, but that is not
+	# packable
+	def set_po(iu_barcode, check_mbc=true)
+		@physical_object =  PhysicalObject.where(iu_barcode: iu_barcode).first
+		if @physical_object.nil?
+			@physical_object = PhysicalObject.new
+			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{iu_barcode}")
+		elsif !@physical_object.cage_shelf.nil?
+			@physical_object.errors.add(:cage_shelf, "#{IU_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
+		else
+			# need to check validity of both barcodes
+			mbc = params[:cage] ? params[:cage][:physical_object_mdpi_barcode] : nil?
+			if check_mbc && mbc.blank?
+				@physical_object.errors.add(:mdpi_barcode, "Cannot pack a physical object without an MDPI barcode")
+			elsif check_mbc && !ApplicationHelper.valid_barcode?(mbc, true)
+				@physical_object.errors.add(:mdpi_barcode, "#{mbc} is not a valid MDPI barcode")
+			elsif check_mbc && CageShelf.where(mdpi_barcode: mbc.to_i).size > 0
+				@physical_object.errors.add(:mdpi_barcode, "MDPI barcode #{mbc} has already beed assigned to a cage shelf!")
+			elsif check_mbc && (!@physical_object.mdpi_barcode.nil? && @physical_object.mdpi_barcode != mbc.to_i)
+				@physical_object.errors.add(:mdpi_barcode, "#{@physical_object.iu_barcode} has already been assigned an MDPI barcode: #{@physical_object.mdpi_barcode}")
+			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
+				debugger
+				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
+			else
+				if NONPACKABLE_GAUGES.include?(@physical_object.gauge)
+					@physical_object.errors.add(:gauge, "#{@physical_object.gauge} cannot be sent to Memnon. #{@physical_object.iu_barcode} was not added to cage shelf")
+				end
+			end
+		end
+		@physical_object
 	end
 
 	# Never trust parameters from the scary internet, only allow the white list through.
