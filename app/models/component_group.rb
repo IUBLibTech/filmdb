@@ -3,7 +3,7 @@ class ComponentGroup < ActiveRecord::Base
   has_many :component_group_physical_objects
   has_many :physical_objects, through: :component_group_physical_objects
 
-  ALF_GROUP_TYPES = ['Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)']
+  MDPI_GROUP_TYPES = ['Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)']
   BEST_COPY_WELLS = 'Best Copy (Wells)'
   BEST_COPY_ALF = 'Best Copy (MDPI)'
   BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_WELLS]
@@ -51,7 +51,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def whose_workflow
-    ALF_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
+    MDPI_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
   end
 
   def alf_delivery?

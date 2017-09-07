@@ -260,7 +260,6 @@ class CagesController < ApplicationController
 			elsif check_mbc && (!@physical_object.mdpi_barcode.nil? && @physical_object.mdpi_barcode != mbc.to_i)
 				@physical_object.errors.add(:mdpi_barcode, "#{@physical_object.iu_barcode} has already been assigned an MDPI barcode: #{@physical_object.mdpi_barcode}")
 			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
-				debugger
 				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
 			else
 				if NONPACKABLE_GAUGES.include?(@physical_object.gauge)

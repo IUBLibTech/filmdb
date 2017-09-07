@@ -1,5 +1,6 @@
 # noinspection ALL
 class CsvParser
+	include DateHelper
   require 'csv'
   require 'manual_roll_back_error'
 
@@ -305,7 +306,8 @@ class CsvParser
     dates = row[column_index DATE].to_s
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
-	      title.title_dates << TitleDate.new(title_id: title.id, date: date, date_type: 'Publication Date')
+	      title.title_dates << TitleDate.new(title_id: title.id, date: date, date_type: 'Unknown')
+
         # date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
         # date_only = /^([0-9\/?~]+)$/
         # if date_type.match(date)

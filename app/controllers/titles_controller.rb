@@ -5,14 +5,20 @@ class TitlesController < ApplicationController
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
-  # GET /titles
-  # GET /titles.json
-  def index
-    if params[:selected] && params[:selected] == 'true'
-      @titles = Title.titles_selected_for_digitization
-    else
-      @titles = Title.titles_not_selected_for_digitization
-    end
+
+  # def old_index
+  #   if params[:selected] && params[:selected] == 'true'
+  #     @titles = Title.titles_selected_for_digitization
+  #   else
+  #     @titles = Title.titles_not_selected_for_digitization
+  #   end
+  # end
+
+  def search
+	  if params[:title_text]
+		  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+	  end
+	  render 'index'
   end
 
   # GET /titles/1
@@ -228,7 +234,7 @@ class TitlesController < ApplicationController
       params.require(:title).permit(
           :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
           title_creators_attributes: [:id, :name, :role, :_destroy],
-          title_dates_attributes: [:id, :date, :year, :date_type, :_destroy],
+          title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
           title_genres_attributes: [:id, :genre, :_destroy],
           title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
           title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],

@@ -32,7 +32,8 @@ Unit.new(abbreviation: 'B-MATHERS', name: "Indiana University, Bloomington. Will
 
 # seed misc collections for each
 Unit.all.each do |u|
-  if u.misc_collection.nil?
-    Collection.new(name: 'Misc [not in collection]', unit: u).save
-  end
+  # future database builds should not use misc collections
+  # if u.misc_collection.nil?
+  #   Collection.new(name: 'Misc [not in collection]', unit: u).save
+  # end
 end

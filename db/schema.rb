@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830195452) do
+ActiveRecord::Schema.define(version: 20170905185105) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -415,12 +415,15 @@ ActiveRecord::Schema.define(version: 20170830195452) do
   end
 
   create_table "title_dates", force: :cascade do |t|
-    t.integer  "title_id",   limit: 8
-    t.string   "date",       limit: 255
-    t.string   "date_type",  limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "year",       limit: 4
+    t.integer  "title_id",      limit: 8
+    t.string   "date_text",     limit: 255
+    t.string   "date_type",     limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.date     "start_date"
+    t.boolean  "month_present"
+    t.boolean  "day_present"
+    t.boolean  "extra_text"
   end
 
   create_table "title_forms", force: :cascade do |t|
