@@ -17,9 +17,6 @@ class UnitsController < ApplicationController
 		@unit = Unit.new(unit_params)
 		respond_to do |format|
 			if @unit.save
-				misc = Collection.new(name: Collection::MISC_COLLECTION_NAME)
-				misc.unit = @unit
-				misc.save
 				format.html { redirect_to @unit, notice: 'Unit was successfully created.' }
 				format.json { render :show, status: :created, location: @unit }
 			else

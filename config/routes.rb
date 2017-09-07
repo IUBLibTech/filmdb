@@ -80,7 +80,7 @@ Rails.application.routes.draw do
 	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
-  resources :titles
+  resources :titles, except: [:index]
   get '/titles/filter_seected/:selected', to: 'titles#index', as: 'selected_titles'
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
@@ -90,6 +90,8 @@ Rails.application.routes.draw do
   post '/titles/create_component_group/:id', to: 'titles#create_component_group', as: 'create_component_group'
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
+  get '/titles/', to: 'titles#search', as: 'titles_index'
+  post '/titles/search', to: 'titles#search', as: 'titles_search'
 
   resources :units
 

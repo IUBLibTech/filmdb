@@ -12,6 +12,7 @@
     <th>Generation</th>
     <th>Reel Number</th>
     <th>Can Size</th>
+	  <th>Collection</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr>
@@ -23,6 +24,7 @@
     <td><%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %></td>
     <td><%= p.reel_number %></td>
     <td><%= p.can_size %></td>
+	  <td><%= p.collection.name %></td>
   </tr>
   <% end %>
 </table>

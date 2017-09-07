@@ -14,7 +14,7 @@
       <tr>
         <th>Collection</th>
         <td>
-          <%= f.select :collection_id, Collection.where("name != 'Misc [not in collection]'").order('name ASC').collect { |u| [u.name, u.id] }, { }, multiple: false, size: 1 %>
+          <%= f.select :collection_id, Collection.all.order('name ASC').collect { |u| [u.name, u.id] }, { }, multiple: false, size: 1 %>
         </td>
       </tr>
       <tr>

@@ -90,7 +90,7 @@
     <div id="dates_div">
       <%= f.fields_for :title_dates do |td| %>
           <div class="label"><b>Type</b> <%= td.select :date_type, options_for_select(@title_date_cv[:date_type], td.object.date_type) %></div>
-          <div class="label"><b>Date</b> <%= td.text_field :year, class: 'title_date_year' %></div>
+          <div class="label"><b>Date</b> <%= td.text_field :date_text, class: 'title_date_year' %></div>
           <div class="clear"><%= td.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Date", :title_dates %>

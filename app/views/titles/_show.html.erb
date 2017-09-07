@@ -88,7 +88,7 @@
   <% unless @title.title_dates.empty? %>
       <h4>Dates</h4>
       <% @title.title_dates.each do |td| %>
-        <div class="date"><b><%= td.date_type %>:</b> <%= td.year %></div>
+			<div class="date"><b><%= td.date_type %>:</b> <%= td.date_to_s %></div>
       <% end %>
   <% end %>
   <h4>Notes</h4>
