@@ -8,6 +8,9 @@
 </head>
 <body>
 <div id="branding">
+	<div id="release">
+		Version <%= APP_VERSION %>
+	</div>
 	<% if Rails.env != 'production'  %>
 		<div id="environment"><%= Rails.env.upcase %></div>
 	<% end %>
@@ -51,11 +54,11 @@
   <div class="menuItem">
     <a href="#">Search</a>
     <ul class="nav">
-      <li><a href="#">Title</a></li>
-      <li><a href="#">Barcode</a></li>
+      <li><%= link_to 'Titles', titles_path %></li>
+      <!-- li><a href="#">Barcode</a></li>
       <li><a href="#">Series</a></li>
       <li><a href="#">Collection</a></li>
-      <li><a href="#">Advanced Search</a></li>
+      <li><a href="#">Advanced Search</a></li -->
     </ul>
   </div>
   <div class="menuItem">
