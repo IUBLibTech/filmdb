@@ -16,7 +16,7 @@ class PhysicalObjectsController < ApplicationController
 	  if params[:status] && !params[:status].blank?
 		  @physical_objects = PhysicalObject.where_current_workflow_status_is(params[:status])
 	  else
-		  @physical_objects = PhysicalObject.all
+		  @physical_objects = []
 	  end
   end
 

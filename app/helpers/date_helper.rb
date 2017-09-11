@@ -33,17 +33,21 @@ module DateHelper
 		if match.nil?
 			nil
 		else
-			year = match[1].to_i
-			puts year
-			month = match[2]&.to_i
-			day = match[3]&.to_i
-			d = day.nil? ? (month.nil? ? Date.new(year) : Date.new(year, month)) : Date.new(year, month, day)
-			map = {}
-			map[:date] = d
-			map[:month] = !match[2].nil?
-			map[:day] = !match[3].nil?
-			map[:extra] = (match[0].length != date.length)
-			map
+			begin
+				year = match[1].to_i
+				puts year
+				month = match[2]&.to_i
+				day = match[3]&.to_i
+				d = day.nil? ? (month.nil? ? Date.new(year) : Date.new(year, month)) : Date.new(year, month, day)
+				map = {}
+				map[:date] = d
+				map[:month] = !match[2].nil?
+				map[:day] = !match[3].nil?
+				map[:extra] = (match[0].length != date.length)
+				map
+			rescue
+				nil
+			end
 		end
 	end
 
