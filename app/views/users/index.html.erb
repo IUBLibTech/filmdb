@@ -8,6 +8,8 @@
       <th>Email Address</th>
       <th>Active?</th>
 	    <th>Can Delete?</th>
+	    <th>Can Update Location?</th>
+	    <th>Works at Wells and ALF?</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -32,6 +34,12 @@
         </td>
 	      <td class="<%= user.can_delete? ? 'green' : 'red' %>">
 		      <%= user.can_delete? ? 'Yes' : 'No' %>
+	      </td>
+	      <td class="<%= user.can_update_physical_object_location ? 'green' : 'red' %>">
+		      <%= user.can_update_physical_object_location ? 'Yes' : 'No' %>
+	      </td>
+	      <td>
+		      <%= user.works_in_both_locations ? 'Yes' : 'No' %>
 	      </td>
         <td>
         	<%= link_to 'Show', user %>

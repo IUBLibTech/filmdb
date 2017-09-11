@@ -1,0 +1,34 @@
+<h4>Change a Workflow Status Location</h4>
+<table>
+	<tr>
+		<th colspan="2">Scan a barcode to change the location of a Physical Object</th>
+	</tr>
+	<tr>
+		<th>Barcode</th>
+		<td>
+			<input type="text" id="scanned_barcode">
+		</td>
+	</tr>
+</table>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('#scanned_barcode').bind('input', function() {
+			var val = $('#scanned_barcode').val();
+			$('#ajax').html('')
+			if (isValidBarcode(val) || isValidBarcode(val, true)) {
+				$.ajax({
+					url: './ajax_update_location_get/' + val,
+					error: function (jqxhr, status, error) {
+						swal('An error was encounted during the ajax call...', error);
+					},
+					success: function(result){
+						$('#ajax').html(result);
+					}
+				});
+			}
+		});
+	});
+</script>
+<div id="ajax" style="margin-top: 20px;">
+
+</div>

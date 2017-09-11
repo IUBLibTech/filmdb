@@ -8,7 +8,7 @@ class CollectionsController < ApplicationController
   # GET /collections
   # GET /collections.json
   def index
-    @collections = Collection.where("name != 'Misc [not in collection]'").all
+    @collections = Collection.all.order(:name)
   end
 
   # GET /collections/1

@@ -1,2 +1,124 @@
-<h4 class="m_bottom_10px">Queued Physical Objects</h4>
-<%=  render partial: 'physical_objects_table' %>
+<table id="physical_objects_table">
+	<tr>
+		<th>Select To Pull</th>
+		<th>Title(s)</th>
+		<th>IU Barcode</th>
+		<th>Can Size</th>
+		<th>Gauge</th>
+		<th>Location</th>
+		<th>Pulled For</th>
+		<th>Cancel</th>
+	</tr>
+	<% if @ingested.size > 0 %>
+	<tr>
+		<th colspan="8">Queued Physical Objects (Ingested)</th>
+	</tr>
+	<% end %>
+	<% @ingested.each do |p| %>
+	<tr>
+		<td><%= check_box_tag "po_#{p.id}", ''%></td>
+		<td>
+			<% p.titles.each do |t| %>
+				<%= link_to "#{t.title_text}", title_path(t) %> <br>
+			<% end %>
+		</td>
+		<td><%=  p.iu_barcode %></td>
+		<td><%= p.can_size %></td>
+		<td><%= p.gauge %></td>
+		<td><%=  p.storage_location %></td>
+		<td><%= p.active_component_group&.group_type %></td>
+		<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
+	</tr>
+	<% end %>
+	<% if @not_ingested.size > 0 %>
+	<tr>
+		<th colspan="8">Queued Physical Objects (Not Ingested)</th>
+	</tr>
+	<% end %>
+	<% @not_ingested.each do |p| %>
+		<tr>
+			<td><%= check_box_tag "po_#{p.id}", ''%></td>
+			<td>
+				<% p.titles.each do |t| %>
+					<%= link_to "#{t.title_text}", title_path(t) %> <br>
+				<% end %>
+			</td>
+			<td><%=  p.iu_barcode %></td>
+			<td><%= p.can_size %></td>
+			<td><%= p.gauge %></td>
+			<td><%=  p.storage_location %></td>
+			<td><%= p.active_component_group&.group_type %></td>
+			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="2">
+			<%= form_tag(process_pull_requested_path) do %>
+				<%= hidden_field_tag 'ids', '' %>
+				<%= submit_tag 'Submit Pull Request' %>
+			<% end %>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	var lastChecked = null;
+	$(document).ready(function() {
+		$('input:checkbox').click(function(e) {
+			if (!lastChecked) {
+				lastChecked = this;
+				setChecked();
+				return;
+			}
+			if (e.shiftKey) {
+				var start = $('input:checkbox').index(this);
+				var end = $('input:checkbox').index(lastChecked);
+				$('input:checkbox').slice(Math.min(start, end), Math.max(start,end) + 1).prop('checked', lastChecked.checked)
+			}
+			setChecked();
+			lastChecked = this;
+		});
+		$('.remove_from_queue').click(function(event) {
+			event.preventDefault();
+			clicked = $(this);
+			swal({
+					title: 'Remove from Queue',
+					text: 'Are you sure you want to remove this Physical Object from the Queue?',
+					type: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Remove from Queue',
+					closeOnConfirm: false
+				},
+				function(isConfirm){
+					if (isConfirm) {
+						id = clicked.attr('id').substring(3)
+						$.ajax({
+							url: './ajax_cancel_queued_pull_request/' + id,
+							method: 'POST',
+							error: function (XMLHttpRequest, textStatus, errorThrown) {
+								swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+							},
+							success: function (result) {
+								swal({
+										title: 'Reponse',
+										text: "Queued pull requests were cancelled for the following physical objects: "+result,
+										html: true
+									},
+									function() {
+										location.reload();
+									})
+							}
+						})
+					}
+				})
+		});
+	})
+	// sets the hidden po ids attribute on the form
+	function setChecked() {
+		var po_ids = [];
+		$(':checked').each(function() {
+			var x = this;
+			po_ids.push(this.id.substring(3))
+		});
+		$('#ids').val(po_ids.join(','));
+	}
+</script>

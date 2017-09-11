@@ -38,18 +38,22 @@ module ApplicationHelper
 		ApplicationHelper.valid_barcode?(barcode) && barcode.to_s != "0"
 	end
 
-	# this method checks to see whether any barcodable item (physical object, box, bin)
-	# has been assigned the specified barcode. returning the object if it does exist, otherwise
-	# false
-	def ApplicationHelper.barcode_assigned?(barcode)
-		unless barcode == 0
-			b = false
-			if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
-				b = po[0]
-			end
-			return b
+	def ApplicationHelper.mdpi_barcode_assigned?(barcode)
+		b = false
+		if (po = PhysicalObject.where(mdpi_barcode: barcode).limit(1)).size == 1
+			b = po[0]
+		elsif (cs = CageShelf.where(mdpi_barcode: barcode).limit(1)).size == 1
+			b = cs[0]
 		end
-		false
+		return b
+	end
+
+	def ApplicationHelper.iu_barcode_assigned?(barcode)
+		b = false
+		if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
+			b = po[0]
+		end
+		return b
 	end
 
 	def ApplicationHelper.current_user_object

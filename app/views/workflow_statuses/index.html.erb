@@ -1,0 +1,64 @@
+<div class="clear" style="margin-bottom: 20px">
+	<table>
+		<tr>
+			<th style="background: #496d89; color: white">Spreadsheet Locations</th>
+		</tr>
+		<% WorkflowStatus::SPREADSHEET_START_LOCATIONS.each do |l| %>
+			<tr>
+				<td><%= l %></td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+<div class="left">
+	<table>
+		<tr>
+			<th colspan="2" style="background: #496d89; color: white">Wells Workflow</th>
+		</tr>
+		<tr>
+			<th>Physical Location</th>
+			<th>Can Move To</th>
+		</tr>
+		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+			<% unless status.include?('(ALF)')%>
+				<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].select{|st| !st.include?('(ALF)') }.each_with_index do |match, index| %>
+					<tr>
+						<td><%= index == 0 ? "#{status}" : ''  %></td>
+						<td>
+							<%= match %>
+						</td>
+					</tr>
+				<% end %>
+				<% if status == 'In Workflow (Wells)' %>
+					<tr>
+						<td></td>
+						<td><%= WorkflowStatus::RECEIVED_FROM_STORAGE_STAGING %></td>
+					</tr>
+				<% end %>
+			<% end %>
+		<% end %>
+	</table>
+</div>
+<div class="left" style="margin-left: 10px;">
+	<table>
+		<tr>
+			<th colspan="2" style="background: #496d89; color: white">MDPI Workflow</th>
+		</tr>
+		<tr>
+			<th>Physical Location</th>
+			<th>Can Move To</th>
+		</tr>
+		<% WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW.keys.each do |status| %>
+			<% if status.include?('(Wells)')%><% next %><% end %>
+				<%  WorkflowStatus::STATUSES_TO_NEXT_WORKFLOW[status].select{ |st| !st.include?('(Wells)')}.each_with_index do |match, index| %>
+					<tr>
+						<td><%= index == 0 ? "#{status}" : ''  %></td>
+						<td>
+							<%= match %>
+						</td>
+					</tr>
+				<% end %>
+		<% end %>
+	</table>
+</div>
+

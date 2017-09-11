@@ -2,6 +2,7 @@ class CageShelf < ActiveRecord::Base
 
   belongs_to :cage
   has_many :physical_objects
+  validates :mdpi_barcode, mdpi_barcode: true
 
 	SEC = 1
 	MIN = 60
@@ -23,6 +24,10 @@ class CageShelf < ActiveRecord::Base
 	def duration
 		physical_objects.nil? ? 0 : calc_duration_from_footage(physical_objects.sum(:footage))
 	end
+
+  def can_ship?
+	  (!mdpi_barcode.blank? && physical_objects.size > 0) || (physical_objects.size == 0 && mdpi_barcode.blank?)
+  end
 
 	private
 	def calc_duration_from_footage(ft)

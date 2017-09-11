@@ -8,24 +8,30 @@
 /.bundle
 
 # Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
+db/*.sqlite3
+db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log/*
+log/*
 !/log/.keep
-/tmp
+tmp
 config/database.yml
 
 # files for rubymine
-/.idea/*
+.idea/*
 
 # files from Passenger
-pasenger.*.lock
+passenger.*
 
 # settings contains the service credentials for push/pull pod/filmdb accounts, so don't include
-/config/settings/development.yml
-/config/settings/test.yml
-/config/settings/production.yml
-/config/secrets.yml
-/config/cedar.yml
+config/settings/development.yml
+config/settings/test.yml
+config/settings/production.yml
+config/secrets.yml
+config/cedar.yml
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+
+public/

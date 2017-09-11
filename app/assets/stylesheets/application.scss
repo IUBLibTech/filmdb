@@ -220,7 +220,7 @@ table.version_table > tbody > tr > td > input {
     font-weight: bold;
     padding: 5px;
     color: white;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 #image_metadata > table, #sound_metadata > table {
@@ -254,6 +254,12 @@ div.title_text {
     vertical-align: middle;
     line-height: 20px;
     padding-left: 5px;
+}
+div.title_notes {
+	min-height: 10px;
+}
+input.title_date_year {
+	width: 115px;
 }
 li.title_li {
     overflow: hidden;
@@ -367,6 +373,9 @@ td#color {
 }
 .h_400px {
     height: 400px;
+}
+.mr_10 {
+	margin-right: 10px;
 }
 .pl_10px {
     padding-left: 10px;
@@ -519,8 +528,13 @@ div#title_popup_header > h4 {
 }
 #shelf_content, #shelf_content_form {
     float: left;
-    width: 65%;
     margin-left: 15px;
+}
+#shelf_content {
+	width: 65%;
+}
+#shelf_content_form {
+	width: 40%;
 }
 #shelf_content H4 {
     margin-top: 0;
@@ -580,4 +594,65 @@ div.check_box > div {
 
  #physical_objects_filter_form {
      margin: 20px 0 10px 0;
+ }
+
+ #scan_div {
+	 display: none;
+	 margin-bottom: 5px;
+ }
+
+ div#environment {
+	 background: #e69a37;
+	 color: black;
+	 font-weight: bold;
+	 top: 110px;
+	 position: relative;
+	 text-align: center;
+	 font-size: 2em;
+ }
+
+ div#alf {
+	 overflow: hidden;
+ }
+ div#wells {
+	 overflow: hidden;
+ }
+ div#alf_form_div {
+	 margin-left: 10px;
+	 overflow: hidden;
+ }
+ 
+ .hidden {
+	 display: none;
+ }
+
+ #cg {
+	 margin-top: 15px;
+ }
+
+ .po_error_div {
+	 margin-bottom:10px;
+ }
+
+ #cg_attributes_form {
+	 margin-top: 20px;
+	 border: 1px solid #84b8e0;
+	 padding: 5px;
+ }
+ #cg_attributes_form > div {
+	 margin-bottom: 10px;
+ }
+ .boxsizingBorder {
+	 -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	 box-sizing: border-box;
+ }
+ div.date {
+	 width: 25%;
+	 float: left;
+	 margin-bottom: 10px;
+ }
+
+ tr.not_digitized {
+	 background: #b2d6f2;
  }

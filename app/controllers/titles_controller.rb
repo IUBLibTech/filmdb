@@ -1,14 +1,24 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
-  before_action :set_series, only: [:create, :create_ajax]
+  before_action :set_series, only: [:create, :create_ajax, :update]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
 
-  # GET /titles
-  # GET /titles.json
-  def index
-    @titles = Title.all
+
+  # def old_index
+  #   if params[:selected] && params[:selected] == 'true'
+  #     @titles = Title.titles_selected_for_digitization
+  #   else
+  #     @titles = Title.titles_not_selected_for_digitization
+  #   end
+  # end
+
+  def search
+	  if params[:title_text]
+		  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+	  end
+	  render 'index'
   end
 
   # GET /titles/1
@@ -67,10 +77,17 @@ class TitlesController < ApplicationController
       else
         cg = nil
         ComponentGroup.transaction do
-          cg = ComponentGroup.new(group_type: params[:pos][:group_type], title_id: @title.id, group_summary: params[:pos][:group_summary])
-          cg.save
+          cg = ComponentGroup.new(
+            group_type: params[:pos][:group_type], title_id: @title.id,
+            group_summary: params[:pos][:group_summary],
+            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
+            return_on_reel: (params[:pos][:return_on_reel] == 'Yes' ? true : false),
+            clean: params[:pos][:clean],
+            color_space: params[:pos][:color_space]
+          )
+          cg.save!
           pos.each do |p|
-            ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save
+            ComponentGroupPhysicalObject.new(physical_object_id: p.id, component_group_id: cg.id).save!
           end
         end
         format.html { redirect_to title_path(@title), notice: "Component Group <i>#{cg.group_type}</i> Created." }
@@ -110,7 +127,13 @@ class TitlesController < ApplicationController
   # PATCH/PUT /titles/1.json
   def update
     respond_to do |format|
-      if @title.update(title_params)
+	    @tp = title_params
+	    if !@series && !params[:title][:series_title_text].blank?
+		    @series = Series.new(title: params[:title][:series_title_text])
+		    @series.save
+		    @tp[:series_id] = @series.id
+	    end
+      if @title.update(@tp)
         format.html { redirect_to @title, notice: 'Title was successfully updated.' }
         format.json { render :show, status: :ok, location: @title }
       else
@@ -194,6 +217,7 @@ class TitlesController < ApplicationController
   end
   def set_title_cv
     @title_cv = ControlledVocabulary.title_cv
+	  @title_date_cv = ControlledVocabulary.title_date_cv
   end
   def set_form_cv
     @form_cv = ControlledVocabulary.title_form_cv
@@ -210,7 +234,7 @@ class TitlesController < ApplicationController
       params.require(:title).permit(
           :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
           title_creators_attributes: [:id, :name, :role, :_destroy],
-          title_dates_attributes: [:id, :date, :date_type, :_destroy],
+          title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
           title_genres_attributes: [:id, :genre, :_destroy],
           title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
           title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],

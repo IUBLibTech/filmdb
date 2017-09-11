@@ -33,15 +33,12 @@
       <% if @collection %>
           <%= @collection.name%>
       <% else %>
-          <%= f.text_field :collection_text%>
-      <% end %>
+		    <%= f.text_field :collection_text%>
+		    <div>
+			    No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection">
+		    </div>
+	    <% end %>
       <%= f.hidden_field :collection_id %>
-    </div>
-    <div class="label">
-      <b>Current Location</b>
-    </div>
-    <div class="field">
-      <%= f.select :location, options_for_select(@cv[:location]) %>
     </div>
     <div class="label">
       <b>* IU Barcode</b>
@@ -140,11 +137,11 @@
         </div>
         <div class="check_box">
           <%= f.check_box :generation_magnetic_track %>
-          <div>Magnetic Track</div>
+          <div>Separate Magnetic Track</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_optical_sound_track %>
-          <div>Optical Soundtrack</div>
+          <div>Separate Optical Track</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_outs_and_trims %>
@@ -174,7 +171,7 @@
         </div>
         <div class="check_box">
           <%= f.check_box :generation_original_camera %>
-          <div>Original Camera</div>
+          <div>Camera Original</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_original %>
@@ -279,7 +276,10 @@
       <div class="check_box"><%= f.check_box :stock_gevaert %><div>Gevaert</div></div>
       <div class="check_box"><%= f.check_box :stock_kodak %><div>Kodak</div></div>
       <div class="check_box"><%= f.check_box :stock_ferrania %><div>Ferrania</div></div>
-      <div class="check_box"><%= f.check_box :stock_mixed %><div>Mixed</div></div>
+	    <div class="check_box"><%= f.check_box :stock_agfa_gevaert %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_agfa_gevaert] %></div>
+	    <div class="check_box"><%= f.check_box :stock_3_m %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_3_m] %></div>
+	    <div class="check_box"><%= f.check_box :stock_pathe %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_pathe] %></div>
+	    <div class="check_box"><%= f.check_box :stock_unknown %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div>
     </div>
   </div>
 
@@ -310,7 +310,7 @@
       <b class="block">Color</b>
       <div>
         <div class="_33 left">
-          <%= f.check_box :color_bw_bw_black_and_white %>Black & White<br/>
+          <%= f.check_box :color_bw_bw_black_and_white %>Black and White<br/>
           <%= f.check_box :color_bw_bw_toned %>Toned<br/>
           <%= f.check_box :color_bw_bw_tinted %>Tinted<br/>
           <%= f.check_box :color_bw_bw_hand_coloring %>Hand Coloring<br/>
@@ -339,6 +339,7 @@
         <%= f.check_box :aspect_ratio_2_35_1 %>2.35:1
         <%= f.check_box :aspect_ratio_2_39_1 %>2.39:1
         <%= f.check_box :aspect_ratio_2_59_1 %>2.59:1
+	      <%= f.check_box :aspect_ratio_2_66_1%><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %>
       </div>
     </div>
     <div>
@@ -358,20 +359,19 @@
   </div>
   <div class="em_95">
     <b class='block'>Format Type</b>
-    <div class="left">
+    <div class="left mr_10">
       <%= f.check_box :sound_format_optical %>Optical<br/>
       <%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area<br/>
       <%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density<br/>
-      <%= f.check_box :sound_format_magnetic %>Magnetic
+      <%= f.check_box :sound_format_magnetic %>Magnetic<br/>
+	    <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
     </div>
     <div class="left">
-      <%= f.check_box :sound_format_mixed %>Mixed<br/>
       <%= f.check_box :sound_format_digital_sdds %>Digital: SDDS<br/>
       <%= f.check_box :sound_format_digital_dts %>Digital: DTS<br/>
-      <%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital
-    </div>
-    <div class="left">
-      <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
+      <%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital<br/>
+	    <%= f.check_box :sound_format_digital_dolby_digital_sr %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %><br/>
+	    <%= f.check_box :sound_format_digital_dolby_digital_a %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %>
     </div>
   </div>
   <div>
