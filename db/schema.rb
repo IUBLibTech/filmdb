@@ -533,7 +533,7 @@ ActiveRecord::Schema.define(version: 20170905185105) do
   # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
   # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
   execute(<<-TRIGGERSQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
+CREATE DEFINER = 'iulmia_inv_test'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
 FOR EACH ROW
 BEGIN
     IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
