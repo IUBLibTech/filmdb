@@ -31,10 +31,12 @@ function isValidBarcode(barcode, mdpi) {
 }
 
 function validateIUBarcode(barcodeEl) {
-    if (isValidBarcode(barcodeEl.val())) {
+    if (isValidBarcode(barcodeEl.val(), false)) {
         markValid(barcodeEl);
+	      return true;
     } else {
         markInvalid(barcodeEl);
+	      return false;
     }
 }
 

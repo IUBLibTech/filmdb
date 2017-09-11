@@ -29,6 +29,7 @@ class ComponentGroupsController < ApplicationController
   # POST /component_groups.json
   def create
     @component_group = ComponentGroup.new(component_group_params)
+    @component_group.scan_resolution(params['2k'] ? '2k' : (params['4k'] ? '4k' : '5k'))
     respond_to do |format|
       if @component_group.save
         format.html { redirect_to @component_group, notice: 'Component group was successfully created.' }
@@ -78,13 +79,14 @@ class ComponentGroupsController < ApplicationController
       PhysicalObject.transaction do
         @component_group.physical_objects.each do |p|
           status = p.current_workflow_status
-          if status.status_type != WorkflowStatusTemplate::IN_STORAGE
-            bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.type_and_location}</b>".html_safe
+          if !status.can_be_pulled?
+            bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.status_name}</b>".html_safe
           else
-            p.workflow_statuses << WorkflowStatus.new(
-              workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::PULL_REQUEST_QUEUED],
-              physical_object_id: p.id,
-              workflow_status_location_id: status.workflow_status_location_id)
+            # must set active component group BEFORE building the next workflow status, WorkflowStatus needs to set the component group id on it
+            p.active_component_group = @component_group
+            ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
+            p.workflow_statuses << ws
+	          p.save!
           end
         end
         if bad.size > 0
@@ -117,7 +119,7 @@ class ComponentGroupsController < ApplicationController
     params[:cg_pos][:po_ids].split(',').collect { |p| p.to_i }.each do |po_id|
       ComponentGroupPhysicalObject.transaction do
         if !@component_group.physical_objects.exists?(po_id)
-          ComponentGroupPhysicalObject.new(physical_object_id: po_id, component_group_id: @component_group.id).save
+          ComponentGroupPhysicalObject.new(physical_object_id: po_id, component_group_id: @component_group.id).save!
         end
       end
     end

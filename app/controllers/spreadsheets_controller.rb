@@ -66,8 +66,8 @@ class SpreadsheetsController < ApplicationController
   end
 
   def merge_series_candidates
-    @series_candidates = Series.series_in_spreadsheet(params[:series], @spreadsheet.id)
-    @existing_series = Series.series_not_in_spreadsheet(params[:series], @spreadsheet)
+    @series_candidates = Series.series_in_spreadsheet(Series.find(params[:series].to_i).title, @spreadsheet.id)
+    @existing_series = Series.series_not_in_spreadsheet(Series.find(params[:series].to_i).title, @spreadsheet.id)
   end
 
   def merge_series
@@ -101,7 +101,7 @@ class SpreadsheetsController < ApplicationController
 
   # action which lists matching titles (by title text) for a given spreadsheet id
   def merge_title_candidates
-    @title_candidates = Title.titles_in_spreadsheet(params[:title], @spreadsheet.id)
+    @title_candidates = Title.titles_in_spreadsheet(Title.find(params[:title]).title_text, @spreadsheet.id)
     @existing_titles = Title.titles_not_in_spreadsheet(params[:title], @spreadsheet.id)
   end
 

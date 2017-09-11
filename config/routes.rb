@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   post '/cages/mark_ready_to_ship/:id', to: 'cages#mark_ready_to_ship', as: 'mark_ready_to_ship'
   post '/cages/unmark_ready_to_ship/:id', to: 'cages#unmark_ready_to_ship', as: 'unmark_ready_to_ship'
   post '/cages/mark_shipped/:id', to: 'cages#mark_shipped', as: 'mark_shipped'
+  get '/cages/push_result/:id', to: 'cages#push_result', as: 'cage_push_result'
+  get '/cages/cage_shelf/:id/ajax_cage_shelf_stats', to: 'cages#ajax_cage_shelf_stats', as: 'ajax_cage_shelf_stats'
+  get '/cages/ajax_add_physical_object_iu_barcode_scan/:iu_barcode', to: 'cages#ajax_add_physical_object_iu_barcode_scan', as: 'ajax_add_physical_object_iu_barcode_scan'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -38,9 +41,18 @@ Rails.application.routes.draw do
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
-  post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
+  #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
 	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
+  get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
+  get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
+  post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
+
+  # pull requests
+  get '/pull_requests', to: 'pull_requests#index', as: 'pull_requests'
+  get '/pull_requests/:id', to: 'pull_requests#show', as: 'show_pull_request'
+
+  get '/search', to: 'search#barcode_search', as: 'barcode_search'
 
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
@@ -51,9 +63,9 @@ Rails.application.routes.draw do
   resources :series_titles
 
 	# services URLs
-	post '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch'
-	get '/services/update_batch/:batch_id', to: 'services#receive', as: 'update_batch_test'
-	post '/services/push_cage_to_pod/:cage_id', to: 'services#push_cage_to_pod', as: 'push_cage_to_pod'
+	post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
+	get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
+	post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
 	get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
@@ -68,7 +80,8 @@ Rails.application.routes.draw do
 	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
-  resources :titles
+  resources :titles, except: [:index]
+  get '/titles/filter_seected/:selected', to: 'titles#index', as: 'selected_titles'
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
@@ -77,16 +90,22 @@ Rails.application.routes.draw do
   post '/titles/create_component_group/:id', to: 'titles#create_component_group', as: 'create_component_group'
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
+  get '/titles/', to: 'titles#search', as: 'titles_index'
+  post '/titles/search', to: 'titles#search', as: 'titles_search'
 
   resources :units
 
 	resources :users
+  get '/users/worksite_location/:id', to: 'users#show_update_location', as: 'show_worksite_location'
+  patch '/users/worksite_location/:id', to: 'users#update_location', as: 'update_worksite_location'
 
 	# routes for workflow
 	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
 	post '/workflow/process_pull_request', to: 'workflow#process_pull_requested', as: 'process_pull_requested'
-	get '/workflow/receive_from_strorage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
-	post '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
+	get '/workflow/receive_from_storage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
+	patch '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
+  post '/workflow/receive_from_storage_wells/', to: 'workflow#process_receive_from_storage_wells', as: 'process_received_from_storage_wells'
+  get '/workflow/ajax_alf_barcode/:iu_barcode', to: 'workflow#ajax_alf_receive_iu_barcode', as: 'ajax_alf_receive_iu_barcode'
 	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
 	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
 	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
@@ -97,9 +116,25 @@ Rails.application.routes.draw do
 	post '/workflow/process_send_to_freezer', to: 'workflow#process_send_to_freezer', as: 'process_send_to_freezer'
 	get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
 	post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
-  get '/workflow/ship_cages', to: 'workflow#ship_cages', as: 'ship_cages'
+  post '/workflow/ajax_cancel_queued_pull_request/:id', to: 'workflow#ajax_cancel_queued_pull_request', as: 'cancel_queued_pull_request'
+  get '/workflow/best_copy_selection', to: 'workflow#best_copy_selection', as: 'workflow_best_copy_selection'
+  post '/workflow/ajax_best_copy_selection_barcode/:iu_barcode', to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode'
+  get '/workflow/ajax_best_copy_selection_barcode/:iu_barcode',  to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode_test'
+  post '/workflow/best_copy_selection_update', to: 'workflow#best_copy_selection_update', as: 'best_copy_selection_update'
+  get '/workflow/issues_shelf', to: 'workflow#issues_shelf', as: 'issues_shelf'
+  post '/workflow/ajax_issues_shelf_barcode/:iu_barcode', to: 'workflow#ajax_issues_shelf_barcode', as: 'ajax_issues_shelf_barcode'
+  patch '/workflow/ajax_issues_shelf_update/:id', to: 'workflow#ajax_issues_shelf_update', as: 'ajax_issues_shelf_update'
+  get '/workflow/update_location', to: 'workflow#update_location', as: 'update_location'
+  get '/workflow/ajax_update_location_get/:barcode', to: 'workflow#ajax_update_location', as: 'ajax_update_location_get'
+  post '/workflow/ajax_update_location_post', to: 'workflow#ajax_update_location_post', as: 'ajax_update_location_post'
+  get '/workflow/cancel_after_pull_request', to: 'workflow#cancel_after_pull_request', as: 'cancel_after_pull_request'
+  post '/workflow/process_cancel_after_pull_request/:id', to: 'workflow#process_cancel_after_pull_request', as: 'process_cancel_after_pull_request'
+  post '/workflow/process_requeue_after_pull_request/:id', to: 'workflow#process_requeue_after_pull_request', as: 'process_requeue_after_pull_request'
+  get '/workflow/return_from_mold_abatement/', to: 'workflow#return_from_mold_abatement', as: 'return_from_mold_abatement'
+  get '/workflow/ajax_mold_abatement_barcode/:bc', to: 'workflow#ajax_mold_abatement_barcode', as: 'ajax_mold_abatement_barcode'
+  post '/workflow/update_return_from_mold_abatement/:id', to: 'workflow#update_return_from_mold_abatement', as: 'update_return_from_mold_abatement'
 
-	resources :workflow_status_locations
+  get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

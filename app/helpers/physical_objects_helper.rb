@@ -1,5 +1,17 @@
 module PhysicalObjectsHelper
   include MailHelper
+
+  GAUGES_TO_FRAMES_PER_FOOT = {
+	  '8mm' => 72, 'Super 8mm' => 72, '9.5 mm' => 40.5, '16mm' => 40, 'Super 16mm' => 40, '28mm' => 20.5, '35mm' => 16, '35/32mm' => 40, '70mm' => 12.8
+  }
+
+  def hh_mm_sec(totalSeconds)
+	  hh = (totalSeconds / 3600).floor
+	  mm = ((totalSeconds - (hh * 3600)) / 60).floor
+	  ss = totalSeconds - (hh * 3600) - (mm * 60)
+	  "#{hh}:#{"%02d" % mm}:#{"%02d" % ss}"
+  end
+
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
     @physical_object = PhysicalObject.new(physical_object_params)
@@ -9,10 +21,7 @@ module PhysicalObjectsHelper
     begin
       PhysicalObject.transaction do
         process_titles
-        ws = WorkflowStatus.new(
-          physical_object_id: @physical_object.id,
-          workflow_status_template_id: WorkflowStatusTemplate::STATUS_TO_TEMPLATE_ID[WorkflowStatusTemplate::ON_SITE],
-          workflow_status_location_id: WorkflowStatusLocation.just_inventoried_location_id)
+        ws = WorkflowStatus.build_workflow_status(WorkflowStatus::JUST_INVENTORIED_WELLS, @physical_object)
 				@physical_object.workflow_statuses << ws
         respond_to do |format|
           if @physical_object.save
@@ -72,9 +81,11 @@ module PhysicalObjectsHelper
         :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
         :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :reel_number,
         :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
-        :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_mixed, :format_notes,
+        :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
         :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
         :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :frame_rate,
+        :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
+        :stock_unknown, :aspect_ratio_2_66_1,
 
         :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
         :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
@@ -83,7 +94,7 @@ module PhysicalObjectsHelper
 
         :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
         :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :close_caption, :captions_or_subtitles_notes,
-        :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_mixed,
+        :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,

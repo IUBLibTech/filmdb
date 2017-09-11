@@ -4,7 +4,7 @@ class PhysicalObjectsController < ApplicationController
   include PhysicalObjectsHelper
   include MailHelper
 
-  before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy]
+  before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy, :mark_missing]
   before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
                                 :edit_location, :update_location, :duplicate
   ]
@@ -12,11 +12,11 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-		@statuses = WorkflowStatusTemplate.all
+		@statuses = WorkflowStatus::ALL_STATUSES.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
 		  @physical_objects = PhysicalObject.where_current_workflow_status_is(params[:status])
 	  else
-		  @physical_objects = PhysicalObject.all
+		  @physical_objects = []
 	  end
   end
 
@@ -139,21 +139,38 @@ class PhysicalObjectsController < ApplicationController
     redirect_to edit_ad_strip_path
   end
 
-  def edit_location
-    @physical_object = PhysicalObject.new
+  # def edit_location
+  #   @physical_object = PhysicalObject.new
+  # end
+  #
+  # def update_location
+  #   bc = params[:physical_object][:iu_barcode]
+  #   location = params[:physical_object][:location]
+  #   @physical_object = PhysicalObject.where(iu_barcode: bc).first
+  #   if @physical_object.nil?
+  #     flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+  #   else
+  #     @physical_object.update_attributes(location: location)
+  #     flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
+  #   end
+  #   redirect_to edit_location_path
+  # end
+
+  def mark_missing
+    if @physical_object.current_workflow_status.status_name == WorkflowStatus::PULL_REQUESTED
+      ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @physical_object, true)
+      @physical_object.workflow_statuses << ws
+      @physical_object.save
+      flash[:notice] = "#{@physical_object.iu_barcode} was successfully marked <i>Missing</i>".html_safe
+      redirect_to physical_objects_path
+    else
+      flash[:warning] = "#{@physical_object.iu_barcode}'s workflow status must be Pull Requested to mark missing. It's current status is #{@physical_object.current_workflow_status.status_name}".html_safe
+      redirect_to physical_objects_path
+    end
   end
 
-  def update_location
-    bc = params[:physical_object][:iu_barcode]
-    location = params[:physical_object][:location]
-    @physical_object = PhysicalObject.where(iu_barcode: bc).first
-    if @physical_object.nil?
-      flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
-    else
-      @physical_object.update_attributes(location: location)
-      flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
-    end
-    redirect_to edit_location_path
+  def workflow_history
+    @physical_object = PhysicalObject.find(params[:id])
   end
 
   # DELETE /physical_objects/1
@@ -164,6 +181,15 @@ class PhysicalObjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to physical_objects_url, notice: 'Physical object was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def ajax_show_storage
+    po = PhysicalObject.where(params[:iu_barcode]).first
+    if po.nil?
+      render text: "Could Not Find Physical Object With IU Barcode: #{params[:iu_barcode]}"
+    else
+      render text: "#{params[:iu_barcode]} Should Be Returned to <b>#{po.storage_location}</b>".html_safe
     end
   end
 

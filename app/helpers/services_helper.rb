@@ -3,6 +3,7 @@ module ServicesHelper
 	require 'uri'
 	include CagesHelper
 
+	# does the work of generating the XML file, and then sending it, to POD for digitization workflow
 	def push_cage_to_pod(cage)
 		file_path = write_xml(cage)
 		return post_multipart(file_path)

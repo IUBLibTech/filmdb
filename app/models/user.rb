@@ -30,4 +30,12 @@ class User < ActiveRecord::Base
 		first_name + ' ' + last_name
 	end
 
+	def worksite_timed_out?
+		works_in_both_locations? && (updated_at + SessionsHelper::TIME_OUT < Time.now)
+	end
+
+	def worksite_set?
+		!worksite.nil?
+	end
+
 end

@@ -1,5 +1,6 @@
 # noinspection ALL
 class CsvParser
+	include DateHelper
   require 'csv'
   require 'manual_roll_back_error'
 
@@ -11,10 +12,10 @@ class CsvParser
       'Title', 'Duration', 'Series Name', 'Media Type', 'Medium', 'Unit', 'Collection', 'Current Location', 'IU Barcode', 'MDPI Barcode', 'IUCat Title No.',
       'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can', 'Can Size', 'Footage', 'Edge Code Date', 'Base',
       'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio', 'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type',
-      'Sound Configuration', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
+      'Sound Field', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
       'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
       'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
-      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes'
+      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes', 'ALF Shelf Location'
   ]
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
   TITLE, DURATION, SERIES_NAME, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
@@ -23,17 +24,18 @@ class CsvParser
   SOUND_CONFIGURATION, DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, FORMAT_NOTES, OVERALL_CONDITION, RESEARCH_VALUE ,OVERALL_CONDITION_NOTES, AD_STRIP = 31,32,33,34,35,36,37,38
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
-  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES = 54,55,56,57,58,59,60,61,62
+  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHLEF_LOCATION = 54,55,56,57,58,59,60,61,62,63
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
       COLUMN_HEADERS[IUCAT_TITLE_NO] => :title_control_number=, COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
-      COLUMN_HEADERS[EDGE_CODE_DATE] => :edge_code=, COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
+      COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
       COLUMN_HEADERS[MISSING_FOOTAGE] => :missing_footage=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
-      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=
+      COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
+      COLUMN_HEADERS[ALF_SHLEF_LOCATION] => :alf_shelf=
   }
 
   # regexes for parsing
@@ -56,8 +58,12 @@ class CsvParser
   end
 
   def parse_csv
-    @csv = CSV.read(@filepath, headers: false)
-    @default_workflow_status_template = WorkflowStatusTemplate.all.order(:sort_order).last
+    begin
+      @csv = CSV.read(@filepath, headers: false)
+    rescue
+      opened_file = File.open(@filepath, "r:ISO-8859-1:UTF-8")
+      @csv = CSV.parse(opened_file, headers: false)
+    end
     parse_headers(@csv[0])
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
@@ -82,7 +88,7 @@ class CsvParser
               po = parse_physical_object(row, i)
               all_physical_objects << po
               if po.errors.any?
-                error_msg << error_msg(i, po)
+                error_msg << gen_error_msg(i, po)
               end
             end
           end
@@ -92,7 +98,7 @@ class CsvParser
           if error_msg.nil? || error_msg.length == 0
             all_physical_objects.each_with_index do |po, index|
               unless po.save
-                error_msg << error_msg(index + 1, po)
+                error_msg << gen_error_msg(index + 1, po)
               end
             end
           end
@@ -172,6 +178,13 @@ class CsvParser
       po.errors.add(:date, "Unable to parse date created")
     end
 
+    if !row[column_index EDGE_CODE_DATE].blank?
+      edge_codes = row[column_index EDGE_CODE_DATE].split(' ; ')
+      edge_codes.each do |d|
+        po.physical_object_dates << PhysicalObjectDate.new(physical_object_id: po.id, controlled_vocabulary_id: ControlledVocabulary.physical_object_date_cv[:type][0][1].to_i, date: d)
+      end
+    end
+
     # manually parse the other values to ensure conformance to controlled vocabulary
     dur = row[column_index DURATION]
     unless dur.blank?
@@ -190,7 +203,7 @@ class CsvParser
       po.send(:media_type=, media_type)
       medium = row[column_index MEDIUM]
       if medium.blank? || ! po.media_type_mediums[media_type].include?(medium)
-        po.errors.add(:medium, "Medium blank or malformed: '#{medium}'")
+        po.errors.add(:medium, "Medium: '#{medium}' is malformed for Media Type: '#{media_type}'")
       else
         po.send(:medium=, medium)
       end
@@ -198,7 +211,15 @@ class CsvParser
 
 
     location = row[column_index CURRENT_LOCATION]
-    set_value(:location, location, po)
+    # for now we are just storing the value in a text field, later this will be parsed
+    #set_value(:location, location, po)
+    #po.location = location
+    if WorkflowStatus::SPREADSHEET_START_LOCATIONS.include?(location)
+      ws = WorkflowStatus.build_workflow_status(location, po)
+      po.workflow_statuses << ws
+    else
+      po.errors.add(:location, "Unknown or malformed Current Location field: #{location}")
+    end
 
     gauge = row[column_index GAUGE]
     set_value(:gauge, gauge, po)
@@ -245,12 +266,10 @@ class CsvParser
 
     cr = row[column_index OVERALL_CONDITION]
     unless cr.blank?
-      @cv[:overall_condition_rating].collect { |x| x[0] }.each do |k|
-        if k.include?(cr)
-          po.send(:condition_rating=, k)
-        end
-      end
-      if po.condition_rating.blank?
+      vals = @cv[:overall_condition_rating].collect { |x| x[0] }
+      if vals.include?(cr)
+        po.send(:condition_rating=, cr)
+      else
         po.errors.add(:condition_rating, "Invalid Overall Condition Rating: #{cr}")
       end
     end
@@ -287,23 +306,25 @@ class CsvParser
     dates = row[column_index DATE].to_s
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
-        date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
-        date_only = /^([0-9\/?~]+)$/
-        if date_type.match(date)
-          matcher = date_type.match(date)
-          d = matcher[1]
-          type = matcher[2]
-          if @title_date_cv[:date_type].collect { |x| x[0] }.include? type
-            TitleDate.new(title_id: title.id, date: d, date_type: type).save
-          else
-            po.errors.add(:title_date, "Invalid date_type: #{type}")
-          end
-        elsif date_only.match(date)
-          d = date_only.match(date)[1]
-          title.title_dates << TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown')
-        else
-          po.errors.add(:title_date, "Invalid date/date_type format: #{date}")
-        end
+	      title.title_dates << TitleDate.new(title_id: title.id, date_text: date, date_type: 'Unknown')
+
+        # date_type = /^([0-9\/?~]+) \(([a-zA-Z ]+)\)$/
+        # date_only = /^([0-9\/?~]+)$/
+        # if date_type.match(date)
+        #   matcher = date_type.match(date)
+        #   d = matcher[1]
+        #   type = matcher[2]
+        #   if @title_date_cv[:date_type].collect { |x| x[0] }.include? type
+        #     TitleDate.new(title_id: title.id, date: d, date_type: type).save
+        #   else
+        #     po.errors.add(:title_date, "Invalid date_type: #{type}")
+        #   end
+        # elsif date_only.match(date)
+        #   d = date_only.match(date)[1]
+        #   title.title_dates << TitleDate.new(title_id: title.id, date: d, date_type: 'Unknown')
+        # else
+        #   po.errors.add(:title_date, "Invalid date/date_type format: #{date}")
+        # end
       end
     end
 
@@ -451,9 +472,9 @@ class CsvParser
     # generation
     gen_fields = row[column_index GENERATION].blank? ? [] : row[column_index GENERATION].split(DELIMITER)
     gen_fields.each do |gf|
-      field = "generation #{gf}".parameterize.underscore
-      if PhysicalObject::GENERATION_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+      if PhysicalObject::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
+        sym = PhysicalObject::GENERATION_FIELDS_HUMANIZED.key(gf)
+        po.send((sym.to_s << "=").to_sym, true)
       else
         po.errors.add(:generation, "Undefined generation: #{gf}")
       end
@@ -580,18 +601,18 @@ class CsvParser
     lang_fields.each do |lf|
       index = langs.find_index(lf.downcase)
       if ! index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][0][0], physical_object_id: po.id)
+	      po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::ORIGINAL_DIALOG, physical_object_id: po.id)
       else
         po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
       end
     end
     lang_fields = row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].blank? ? [] : row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].split(DELIMITER)
     lang_fields.each do |lf|
-      index = langs.find_index(lf)
+      index = langs.find_index(lf.downcase)
       if !index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: @l_cv[:language_type][1][0], physical_object_id: po.id)
+        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::CAPTIONS, physical_object_id: po.id)
       else
-        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: #{lf}")
+        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: '#{lf}'")
       end
     end
 
@@ -603,8 +624,13 @@ class CsvParser
     end
 
     mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
+    mold_vals = @cv[:mold].collect{ |cv| cv[0]}
     if mold.length > 0
-      po.send(:mold=, mold)
+	    if mold_vals.include?(mold)
+		    po.send(:mold=, mold)
+	    else
+		    po.errors.add(:mold, "Invalid mold value: '#{mold}'")
+	    end
     end
 
     shrink = row[column_index SHRINKAGE]
@@ -622,7 +648,7 @@ class CsvParser
         po.boolean_conditions << BooleanCondition.new(condition_type: cf.titleize, physical_object_id: po.id)
       else
         # some condition types have a range value (1-5), strip this off before matching against PhysicalObject::CONDITION_FIELDS
-        pattern = /([a-zA-Z ]+) \(([1-5]{1})\)/
+        pattern = /([a-zA-Z ]+) \(([1-4]{1})\)/
         matcher = pattern.match(cf)
         if matcher && val_conditions.include?(matcher[1].downcase)
           po.value_conditions << ValueCondition.new(condition_type: matcher[1].titleize, value: cv[:rated_condition_rating][matcher[2].to_i - 1][0], physical_object_id: po.id)
@@ -631,8 +657,19 @@ class CsvParser
         end
       end
     end
-    #FIXME: determine if we need to have a default status other than in storage for spreadsheet created physical objects
-    po.workflow_statuses << WorkflowStatus.new(physical_object_id: po.id, workflow_status_template_id: @default_workflow_status_template.id)
+
+    # location = row[column_index LOCATION]
+    # ws = nil
+    # if location.blank?
+	   #  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_STORAGE_INGESTED, po)
+    # else
+	   #  if WorkflowStatus.is_storage_status?(location)
+		 #    ws = WorkflowStatus.build_workflow_status(location, po)
+	   #  else
+		 #    po.errors.add(:condition, "Undefined Location: #{cf}")
+	   #  end
+    # end
+    # po.workflow_statuses << ws unless ws.nil?
     po
   end
 
@@ -650,14 +687,14 @@ class CsvParser
     po.send((attr_symbol.to_s << "=").to_sym, ! val.blank?)
   end
 
-  def error_msg(row, physical_object)
-    msg = "<div>Physical Object at row #{row} has the following problem(s):</div><ul>".html_safe
+  def gen_error_msg(row, physical_object)
+    msg = "<div class='po_error_div'>Physical Object at row #{row + 1} has the following problem(s):<ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
       problems = physical_object.errors[k].map(&:inspect).join(', ')
       msg << "<li>#{attr}: #{problems}</li>".html_safe
     end
-    msg << "</ul>".html_safe
+    msg << "</ul></div>".html_safe
   end
 
   # feed this method a column constant (STOCK, BASE, TITLE, etc) and it returns the column index of the current spreadsheet

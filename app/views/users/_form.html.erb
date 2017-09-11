@@ -42,11 +42,27 @@
       </td>
     </tr>
     <tr>
-      <th>Roles</th>
+      <th>Can Delete?</th>
       <td>
-	      Can Delete? <%= f.check_box :can_delete %>
+	      <%= f.check_box :can_delete %>
       </td>
     </tr>
+	  <tr>
+		  <th>Can Update Physical Object Location?</th>
+	    <td><%= f.check_box :can_update_physical_object_location %></td>
+	  </tr>
+	  <tr>
+		  <th>Worksite</th>
+		  <td>
+			  <%= f.select :worksite_location, options_for_select(WorkflowStatus::WORK_LOCATIONS.collect{ |l| [l,l]}) %>
+		  </td>
+	  </tr>
+	  <tr>
+		  <th>Works at Wells and Alf?</th>
+		  <td>
+			  <%= f.check_box :works_in_both_locations %>
+		  </td>
+	  </tr>
   </table>
 
   <div class="actions">

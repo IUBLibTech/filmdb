@@ -41,7 +41,11 @@
                 <td><%= series %></td>
                 <td><%= @series_count_in_spreadsheet[series] %></td>
                 <td><%= @series_count_not_in_spreadsheet[series].nil? ? 0 : @series_count_not_in_spreadsheet[series] %></td>
-                <td><%= link_to "Merge Series", merge_series_candidates_path(id: @spreadsheet.id, series: series) %></td>
+                <td>
+	                <% if (@series_count_in_spreadsheet[series] + (@series_count_not_in_spreadsheet[series].nil? ? 0 : @series_count_not_in_spreadsheet[series])) > 1%>
+	                 <%= link_to "Merge Series", merge_series_candidates_path(id: @spreadsheet.id, series: Series.where(title: series).first.id) %>
+	                <% end %>
+                </td>
               </tr>
           <% end %>
         </table>
@@ -62,7 +66,9 @@
             <td><%= @title_count_in_spreadsheet[title] %></td>
             <td><%= @title_count_not_in_spreadsheet[title].nil? ? 0 : @title_count_not_in_spreadsheet[title] %></td>
             <td>
-              <%= link_to "Merge Titles", merge_title_candidates_path(id: @spreadsheet.id, title: title) %>
+	            <% if (@title_count_in_spreadsheet[title] + (@title_count_not_in_spreadsheet[title].nil? ? 0 : @title_count_not_in_spreadsheet[title]) > 1)%>
+		            <%= link_to "Merge Titles", merge_title_candidates_path(id: @spreadsheet.id, title: Title.where(title_text: title).first.id) %>
+	            <% end %>
             </td>
           </tr>
       <% end %>

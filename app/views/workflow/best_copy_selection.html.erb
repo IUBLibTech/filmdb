@@ -1,0 +1,73 @@
+<% if action_name == 'best_copy_selection_update' %>
+<%= render partial: 'workflow/best_copy_cg_message' %>
+<% end %>
+<h4>Best Copy Selection</h4>
+<p>Scan an IU barcode below to retrieve its Best Copy component group</p>
+<table>
+	<tr>
+		<th>IU Barcode</th>
+		<td><input type="text" id="iu_barcode"/></td>
+	</tr>
+</table>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('#iu_barcode').bind('input', function(){
+			valid = validateIUBarcode($(this));
+			if (valid) {
+				$.ajax({
+					url: './ajax_best_copy_selection_barcode/' + $(this).val(),
+					method: 'POST',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+						$('#cg').html('');
+					},
+					success: function (result) {
+						$('#cg').html(result);
+						$('.best_copy_check').change(function() {
+							pos = [];
+							$('.best_copy_check:checked').each(function() {
+								pos.push($(this).attr("value").substring(3));
+							});
+							$('#pos').attr('value', pos.join(','));
+						});
+						$('.mutually_exclusive').click(function() {
+							checked_state = $(this).is(':checked');
+							$(this).parent('td').children('.mutually_exclusive').each(function() {
+								$(this).prop('checked', false);
+							})
+							$(this).prop('checked', checked_state);
+						});
+						$('#best_copy_update_form').submit(function(event) {
+							event.preventDefault();
+							resolution_selected = $('.mutually_exclusive:checked').length == 1
+							if ($('.best_copy_check:checked').length == 0) {
+								swal({
+									title: 'Return All Physical Objects without creating a Component Group?',
+									text: 'If you select continue, all Physical Objects will be marked as returned to their storage locations without creating a Reformating (MDPI) Component Group.',
+									type: 'warning',
+									showCancelButton: true,
+									confirmButtonText: 'Continue',
+									reverseButtons: true
+								},
+								function() {
+									// for some reason jquery does not actually submit the form on this call... using DOM event
+									//$('#best_copy_update_form').submit();
+									document.getElementById('best_copy_update_form').submit();
+								})
+							} else {
+								if (resolution_selected) {
+									document.getElementById('best_copy_update_form').submit();
+								} else {
+									swal('You must select a scan resolution!');
+								}
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+</script>
+<div id="cg"></div>
+<h4>Physical Objects in Best Copy Workflow</h4>
+<%= render partial: 'workflow/physical_objects_table' %>

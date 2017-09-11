@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  skip_before_action :signed_in_user, only: [:show_update_location, :update_location]
 
   # GET /users
   # GET /users.json
@@ -13,6 +14,7 @@ class UsersController < ApplicationController
   def show
     authorize User
   end
+
 
   # GET /users/new_physical_object
   def new
@@ -67,6 +69,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def show_update_location
+    @user = User.find(params[:id])
+    render 'update_location'
+  end
+
+  def update_location
+    @user = User.find(params[:id])
+    # rails will not actually save the record if nothing has been altered... need to call touch if the user simply timed out and the location remains the same
+    if @user.worksite_location == params[:user][:worksite_location]
+	    @user.touch
+    else
+	    @user.update(worksite_location: params[:user][:worksite_location])
+    end
+    redirect_back_or_to root_url
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -75,6 +93,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :email_address, :first_name, :last_name, :active, :can_delete)
+      params.require(:user).permit(:username, :email_address, :first_name, :last_name, :active, :can_delete, :works_in_both_locations, :worksite_location, :can_update_physical_object_location)
     end
 end

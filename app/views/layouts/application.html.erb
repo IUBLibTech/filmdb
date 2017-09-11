@@ -8,6 +8,9 @@
 </head>
 <body>
 <div id="branding">
+	<% if Rails.env != 'production'  %>
+		<div id="environment"><%= Rails.env.upcase %></div>
+	<% end %>
   <div class="user">
 	  User: <b><%= current_username %></b><br/>
     <%= link_to 'Sign Out', signout_path, method: :delete, class: 'red' %>
@@ -22,10 +25,13 @@
 		<ul class="nav">
 			<li><%= link_to 'Request Pull of Queued Objects', pull_request_path %></li>
       <li><%= link_to 'Receive From Storage', receive_from_storage_path %></li>
+			<li><%= link_to 'Best Copy Selection', workflow_best_copy_selection_path %></li>
+			<li><%= link_to 'Issues', issues_shelf_path %></li>
+			<li><%= link_to 'Return from Mold Abatement', return_from_mold_abatement_path %></li>
       <li><%= link_to 'Pack Items for Digitization', cages_path %></li>
-      <li><%= link_to 'Ship Items for Digitization', ship_cages_path %></li>
+      <li><%= link_to 'Ship Items for Digitization', cages_path %></li>
       <li><%= link_to 'Return to Storage', return_to_storage_path %></li>
-
+			<li><%= link_to 'Cancel Pull Request', cancel_after_pull_request_path %></li>
     </ul>
 	</div>
   <div class="menuItem">
@@ -36,6 +42,10 @@
       <li><%= link_to 'Send to Freexer', send_to_freezer_path %></li>
       <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
       <li><%= link_to 'Mark Item Found', '' %></li>
+	    <% if policy(PhysicalObject).update_location? %>
+		    <br>
+		    <li><%= link_to 'Change Location', update_location_url %></li>
+	    <% end %>
     </ul>
   </div>
   <div class="menuItem">
@@ -53,11 +63,10 @@
     <ul class="nav">
       <li><%= link_to 'Import Spreadsheet', spreadsheets_path %></li>
       <li><a href="#">Export Metadata</a></li>
-      <li><a href="#">Reports</a></li>
     </ul>
   </div>
   <div class="menuItem">
-    <a href="#">Old Menus</a>
+    <a href="#">Other</a>
     <ul class="nav">
       <li><%= link_to "Physical Objects", physical_objects_path %></li>
       <li><%= link_to "Units", units_path %></li>
@@ -66,8 +75,17 @@
       <li><%= link_to "Titles", titles_path %></li>
       <li><%= link_to "Spreadsheets", spreadsheets_path %></li>
       <li><%= link_to "Users", users_path %></li>
+	    <li><%= link_to "Stats", stats_index_path %></li>
+	    <li><%= link_to "Workflow Statuses", workflow_statuses_path %></li>
+	    <li><%= link_to 'View Pull Requests', pull_requests_path %></li>
     </ul>
   </div>
+	<div class="right">
+		<%= form_tag barcode_search_path, method: 'get' do  %>
+			<%= text_field_tag :barcode, params[:barcode] %>
+			<%= submit_tag 'Search Barcode', name: nil %>
+		<% end %>
+	</div>
 </div>
 <%= render partial: 'layouts/notice_div' %>
 <%= yield %>

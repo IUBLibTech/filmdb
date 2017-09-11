@@ -2,6 +2,7 @@ class Cage < ActiveRecord::Base
   belongs_to :top_shelf, foreign_key: "top_shelf_id", class_name: "CageShelf", dependent: :delete
   belongs_to :middle_shelf, foreign_key: "middle_shelf_id", class_name: "CageShelf", dependent: :delete
   belongs_to :bottom_shelf, foreign_key: "bottom_shelf_id", class_name: "CageShelf", dependent: :delete
+  has_many :pod_pushes
 
   accepts_nested_attributes_for :top_shelf
   accepts_nested_attributes_for :middle_shelf
@@ -86,8 +87,15 @@ class Cage < ActiveRecord::Base
   end
 
   def can_by_shipped?
-    (!top_shelf.nil? || !middle_shelf.nil? || !bottom_shelf.nil?) &&
-      (top_shelf.physical_objects.size > 0 || middle_shelf.physical_objects.size > 0 || bottom_shelf.physical_objects.size > 0)
+    total_physical_objects > 0 && top_shelf.can_ship? && middle_shelf.can_ship? && bottom_shelf.can_ship?
+  end
+
+  def all_shelves_returned?
+    can_by_shipped? && (top_shelf.returned || top_shelf.MDPI)
+  end
+
+  def total_physical_objects
+    top_shelf.physical_objects.size + middle_shelf.physical_objects.size + bottom_shelf.physical_objects.size
   end
 
   def can_be_destroyed?

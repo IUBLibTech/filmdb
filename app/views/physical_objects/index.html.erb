@@ -5,7 +5,7 @@
       <tr>
         <th>Status</th>
         <td>
-          <%= select_tag 'status', options_from_collection_for_select(@statuses, 'name', 'name', params[:status] ? params[:status] : ''), include_blank: true %>
+          <%= select_tag 'status', options_for_select(@statuses), include_blank: true %>
         </td>
       </tr>
       <tr>
