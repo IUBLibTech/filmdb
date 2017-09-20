@@ -46,7 +46,11 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = :info
+
+  # this sets up log rotating first arg the log file location, second arg the number of files to rotate through
+  # third arg the size of each file
+  config.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.log", 10, 100.megabytes)
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
