@@ -23,19 +23,21 @@
 			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.type_and_location }.uniq.join(', ') %></td>
 	    <td>
 		    <% if cg.is_reformating? %>
-		    <ul>
+		    <%= link_to image_tag('edit2.png'), '#', class: 'edit_dig_params', id: "edit_dig_params_#{cg.id}", title: 'Click to edit digitization parameters' %>
+		    <ul class="dig_params">
 			    <li>Scan resolution: <%= cg.scan_resolution %></li>
 			    <li>Color space: <%= cg.color_space %></li>
 			    <li>Clean: <%= cg.clean %></li>
 			    <li>Return on Original Reel: <%= cg.return_on_reel ? 'Yes' : 'No' %></li>
 		    </ul>
+
 		    <% end %>
 	    </td>
       <td>
+	      <% if cg.can_be_pulled? %>
+		      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
+	      <% end %>
 	      <% if policy(cg).destroy? %>
-		      <% if cg.can_be_pulled? %>
-			      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
-		      <% end %>
 		      <br/>
 		      <%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
 	      <% end %>
@@ -129,6 +131,7 @@
   $('.cg_pull_link').click(function(event) {
 		var id = $(this).attr('id').substring(3);
 		event.preventDefault();
+	  event.stopPropagation();
 		$.ajax({
 			url: '../component_groups/'+id+'/ajax_queue_pull_request',
 			method: 'POST',
@@ -142,13 +145,15 @@
         title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
 				msg = data == 'success' ? '<p>Component Group queued for pull request</p>': fillBadList(data)
         swal({
-					title: title,
-					text: msg,
-          html: true
-				})
+	        title: title,
+	        text: msg,
+	        html: true,
+        },
+        function() {
+	        location.reload()
+        })
 			}
 		});
-		return false;
 	});
 
   var fillBadList = function(data) {
@@ -159,6 +164,37 @@
     ul += "</ul>"
     return ul;
   }
+
+  $('a.edit_dig_params').click(function(event) {
+		event.preventDefault();
+	  event.stopPropagation();
+		id = $(this).attr('id').substring('edit_dig_params_'.length)
+		$.ajax({
+			url: './ajax/edit_cg_params/'+id,
+			method: 'GET',
+			error: function(jqXHR, textStatus, error) {
+				swal({
+					title: 'Ajax Error',
+					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
+				})
+			},
+			success: function(data, status, xhr) {
+				swal({
+					title: 'Edit Component Group',
+					html: true,
+					text: data,
+					confirmButtonText: 'Update Component Group',
+					showCancelButton: true,
+					cancelButtonText: 'Cancel'
+				},
+				function(isConfirm) {
+					if (isConfirm) {
+						document.getElementsByClassName('edit_component_group')[0].submit();
+					}
+				})
+			}
+		})
+	});
 
 </script>
 
