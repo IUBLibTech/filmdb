@@ -12,7 +12,7 @@ class ComponentGroup < ActiveRecord::Base
   COLOR_SPACE_LIN_10 = 'Linear 10 bit'
   COLOR_SPACE_LIN_16 = 'Linear 16 bit'
   COLOR_SPACE_LOG_10 = 'Logarithmic 10 bit'
-  COLOR_SPACES = ['', COLOR_SPACE_LOG_10, COLOR_SPACE_LIN_10, COLOR_SPACE_LIN_16]
+  COLOR_SPACES = [COLOR_SPACE_LOG_10, COLOR_SPACE_LIN_10, COLOR_SPACE_LIN_16]
 
 
   def generations

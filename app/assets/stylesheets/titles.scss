@@ -84,3 +84,14 @@ input.title_publisher {
 .mt_25 {
   margin-top: 25px;
 }
+.dig_params {
+	display: inline;
+	float: left;
+}
+.edit_dig_params {
+	float: right;
+}
+.edit_dig_params > img {
+	width: auto;
+	height: 19px;
+}

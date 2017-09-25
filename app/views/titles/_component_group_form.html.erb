@@ -4,7 +4,7 @@
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
 	    <div id="scan_div">
 		    <b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', true, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %> | 5k <%= check_box_tag '5k', '5k', false, class: 'mutually_exclusive' %> | HD <%= check_box_tag 'HD', 'HD', false, class: 'mutually_exclusive' %>
-		    <b>Color Space: </b><%= f.select :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{ |cs| [cs,cs]}) %>
+		    <b>Color Space: </b><%= f.select :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{ |cs| [cs,cs]}, 'Linear 10 bit') %>
 		    <br>
 		    <b>Clean: </b><%= f.select :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand clean only', 'Hand clean only']]) %>
 		    <b>Return on Reel: </b><%= f.select :return_on_reel, options_for_select([['Yes', 'Yes'],['No', 'No']], 'No') %>

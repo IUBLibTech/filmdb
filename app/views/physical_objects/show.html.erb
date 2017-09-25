@@ -38,7 +38,7 @@
     <b>Collection</b> <%= @physical_object.collection&.name %><br/>
 		<b>Workflow Status</b><%= link_to @physical_object.current_workflow_status.type_and_location, physical_object_workflow_history_path(@physical_object) %><br/>
 	  <% unless @physical_object.alf_shelf.blank? %>
-		  <b>ALF Hell Location</b> <%= @physical_object.alf_shelf %> <br>
+		  <b>ALF/Freezer Location</b> <%= @physical_object.alf_shelf %> <br>
 	  <% end %>
     <b>IU Barcode</b> <%= @physical_object.iu_barcode %><br/>
     <b>MDPI Barcode</b> <%= @physical_object.mdpi_barcode %><br/>

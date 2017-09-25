@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170912152945) do
+ActiveRecord::Schema.define(version: 20170920185043) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -358,6 +358,8 @@ ActiveRecord::Schema.define(version: 20170912152945) do
     t.boolean  "stock_pathe"
     t.boolean  "stock_unknown"
     t.boolean  "aspect_ratio_2_66_1"
+    t.boolean  "aspect_ratio_1_36"
+    t.boolean  "aspect_ratio_1_18"
   end
 
   create_table "pod_pushes", force: :cascade do |t|
@@ -415,15 +417,20 @@ ActiveRecord::Schema.define(version: 20170912152945) do
   end
 
   create_table "title_dates", force: :cascade do |t|
-    t.integer  "title_id",      limit: 8
-    t.string   "date_text",     limit: 255
-    t.string   "date_type",     limit: 255
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.integer  "title_id",                    limit: 8
+    t.string   "date_text",                   limit: 255
+    t.string   "date_type",                   limit: 255
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.date     "start_date"
-    t.boolean  "month_present"
-    t.boolean  "day_present"
+    t.boolean  "start_month_present"
+    t.boolean  "start_day_present"
     t.boolean  "extra_text"
+    t.boolean  "start_date_is_approximation"
+    t.date     "end_date"
+    t.boolean  "end_date_month_present"
+    t.boolean  "end_date_day_present"
+    t.boolean  "end_date_is_approximation"
   end
 
   create_table "title_forms", force: :cascade do |t|
@@ -531,5 +538,12 @@ ActiveRecord::Schema.define(version: 20170912152945) do
   end
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
+
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
+  end
 
 end
