@@ -24,7 +24,7 @@ class CsvParser
   SOUND_CONFIGURATION, DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, FORMAT_NOTES, OVERALL_CONDITION, RESEARCH_VALUE ,OVERALL_CONDITION_NOTES, AD_STRIP = 31,32,33,34,35,36,37,38
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
-  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHLEF_LOCATION = 54,55,56,57,58,59,60,61,62,63
+  CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHELF_LOCATION = 54,55,56,57,58,59,60,61,62,63
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -35,7 +35,7 @@ class CsvParser
       COLUMN_HEADERS[SERIES_PART] => :series_part=, COLUMN_HEADERS[SERIES_PRODUCTION_NUMBER] => :series_production_number=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
       COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
-      COLUMN_HEADERS[ALF_SHLEF_LOCATION] => :alf_shelf=
+      COLUMN_HEADERS[ALF_SHELF_LOCATION] => :alf_shelf=
   }
 
   # regexes for parsing
@@ -221,6 +221,11 @@ class CsvParser
       po.errors.add(:location, "Unknown or malformed Current Location field: #{location}")
     end
 
+    alf_shelf = row[column_index ALF_SHELF_LOCATION]
+    unless alf_shelf.blank?
+      po.send(:alf_shelf=, alf_shelf)
+    end
+
     gauge = row[column_index GAUGE]
     set_value(:gauge, gauge, po)
 
@@ -289,7 +294,7 @@ class CsvParser
     # now parse all title data
     @title_cv = ControlledVocabulary.title_cv
     @title_date_cv = ControlledVocabulary.title_date_cv
-    @title_date_types =  @title_date_cv.collect{ |d| d[0][0]}
+    @title_date_types =  @title_date_cv[:date_type].collect{ |d| d[0] }
     @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0] }
     @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0] }
     title = Title.new(title_text: row[column_index TITLE])
@@ -308,21 +313,25 @@ class CsvParser
     unless dates.blank?
       dates.split(DELIMITER).each do |date|
 	      # the HEX codes in the middle are for MS Excel which changes '-' (minus) to en dashes and/or em dashes
-	      date_type_rgx = /^([\[\]0-9\/\?]+)( ?[-\xE2\x80\x94\xE2\x80\x93]{1,1} ?([\[\]0-9\/\?]+))? ?(\(([a-zA-Z ]+)\))?/
+	      date_type_rgx = /^(([\[\]0-9\/\?]+)( ?[-\xE2\x80\x94\xE2\x80\x93]{1,1} ?([\[\]0-9\/\?]+))?) ?(\(([a-zA-Z ]+)\))?/
 	      match = date_type_rgx.match(date)
-	      date_set = DateHelper.convert_dates((match.nil? ? date : match[1]))
-	      # error case - start date will always be !nil unless the string is malformed.
-	      # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
-	      if date_set[:start_date].nil?
-		      debugger
+	      if match.nil?
 		      po.errors.add(:title_date, "Malformed date #{date}")
 	      else
-		      type = (match[6].nil? ? 'TBD' : @title_date_types.include?(match[6]))
-		      if type.nil?
-			      po.errors.add(:title_date, "Unknown title date type: #{date}")
+		      date_set = DateHelper.convert_dates(match[1])
+		      # error case - start date will always be !nil unless the string is malformed.
+		      # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
+		      if date_set[:start_date].nil?
+			      po.errors.add(:title_date, "Malformed date #{date}")
 		      else
-			      td = TitleDate.new(title_id: title.id, date_text: date, date_type: type)
-			      title.title_dates << td
+			      type = (match[6].nil? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
+			      if type.nil?
+				      debugger
+				      po.errors.add(:title_date, "Unknown title date type: #{date}")
+			      else
+				      td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
+				      title.title_dates << td
+			      end
 		      end
 	      end
       end

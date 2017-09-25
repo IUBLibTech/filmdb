@@ -58,6 +58,18 @@
     <div class="field">
       <%= f.text_field :title_control_number %>
     </div>
+	  <div class="label">
+		  <b>Storage Location</b>
+	  </div>
+	  <div class="field">
+		  <%= f.object.storage_location %>
+	  </div>
+		<div class="label">
+			<b>Alf Shelf/Freezer Location</b>
+		</div>
+		<div class="field">
+			<%= f.text_field :alf_shelf %>
+		</div>
   </div>
   <div id="version_div" class="clear">
     <b class="block">Version</b>
@@ -339,7 +351,9 @@
         <%= f.check_box :aspect_ratio_2_35_1 %>2.35:1
         <%= f.check_box :aspect_ratio_2_39_1 %>2.39:1
         <%= f.check_box :aspect_ratio_2_59_1 %>2.59:1
-	      <%= f.check_box :aspect_ratio_2_66_1%><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %>
+	      <%= f.check_box :aspect_ratio_2_66_1%><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %><br>
+	      <%= f.check_box :aspect_ratio_1_36 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_36_1] %>
+	      <%= f.check_box :aspect_ratio_1_18 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_18_1] %>
       </div>
     </div>
     <div>

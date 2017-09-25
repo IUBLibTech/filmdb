@@ -124,17 +124,22 @@ class Title < ActiveRecord::Base
 		sql
 	end
 	def self.title_search_where_sql(title_text, date, publisher_text, collection_id)
-		sql = "WHERE"
+		sql = (title_text.blank? && date.blank? && publisher_text.blank? && collection_id.blank?) ? "" : "WHERE"
 		if !title_text.blank?
 			sql << " titles.title_text like '%#{title_text}%'"
 		end
 		if !date.blank?
 			add_and(sql)
-			dates = date.split(' - ')
+			dates = date.gsub(' ', '').split('-')
 			if dates.size == 1
-				sql << "year(title_dates.start_date) = #{dates[0]}"
+				sql << "((title_dates.end_date is null AND year(title_dates.start_date) = #{dates[0]}) OR "+
+					"(title_dates.end_date is not null AND year(title_dates.start_date) <= #{dates[0]} AND year(title_dates.end_date) >=  #{dates[0]}))"
 			else
-				sql << "year(title_dates.start_date) >= #{dates[0]} AND year(title_dates.start_date) <= #{dates[1]}"
+				sql << "((title_dates.end_date is null AND #{dates[0]} <= year(title_dates.start_date) AND #{dates[0]} >= year(title_dates.start_date)) OR "+
+					"(title_dates.end_date is not null AND "+
+					"((#{dates[0]} <= year(title_dates.start_date) AND #{dates[1]} >= year(title_dates.start_date)) OR "+
+					"(#{dates[0]} <= year(title_dates.end_date) AND #{dates[1]} >= year(title_dates.end_date)) OR "+
+					"(year(title_dates.start_date) < #{dates[0]} AND year(title_dates.end_date) > #{dates[1]}))))"
 			end
 		end
 		if !publisher_text.blank?
@@ -152,3 +157,28 @@ class Title < ActiveRecord::Base
 	end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
