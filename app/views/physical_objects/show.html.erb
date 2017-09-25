@@ -36,16 +36,14 @@
   <div class="left _50">
     <b>Unit</b> <%= @physical_object.unit.abbreviation %><br/>
     <b>Collection</b> <%= @physical_object.collection&.name %><br/>
-		<b>Workflow Status</b><%= link_to @physical_object.current_workflow_status.type_and_location, physical_object_workflow_history_path(@physical_object) %><br/>
-	  <% unless @physical_object.alf_shelf.blank? %>
-		  <b>ALF/Freezer Location</b> <%= @physical_object.alf_shelf %> <br>
-	  <% end %>
+		<b>Workflow Status</b> <%= link_to @physical_object.current_workflow_status.type_and_location, physical_object_workflow_history_path(@physical_object) %><br/>
+	  <b>Storage Location</b> <%= @physical_object.storage_location %><br>
+	  <b>ALF/Freezer Location</b> <%= @physical_object.alf_shelf %> <br>
     <b>IU Barcode</b> <%= @physical_object.iu_barcode %><br/>
     <b>MDPI Barcode</b> <%= @physical_object.mdpi_barcode %><br/>
     <b>IUCAT Title No.</b> <%= @physical_object.title_control_number %><br/>
   </div>
 </div>
-
 <div id="" class="metadata_section">
   <h4>Format</h4>
   <div class="left _50">
