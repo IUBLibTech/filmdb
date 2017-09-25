@@ -324,9 +324,8 @@ class CsvParser
 		      if date_set[:start_date].nil?
 			      po.errors.add(:title_date, "Malformed date #{date}")
 		      else
-			      type = (match[6].nil? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
+			      type = (match[6].blank? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
 			      if type.nil?
-				      debugger
 				      po.errors.add(:title_date, "Unknown title date type: #{date}")
 			      else
 				      td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
