@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170918131700) do
+ActiveRecord::Schema.define(version: 20170920185043) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -358,6 +358,8 @@ ActiveRecord::Schema.define(version: 20170918131700) do
     t.boolean  "stock_pathe"
     t.boolean  "stock_unknown"
     t.boolean  "aspect_ratio_2_66_1"
+    t.boolean  "aspect_ratio_1_36"
+    t.boolean  "aspect_ratio_1_18"
   end
 
   create_table "pod_pushes", force: :cascade do |t|

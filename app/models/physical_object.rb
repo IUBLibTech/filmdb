@@ -127,11 +127,12 @@ class PhysicalObject < ActiveRecord::Base
 
   ASPECT_RATIO_FIELDS = [
       :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1, :aspect_ratio_2_39_1, :aspect_ratio_2_59_1,
-      :aspect_ratio_2_66_1
+      :aspect_ratio_2_66_1, :aspect_ratio_1_36, :aspect_ratio_1_18
   ]
   ASPECT_RATIO_FIELDS_HUMANIZED = {
       aspect_ratio_1_33_1: "1.33:1", aspect_ratio_1_37_1: "1.37:1", aspect_ratio_1_66_1: "1.66:1", aspect_ratio_1_85_1: "1.85:1",
-      aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1", aspect_ratio_2_66_1: "2.66:1"
+      aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1", aspect_ratio_2_66_1: "2.66:1",
+      aspect_ratio_1_36: '1.36:1', aspect_ratio_1_18: '1.18:1'
   }
 
   SOUND_FORMAT_FIELDS = [
@@ -193,8 +194,7 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	def group_identifier
-		t_id = titles.first.id
-		"FDB#{"%08d" % t_id}"
+		titles.first.id
 	end
 
 	# tests if the physical object is currently on IULMIA staff workflow space
@@ -351,13 +351,13 @@ class PhysicalObject < ActiveRecord::Base
 		xml = options[:builder]
 		xml.physicalObject do
 			xml.filmdbId id
-			xml.groupIdentifier group_identifier
+			xml.titleId active_component_group.title.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
 			xml.iucatTitleControlNumber title_control_number
 			xml.format medium
 			xml.unit unit.abbreviation
-			xml.title titles.collect { |t| t.title_text }.join(', ')
+			xml.title titles.collect{ |t| t.title_text }.join(', ')
 			xml.alternativeTitle alternative_title unless alternative_title.nil?
 			xml.collectionName collection&.name
 			xml.accompanyingDocumentation accompanying_documentation
@@ -389,6 +389,9 @@ class PhysicalObject < ActiveRecord::Base
 			end
 			if active_component_group != nil
 				xml.clean active_component_group.clean
+			end
+			if active_component_group != nil
+				xml.returnOnOriginalReel active_component_group.return_on_reel
 			end
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
@@ -502,6 +505,8 @@ class PhysicalObject < ActiveRecord::Base
 				xml.ratio_2_35_1 aspect_ratio_2_35_1
 				xml.ratio_2_39_1 aspect_ratio_2_39_1
 				xml.ratio_2_59_1 aspect_ratio_2_59_1
+				xml.ratio_1_36_1 aspect_ratio_1_36
+				xml.ratio_1_18_1 aspect_ratio_1_18
 			end
 			xml.soundFormats do
 				xml.optical sound_format_optical

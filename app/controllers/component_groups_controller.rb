@@ -46,7 +46,8 @@ class ComponentGroupsController < ApplicationController
   def update
     respond_to do |format|
       if @component_group.update(component_group_params)
-        format.html { redirect_to @component_group, notice: 'Component group was successfully updated.' }
+	      # currently, the only place a CG can be updated is on the Titles page so redirect there
+        format.html { redirect_to @component_group.title, notice: 'Component group was successfully updated.' }
         format.json { render :show, status: :ok, location: @component_group }
       else
         format.html { render :edit }
@@ -149,6 +150,8 @@ class ComponentGroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_group_params
-      params.fetch(:component_group, {})
+      params.require(:component_group).permit(
+        :scan_resolution, :color_space, :return_on_reel, :clean
+      )
     end
 end
