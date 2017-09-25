@@ -4,25 +4,25 @@
 	<tr>
 		<th>Title Text</th>
 		<td>
-			<%= text_field_tag :title_text %>
+			<%= text_field_tag :title_text, params[:title_text] %>
 		</td>
 	</tr>
 	<tr>
 		<th>Date</th>
 		<td>
-			<%= text_field_tag :date %>
+			<%= text_field_tag :date, params[:date] %>
 		</td>
 	</tr>
 	<tr>
 		<th>Publisher</th>
 		<td>
-			<%= text_field_tag :publisher_text %>
+			<%= text_field_tag :publisher_text, params[:publisher_text] %>
 		</td>
 	</tr>
 	<tr>
 		<th>Search Within Collection</th>
 		<td>
-			<%= select_tag :collection_id, options_for_select([['All', "0"]] + Collection.all.order(:name).collect{ |c| [c.name, c.id]}) %>
+			<%= select_tag :collection_id, options_for_select([['All', "0"]] + Collection.all.order(:name).collect{ |c| [c.name, c.id]}, params[:collection_id]) %>
 		</td>
 	</tr>
 	<tr>
@@ -100,3 +100,16 @@
 	<% end %>
 </table>
 <% end %>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#date').bind('input',function() {
+			var y = /^[0-9]{4}$/;
+			var yy = /^[0-9]{4}\s{0,1}-\s{0,1}[0-9]{4}$/
+			if (y.test($(this).val()) || yy.test($(this).val()) || $(this).val().length == 0) {
+				$(this).removeClass('bad_barcode');
+			} else {
+				$(this).addClass('bad_barcode')
+			}
+		});
+	});
+</script>

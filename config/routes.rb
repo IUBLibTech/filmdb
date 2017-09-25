@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
   get '/titles/', to: 'titles#search', as: 'titles_index'
   post '/titles/search', to: 'titles#search', as: 'titles_search'
+  get '/titles/ajax/edit_cg_params/:id', to: 'titles#ajax_edit_cg_params', as: 'ajax_edit_cg_params'
 
   resources :units
 

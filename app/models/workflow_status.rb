@@ -179,7 +179,7 @@ class WorkflowStatus < ActiveRecord::Base
 			if [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MISSING, MOLD_ABATEMENT, JUST_INVENTORIED_WELLS].include? status_name
 				''
 			else
-				raise WorkflowError 'Missing active component group!!!'
+				raise 'Missing active component group!!!'
 			end
 		else
 			po.active_component_group.whose_workflow

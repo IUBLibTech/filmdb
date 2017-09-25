@@ -11,7 +11,7 @@
 		<% all_here = @cg.all_present? %>
 		<% @cg.physical_objects.each do |p| %>
 			<tr>
-				<td><%= p.iu_barcode %></td>
+				<td><%= link_to p.iu_barcode, edit_physical_object_path(p), target: '_blank' %></td>
 				<td><%= p.current_workflow_status.type_and_location %></td>
 				<td>
 					<% if all_here %>
