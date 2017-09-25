@@ -147,10 +147,17 @@ class TitlesController < ApplicationController
   # DELETE /titles/1.json
   def destroy
     authorize Title
-    @title.destroy
-    respond_to do |format|
-      format.html { redirect_to titles_url, notice: 'Title was successfully destroyed.' }
-      format.json { head :no_content }
+    if @title.physical_objects.size == 0
+      @title.destroy
+      respond_to do |format|
+        format.html { redirect_to titles_url, notice: 'Title was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        flash[:warning] = "Cannot delete a Title that has Physical Objects"
+        format.html {redirect_to @title, warning: "Uh oh!"}
+      end
     end
   end
 
@@ -192,6 +199,11 @@ class TitlesController < ApplicationController
 
   def autocomplete_title_for_collection
 
+  end
+
+  def ajax_edit_cg_params
+    @cg = ComponentGroup.find(params[:id])
+	  render partial: 'ajax_edit_cg_params'
   end
 
   private

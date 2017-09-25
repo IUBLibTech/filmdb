@@ -72,7 +72,7 @@ module PhysicalObjectsHelper
     params.require(:physical_object).permit(
         :location, :media_type, :medium, :iu_barcode, :copy_right, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
-        :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
+        :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
         :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
         :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
         :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
@@ -93,7 +93,7 @@ module PhysicalObjectsHelper
         :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
 
         :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
-        :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :close_caption, :captions_or_subtitles_notes,
+        :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :close_caption, :captions_or_subtitles_notes,
         :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
         :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,

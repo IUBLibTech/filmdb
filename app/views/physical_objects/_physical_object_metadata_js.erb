@@ -14,6 +14,14 @@
   $("#physical_object_mdpi_barcode").bind("input", function () {
     validateMdpiBarcode($(this));
   });
+  $("#physical_object_shrinkage").bind('input', function() {
+	  var decimal = /^[0-9]+$|^[0-9]+.[0-9]+$/
+	  if ($(this).val() == "" || decimal.test($(this).val())) {
+		  $(this).removeClass('bad_barcode')
+	  } else {
+		  $(this).addClass('bad_barcode')
+	  }
+  });
 
   // hook in handles for the event change on media type
   var media_type_mediums = <%= PhysicalObject::MEDIA_TYPE_MEDIUMS.to_json.html_safe %>;
