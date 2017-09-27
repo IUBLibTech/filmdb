@@ -9,7 +9,7 @@ class CagesController < ApplicationController
 
 	before_action :set_cage_shelf, only: [:shelf_physical_objects, :add_physical_object_to_shelf, :remove_physical_object]
 
-	skip_before_filter :verify_authenticity_token, only[:mark_shipped]
+	skip_before_filter :verify_authenticity_token, only: [:mark_shipped]
 	protect_from_forgery with: :null_session, only: [:marked_shipped]
 
 	# GET /cages/1
