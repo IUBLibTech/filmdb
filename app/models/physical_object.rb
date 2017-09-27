@@ -78,7 +78,8 @@ class PhysicalObject < ActiveRecord::Base
                     :generation_negative, :generation_positive, :generation_reversal, :generation_projection_print, :generation_answer_print, :generation_work_print,
                     :generation_composite, :generation_intermediate, :generation_mezzanine, :generation_kinescope, :generation_magnetic_track, :generation_optical_sound_track,
                     :generation_outs_and_trims, :generation_a_roll, :generation_b_roll, :generation_c_roll, :generation_d_roll, :generation_edited,
-                    :generation_original_camera, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate, :generation_master
+                    :generation_original_camera, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate,
+                    :generation_master, :generation_master, :generation_other
                     ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
@@ -86,7 +87,8 @@ class PhysicalObject < ActiveRecord::Base
       generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Separate Magnetic Track", generation_optical_sound_track: "Separate Optical Track",
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_original_camera: "Camera Original", generation_original: "Original",
-      generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate", generation_master: 'Master'
+      generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate", generation_master: 'Master',
+      generation_other: "Other"
   }
 
   BASE_FIELDS =[:base_acetate, :base_polyester, :base_nitrate, :base_mixed]
@@ -94,7 +96,7 @@ class PhysicalObject < ActiveRecord::Base
     base_acetate: "Acetate", base_polyester: "Polyester", base_nitrate: "Nitrate", base_mixed: "Mixed"
   }
 
-  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_3_m, :stock_agfa_gevaert, :stock_pathe, :stock_unknown]
+  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_3_m,:stock_agfa_gevaert, :stock_pathe, :stock_unknown]
   STOCK_FIELDS_HUMANIZED = {
       stock_agfa: 'Agfa', stock_ansco: "Ansco", stock_dupont: 'Dupont', stock_orwo: "Orwo", stock_fuji: "Fuji", stock_gevaert: "Gevaert",
       stock_kodak: "Kodak", stock_ferrania: "Ferrania", stock_3_m: '3M', stock_agfa_gevaert: 'Agfa-Gevaert', stock_pathe: 'Pathe', stock_unknown: "Unknown"
@@ -102,12 +104,12 @@ class PhysicalObject < ActiveRecord::Base
 
   PICTURE_TYPE_FIELDS = [
       :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope
+      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles
   ]
   PICTURE_TYPE_FIELDS_HUMANIZED = {
       picture_not_applicable: "Not Applicable", picture_silent_picture: "Silent", picture_mos_picture: "MOS",
       picture_composite_picture: "Composite", picture_intertitles_only: "Intertitles Only", picture_credits_only: "Credits Only",
-      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope"
+      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope", picture_titles: 'Titles'
   }
   COLOR_BW_FIELDS = [
       :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_bw_black_and_white
@@ -147,10 +149,10 @@ class PhysicalObject < ActiveRecord::Base
       sound_format_digital_dolby_digital_a: 'Digital: Dolby A'
   }
 
-  SOUND_CONTENT_FIELDS = [:sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes]
+  SOUND_CONTENT_FIELDS = [:sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration]
   SOUND_CONTENT_FIELDS_HUMANIZED = {
       sound_content_music_track: "Music Track", sound_content_effects_track: "Effects Track", sound_content_dialog: "Dialog",
-      sound_content_composite_track: "Composite Track", sound_content_outtakes: "Outtakes"
+      sound_content_composite_track: "Composite Track", sound_content_outtakes: "Outtakes", sound_content_narration: 'Narration'
   }
 
   SOUND_CONFIGURATION_FIELDS = [
@@ -444,6 +446,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.mixed generation_mixed
 				xml.originalCamera generation_original_camera
 				xml.master generation_master
+				xml.other generation_other
 			end
 			xml.bases do
 				xml.acetate base_acetate
@@ -474,6 +477,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.pictureEffects picture_picture_effects
 				xml.pictureOuttakes picture_picture_outtakes
 				xml.kinescope picture_kinescope
+				xml.titles picture_titles
 			end
 			xml.dates do
 				physical_object_dates.each do |pod|
@@ -526,6 +530,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.dialog sound_content_dialog
 				xml.compositeTrack sound_content_composite_track
 				xml.outtakes sound_content_outtakes
+				xml.narration sound_content_narration
 			end
 			xml.soundConfigurations do
 				xml.mono sound_configuration_mono
