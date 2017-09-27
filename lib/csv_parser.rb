@@ -15,7 +15,8 @@ class CsvParser
       'Sound Field', 'Dialog Language', 'Captions or Subtitles Language', 'Format Notes', 'Overall Condition', 'Research Value', 'Overall Condition Notes', 'AD Strip',
       'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
       'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
-      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes', 'ALF Shelf Location'
+      'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes', 'ALF Shelf Location',
+      'Subject', 'Name Authority'
   ]
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
   TITLE, DURATION, SERIES_NAME, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
@@ -25,6 +26,7 @@ class CsvParser
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
   CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHELF_LOCATION = 54,55,56,57,58,59,60,61,62,63
+	SUBJECT, NAME_AUTHORITY = 64, 65
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -141,7 +143,7 @@ class CsvParser
       end
     end
 
-    # examine spreadsheet headers to make sure theybconform to vocabulary
+    # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
         @parse_headers_msg << parsed_header_message(ch)
@@ -241,11 +243,13 @@ class CsvParser
     miic = row[column_index MULTIPLE_ITEMS_IN_CAN]
     set_boolean_value(:multiple_items_in_can, miic, po)
 
+    can_sizes = @cv[:can_size].collect{ |c| c[0]}
     can = row[column_index CAN_SIZE]
-    can = can.to_i rescue can    #can size has a 'Cartridge' value so is represented as text
-    # ''.to_i returns 0...
-    unless can == 0
-      set_value(:can_size, can.to_s, po)
+    if can_sizes.include?(can)
+      set_value(:can_size, can, po)
+    else
+	    debugger
+      po.errors.add(:can_size, "Invalid Can Size: #{can}")
     end
 
     footage = row[column_index FOOTAGE]
@@ -307,6 +311,15 @@ class CsvParser
     title_notes = row[column_index TITLE_NOTES]
     unless title_notes.blank?
       title.notes = title_notes
+    end
+
+    title_subject = row[column_index SUBJECT]
+    unless title_subject.blank?
+	    title.subject = title_subject
+    end
+    title_name_authority = row[column_index NAME_AUTHORITY]
+    unless title_name_authority.blank?
+	    title.name_authority = title_name_authority
     end
 
     dates = row[column_index DATE].to_s
@@ -509,7 +522,10 @@ class CsvParser
     stock_fields = row[column_index STOCK].blank? ? [] : row[column_index STOCK].split(DELIMITER)
     stock_fields.each do |sf|
       field = "stock #{sf}".parameterize.underscore
-      if PhysicalObject::STOCK_FIELDS.include?(field.to_sym)
+      # 3m is a special case
+      if sf == '3M'
+	      po.stock_3_m = true
+      elsif PhysicalObject::STOCK_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
         po.errors.add(:stock, "Undefined stock: #{sf}")

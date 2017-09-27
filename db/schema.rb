@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170920185043) do
+ActiveRecord::Schema.define(version: 20170927171841) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -360,6 +360,9 @@ ActiveRecord::Schema.define(version: 20170920185043) do
     t.boolean  "aspect_ratio_2_66_1"
     t.boolean  "aspect_ratio_1_36"
     t.boolean  "aspect_ratio_1_18"
+    t.boolean  "picture_titles"
+    t.boolean  "generation_other"
+    t.boolean  "sound_content_narration"
   end
 
   create_table "pod_pushes", force: :cascade do |t|
@@ -482,6 +485,8 @@ ActiveRecord::Schema.define(version: 20170920185043) do
     t.string   "series_part",        limit: 255
     t.integer  "created_by_id",      limit: 8
     t.text     "notes",              limit: 65535
+    t.text     "subject",            limit: 65535
+    t.text     "name_authority",     limit: 65535
   end
 
   create_table "units", force: :cascade do |t|
