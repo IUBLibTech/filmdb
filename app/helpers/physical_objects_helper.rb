@@ -58,7 +58,7 @@ module PhysicalObjectsHelper
   def calc_estimated_duration(pos)
     d = 0
     pos.each do |p|
-      d += (PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24
+      d += (PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * (p.footage.blank? ? 0 : p.footage)) / 24
     end
     d
   end
