@@ -18,24 +18,29 @@
 	<%= f.fields_for :top_shelf do |ts| %>
 		<b>Top Shelf Identifier</b> <%= @cage.top_shelf.identifier %> <br>
 		<%= ts.hidden_field :identifier %>
-		<b>Top Shelf MDPI Barcode</b> <%= ts.text_field :mdpi_barcode %> <br>
+		<b>Top Shelf MDPI Barcode</b> <%= ts.text_field :mdpi_barcode, class: 'mdpi_barcode' %> <br>
 	<% end %>
 
 	<h4>Middle Shelf Fields</h4>
 	<%= f.fields_for :middle_shelf do |ms| %>
 		<%= ms.hidden_field :identifier %>
 		<b>Middle Shelf Identifier</b> <%= @cage.middle_shelf.identifier %> <br>
-		<b>Middle Shelf MDPI Barcode</b> <%= ms.text_field :mdpi_barcode %> <br>
+		<b>Middle Shelf MDPI Barcode</b> <%= ms.text_field :mdpi_barcode, class: 'mdpi_barcode' %> <br>
 	<% end %>
 
   <h4>Bottom Shelf</h4>
 	<%= f.fields_for :bottom_shelf do |bs| %>
 		<%= bs.hidden_field :identifier %>
 		<b>Bottom Shelf Identifier</b> <%= @cage.bottom_shelf.identifier %> <br>
-		<b>Bottom Shelf MDPI Barcode</b> <%= bs.text_field :mdpi_barcode %> <br>
+		<b>Bottom Shelf MDPI Barcode</b> <%= bs.text_field :mdpi_barcode, class: 'mdpi_barcode' %> <br>
 	<% end %>
 
 	<div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+<script type="text/javascript" charset="utf-8">
+	$(".mdpi_barcode").bind("input", function () {
+		validateMdpiBarcode($(this));
+	});
+</script>

@@ -10,7 +10,7 @@ class TitleDate < ActiveRecord::Base
 	end
 
   def ==(another)
-    self.class == another.class && self.start_date == another.start_date && self.date_type == another.date_type  && self.month_present == another.month_present && self.day_present == another.day_present
+    self.class == another.class && self.date_type == another.date_type && self.date_to_s == another.date_to_s
   end
 
 

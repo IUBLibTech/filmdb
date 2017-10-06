@@ -2,6 +2,8 @@
   <%= link_to 'Edit', edit_cage_path(@cage) %> |
   <%= link_to 'Back', cages_path %>
   <div class="clear"></div>
+  <div id="digi_staging">
+  </div>
   <h2><%= "#{@cage.identifier}" %></h2>
   <table id="cage_table" class="left">
     <tr>
@@ -193,6 +195,7 @@
           success: function(result) {
             setShelfContent(result);
 	          update_shelf_stats();
+	          update_digi_stats();
           }
         });
       }
@@ -219,6 +222,18 @@
 			    $('#total_duration').html(result['total_duration']);
 		    }
 	    });
+    }
+
+    function update_digi_stats() {
+	    $.ajax({
+		    url: "<%= digitization_staging_stats_path %>",
+		    error: function(xmlHttpRequest, status, error) {
+			    swal({title: 'Ajax error', text: 'An error occurred while trying to retrieve digitization staging shelf stats'})
+		    },
+		    success: function(result) {
+			    $('#digi_staging').html(result)
+		    }
+	    })
     }
 
     function setShelfContent(content) {
@@ -251,6 +266,7 @@
             success: function(result) {
               setShelfContent(result);
 	            update_shelf_stats();
+	            update_digi_stats();
             }
           });
         });
@@ -265,4 +281,7 @@
     $("#cage_physical_object_mdpi_barcode").bind("change keyup", function () {
       validateMdpiBarcode($(this));
     });
+	  $(document).ready(function() {
+		  update_digi_stats();
+	  });
   </script>

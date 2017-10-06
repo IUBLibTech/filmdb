@@ -66,6 +66,7 @@ class WorkflowController < ApplicationController
 			PhysicalObject.transaction do
 				@physical_object.active_component_group.physical_objects.each do |p|
 					p.workflow_statuses << WorkflowStatus.build_workflow_status(p.storage_location, p)
+					p.active_component_group = nil
 					p.save
 				end
 			end

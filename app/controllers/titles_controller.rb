@@ -1,5 +1,6 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
+  include TitlesHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
   before_action :set_series, only: [:create, :create_ajax, :update]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
@@ -159,6 +160,24 @@ class TitlesController < ApplicationController
         format.html {redirect_to @title, warning: "Uh oh!"}
       end
     end
+  end
+
+  def titles_merge
+	  @titles = Title.where(id: params[:title_ids].split(',').collect { |t| t.to_i })
+  end
+
+  def merge_titles
+	  @master = Title.find(params[:master])
+	  @mergees = Title.where(id: params[:selected].split(','))
+	  failed = title_merge(@master, @mergees)
+	  if failed.size > 0
+		  links = failed.collect{ |t| view_context.link_to t.title_text, title_path(t), target: '_blank' }.join(', ')
+		  flash[:warning] = "The following Titles are in active workflow and were not merged: #{links}"
+	  end
+	  if @mergees.size > failed.size
+		  flash[:notice] = "#{@mergees.size - failed.size} Title(s) were merged into #{@master.title_text}"
+	  end
+	  redirect_to @master
   end
 
   def new_physical_object

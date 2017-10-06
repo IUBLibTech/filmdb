@@ -248,7 +248,6 @@ class CsvParser
     if can_sizes.include?(can)
       set_value(:can_size, can, po)
     else
-	    debugger
       po.errors.add(:can_size, "Invalid Can Size: #{can}")
     end
 

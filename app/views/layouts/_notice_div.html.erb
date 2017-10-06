@@ -1,7 +1,7 @@
 <% unless flash[:warning].blank? && flash.now[:warning].blank? %>
     <div>
       <p class="warning">
-        <%= flash[:warning] ? flash[:warning] : flash.now[:warning] %>
+        <%= raw (flash[:warning].blank? ? flash.now[:warning] : flash[:warning]) %>
       </p>
     </div>
 <% end %>
