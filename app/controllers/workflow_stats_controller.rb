@@ -3,7 +3,7 @@ class WorkflowStatsController < ApplicationController
 
 	def digitization_staging_stats
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::TWO_K_FOUR_K_SHELVES)
-		@gauges = {}
+		@gauges = {'Not Specified': 0}
 		@can_sizes = {}
 		@scan_resolutions = {}
 		@physical_objects.each do |p|
@@ -12,10 +12,14 @@ class WorkflowStatsController < ApplicationController
 			end
 
 			@gauges[p.gauge] += 1
-			if @can_sizes[p.can_size].nil?
-				@can_sizes[p.can_size] = 0
+			if p.can_size.blank?
+				@can_sizes['Not Specified'] += 1
+			else
+				if @can_sizes[p.can_size].nil?
+					@can_sizes[p.can_size] = 0
+				end
+				@can_sizes[p.can_size] += 1
 			end
-			@can_sizes[p.can_size] += 1
 
 			cg = p.active_component_group
 			if @scan_resolutions[cg.scan_resolution].nil?
