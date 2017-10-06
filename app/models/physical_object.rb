@@ -231,6 +231,10 @@ class PhysicalObject < ActiveRecord::Base
 		# freezer because an item may have been previously ingest but later determined to be stored in the freezer/awaiting freezer
 		elsif ingested
 			return WorkflowStatus::IN_STORAGE_INGESTED
+		elsif current_workflow_status.nil?
+			''
+		elsif (current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_WELLS || current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_ALF)
+			current_workflow_status.status_name
 		else
 			return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
 		end

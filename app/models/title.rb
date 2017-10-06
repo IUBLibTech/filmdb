@@ -107,6 +107,13 @@ class Title < ActiveRecord::Base
 		ActiveRecord::Base.connection.execute(sql).first[0]
 	end
 
+	def in_active_workflow?
+		physical_objects.any?{ |p|
+			cs = p.current_workflow_status
+			(!cs.nil? && !WorkflowStatus.is_storage_status?(cs.status_name)) &&	cs.status_name != WorkflowStatus::JUST_INVENTORIED_ALF && cs.status_name != WorkflowStatus::JUST_INVENTORIED_WELLS
+		}
+	end
+
 	private
 	def self.title_search_from_sql(title_text, date, publisher_text, collection_id)
 		sql = "FROM titles"

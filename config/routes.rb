@@ -71,7 +71,7 @@ Rails.application.routes.draw do
   resources :spreadsheets, only: [:index, :show, :destroy]
   post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
   get '/spreadsheets/:id/title/:title', to: 'spreadsheets#merge_title_candidates', as: 'merge_title_candidates'
-  post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_titles'
+  post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_spreadsheet_titles'
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
   post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
@@ -91,8 +91,11 @@ Rails.application.routes.draw do
   get '/autocomplete_title/', to: 'titles#autocomplete_title', as: 'autocomplete_title'
   get '/autocomplete_title_for_series/:series_id/', to: 'titles#autocomplete_title_for_series', as: 'autocomplete_title_for_series'
   get '/titles/', to: 'titles#search', as: 'titles_index'
-  post '/titles/search', to: 'titles#search', as: 'titles_search'
+  get '/search/titles', to: 'titles#search', as: 'titles_search_index'
+  post '/search/titles', to: 'titles#search', as: 'titles_search'
   get '/titles/ajax/edit_cg_params/:id', to: 'titles#ajax_edit_cg_params', as: 'ajax_edit_cg_params'
+  post '/titles/merge', to: 'titles#titles_merge', as: 'titles_merge'
+  post '/titles/do_merge', to: 'titles#merge_titles', as: 'merge_titles'
 
   resources :units
 
@@ -136,6 +139,9 @@ Rails.application.routes.draw do
   post '/workflow/update_return_from_mold_abatement/:id', to: 'workflow#update_return_from_mold_abatement', as: 'update_return_from_mold_abatement'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
+
+  # workflow_stats routes
+  get '/workflow_stats/digitization_staging_stats', to: 'workflow_stats#digitization_staging_stats', as: 'digitization_staging_stats'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete

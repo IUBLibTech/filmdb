@@ -55,6 +55,14 @@ module PhysicalObjectsHelper
     end
   end
 
+  def calc_estimated_duration(pos)
+    d = 0
+    pos.each do |p|
+      d += (PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24
+    end
+    d
+  end
+
   # Titles are now a many to many with physical objects - as a result whenever we process the title_ids passed in through the form, we need to examine if any PhysicalObjectTitles (join object)
   # exist that are not represented in the passed ids. These non-represented ids are titles that were associated with the physical object but have been disacciated (through a edit/update call
   # in physical_objects_controller)
