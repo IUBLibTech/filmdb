@@ -50,12 +50,21 @@ class PhysicalObject < ActiveRecord::Base
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
 	scope :where_current_workflow_status_is, lambda { |*status|
+
+		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
+		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
+		status = status.flatten
+
 		sql = "SELECT physical_objects.* "+
 			"FROM ( SELECT workflow_statuses.physical_object_id "+
 			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses GROUP BY physical_object_id) AS x "+
 			    "INNER JOIN workflow_statuses on (workflow_statuses.physical_object_id = x.physical_object_id AND x.status = workflow_statuses.created_at) "+
 			    "WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"
 		PhysicalObject.find_by_sql(sql)
+	}
+
+	scope :in_active_workflow, -> {
+		where_current_workflow_status_is()
 	}
 
 
