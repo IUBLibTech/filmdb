@@ -11,8 +11,8 @@ class WorkflowStatsController < ApplicationController
 			if @gauges[p.gauge].nil?
 				@gauges[p.gauge] = 0
 			end
-
 			@gauges[p.gauge] += 1
+
 			if p.can_size.blank?
 				@can_sizes[ns] += 1
 			else
