@@ -125,13 +125,13 @@ class PhysicalObject < ActiveRecord::Base
   ]
   COLOR_COLOR_FIELDS = [
       :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
-      :color_bw_color_ansochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color_color
+      :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman, :color_bw_color_color
   ]
   COLOR_FIELDS = COLOR_BW_FIELDS + COLOR_COLOR_FIELDS
 
   COLOR_FIELDS_HUMANIZED = {
       color_bw_bw_toned: "Toned (Black and White)", color_bw_bw_tinted: "Tinted (Black and White)", color_bw_color_ektachrome: "Ektachrome",
-      color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_ansochrome: "Anscochrome",
+      color_bw_color_kodachrome: "Kodachrome", color_bw_color_technicolor: "Technicolor", color_bw_color_anscochrome: "Anscochrome",
       color_bw_color_eco: "Eco", color_bw_color_eastman: "Eastman", color_bw_bw: "Black and White", color_bw_bw_hand_coloring: "Hand Coloring",
       color_bw_bw_stencil_coloring: "Stencil Coloring", color_bw_color_color: "Color", color_bw_bw_black_and_white: 'Black & White'
   }
@@ -506,7 +506,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.ektachrome color_bw_color_ektachrome
 				xml.kodachrome color_bw_color_kodachrome
 				xml.technicolor color_bw_color_technicolor
-				xml.ansochrome color_bw_color_ansochrome
+				xml.anscochrome color_bw_color_anscochrome
 				xml.eco color_bw_color_eco
 				xml.eastman color_bw_color_eastman
 				xml.color color_bw_color_color
