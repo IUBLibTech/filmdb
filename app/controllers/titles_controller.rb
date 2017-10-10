@@ -1,5 +1,6 @@
 class TitlesController < ApplicationController
   include PhysicalObjectsHelper
+  include TitlesHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
   before_action :set_series, only: [:create, :create_ajax, :update]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
@@ -161,6 +162,24 @@ class TitlesController < ApplicationController
     end
   end
 
+  def titles_merge
+	  @titles = Title.where(id: params[:title_ids].split(',').collect { |t| t.to_i })
+  end
+
+  def merge_titles
+	  @master = Title.find(params[:master])
+	  @mergees = Title.where(id: params[:selected].split(','))
+	  failed = title_merge(@master, @mergees)
+	  if failed.size > 0
+		  links = failed.collect{ |t| view_context.link_to t.title_text, title_path(t), target: '_blank' }.join(', ')
+		  flash[:warning] = "The following Titles are in active workflow and were not merged: #{links}"
+	  end
+	  if @mergees.size > failed.size
+		  flash[:notice] = "#{@mergees.size - failed.size} Title(s) were merged into #{@master.title_text}"
+	  end
+	  redirect_to @master
+  end
+
   def new_physical_object
     @em = 'Creating New Physical Object'
     @physical_object = PhysicalObject.new
@@ -240,11 +259,10 @@ class TitlesController < ApplicationController
   def set_creator_cv
 
   end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def title_params
       params.require(:title).permit(
-          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
+          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes, :subject, :name_authority,
           title_creators_attributes: [:id, :name, :role, :_destroy],
           title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
           title_genres_attributes: [:id, :genre, :_destroy],

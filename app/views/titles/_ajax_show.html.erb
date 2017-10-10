@@ -51,9 +51,9 @@
         <%= @title.title_locations.collect { |l| l.location }.join(', ') %>
     <% end %>
 
-    <% unless @title.title_dates.empty? %>
-        <h4>Dates</h4>
-        <%= @title.title_dates.collect { |d| "#{d.date_type.blank? ? d.date : "#{d.date_type} : #{d.date}" }"}.join(', ') %>
-    <% end %>
+	  <% unless @title.title_dates.empty? %>
+		  <h4>Dates</h4>
+		  <%= @title.title_dates.collect { |td| td.date_to_s }.join(',') %>
+	  <% end %>
   </div>
 </div>

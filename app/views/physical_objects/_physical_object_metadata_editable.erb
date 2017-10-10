@@ -113,6 +113,10 @@
           <%= f.check_box :generation_reversal %>
           <div>Reversal</div>
         </div>
+	      <div class="check_box">
+		      <%= f.check_box :generation_other %>
+		      <div>Other</div>
+	      </div>
       </div>
       <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
@@ -313,6 +317,7 @@
         <%= f.check_box :picture_picture_effects %>Picture Effects<br/>
         <%= f.check_box :picture_picture_outtakes %>Picture Outtakes<br/>
         <%= f.check_box :picture_kinescope %>Kinescope<br/>
+	      <%= f.check_box :picture_titles %>Titles
       </div>
     </div>
     <div class="clear">
@@ -397,7 +402,8 @@
     </div>
     <div class="left _50">
       <%= f.check_box :sound_content_composite_track %>Composite Track<br/>
-      <%= f.check_box :sound_content_outtakes %>Outtakes
+      <%= f.check_box :sound_content_outtakes %>Outtakes<br>
+	    <%= f.check_box :sound_content_narration %>Narration
     </div>
   </div>
   <div>

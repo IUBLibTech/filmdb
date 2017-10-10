@@ -1,5 +1,6 @@
+<%= link_to 'Create New Title', new_title_path %>
 <h4>Title Search</h4>
-<%= form_tag titles_search_path do %>
+<%= form_tag titles_search_path, method: :post do %>
 <table>
 	<tr>
 		<th>Title Text</th>
@@ -51,12 +52,15 @@
 <% if @titles %>
 <br>
 <br>
+<%= form_tag titles_merge_path %>
+	<%= hidden_field_tag :title_ids %>
 <table>
 	<tr>
 		<th>Title</th>
 		<th>Date(s)</th>
 		<th>Publisher(s)</th>
 		<th>Physical Object(s) Summary</th>
+		<th>Merge</th>
 	</tr>
 	<% @titles.each do |t| %>
 	<% c = t.count_selected_for_digitization %>
@@ -96,6 +100,17 @@
 				</li>
 			</ul>
 		</td>
+		<td>
+			<%= check_box_tag t.id, t.id, false, class:'title_check' %>
+		</td>
+	</tr>
+	<% end %>
+	<% if @titles.size > 0 %>
+	<tr>
+		<td colspan="4"></td>
+		<td>
+			<%= submit_tag "Merge Selected Titles" %>
+		</td>
 	</tr>
 	<% end %>
 </table>
@@ -110,6 +125,27 @@
 			} else {
 				$(this).addClass('bad_barcode')
 			}
+		});
+		// hook in the checkboxes to be range selectable
+		checks = $('input:checkbox')
+		var lastChecked = null;
+		checks.click(function(e) {
+			if (!lastChecked) {
+				lastChecked = this;
+			} else if (e.shiftKey) {
+				var start = $('input:checkbox').index(this);
+				var end = $('input:checkbox').index(lastChecked);
+				$('input:checkbox').slice(Math.min(start, end), Math.max(start, end) + 1).prop('checked', lastChecked.checked)
+			}
+			lastChecked = this;
+
+			var ids = [];
+			$(':checked.title_check').each(function() {
+				var x = this;
+				ids.push(this.id)
+			});
+			$('#title_ids').val(ids.join(','));
+			return true;
 		});
 	});
 </script>
