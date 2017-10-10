@@ -12,8 +12,6 @@ class CagesController < ApplicationController
 	skip_before_filter :verify_authenticity_token, only: [:mark_shipped]
 	protect_from_forgery with: :null_session, only: [:mark_shipped]
 
-
-
 	# GET /cages/1
   # GET /cages/1.json
   def show

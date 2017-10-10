@@ -107,6 +107,14 @@
     <div id="notes_div">
       <%= f.text_area :notes %>
     </div>
+	  <h4>Subject</h4>
+	  <div id="notes">
+		  <%= f.text_area :subject %>
+	  </div>
+	  <h4>Name Authority</h4>
+	  <div id="name_authority">
+		  <%= f.text_area :name_authority %>
+	  </div>
     <div class="actions">
       <%= f.submit (action_name == 'new' ? 'Create' : "Update"), id: 'title_submit' %>
     </div>

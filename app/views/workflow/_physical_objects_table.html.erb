@@ -8,6 +8,11 @@
       <th>Select To Pull</th>
 			<th>Cancel</th>
     <% end %>
+		<% if action_name == 'best_copy_selection' || action_name == 'best_copy_selection' %>
+			<th>Scan Settings</th>
+			<th>Condition Notes</th>
+			<th>Component Group notes</th>
+		<% end %>
 	</tr>
 <% @physical_objects.each do |p| %>
 	<tr>
@@ -23,6 +28,23 @@
       <td><%= check_box_tag "po_#{p.id}", ''%></td>
 			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
     <% end %>
+		<% if action_name == 'best_copy_selection' || action_name == 'best_copy_selection' %>
+			<% cg = p.active_component_group %>
+			<td>
+				<ul class="dig_params">
+					<li>Scan resolution: <%= cg.scan_resolution %></li>
+					<li>Color space: <%= cg.color_space %></li>
+					<li>Clean: <%= cg.clean %></li>
+					<li>Return on Original Reel: <%= cg.return_on_reel ? 'Yes' : 'No' %></li>
+				</ul>
+			</td>
+			<td>
+				<%= p.condition_notes %>
+			</td>
+			<td>
+				<%= cg.group_summary %>
+			</td>
+		<% end %>
 	</tr>
 <% end %>
 <% if action_name == 'pull_request' %>

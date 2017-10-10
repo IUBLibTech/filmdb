@@ -127,7 +127,7 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	def self.workflow_type_from_status(status_name)
-		STATUS_TYPES_TO_STATUSES.each do |key|
+		STATUS_TYPES_TO_STATUSES.keys.each do |key|
 			if STATUS_TYPES_TO_STATUSES[key].include? status_name
 				return key
 			end
@@ -135,8 +135,8 @@ class WorkflowStatus < ActiveRecord::Base
 		nil
 	end
 
-	def self.is_storage_status?(status)
-		s = workflow_type_from_status(status)
+	def self.is_storage_status?(status_name)
+		s = workflow_type_from_status(status_name)
 		s != nil && s == 'Storage'
 	end
 

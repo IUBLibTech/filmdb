@@ -55,6 +55,14 @@ module PhysicalObjectsHelper
     end
   end
 
+  def calc_estimated_duration(pos)
+    d = 0
+    pos.each do |p|
+      d += (PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * (p.footage.blank? ? 0 : p.footage)) / 24
+    end
+    d
+  end
+
   # Titles are now a many to many with physical objects - as a result whenever we process the title_ids passed in through the form, we need to examine if any PhysicalObjectTitles (join object)
   # exist that are not represented in the passed ids. These non-represented ids are titles that were associated with the physical object but have been disacciated (through a edit/update call
   # in physical_objects_controller)
@@ -79,11 +87,11 @@ module PhysicalObjectsHelper
         :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
         :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
         :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
-        :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :reel_number,
+        :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other, :reel_number,
         :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
         :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
         :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-        :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :frame_rate,
+        :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :frame_rate,
         :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
         :stock_unknown, :aspect_ratio_2_66_1,
 
@@ -96,7 +104,7 @@ module PhysicalObjectsHelper
         :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :close_caption, :captions_or_subtitles_notes,
         :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
         :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
-        :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
+        :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration,
         :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
         :sound_configuration_dual_mono, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
         :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,

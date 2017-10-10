@@ -60,3 +60,10 @@ $.rails.showConfirmationDialog = function(link){
         }
     });
 }
+
+function showLoad(jqSelector, scale) {
+	jqSelector.after("<div class='loader right' style='zoom: %{scale}; -moz-transform: scale(%{scale})'></div>");
+}
+function hideLoader(jqSelector) {
+	jqSelector.find('.loader').remove();
+}

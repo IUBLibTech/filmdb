@@ -329,6 +329,13 @@ td#color {
 ._75 {
     width: 75%;
 }
+._95 {
+	width: 95%;
+}
+._98 {
+	width: 98%;
+}
+
 ._100 {
     width: 100%;
 }
@@ -431,7 +438,10 @@ ul {
     color: white;
 }
 li#master_selection {
-    background: #805215;
+	background: #805215;
+}
+li.master_selection {
+	background: #805215;
 }
 tr.ui-selected {
     background: #f0cfa3;
@@ -664,3 +674,21 @@ div.check_box > div {
 	 color: #911e0c;
 	 font-weight: bold;
  }
+
+ .ml_10 {
+	 margin-left: 10px;
+ }
+
+.loader {
+	border: 3px solid #f3f3f3; /* Light grey */
+	border-top: 3px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	animation: spin 0.7s linear infinite;
+	display: none;
+}
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}

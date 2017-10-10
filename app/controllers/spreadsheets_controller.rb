@@ -112,6 +112,7 @@ class SpreadsheetsController < ApplicationController
       @mergees = Title.where(id: params[:selected].split(','))
       @mergees.each do |m|
         m.series_id = @master_title.series_id
+
         if @master_title.series_part.blank?
           @master_title.series_part = m.series_part
         end
@@ -123,6 +124,12 @@ class SpreadsheetsController < ApplicationController
         end
         unless m.series_part.blank?
           @master_title.series_part += (@master_title.series_part.blank? ? m.series_part : " | #{m.series_part}")
+        end
+        unless m.notes.blank?
+	        @master_title.notes += (@master_title.notes.blank? ? m.notes : " | #{m.notes}")
+        end
+        unless m.subject.blank?
+	        @master_title.subject += (@master_title.subject.blank? ? m.subject : " | #{m.subject}")
         end
 
         m.title_original_identifiers.each do |toi|
