@@ -96,6 +96,10 @@ Rails.application.routes.draw do
   get '/titles/ajax/edit_cg_params/:id', to: 'titles#ajax_edit_cg_params', as: 'ajax_edit_cg_params'
   post '/titles/merge', to: 'titles#titles_merge', as: 'titles_merge'
   post '/titles/do_merge', to: 'titles#merge_titles', as: 'merge_titles'
+  get '/title_merge_selection/', to: 'titles#title_merge_selection', as: 'title_merge_selection'
+  get '/title_merge_selection_table_row/:id', to: 'titles#title_merge_selection_table_row', as: 'title_merge_selection_table_row'
+  get '/title_merge_selection/merge_physical_object_candidates', to: 'titles#merge_physical_object_candidates', as: 'title_merge_physical_object_candidates'
+  post '/title_merge_select/merge_titles', to: 'titles#merge_autocomplete_titles', as: 'title_autocomplete_selection_merge'
 
   resources :units
 
