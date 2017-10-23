@@ -162,10 +162,12 @@ class TitlesController < ApplicationController
     end
   end
 
+  # title merge from search page
   def titles_merge
 	  @titles = Title.where(id: params[:title_ids].split(',').collect { |t| t.to_i })
   end
 
+  # post for merging titles from search page
   def merge_titles
 	  @master = Title.find(params[:master])
 	  @mergees = Title.where(id: params[:selected].split(','))
@@ -180,6 +182,87 @@ class TitlesController < ApplicationController
 	  redirect_to @master
   end
 
+
+  ##### These actions are all related to handling title merge through the "title autocomplete" selection process ######
+  # get for title merging from ajax autcomplete title selection
+  def title_merge_selection
+
+  end
+  # ajax page returns a table row for the specified title
+  def title_merge_selection_table_row
+    @title = Title.find(params[:id])
+    render partial: 'title_merge_selection_table_row'
+  end
+  # ajax call that renders a table containing all the physical objects for the specified title ids
+  def merge_physical_object_candidates
+	  @physical_objects = Title.where(id: params[:ids]).collect{ |t| t.physical_objects }.flatten
+	  @component_group_cv = ControlledVocabulary.component_group_cv
+	  render partial: 'merge_physical_object_candidates'
+  end
+  # does the actual title merge for ajax search based merging
+  def merge_autocomplete_titles
+	  @component_group_cv = ControlledVocabulary.component_group_cv
+    @master = Title.find(params[:master_title_id])
+    @title = @master
+    if @master.nil?
+      flash.now[:warning] = "You did not specify a master title record - merge aborted"
+      redirect_to 'title_merge_selection'
+    else
+	    # 1) Merge the titles
+	    @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
+	    title_merge(@master, @mergees)
+
+	    # 2) Create any necessary component groups
+	    @physical_objects = PhysicalObject.where("id in (?)", params[:cg_pos].split(',').collect{ |s| s.to_i})
+	    @queued = 0
+	    @returned = 0
+	    if @physical_objects.size > 0
+		    @cg = ComponentGroup.new(
+			    title_id: @master.id,
+			    group_type: params[:group_type], title_id: @title.id,
+			    group_summary: params[:group_summary],
+			    scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
+			    return_on_reel: (params[:return_on_reel] == 'Yes' ? true : false),
+			    clean: params[:clean],
+			    color_space: params[:color_space],
+			    return_on_reel: params[:return_on_reel]
+		    )
+		    @physical_objects.each do |p|
+			    @cg.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @cg.id, physical_object_id: p.id)
+			    p.active_component_group = @cg
+			    # if any of the CG physical objects are in active workflow, queue pulls for any CG physical objects that are in storage
+			    if WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include?(p.current_workflow_status.status_name)
+				    ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p, true)
+				    p.workflow_statuses << ws
+				    p.save
+				    @queued += 1
+				    loc = (@cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+				    ws = WorkflowStatus.build_workflow_status(loc, p, true)
+				    p.workflow_statuses << ws
+				    p.save
+			    end
+		    end
+		    @cg.save
+	    end
+	    # 3) Return all physical objects not in the newly created (or not created) Component Group back to storage
+	    @master.physical_objects.each do |p|
+		    in_storage = WorkflowStatus.is_storage_status?(p.current_workflow_status.status_name)
+		    in_cg = (@cg.nil? ? false: @cg.physical_objects.include?(p))
+		    if (@cg.nil? && !in_storage) || (@cg && !in_cg && !in_storage)
+			    ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
+			    p.workflow_statuses << ws
+			    p.save
+			    @returned += 1
+		    end 
+	    end
+    end
+    flash[:merge] = true
+    render 'titles/show'
+  end
+
+
+
+
   def new_physical_object
     @em = 'Creating New Physical Object'
     @physical_object = PhysicalObject.new
@@ -189,7 +272,12 @@ class TitlesController < ApplicationController
 
   def autocomplete_title
     if params[:term]
-      json = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ?", "%#{params[:term]}%").select('titles.id, title_text, titles.summary, series_id, series.title').to_json
+      if params[:exclude]
+        @titles = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ? AND titles.id not in (?)", "%#{params[:term]}%", params[:exclude]).select('titles.id, title_text, titles.summary, series_id, series.title')
+      else
+        @titles = Title.joins("LEFT JOIN `series` ON `series`.`id` = `titles`.`series_id`").where("title_text like ? ", "%#{params[:term]}%").select('titles.id, title_text, titles.summary, series_id, series.title')
+      end
+      json = @titles.to_json
       json.gsub! "\"title_text\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       json.gsub! "\"title\":", "\"series_title\":"
@@ -198,6 +286,7 @@ class TitlesController < ApplicationController
       render json: ''
     end
   end
+
 
   def autocomplete_title_for_series
     if params[:series_id] && params[:term]

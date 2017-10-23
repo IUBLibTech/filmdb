@@ -13,6 +13,7 @@
     <th>Reel Number</th>
     <th>Can Size</th>
 	  <th>Collection</th>
+	  <th>Location</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr>
@@ -25,6 +26,7 @@
     <td><%= p.reel_number %></td>
     <td><%= p.can_size %></td>
 	  <td><%= p.collection&.name %></td>
+	  <td><%= p.current_workflow_status.status_name %></td>
   </tr>
   <% end %>
 </table>

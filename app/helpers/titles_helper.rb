@@ -76,7 +76,14 @@ module TitlesHelper
 	end
 
 	def fix_component_groups(master, mergees)
-		# FIXME: determine what to do with active workflow CGs
+		ms = "This Component Group was created in a differebt title that was merged into this record. It may no longer be relevant."
+		mergees.each do |t|
+			t.component_groups.each do |cg|
+				cg.title_id = master.id
+				cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
+				cg.save
+			end
+		end
 	end
 
 end
