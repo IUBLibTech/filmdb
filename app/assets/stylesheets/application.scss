@@ -200,6 +200,9 @@ table.version_table > tbody > tr > td > input {
     padding: 5px;
 
 }
+#selected_titles > .warning, #physical_objects > .warning {
+	margin: 0;
+}
 .notice {
     background-color: green;
     color: black;
@@ -309,6 +312,10 @@ td#color {
     color: white;
     font-weight: bold;
     padding-left: 10px;
+}
+
+._20 {
+	width: 20%;
 }
 
 ._25 {
@@ -437,12 +444,16 @@ ul {
     background: #e69a37;
     color: white;
 }
-li#master_selection {
+li#master_selection, li.master_selection, tr.master_selection {
 	background: #805215;
 }
-li.master_selection {
-	background: #805215;
+tr.master_selection {
+	color: white;
 }
+tr.master_selection > td > a {
+	color: white;
+}
+
 tr.ui-selected {
     background: #f0cfa3;
 }
@@ -691,4 +702,23 @@ div.check_box > div {
 @keyframes spin {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
+}
+
+.title_merge_remove {
+	cursor: pointer;
+}
+.title_merge_remove:hover {
+	color: #805215;
+}
+#title_summary {
+	position: fixed;
+	z-index: 200;
+	background-color: white;
+	border: 1px solid #805215;
+	display: none;
+	box-shadow: -8px 8px 4px grey;
+	width: 600px;
+	margin-left: 390px;
+	margin-top: -10px;
+	padding: 5px;
 }

@@ -97,7 +97,7 @@ module PhysicalObjectsHelper
 
         :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
         :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
-        :color_bw_color_ansochrome, :color_bw_color_eco, :color_bw_color_eastman,
+        :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman,
         :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
 
         :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
