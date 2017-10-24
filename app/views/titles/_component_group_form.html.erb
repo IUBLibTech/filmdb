@@ -1,4 +1,4 @@
-<%= form_for :pos, url: create_component_group_path, format: :html, html: {id: "component_group_form"} do |f| %>
+<%= form_for :pos, url: create_component_group_path(@title.id), format: :html, html: {id: "component_group_form"} do |f| %>
     <%= f.hidden_field :po_ids %>
 	<div id="cg_attributes_form" class="boxsizingBorder">
       <div><b>Group Type: </b><%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %></div>

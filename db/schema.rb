@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170929192332) do
+ActiveRecord::Schema.define(version: 20171010190426) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -273,7 +273,7 @@ ActiveRecord::Schema.define(version: 20170929192332) do
     t.boolean  "color_bw_color_ektachrome"
     t.boolean  "color_bw_color_kodachrome"
     t.boolean  "color_bw_color_technicolor"
-    t.boolean  "color_bw_color_ansochrome"
+    t.boolean  "color_bw_color_anscochrome"
     t.boolean  "color_bw_color_eco"
     t.boolean  "color_bw_color_eastman"
     t.boolean  "aspect_ratio_1_33_1"
