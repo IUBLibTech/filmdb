@@ -40,7 +40,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def is_reformating?
-	  group_type.include? 'Reformatting'
+	  group_type.include?('Reformatting') || group_type.include?('Best Copy')
   end
 
   def all_present?

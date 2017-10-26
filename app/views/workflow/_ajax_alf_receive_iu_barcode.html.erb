@@ -28,6 +28,12 @@
 					<%= f.text_field :footage %>
 				</td>
 			</tr>
+			<tr>
+				<th>Can Size</th>
+				<td>
+					<%= f.select :can_size, options_for_select(@cv[:can_size], @physical_object.can_size), {include_blank: ''} %>
+				</td>
+			</tr>
 			<% if !@physical_object.active_component_group&.scan_resolution.blank? %>
 			<tr>
 				<th>Scan Resolution</th>

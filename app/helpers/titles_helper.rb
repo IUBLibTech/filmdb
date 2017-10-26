@@ -1,14 +1,16 @@
 module TitlesHelper
 
 	# attempts to merge all mergees into the master title record - physical objects are reassigned, all non-duplicate creator,
-	# publisher, date, genre, form, etc data is also moved over to the master record. Currently, titles that are in active
-	# workflow will not be merged. This method will return a array of any titles not merged
-	def title_merge(master, mergees)
+	# publisher, date, genre, form, etc data is also moved over to the master record.
+	# Titles that are in active workflow will not be merged unless force_merge = true. It is then up to the calling code to
+	# sort out any active component groups since this will leave the title's physical objects in an inconsistent state.
+	#
+	# This method returns an array of any titles not merged
+	def title_merge(master, mergees, force_merge=false)
 		failed = []
-		fix_component_groups(master, mergees)
+		fix_component_groups(master, mergees, force_merge)
 		mergees.each do |m|
-
-			if m.in_active_workflow?
+			if m.in_active_workflow? && !force_merge
 				failed << m
 				next
 			end
@@ -75,9 +77,17 @@ module TitlesHelper
 		failed
 	end
 
-	def fix_component_groups(master, mergees)
-		ms = "This Component Group was created in a differebt title that was merged into this record. It may no longer be relevant."
+	def fix_component_groups(master, mergees, force_merge)
+		ms = "This component group was created before other titles were merged into this title."
+		master.component_groups.each do |cg|
+			cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
+			cg.save
+		end
+		ms = "This Component Group belonged to a title that was merged into this record. It may no longer be relevant."
 		mergees.each do |t|
+			if t.in_active_workflow? && !force_merge
+				next
+			end
 			t.component_groups.each do |cg|
 				cg.title_id = master.id
 				cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
