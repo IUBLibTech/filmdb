@@ -199,6 +199,9 @@ class PhysicalObject < ActiveRecord::Base
 		workflow_statuses.last
 	end
 
+	def current_location
+		current_workflow_status.status_name
+	end
 
 	def workflow
 		current_workflow_status&.workflow_type

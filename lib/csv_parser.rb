@@ -245,12 +245,13 @@ class CsvParser
 
     can_sizes = @cv[:can_size].collect{ |c| c[0]}
     can = row[column_index CAN_SIZE]
-    if can_sizes.include?(can)
-      set_value(:can_size, can, po)
-    else
-      po.errors.add(:can_size, "Invalid Can Size: #{can}")
+    unless can.blank?
+      if can_sizes.include?(can)
+        set_value(:can_size, can, po)
+      else
+        po.errors.add(:can_size, "Invalid Can Size: #{can}")
+      end
     end
-
     footage = row[column_index FOOTAGE]
     unless footage.blank?
       po.send(:footage=, footage.to_i)

@@ -10,7 +10,7 @@
     <th>Actions</th>
   </thead>
   <tbody>
-  <% @title.component_groups.each do |cg| %>
+  <% @title.component_groups.order('id DESC').each do |cg| %>
     <tr id="<%= cg.id %>">
       <td id="cg_<%= cg.id %>_group_type" title="<%= cg.group_type %>"><%= cg.group_type %> (<%= cg.physical_objects.size %>)
 	      <% if cg.group_type == 'Reformating' %><%= " [#{cg.scan_resolution}]" %><% end %></td>

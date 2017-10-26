@@ -544,11 +544,4 @@ ActiveRecord::Schema.define(version: 20171010190426) do
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
 
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
-
 end
