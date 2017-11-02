@@ -240,7 +240,6 @@ class TitlesController < ApplicationController
 				    p.workflow_statuses << ws
 			    else
 				    loc = (@cg.group_type == ComponentGroup::BEST_COPY_ALF ? ComponentGroup::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
-				    debugger
 				    ws = WorkflowStatus.build_workflow_status(loc, p, true)
 				    p.workflow_statuses << ws
 			    end
