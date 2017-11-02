@@ -1,6 +1,6 @@
 <% if flash[:merge] == true %>
-	<p class="notice">Merge successful. The following happened as a result:
-	<ul>
+	<p class="notice">Merge successful. The following happened as a result:	</p>
+	<ul class="notice">
 		<li><%= pluralize(@mergees.size, 'Title') %> merged into this Title</li>
 		<li>A new Component Group <%= @physical_objects.size > 0 ? 'was' : 'was not' %> created.</li>
 		<% if @queued > 0 %>
@@ -11,7 +11,7 @@
 		<% end %>
 		<% if (@cg && @cg.physical_objects.size > @queued)%>
 			<li>
-				<%= "#{pluralize(@cg.physical_objects.size - @queued, 'Physical Object')} #{@cg.physical_objects.size > 1 ? 'have' : 'has'}" %> moved to
+				<%= "#{pluralize(@cg.physical_objects.size - @queued, 'Physical Object')} #{(@cg.physical_objects.size - @queued > 1) ? 'have' : 'has'}" %> moved to
 				<%= @cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES %>
 			</li>
 		<% end %>
@@ -19,7 +19,6 @@
 			<li><%= "#{pluralize(@returned, 'Physical Object')} returned to storage" %></li>
 		<% end %>
 	</ul>
-	</p>
 <% end %>
 <div id="whodoneit">
   <div><b>Creator</b></div><div><%= @title.creator&.name %></div>
