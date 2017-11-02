@@ -210,45 +210,53 @@ class TitlesController < ApplicationController
     else
 	    # 1) Merge the titles
 	    @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
-	    title_merge(@master, @mergees)
-
-	    # 2) Create any necessary component groups
+	    title_merge(@master, @mergees, true)
+      # 2) Create any necessary component group
 	    @physical_objects = PhysicalObject.where("id in (?)", params[:cg_pos].split(',').collect{ |s| s.to_i})
 	    @queued = 0
 	    @returned = 0
+	    sum = "This Component Group was created by merging titles."
 	    if @physical_objects.size > 0
 		    @cg = ComponentGroup.new(
 			    title_id: @master.id,
 			    group_type: params[:group_type], title_id: @title.id,
-			    group_summary: params[:group_summary],
+			    group_summary: (params[:group_summary] + (params[:group_summary].blank? ? sum : " | #{sum}")),
 			    scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
 			    return_on_reel: (params[:return_on_reel] == 'Yes' ? true : false),
 			    clean: params[:clean],
 			    color_space: params[:color_space],
 			    return_on_reel: params[:return_on_reel]
 		    )
+		    # update physical objects in the component group
 		    @physical_objects.each do |p|
 			    @cg.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @cg.id, physical_object_id: p.id)
 			    p.active_component_group = @cg
-			    # if any of the CG physical objects are in active workflow, queue pulls for any CG physical objects that are in storage
+			    # queue pulls for any CG physical objects that are in storage
 			    if WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include?(p.current_workflow_status.status_name)
 				    ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p, true)
 				    p.workflow_statuses << ws
 				    p.save
 				    @queued += 1
-				    loc = (@cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+				    p.workflow_statuses << ws
+			    else
+				    loc = (@cg.group_type == ComponentGroup::BEST_COPY_ALF ? ComponentGroup::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+				    debugger
 				    ws = WorkflowStatus.build_workflow_status(loc, p, true)
 				    p.workflow_statuses << ws
-				    p.save
 			    end
+			    p.save
 		    end
 		    @cg.save
 	    end
-	    # 3) Return all physical objects not in the newly created (or not created) Component Group back to storage
-	    @master.physical_objects.each do |p|
+
+	    # 3) Update physical objects not in the component group
+	    others = @master.physical_objects.to_a - @physical_objects.to_a
+	    others.each do |p|
 		    in_storage = WorkflowStatus.is_storage_status?(p.current_workflow_status.status_name)
-		    in_cg = (@cg.nil? ? false: @cg.physical_objects.include?(p))
-		    if (@cg.nil? && !in_storage) || (@cg && !in_cg && !in_storage)
+		    shipped = p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY
+		    if (shipped || in_storage)
+			    next
+		    else
 			    ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
 			    p.workflow_statuses << ws
 			    p.save
@@ -256,6 +264,7 @@ class TitlesController < ApplicationController
 		    end 
 	    end
     end
+	  @title.reload
     flash[:merge] = true
     render 'titles/show'
   end
