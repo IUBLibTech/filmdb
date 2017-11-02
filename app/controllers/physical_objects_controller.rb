@@ -139,23 +139,6 @@ class PhysicalObjectsController < ApplicationController
     redirect_to edit_ad_strip_path
   end
 
-  # def edit_location
-  #   @physical_object = PhysicalObject.new
-  # end
-  #
-  # def update_location
-  #   bc = params[:physical_object][:iu_barcode]
-  #   location = params[:physical_object][:location]
-  #   @physical_object = PhysicalObject.where(iu_barcode: bc).first
-  #   if @physical_object.nil?
-  #     flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
-  #   else
-  #     @physical_object.update_attributes(location: location)
-  #     flash[:notice] = "Physical Object [#{bc}] was updated with new location: #{location}"
-  #   end
-  #   redirect_to edit_location_path
-  # end
-
   def mark_missing
     if @physical_object.current_workflow_status.status_name == WorkflowStatus::PULL_REQUESTED
       ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @physical_object, true)

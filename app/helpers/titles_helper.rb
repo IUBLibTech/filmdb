@@ -14,28 +14,15 @@ module TitlesHelper
 				failed << m
 				next
 			end
-
-			m.series_id = master.series_id
-
-			if master.series_part.blank?
-				master.series_part = m.series_part
+			if (master.series_id.nil? && !m.series_id.nil?)
+				master.series_id = m.series_id
 			end
-
-			# if master.summary is nil then += will fail as there is no += operator or nil...
-			master.summary = '' if master.summary.blank?
-			unless m.summary.blank?
-				master.summary += " | #{m.summary}"
-			end
-			unless m.series_part.blank?
-				master.series_part += (master.series_part.blank? ? m.series_part : " | #{m.series_part}")
-			end
-			unless m.notes.blank?
-				master.notes += (master.notes.blank? ? m.notes : " | #{m.notes}")
-			end
-			unless m.subject.blank?
-				master.subject += (master.subject.blank? ? m.subject : " | #{m.subject}")
-			end
-
+			puts("\n\n\n\nMaster: #{master.summary}\n\nMerge: #{m.summary}")
+			master.summary = (master.summary.blank? ? m.summary : master.summary + (m.summary.blank? ? '' : " | #{m.summary}"))
+			master.series_part = (master.series_part.blank?  ? m.series_part : master.series_part + (m.series_part.blank? ? '' : " | #{m.series_part}"))
+			master.notes = (master.notes.blank? ? m.notes : master.notes + (m.notes.blank? ? '' : " | #{m.notes}"))
+			master.subject = (master.subject.blank? ? m.subject : master.subject + (m.subject.blank? ? '' : master.subject + " | #{m.subject}"))
+			puts("After: #{master.summary}")
 			m.title_original_identifiers.each do |toi|
 				unless master.title_original_identifiers.include? toi
 					master.title_original_identifiers << toi
@@ -74,6 +61,7 @@ module TitlesHelper
 			PhysicalObjectTitle.where(title_id: m.id).update_all(title_id: master.id)
 			m.delete
 		end
+		master.save
 		failed
 	end
 
