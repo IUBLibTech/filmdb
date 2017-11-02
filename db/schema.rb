@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171010190426) do
+ActiveRecord::Schema.define(version: 20171027144422) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 20171010190426) do
     t.datetime "updated_at"
     t.text     "group_summary",   limit: 65535
     t.text     "scan_resolution", limit: 65535
-    t.string   "clean",           limit: 255,   default: "1"
+    t.string   "clean",           limit: 255,   default: "Yes"
     t.boolean  "hand_clean_only",               default: false
     t.boolean  "hd"
     t.boolean  "return_on_reel",                default: false

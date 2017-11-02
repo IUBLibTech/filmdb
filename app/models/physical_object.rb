@@ -234,22 +234,26 @@ class PhysicalObject < ActiveRecord::Base
 
 	# where (IN ALF!!!) the PO is currently stored
 	def storage_location
-		ingested = WorkflowStatus.where(physical_object_id: id, status_name: WorkflowStatus::IN_STORAGE_INGESTED).size > 0
-		if awaiting_freezer?
-			return WorkflowStatus::AWAITING_FREEZER
-		elsif in_freezer?
-			return WorkflowStatus::IN_FREEZER
-		# because of how 'ingested' is determined (if there are any ingested states), we need to test after AFTER testing for
-		# freezer because an item may have been previously ingest but later determined to be stored in the freezer/awaiting freezer
-		elsif ingested
-			return WorkflowStatus::IN_STORAGE_INGESTED
-		elsif current_workflow_status.nil?
-			''
-		elsif (current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_WELLS || current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_ALF)
-			current_workflow_status.status_name
-		else
-			return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
-		end
+		# previously storage location was based on a heirarchical based decision = if an item is ever in the freezer, it will always be in the freezer
+		# this did not present the opportunity to correct human error (something incorrectly placed in the freezer). Logic no longer enforces these
+		# rules and storage location is now determine by the last place an item resided "in storage"
+		# ingested = WorkflowStatus.where(physical_object_id: id, status_name: WorkflowStatus::IN_STORAGE_INGESTED).size > 0
+		# if awaiting_freezer?
+		# 	return WorkflowStatus::AWAITING_FREEZER
+		# elsif in_freezer?
+		# 	return WorkflowStatus::IN_FREEZER
+		# # because of how 'ingested' is determined (if there are any ingested states), we need to test after AFTER testing for
+		# # freezer because an item may have been previously ingest but later determined to be stored in the freezer/awaiting freezer
+		# elsif ingested
+		# 	return WorkflowStatus::IN_STORAGE_INGESTED
+		# elsif current_workflow_status.nil?
+		# 	''
+		# elsif (current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_WELLS || current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_ALF)
+		# 	current_workflow_status.status_name
+		# else
+		# 	return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
+		# end
+		workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at ASC').last.status_name
 	end
 
 
