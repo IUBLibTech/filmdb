@@ -106,7 +106,7 @@
 		$.ajax({
 			url: '/title_merge_selection_table_row/'+id,
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during IU Barcode scan: " + errorThrown});
+				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
 			},
 			success: function(result) {
 				$('.title_merge_remove').unbind('click.title_merge_remove_title')
@@ -130,7 +130,7 @@
 		$.ajax({
 			url: '/titles/ajax/'+id,
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during IU Barcode scan: " + errorThrown});
+				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
 			},
 			success: function(result) {
 				$('#title_summary').html(result);
@@ -144,7 +144,7 @@
 			url: "<%= title_merge_physical_object_candidates_path %>",
 			data: {ids: selectedTitleIds()},
 			error: function(MLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during IU Barcode scan: " + errorThrown});
+				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
 			},
 			success: function(result) {
 				$('#physical_objects').html(result)

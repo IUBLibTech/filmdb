@@ -1,39 +1,28 @@
 module TitlesHelper
 
 	# attempts to merge all mergees into the master title record - physical objects are reassigned, all non-duplicate creator,
-	# publisher, date, genre, form, etc data is also moved over to the master record. Currently, titles that are in active
-	# workflow will not be merged. This method will return a array of any titles not merged
-	def title_merge(master, mergees)
+	# publisher, date, genre, form, etc data is also moved over to the master record.
+	# Titles that are in active workflow will not be merged unless force_merge = true. It is then up to the calling code to
+	# sort out any active component groups since this will leave the title's physical objects in an inconsistent state.
+	#
+	# This method returns an array of any titles not merged
+	def title_merge(master, mergees, force_merge=false)
 		failed = []
-		fix_component_groups(master, mergees)
+		fix_component_groups(master, mergees, force_merge)
 		mergees.each do |m|
-
-			if m.in_active_workflow?
+			if m.in_active_workflow? && !force_merge
 				failed << m
 				next
 			end
-
-			m.series_id = master.series_id
-
-			if master.series_part.blank?
-				master.series_part = m.series_part
+			if (master.series_id.nil? && !m.series_id.nil?)
+				master.series_id = m.series_id
 			end
-
-			# if master.summary is nil then += will fail as there is no += operator or nil...
-			master.summary = '' if master.summary.blank?
-			unless m.summary.blank?
-				master.summary += " | #{m.summary}"
-			end
-			unless m.series_part.blank?
-				master.series_part += (master.series_part.blank? ? m.series_part : " | #{m.series_part}")
-			end
-			unless m.notes.blank?
-				master.notes += (master.notes.blank? ? m.notes : " | #{m.notes}")
-			end
-			unless m.subject.blank?
-				master.subject += (master.subject.blank? ? m.subject : " | #{m.subject}")
-			end
-
+			puts("\n\n\n\nMaster: #{master.summary}\n\nMerge: #{m.summary}")
+			master.summary = (master.summary.blank? ? m.summary : master.summary + (m.summary.blank? ? '' : " | #{m.summary}"))
+			master.series_part = (master.series_part.blank?  ? m.series_part : master.series_part + (m.series_part.blank? ? '' : " | #{m.series_part}"))
+			master.notes = (master.notes.blank? ? m.notes : master.notes + (m.notes.blank? ? '' : " | #{m.notes}"))
+			master.subject = (master.subject.blank? ? m.subject : master.subject + (m.subject.blank? ? '' : master.subject + " | #{m.subject}"))
+			puts("After: #{master.summary}")
 			m.title_original_identifiers.each do |toi|
 				unless master.title_original_identifiers.include? toi
 					master.title_original_identifiers << toi
@@ -72,12 +61,21 @@ module TitlesHelper
 			PhysicalObjectTitle.where(title_id: m.id).update_all(title_id: master.id)
 			m.delete
 		end
+		master.save
 		failed
 	end
 
-	def fix_component_groups(master, mergees)
-		ms = "This Component Group was created in a differebt title that was merged into this record. It may no longer be relevant."
+	def fix_component_groups(master, mergees, force_merge)
+		ms = "This component group was created before other titles were merged into this title."
+		master.component_groups.each do |cg|
+			cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
+			cg.save
+		end
+		ms = "This Component Group belonged to a title that was merged into this record. It may no longer be relevant."
 		mergees.each do |t|
+			if t.in_active_workflow? && !force_merge
+				next
+			end
 			t.component_groups.each do |cg|
 				cg.title_id = master.id
 				cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
