@@ -107,6 +107,7 @@ class WorkflowController < ApplicationController
 			ws = WorkflowStatus.build_workflow_status(params[:physical_object][:workflow], @physical_object)
 			@physical_object.workflow_statuses << ws
 			@physical_object.footage = params[:physical_object][:footage] unless params[:physical_object][:footage].blank?
+			@physical_object.can_size = params[:physical_object][:can_size] unless params[:physical_object][:can_size].blank?
 			@physical_object.save
 			flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"
 		end
@@ -115,6 +116,7 @@ class WorkflowController < ApplicationController
 
 	def ajax_alf_receive_iu_barcode
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
+		@cv = ControlledVocabulary.physical_object_cv
 		if @physical_object.nil?
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? || !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT
@@ -151,7 +153,7 @@ class WorkflowController < ApplicationController
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
-		ws = WorkflowStatus.build_workflow_status(@po.storage_location, @po)
+		ws = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
 		@po.workflow_statuses << ws
 		@po.save
 		flash[:notice] = "#{@po.iu_barcode} was returned to #{ws.status_name}"

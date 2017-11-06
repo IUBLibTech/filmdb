@@ -2,8 +2,9 @@
 <%= render partial: 'workflow/best_copy_cg_message' %>
 <% end %>
 <h4>Best Copy Selection</h4>
-<p>Scan an IU barcode below to retrieve its Best Copy component group</p>
-<table>
+<p style="float:left; width: 75%;">Scan an IU barcode below to retrieve its Best Copy component group</p>
+<p style="float: right; width: 25%;"><%= link_to "Merge Titles", title_merge_selection_path %></p>
+<table class="clear">
 	<tr>
 		<th>IU Barcode</th>
 		<td><input type="text" id="iu_barcode"/></td>

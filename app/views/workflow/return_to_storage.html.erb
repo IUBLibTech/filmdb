@@ -6,6 +6,12 @@
         <td><%= f.text_field :iu_barcode, class: 'ajax_barcode_lookup' %></td>
       </tr>
       <tr>
+	      <th>Return to:</th>
+	      <td>
+		      <%= f.select :location, options_for_select(WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].collect{|s| [s,s]}) %>
+	      </td>
+      </tr>
+	    <tr>
         <td><%= f.submit 'Mark Returned' %> </td>
         <td id="ajax_show_storage_message"></td>
       </tr>

@@ -1,16 +1,22 @@
 <% if flash[:merge] == true %>
-	<p class="notice">Merge successful. The following happened as a result:</p>
-	<ul>
-		<li>This title was merged with <%= @mergees.size %> other Titles</li>
+	<p class="notice">Merge successful. The following happened as a result:	</p>
+	<ul class="notice">
+		<li><%= pluralize(@mergees.size, 'Title') %> merged into this Title</li>
 		<li>A new Component Group <%= @physical_objects.size > 0 ? 'was' : 'was not' %> created.</li>
 		<% if @queued > 0 %>
-			<li><%= @queued %> physical objects in the created Component Group are in storage. They have been Queued for Pull Request (you still need to request the pull)</li>
+			<li>
+				<%= pluralize(@queued, 'Physical Object') %> in the created Component Group <%= @queued.size > 1 ? 'are' : 'is' %> in storage.
+				<%= @queued.size > 1 ? 'They have' : 'It has' %> been Queued for Pull Request
+			</li>
 		<% end %>
 		<% if (@cg && @cg.physical_objects.size > @queued)%>
-			<li><%= @cg.physical_objects.size - @queued %> have been moved to <%= @cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES %></li>
+			<li>
+				<%= "#{pluralize(@cg.physical_objects.size - @queued, 'Physical Object')} #{(@cg.physical_objects.size - @queued > 1) ? 'have' : 'has'}" %> moved to
+				<%= @cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES %>
+			</li>
 		<% end %>
 		<% if @returned > 0 %>
-			<li><%= "#{@returned} Physical Objects were returned to storage" %></li>
+			<li><%= "#{pluralize(@returned, 'Physical Object')} returned to storage" %></li>
 		<% end %>
 	</ul>
 <% end %>

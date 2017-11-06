@@ -1,4 +1,4 @@
-<%= link_to 'Create New Title', new_title_path %>
+<%= link_to 'Create New Title', new_title_path %> | <%= link_to 'Merge Titles', title_merge_selection_path %>
 <h4>Title Search</h4>
 <%= form_tag titles_search_path, method: :post do %>
 <table>
@@ -60,7 +60,7 @@
 		<th>Date(s)</th>
 		<th>Publisher(s)</th>
 		<th>Physical Object(s) Summary</th>
-		<th>Merge</th>
+		<!-- <th>Merge</th> -->
 	</tr>
 	<% @titles.each do |t| %>
 	<% c = t.count_selected_for_digitization %>
@@ -100,17 +100,13 @@
 				</li>
 			</ul>
 		</td>
-		<td>
-			<%= check_box_tag t.id, t.id, false, class:'title_check' %>
-		</td>
+		<!-- <td>	<%= check_box_tag t.id, t.id, false, class:'title_check' %>	</td> -->
 	</tr>
 	<% end %>
 	<% if @titles.size > 0 %>
 	<tr>
 		<td colspan="4"></td>
-		<td>
-			<%= submit_tag "Merge Selected Titles" %>
-		</td>
+		<!-- <td><%= submit_tag "Merge Selected Titles" %></td> -->
 	</tr>
 	<% end %>
 </table>
