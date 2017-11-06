@@ -113,23 +113,23 @@ class SpreadsheetsController < ApplicationController
       @mergees.each do |m|
         m.series_id = @master_title.series_id
 
-        if @master_title.series_part.blank?
-          @master_title.series_part = m.series_part
-        end
-
         # if @master_title.summary is nil then += will fail as there is no += operator or nil...
         @master_title.summary = '' if @master_title.summary.blank?
         unless m.summary.blank?
+          @master_title.summary = "" if @master_title.summary.blank?
           @master_title.summary += " | #{m.summary}"
         end
         unless m.series_part.blank?
+          @master_title.series_part = "" if @master_title.series_part.blank?
           @master_title.series_part += (@master_title.series_part.blank? ? m.series_part : " | #{m.series_part}")
         end
         unless m.notes.blank?
+          @master_title.notes = "" if @master_title.notes.blank?
 	        @master_title.notes += (@master_title.notes.blank? ? m.notes : " | #{m.notes}")
         end
         unless m.subject.blank?
-	        @master_title.subject += (@master_title.subject.blank? ? m.subject : " | #{m.subject}")
+          @master_title.subject = "" if @master_title.subject.blank?
+          @master_title.subject += (@master_title.subject.blank? ? m.subject : " | #{m.subject}")
         end
 
         m.title_original_identifiers.each do |toi|

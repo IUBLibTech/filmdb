@@ -3,7 +3,7 @@
 		<%= link_to @title.title_text, title_path(@title), target: '_blank' %>
 	</td>
 	<td>
-		<% @title.in_active_workflow? ? 'Yes' : 'No' %>
+		<%= @title.in_active_workflow? ? 'Yes' : 'No' %>
 	</td>
 	<td>
 		<%= @title.title_original_identifiers.collect{ |i| "#{i.identifier} (#{i.identifier_type})"}.join(',') %>

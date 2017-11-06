@@ -245,12 +245,13 @@ class CsvParser
 
     can_sizes = @cv[:can_size].collect{ |c| c[0]}
     can = row[column_index CAN_SIZE]
-    if can_sizes.include?(can)
-      set_value(:can_size, can, po)
-    else
-      po.errors.add(:can_size, "Invalid Can Size: #{can}")
+    unless can.blank?
+      if can_sizes.include?(can)
+        set_value(:can_size, can, po)
+      else
+        po.errors.add(:can_size, "Invalid Can Size: #{can}")
+      end
     end
-
     footage = row[column_index FOOTAGE]
     unless footage.blank?
       po.send(:footage=, footage.to_i)
@@ -586,6 +587,8 @@ class CsvParser
       field = "sound format #{ff}".parameterize.underscore
       if PhysicalObject::SOUND_FORMAT_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
+      elsif !PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED.key(ff).nil?
+        po.send((PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED.key(ff).to_s << "=").to_sym, true)
       else
         po.errors.add(:sound_format_type, "Undefined sound format: #{ff}")
       end
@@ -642,8 +645,13 @@ class CsvParser
 
     # ad strip, mold, and shrinkage have their own columns
     ad = row[column_index AD_STRIP]
+    ad_vals = @cv[:ad_strip].collect{|v| v[0]}
     unless ad.blank?
-      po.send(:ad_strip=, ad)
+      if ad_vals.include?(ad)
+	      po.send(:ad_strip=, ad)
+      else
+	      po.errors.add(:ad_strip, "Invalid AD Strip value: #{ad}")
+      end
     end
 
     mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
