@@ -253,7 +253,12 @@ class PhysicalObject < ActiveRecord::Base
 		# else
 		# 	return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
 		# end
-		workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at ASC').last.status_name
+		stats = workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at ASC')
+		if stats.size == 0
+			""
+		else
+			stats.last.status_name
+		end
 	end
 
 
