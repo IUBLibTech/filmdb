@@ -1,5 +1,6 @@
 class Title < ActiveRecord::Base
 	include DateHelper
+	include SessionsHelper
 
 	has_many :title_creators, dependent: :delete_all, autosave: true
   has_many :title_dates, dependent: :delete_all, autosave: true
@@ -81,14 +82,19 @@ class Title < ActiveRecord::Base
     Title.find_by_sql(sql)
   }
 
-  scope :title_search, -> (title_text, date, publisher_text, collection_id) {
-	  sql = "SELECT titles.* FROM titles WHERE titles.id in ( SELECT distinct(titles.id) "+
-		  "#{title_search_from_sql(title_text, date, publisher_text, collection_id)} "+
-		  "#{title_search_where_sql(title_text, date, publisher_text, collection_id)}) ORDER BY titles.title_text"
-
-	  puts "\n\n\n#{sql}\n\n\n"
-	  Title.find_by_sql(sql)
+  scope :title_search, -> (title_text, date, publisher_text, creator_text, collection_id, current_user) {
+	  connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
+	  tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
+		  "#{title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)} "+
+		  "#{title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)})"
+	  connection.execute(tempTblSql)
+	  sql = "SELECT titles.* FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text"
+	  res = Title.find_by_sql(sql)
+	  connection.execute("DROP TABLE #{current_user}_title_search")
+	  res
   }
+
+	self.per_page = 100
 
 	def series_title_text
 		self.series.title if self.series
@@ -115,13 +121,16 @@ class Title < ActiveRecord::Base
 	end
 
 	private
-	def self.title_search_from_sql(title_text, date, publisher_text, collection_id)
+	def self.title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)
 		sql = "FROM titles"
 		if !date.blank?
 			sql << " INNER JOIN title_dates ON title_dates.title_id = titles.id"
 		end
 		if !publisher_text.blank?
 			sql << " INNER JOIN title_publishers ON title_publishers.title_id = titles.id"
+		end
+		if !creator_text.blank?
+			sql << " INNER JOIN title_creators ON title_creators.title_id = titles.id"
 		end
 		if !collection_id.blank?
 			sql << " INNER JOIN physical_object_titles ON physical_object_titles.title_id = titles.id "+
@@ -130,8 +139,8 @@ class Title < ActiveRecord::Base
 		end
 		sql
 	end
-	def self.title_search_where_sql(title_text, date, publisher_text, collection_id)
-		sql = (title_text.blank? && date.blank? && publisher_text.blank? && collection_id.blank?) ? "" : "WHERE"
+	def self.title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)
+		sql = (title_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && collection_id.blank?) ? "" : "WHERE"
 		if !title_text.blank?
 			sql << " titles.title_text like '%#{title_text}%'"
 		end
@@ -152,6 +161,10 @@ class Title < ActiveRecord::Base
 		if !publisher_text.blank?
 			add_and(sql)
 			sql << "title_publishers.name like '%#{publisher_text}%'"
+		end
+		if !creator_text.blank?
+			add_and(sql)
+			sql << "title_creators.name like '%#{creator_text}%'"
 		end
 		if !collection_id.blank?
 			add_and(sql)

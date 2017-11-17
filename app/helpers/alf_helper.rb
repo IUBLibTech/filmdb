@@ -53,7 +53,7 @@ module AlfHelper
 
 	def populate_line(po, user)
 		pl = nil
-		if po.active_component_group.is_mdpi_workflow?
+		if po.active_component_group.deliver_to_alf?
 			pl = PULL_LINE_MDPI
 		else
 			pl = PULL_LINE_WELLS

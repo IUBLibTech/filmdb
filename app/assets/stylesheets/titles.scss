@@ -95,3 +95,18 @@ input.title_publisher {
 	width: auto;
 	height: 19px;
 }
+
+div#title_sum {
+	position: fixed;
+	z-index: 200;
+	background-color: white;
+	border: 1px solid #805215;
+	display: none;
+	box-shadow: -8px 8px 4px grey;
+	width: 600px;
+	margin-left: 390px;
+	margin-top: -10px;
+	padding: 5px;
+	top: 40px;
+	right: 50px;
+}

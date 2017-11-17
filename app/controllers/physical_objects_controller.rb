@@ -168,11 +168,11 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def ajax_show_storage
-    po = PhysicalObject.where(params[:iu_barcode]).first
+    po = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
     if po.nil?
       render text: "Could Not Find Physical Object With IU Barcode: #{params[:iu_barcode]}"
     else
-      render text: "#{params[:iu_barcode]} Should Be Returned to <b>#{po.storage_location}</b>".html_safe
+      render text: "#{params[:iu_barcode]} Should Be Returned to: <b>#{(po.storage_location.blank? ? "<b><i>Object Just inventoried...</i><b>" : po.storage_location)}</b>".html_safe
     end
   end
 
