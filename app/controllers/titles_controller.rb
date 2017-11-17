@@ -17,7 +17,7 @@ class TitlesController < ApplicationController
 
   def search
 	  if params[:title_text]
-		  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+		  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user)
 	  end
 	  render 'index'
   end
@@ -64,6 +64,98 @@ class TitlesController < ApplicationController
         format.json { render json: @title.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def show_split_title
+	  @title = Title.find(params[:id])
+  end
+  def update_split_title
+	  @component_group_cv = ControlledVocabulary.component_group_cv
+	  @title = Title.find(params[:id])
+	  # map { title_1_id: {cg_type1: [array of physical object ids], ..., cg_typeN: [array of physical object ids] }, ..., title_N_id: {}}
+	  # a title id of '' means @title - no reassignment
+	  @map = JSON.parse(params[:map])
+
+	  # pos returned to storage
+	  @returned = []
+	  # physical objects retitled
+	  @retitled = []
+	  # physical objects queued for pull
+	  @queued = []
+
+	  Title.transaction do
+		  @map.keys.each do |title_id|
+			  other_title = nil
+			  if (!title_id.blank? && title_id != @title.id.to_s)
+				  # convert the id into the active record
+				  other_title = Title.find(title_id)
+			  end
+			  @map[title_id].keys.each do |cg_type|
+				  cg = cg_type.blank? ? nil : ComponentGroup.new(title_id: (other_title.nil? ? @title.id : other_title.id), group_type: cg_type)
+				  @map[title_id][cg_type].each do |p|
+					  p = PhysicalObject.find(p)
+					  # order matters... clear the active component group BEFORE assigning new workflow status
+					  p.active_component_group = nil
+
+					  # this physical object is being reassigned to another title so delete the title association and remove it from all component groups for the old title
+					  if (!other_title.nil? && other_title != @title)
+						  @title.component_groups.each do |cgi|
+							  ComponentGroupPhysicalObject.where(component_group_id: cgi.id, physical_object_id: p.id).delete_all
+						  end
+						  PhysicalObjectTitle.where(title_id: @title.id, physical_object_id: p.id).delete_all
+						  other_title.physical_objects << p
+						  other_title.save
+						  @retitled << p
+					  end
+
+					  ws = nil
+					  # back to storage if no component group type specified
+					  if cg.nil?
+						  ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
+						  p.workflow_statuses << ws
+						  p.save
+						  @returned << p
+					  else
+						  cg.physical_objects << p
+						  p.active_component_group = cg
+
+						  # if reformatting, move to 2k/4k shelves, otherwise it needs to move to the respective best copy shelf (Alf/Wells)
+						  if cg.group_type == ComponentGroup::REFORMATTING_MDPI
+							  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p, true)
+						  else
+							  ws = WorkflowStatus.build_workflow_status((cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_WELLS), p, true)
+						  end
+						  p.workflow_statuses << ws
+						  p.save
+					  end
+				  end
+				  cg.save unless cg.nil?
+
+				  # after adding all the PO's to a new component group we need to check if it was a new title assignmenet for a new CG
+				  # if yes, any physical objects that were part of the new title and not part of the old title and in storage, need to be added to (only) best copy cgs and queued
+				  if (!other_title.nil? && other_title != @title && !cg.nil? && cg.group_type != ComponentGroup::REFORMATTING_MDPI)
+					  # add in storage pos to the best copy component group and queue
+					  (cg.title.physical_objects.to_a - cg.physical_objects.to_a).each do |op|
+						  if op.in_storage?
+							  cg.physical_objects << op
+							  op.active_component_group = cg
+							  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, op)
+							  op.workflow_statuses << ws
+							  op.save
+							  @queued << op
+						  end
+					  end
+				  end
+			  end
+		  end
+	  end
+
+
+	  # is this necessary still?
+	  @returned = @returned.uniq{|p| p.id}
+	  @retitled = @retitled.uniq{|p| p.id}
+	  @queued = @queued.uniq{|p| p.id}
+
   end
 
   def create_component_group
@@ -157,7 +249,7 @@ class TitlesController < ApplicationController
     else
       respond_to do |format|
         flash[:warning] = "Cannot delete a Title that has Physical Objects"
-        format.html {redirect_to @title, warning: "Uh oh!"}
+        format.html {redirect_to @title}
       end
     end
   end
@@ -181,6 +273,19 @@ class TitlesController < ApplicationController
 	  end
 	  redirect_to @master
   end
+
+  # returns an array containing the total count of physical objects for this title at index 0,
+  # followed by the total count of physical objects in active workflow at index 1
+  def ajax_reel_count
+	  @title = Title.find(params[:id])
+	  c = 0
+	  @title.physical_objects.each do |p|
+		  cs = p.current_workflow_status
+		  c += 1 if (!cs.nil? && !WorkflowStatus.is_storage_status?(cs.status_name)) &&	cs.status_name != WorkflowStatus::JUST_INVENTORIED_ALF && cs.status_name != WorkflowStatus::JUST_INVENTORIED_WELLS
+	  end
+	  ar = [@title.physical_objects.size, c]
+	  render json: ar
+	end
 
 
   ##### These actions are all related to handling title merge through the "title autocomplete" selection process ######
