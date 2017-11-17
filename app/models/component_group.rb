@@ -3,10 +3,13 @@ class ComponentGroup < ActiveRecord::Base
   has_many :component_group_physical_objects
   has_many :physical_objects, through: :component_group_physical_objects
 
-  MDPI_GROUP_TYPES = ['Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)']
   BEST_COPY_WELLS = 'Best Copy (Wells)'
+  BEST_COPY_MDPI_WELLS = 'Best Copy (MDPI - WELLS)'
   BEST_COPY_ALF = 'Best Copy (MDPI)'
+  REFORMATTING_MDPI = 'Reformatting (MDPI)'
   BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_WELLS]
+
+  MDPI_GROUP_TYPES = [BEST_COPY_ALF, BEST_COPY_MDPI_WELLS, REFORMATTING_MDPI]
 
 
   COLOR_SPACE_LIN_10 = 'Linear 10 bit'
@@ -37,6 +40,14 @@ class ComponentGroup < ActiveRecord::Base
   def is_mdpi_workflow?
 	  # FIXME: this needs to be more robust...
     group_type.include? 'MDPI'
+  end
+
+  def deliver_to_alf?
+    (MDPI_GROUP_TYPES - [BEST_COPY_MDPI_WELLS]).include?(group_type)
+  end
+
+  def deliver_to_wells?
+    !(deliver_to_alf?)
   end
 
   def is_reformating?
