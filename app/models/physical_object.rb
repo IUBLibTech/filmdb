@@ -67,6 +67,7 @@ class PhysicalObject < ActiveRecord::Base
 		where_current_workflow_status_is()
 	}
 
+	FREEZER_AD_STRIP_VALS = ControlledVocabulary.where(model_attribute: ':ad_strip').order('value DESC').limit(3).collect{ |cv| cv.value }
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 	MEDIA_TYPE_MEDIUMS = {
@@ -220,6 +221,10 @@ class PhysicalObject < ActiveRecord::Base
 		current_workflow_status.status_name == WorkflowStatus::PULL_REQUESTED
 	end
 
+	def in_storage?
+		WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include?(current_location)
+	end
+
 	def packed?
 		current_workflow_status.status_name == WorkflowStatus::IN_CAGE
 	end
@@ -232,32 +237,24 @@ class PhysicalObject < ActiveRecord::Base
 		self.collection.blank?
 	end
 
-	# where (IN ALF!!!) the PO is currently stored
+	# where (IN ALF!!!) the PO should be stored
 	def storage_location
-		# previously storage location was based on a heirarchical based decision = if an item is ever in the freezer, it will always be in the freezer
-		# this did not present the opportunity to correct human error (something incorrectly placed in the freezer). Logic no longer enforces these
-		# rules and storage location is now determine by the last place an item resided "in storage"
-		# ingested = WorkflowStatus.where(physical_object_id: id, status_name: WorkflowStatus::IN_STORAGE_INGESTED).size > 0
-		# if awaiting_freezer?
-		# 	return WorkflowStatus::AWAITING_FREEZER
-		# elsif in_freezer?
-		# 	return WorkflowStatus::IN_FREEZER
-		# # because of how 'ingested' is determined (if there are any ingested states), we need to test after AFTER testing for
-		# # freezer because an item may have been previously ingest but later determined to be stored in the freezer/awaiting freezer
-		# elsif ingested
-		# 	return WorkflowStatus::IN_STORAGE_INGESTED
-		# elsif current_workflow_status.nil?
-		# 	''
-		# elsif (current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_WELLS || current_workflow_status.status_name == WorkflowStatus::JUST_INVENTORIED_ALF)
-		# 	current_workflow_status.status_name
-		# else
-		# 	return WorkflowStatus::IN_STORAGE_AWAITING_INGEST
-		# end
 		stats = workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at ASC')
-		if stats.size == 0
-			""
+		# anything with ad_strip > 2.0 must go to the freezer. If it's never been in the freezer if must go to awaiting freezer first for prep.
+		# If it was last in the freezer, it should be returned to the freezer. Otherwise, the item is returned to its last storage location,
+		# or ingested if it has yet to be put anywhere in storage
+		if stats.size > 0
+			if FREEZER_AD_STRIP_VALS.include?(ad_strip)
+				(stats.last.status_name == WorkflowStatus::IN_FREEZER ? WorkflowStatus::IN_FREEZER : WorkflowStatus::AWAITING_FREEZER)
+			else
+				stats.last.status_name
+			end
 		else
-			stats.last.status_name
+			if FREEZER_AD_STRIP_VALS.include?(ad_strip)
+				WorkflowStatus::AWAITING_FREEZER
+			else
+				WorkflowStatus::IN_STORAGE_INGESTED
+			end
 		end
 	end
 

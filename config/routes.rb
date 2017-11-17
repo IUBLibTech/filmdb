@@ -100,7 +100,9 @@ Rails.application.routes.draw do
   get '/title_merge_selection_table_row/:id', to: 'titles#title_merge_selection_table_row', as: 'title_merge_selection_table_row'
   get '/title_merge_selection/merge_physical_object_candidates', to: 'titles#merge_physical_object_candidates', as: 'title_merge_physical_object_candidates'
   post '/title_merge_select/merge_titles', to: 'titles#merge_autocomplete_titles', as: 'title_autocomplete_selection_merge'
-
+  get '/titles/:id/show_split_title', to: 'titles#show_split_title', as: 'show_split_title'
+  post '/titles/:id/update_split_title', to: 'titles#update_split_title', as: 'update_split_title'
+  get '/titles/ajax_reel_count/:id', to: 'titles#ajax_reel_count', as: 'ajax_reel_count'
   resources :units
 
 	resources :users

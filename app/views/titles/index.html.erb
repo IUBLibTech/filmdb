@@ -21,6 +21,12 @@
 		</td>
 	</tr>
 	<tr>
+		<th>Creator</th>
+		<td>
+			<%= text_field_tag :creator_text, params[:creator_text] %>
+		</td>
+	</tr>
+	<tr>
 		<th>Search Within Collection</th>
 		<td>
 			<%= select_tag :collection_id, options_for_select([['All', "0"]] + Collection.all.order(:name).collect{ |c| [c.name, c.id]}, params[:collection_id]) %>
@@ -44,6 +50,8 @@
 		<td><%= params[:date] %></td>
 		<th>Publisher</th>
 		<td><%= params[:publisher_text] %></td>
+		<th>Creator</th>
+		<td><%= params[:creator_text] %></td>
 		<th>Collection:</th>
 		<td><%= params[:collection_id] == '0' ? 'All' : "#{Collection.find(params[:collection_id].to_i).name}" %></td>
 	</tr>
@@ -59,6 +67,7 @@
 		<th>Title</th>
 		<th>Date(s)</th>
 		<th>Publisher(s)</th>
+		<th>Creator(s)</th>
 		<th>Physical Object(s) Summary</th>
 		<!-- <th>Merge</th> -->
 	</tr>
@@ -86,6 +95,15 @@
 		</td>
 		<td>
 			<ul>
+				<% t.title_creators.each do |tc| %>
+				<li>
+					<b><%= tc.role %></b>: <%= tc.name %>
+				</li>
+				<% end %>
+			</ul>
+		</td>
+		<td>
+			<ul>
 				<li>
 					<b>Physical Object Count</b>: <%= t.physical_objects.size %>
 				</li>
@@ -106,7 +124,7 @@
 	<% if @titles.size > 0 %>
 	<tr>
 		<td colspan="4"></td>
-		<!-- <td><%= submit_tag "Merge Selected Titles" %></td> -->
+		<!-- <td><%#= submit_tag "Merge Selected Titles" %></td> -->
 	</tr>
 	<% end %>
 </table>
