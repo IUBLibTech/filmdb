@@ -204,7 +204,9 @@ class CagesController < ApplicationController
 				if p.active_component_group.scan_resolution == '4k'
 					fourK += 1
 				end
-				durationSec += ((PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24)
+				unless p.footage.blank? || p.gauge.blank?
+					durationSec += ((PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24)
+				end
 			end
 			stats[:count_2k] = twoK
 			stats[:percent_2k] = (twoK + fourK > 0) ? twoK / (twoK + fourK) : 0
