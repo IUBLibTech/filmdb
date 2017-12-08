@@ -29,6 +29,24 @@
 			</td>
 		</tr>
 		<tr>
+			<th colspan="2">Color Space</th>
+			<td>
+				<%= f.select :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{ |cs| [cs,cs]}, 'Linear 10 bit') %>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Clean</th>
+			<td>
+				<%= f.select :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand clean only', 'Hand clean only']]) %>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Return on Reel</th>
+			<td>
+				<%= f.select :return_on_reel, options_for_select([['Yes', 'Yes'],['No', 'No']], 'No') %>
+			</td>
+		</tr>
+		<tr>
 			<th colspan="2"></th>
 			<td>
 				<% if all_here %>

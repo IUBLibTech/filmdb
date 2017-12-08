@@ -16,6 +16,7 @@
 	<% end %>
   <div class="user">
 	  User: <b><%= current_username %></b><br/>
+	  Location: <b><%= User.current_user_object.worksite_location %></b><br><br>
     <%= link_to 'Sign Out', signout_path, method: :delete, class: 'red' %>
   </div>
 </div>

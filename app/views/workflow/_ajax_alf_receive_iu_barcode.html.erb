@@ -9,6 +9,10 @@
 				<%= "#{bcs.join(', ')} also #{bcs.size == 1 ? 'belongs' : 'belong'} to this title and #{bcs.size == 1 ? 'has' : 'have'} not yet been received from storage." %>
 			</p>
 		<% end %>
+		<% debugger %>
+		<% if @physical_object.current_workflow_status.status_name == WorkflowStatus::WELLS_TO_ALF_CONTAINER %>
+			<p class="notice">This Physical Object was selected for digitization during <b>Wells MDPI Best Copy</b> workflow. It should be moved to the 2k/4k staging area.</p>
+		<% end  %>
 		<%= form_for @physical_object, url: receive_from_storage_path, html: { id: 'receive_physical_object_form'} do |f| %>
 			<%= f.hidden_field :iu_barcode %>
 		<table>

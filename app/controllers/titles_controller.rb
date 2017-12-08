@@ -17,7 +17,18 @@ class TitlesController < ApplicationController
 
   def search
 	  if params[:title_text]
-		  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user)
+		  # find out whether or not to do pagination
+		  @count = Title.title_search_count(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+		                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
+		  if @count > Title.per_page
+			  @paginate = true
+			  @page = (params[:page] ? params[:page].to_i : 1)
+			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, (@page - 1) * Title.per_page, Title.per_page)
+		  else
+			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
+		  end
 	  end
 	  render 'index'
   end
@@ -427,6 +438,7 @@ class TitlesController < ApplicationController
 	  render partial: 'ajax_edit_cg_params'
   end
 
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_title
@@ -461,17 +473,22 @@ class TitlesController < ApplicationController
   def set_creator_cv
 
   end
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def title_params
-      params.require(:title).permit(
-          :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes, :subject, :name_authority,
-          title_creators_attributes: [:id, :name, :role, :_destroy],
-          title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
-          title_genres_attributes: [:id, :genre, :_destroy],
-          title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
-          title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],
-          title_forms_attributes: [:id, :form, :_destroy],
-          title_locations_attributes: [:id, :location, :_destroy]
-      )
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def title_params
+    params.require(:title).permit(
+        :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes, :subject, :name_authority,
+        title_creators_attributes: [:id, :name, :role, :_destroy],
+        title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
+        title_genres_attributes: [:id, :genre, :_destroy],
+        title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
+        title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],
+        title_forms_attributes: [:id, :form, :_destroy],
+        title_locations_attributes: [:id, :location, :_destroy]
+    )
+  end
+  def page_link_path(page)
+	  titles_search_path(page: page, title_text: params[:title_text], date: params[:date], publisher_text: params[:publisher_text], creator_text: params[:creator_text],
+	                     collection_id: (params[:collection_id] == '0' ? 0 : params[:collection_id]))
+  end
+	helper_method :page_link_path
 end

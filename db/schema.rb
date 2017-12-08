@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117165150) do
+ActiveRecord::Schema.define(version: 20171201143831) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 20171117165150) do
     t.integer  "menu_index",      limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active_status",               default: true
   end
 
   create_table "languages", force: :cascade do |t|
@@ -543,5 +544,12 @@ ActiveRecord::Schema.define(version: 20171117165150) do
   end
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
+
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
+  end
 
 end

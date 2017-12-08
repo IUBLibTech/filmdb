@@ -1,3 +1,33 @@
+<table id="pull_stats">
+	<tbody>
+	<tr>
+		<th>Total Pullable Physical Objects</th>
+		<th>Total Reformatting Reels</th>
+		<th>Total Best Copy Reels (ALF)</th>
+		<th>Total Best Copy Reels (Wells)</th>
+	</tr>
+
+	<tr>
+		<td><%= @physical_objects.size %></td>
+		<td><%= @physical_objects.size - @best_copy_alf_count - @best_copy_wells_count %></td>
+		<td><%= @best_copy_alf_count %></td>
+		<td><%= @best_copy_wells_count %></td>
+	</tr>
+	<tr>
+		<th>Count Selected</th>
+		<th>Count Reformatting Selected</th>
+		<th>Count Best Copy ALF Select</th>
+		<th>Count Best Copy Wells Select</th>
+	</tr>
+	<tr>
+		<td id="selected_count">0</td>
+		<td id="selected_reformatting">0</td>
+		<td id="selected_bc_alf">0</td>
+		<td id="selected_bc_wells">0</td>
+	</tr>
+	</tbody>
+</table>
+<br>
 <table id="physical_objects_table">
 	<tr>
 		<th>Select To Pull</th>
@@ -16,7 +46,7 @@
 	<% end %>
 	<% @ingested.each do |p| %>
 	<tr>
-		<td><%= check_box_tag "po_#{p.id}", ''%></td>
+		<td><%= check_box_tag "po_#{p.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
 		<td>
 			<% p.titles.each do |t| %>
 				<%= link_to "#{t.title_text}", title_path(t) %> <br>
@@ -37,7 +67,7 @@
 	<% end %>
 	<% @not_ingested.each do |p| %>
 		<tr>
-			<td><%= check_box_tag "po_#{p.id}", ''%></td>
+			<td><%= check_box_tag "po_#{p.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
 			<td>
 				<% p.titles.each do |t| %>
 					<%= link_to "#{t.title_text}", title_path(t) %> <br>
@@ -120,5 +150,16 @@
 			po_ids.push(this.id.substring(3))
 		});
 		$('#ids').val(po_ids.join(','));
+		updateCounts();
+	}
+	function updateCounts() {
+		all = $(':checked').size();
+		ref = $(':checked.cg_reformatting_mdpi').size();
+		bc_alf = $(':checked.cg_best_copy_mdpi').size();
+		bc_wells = $(':checked.cg_best_copy_mdpi_-_wells').size();
+		$("#selected_count").html(all)
+		$("#selected_reformatting").html(ref)
+		$("#selected_bc_alf").html(bc_alf)
+		$("#selected_bc_wells").html(bc_wells)
 	}
 </script>

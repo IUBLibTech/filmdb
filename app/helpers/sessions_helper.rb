@@ -1,5 +1,5 @@
 module SessionsHelper
-  TIME_OUT = 60.minutes
+  TIME_OUT = 5.minutes
 
   def sign_in(username)
     self.current_username = username
@@ -25,11 +25,11 @@ module SessionsHelper
   def signed_in_user
 	  if signed_in?
 		  @user = User.where(username: session[:username]).first
-		  @user.touch
 		  if (@user.works_in_both_locations && (@user.updated_at.localtime + SessionsHelper::TIME_OUT < Time.now.localtime)) || (!@user.works_in_both_locations && @user.worksite_location.blank?)
 			  store_location
 			  redirect_to show_worksite_location_path(@user.id)
 		  end
+		  @user.touch
 	  else
 		  store_location
 		  redirect_to signin_url
