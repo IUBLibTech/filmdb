@@ -110,3 +110,35 @@ div#title_sum {
 	top: 40px;
 	right: 50px;
 }
+
+#paginator {
+	margin-bottom: 10px;
+}
+.pag_link, .cur_page, .dis_pag_link {
+	margin-right: 10px;
+	display: inline;
+	border: 2px solid #e69a37;
+	padding: 5px;
+}
+
+.cur_page {
+	font-size: 2.5em;
+	font-weight: bold;
+	border: none
+}
+.dis_pag_link {
+	color: #ddd;
+	border: none;
+}
+.pag_link_first {
+	margin-right: 30px;
+	display: inline;
+	border: 2px solid #e69a37;
+	padding: 5px;
+}
+.pag_link_last {
+	margin-left: 30px;
+	display: inline;
+	border: 2px solid #e69a37;
+	padding: 5px;
+}

@@ -80,7 +80,7 @@ module PhysicalObjectsHelper
     params.require(:physical_object).permit(
         :location, :media_type, :medium, :iu_barcode, :copy_right, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
-        :access, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
+        :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
         :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
         :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
         :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,

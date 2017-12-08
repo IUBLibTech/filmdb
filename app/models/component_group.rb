@@ -7,10 +7,11 @@ class ComponentGroup < ActiveRecord::Base
   BEST_COPY_MDPI_WELLS = 'Best Copy (MDPI - WELLS)'
   BEST_COPY_ALF = 'Best Copy (MDPI)'
   REFORMATTING_MDPI = 'Reformatting (MDPI)'
-  BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_WELLS]
+  BEST_COPY_TYPES = [BEST_COPY_ALF, BEST_COPY_MDPI_WELLS]
 
   MDPI_GROUP_TYPES = [BEST_COPY_ALF, BEST_COPY_MDPI_WELLS, REFORMATTING_MDPI]
-
+  ALF_DELIVERY_GROUPS = [BEST_COPY_ALF, REFORMATTING_MDPI]
+  WELSS_DELIVERY_GROUPS = [BEST_COPY_MDPI_WELLS]
 
   COLOR_SPACE_LIN_10 = 'Linear 10 bit'
   COLOR_SPACE_LIN_16 = 'Linear 16 bit'
@@ -43,11 +44,11 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def deliver_to_alf?
-    (MDPI_GROUP_TYPES - [BEST_COPY_MDPI_WELLS]).include?(group_type)
+    ALF_DELIVERY_GROUPS.include?(group_type)
   end
 
   def deliver_to_wells?
-    !(deliver_to_alf?)
+   WELSS_DELIVERY_GROUPS.inlcude?(group_type)
   end
 
   def is_reformating?
@@ -72,5 +73,9 @@ class ComponentGroup < ActiveRecord::Base
   def wells_delivery?
 
   end
+
+	def in_active_workflow?
+		physical_objects.any?{|p| p.active_component_group == self}
+	end
 
 end

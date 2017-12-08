@@ -21,9 +21,10 @@
 <% end %>
 
 <script type="text/javascript">
+	var resolutionTypes = ['Reformatting (MDPI)', 'Reformatting Replacement (MDPI)', 'Best Copy (MDPI)', 'Best Copy (MDPI)', 'Best Copy (MDPI - WELLS)']
 	var group_type = 'Best Copy';
 	function resolution_selected() {
-		res_needed = (group_type == 'Reformatting (MDPI)' || group_type == 'Reformatting Replacement (MDPI)');
+		res_needed = resolutionTypes.includes(group_type);
 		if (res_needed) {
 			return $('.mutually_exclusive:checked').length == 1;
 		} else {
@@ -56,7 +57,7 @@
   };
 
   $('#pos_group_type').on('change', function() {
-	  if (['Reformatting (MDPI)', 'Reformatting Replacement (MDPI)', 'Best Copy (MDPI)'].includes(this.value)) {
+	  if (resolutionTypes.includes(this.value)) {
 		  $('#scan_div').show()
 	  } else {
 		  $('#scan_div').hide();
