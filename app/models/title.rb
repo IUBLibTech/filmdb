@@ -82,17 +82,28 @@ class Title < ActiveRecord::Base
     Title.find_by_sql(sql)
   }
 
-  scope :title_search, -> (title_text, date, publisher_text, creator_text, collection_id, current_user) {
+  scope :title_search, -> (title_text, date, publisher_text, creator_text, collection_id, current_user, offset, limit) {
 	  connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 	  tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
 		  "#{title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)} "+
 		  "#{title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)})"
 	  connection.execute(tempTblSql)
-	  sql = "SELECT titles.* FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text"
+	  sql = "SELECT titles.* FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 	  res = Title.find_by_sql(sql)
 	  connection.execute("DROP TABLE #{current_user}_title_search")
 	  res
   }
+	scope :title_search_count, -> (title_text, date, publisher_text, creator_text, collection_id, current_user, offset, limit) {
+		connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
+		tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
+			"#{title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)} "+
+			"#{title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)})"
+		connection.execute(tempTblSql)
+		sql = "SELECT count(*) FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
+		res = connection.execute(sql)
+		connection.execute("DROP TABLE #{current_user}_title_search")
+		res.first[0]
+	}
 
 	self.per_page = 100
 

@@ -116,6 +116,7 @@ Rails.application.routes.draw do
 	patch '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
   post '/workflow/receive_from_storage_wells/', to: 'workflow#process_receive_from_storage_wells', as: 'process_received_from_storage_wells'
   get '/workflow/ajax_alf_barcode/:iu_barcode', to: 'workflow#ajax_alf_receive_iu_barcode', as: 'ajax_alf_receive_iu_barcode'
+  get '/workflow/ajax_wells_barcode/:iu_barcode', to: 'workflow#ajax_wells_receive_iu_barcode', as: 'ajax_wells_receive_iu_barcode'
 	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
 	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
 	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'

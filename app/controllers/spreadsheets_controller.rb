@@ -101,8 +101,9 @@ class SpreadsheetsController < ApplicationController
 
   # action which lists matching titles (by title text) for a given spreadsheet id
   def merge_title_candidates
-    @title_candidates = Title.titles_in_spreadsheet(Title.find(params[:title]).title_text, @spreadsheet.id)
-    @existing_titles = Title.titles_not_in_spreadsheet(params[:title], @spreadsheet.id)
+	  tt = Title.find(params[:title]).title_text
+    @title_candidates = Title.titles_in_spreadsheet(tt, @spreadsheet.id)
+    @existing_titles = Title.titles_not_in_spreadsheet(tt, @spreadsheet.id)
   end
 
   # processes the form submission fomr #merge_conditate view
