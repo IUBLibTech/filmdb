@@ -12,96 +12,121 @@
 			</table>
 		</div>
 		<div id="alf_form_div"></div>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('#alf_iu_barcode').bind("input",function(event) {
-					valid = validateIUBarcode($(this));
-					$('#alf_form_div').replaceWith('')
-					if (valid) {
-						$.ajax({
-							url: './ajax_alf_barcode/'+$(this).val(),
-							error: function(jqxhr, status, error) {
-								swal({
-									title: 'Ajax Error',
-									text: 'Something unexpected happened while trying to receive the item'+error,
-									type: 'error'
-								});
-							},
-							success: function(result) {
-								div = $('#alf_form_div');
-								if (div.size() > 0) {
-									div.replaceWith(result);
-								} else {
-									$('#alf_scan_div').after($(result));
-								}
-								$('#receive_physical_object_form').submit(function(event) {
-									event.preventDefault();
-									footage = $.isNumeric($('#physical_object_footage').val());
-									can_size = $('#physical_object_can_size').val() != "";
-									checked = !($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked"));
-									if (footage && can_size && checked) {
-										document.getElementById('receive_physical_object_form').submit();
-										return;
-									} else {
-										msg = "";
-										if (footage && can_size) {
-											msg = "You must update the Physical Object's Condition Notes."
-										} else if (footage && checked) {
-											msg = "You must select a can size."
-										} else if (can_size && checked) {
-											msg = 'You must specify footage.'
-										} else if (footage) {
-											msg = "You must specify can size and update the Physical Object's Condition Notes."
-										} else if (can_size) {
-											msg = "You must specify footage and update the Physical Object's Condition Notes."
-										} else if (checked) {
-											msg = "You must specify footage and can size."
-										} else {
-											msg = "You must specify footage, can size, and update the Physical Object's Condition Notes."
-										}
-										swal("Cannot continue!", msg, 'error');
-									}
-								});
-							},
-							complete: function() {
-								$('#physical_object_workflow').change(function() {
-									if ($('#physical_object_workflow')[0].selectedIndex > 1) {
-										$("#rejected_options").show();
-									} else {
-										$("#rejected_options").hide();
-									}
-								});
-							}
-						});
-					}
-				})
-			});
-			function hookForm() {
-				$('#receive_physical_object_form').submit(function(event) {
-					event.preventDefault();
-
-				});
-			}
-		</script>
 	</div>
 <% else %>
 	<div id="wells">
 		<h4>Receiving Physical Objects at <b>Wells</b></h4>
-		<%= form_for 'physical_object', url: process_received_from_storage_wells_url do |f| %>
-			<table>
-				<tr>
-					<th>IU Barocde</th>
-					<td>
-						<%= f.text_field :iu_barcode %>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2"><%= f.submit "Mark Received" %></td>
-				</tr>
-			</table>
-		<% end %>
+		<div id="wells_scan_div">
+			<%= form_for 'physical_object', url: process_received_from_storage_wells_url do |f| %>
+				<table>
+					<tr>
+						<th>IU Barocde</th>
+						<td>
+							<%= f.text_field :iu_barcode %>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><%= f.submit "Mark Received" %></td>
+					</tr>
+				</table>
+			<% end %>
+		</div>
+		<div id="wells_info_div">
+
+		</div>
 	</div>
 <% end %>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#alf_iu_barcode').bind("input",function(event) {
+			valid = validateIUBarcode($(this));
+			$('#alf_form_div').replaceWith('')
+			if (valid) {
+				$.ajax({
+					url: './ajax_alf_barcode/'+$(this).val(),
+					error: function(jqxhr, status, error) {
+						swal({
+							title: 'Ajax Error',
+							text: 'Something unexpected happened while trying to receive the item'+error,
+							type: 'error'
+						});
+					},
+					success: function(result) {
+						div = $('#alf_form_div');
+						if (div.size() > 0) {
+							div.replaceWith(result);
+						} else {
+							$('#alf_scan_div').after($(result));
+						}
+						$('#receive_physical_object_form').submit(function(event) {
+							event.preventDefault();
+							footage = $.isNumeric($('#physical_object_footage').val());
+							can_size = $('#physical_object_can_size').val() != "";
+							checked = !($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked"));
+							if (footage && can_size && checked) {
+								document.getElementById('receive_physical_object_form').submit();
+								return;
+							} else {
+								msg = "";
+								if (footage && can_size) {
+									msg = "You must update the Physical Object's Condition Notes."
+								} else if (footage && checked) {
+									msg = "You must select a can size."
+								} else if (can_size && checked) {
+									msg = 'You must specify footage.'
+								} else if (footage) {
+									msg = "You must specify can size and update the Physical Object's Condition Notes."
+								} else if (can_size) {
+									msg = "You must specify footage and update the Physical Object's Condition Notes."
+								} else if (checked) {
+									msg = "You must specify footage and can size."
+								} else {
+									msg = "You must specify footage, can size, and update the Physical Object's Condition Notes."
+								}
+								swal("Cannot continue!", msg, 'error');
+							}
+						});
+					},
+					complete: function() {
+						$('#physical_object_workflow').change(function() {
+							if ($('#physical_object_workflow')[0].selectedIndex > 1) {
+								$("#rejected_options").show();
+							} else {
+								$("#rejected_options").hide();
+							}
+						});
+					}
+				});
+			}
+		});
+		$('#physical_object_iu_barcode').bind("input", function(event) {
+			valid = validateIUBarcode($(this));
+			div = $('#wells_info_div')
+			div.html('');
+			if (valid) {
+				$.ajax({
+					url: './ajax_wells_barcode/'+$(this).val(),
+					error: function(jqxhr, status, error) {
+						swal({
+							title: 'Ajax Error',
+							text: 'An error occured while trying to retreive the physical object summary for '+$(this).val()+"<br><br>"+error,
+							type: 'error'
+						});
+					},
+					success: function(result) {
+						div.html(result)
+					}
+				})
+			}
+		})
+	});
+	function hookForm() {
+		$('#receive_physical_object_form').submit(function(event) {
+			event.preventDefault();
+
+		});
+	}
+</script>
 <br>
 <h4 class="m_top_10px clear">
 	Physical Objects in Transit

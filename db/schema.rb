@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117165150) do
+ActiveRecord::Schema.define(version: 20171208161331) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 20171117165150) do
     t.integer  "menu_index",      limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active_status",               default: true
   end
 
   create_table "languages", force: :cascade do |t|
@@ -283,7 +284,6 @@ ActiveRecord::Schema.define(version: 20171117165150) do
     t.boolean  "aspect_ratio_2_35_1"
     t.boolean  "aspect_ratio_2_39_1"
     t.boolean  "aspect_ratio_2_59_1"
-    t.boolean  "close_caption"
     t.text     "sound",                                 limit: 65535
     t.boolean  "sound_format_optical_variable_area"
     t.boolean  "sound_format_optical_variable_density"
@@ -363,6 +363,7 @@ ActiveRecord::Schema.define(version: 20171117165150) do
     t.boolean  "picture_titles"
     t.boolean  "generation_other"
     t.boolean  "sound_content_narration"
+    t.string   "close_caption",                         limit: 255
   end
 
   create_table "pod_pushes", force: :cascade do |t|

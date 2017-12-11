@@ -14,7 +14,14 @@ class PhysicalObjectsController < ApplicationController
   def index
 		@statuses = WorkflowStatus::ALL_STATUSES.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
-		  @physical_objects = PhysicalObject.where_current_workflow_status_is(params[:status])
+      @count = PhysicalObject.count_where_current_workflow_status_is(params[:status])
+      if @count > PhysicalObject.per_page
+        @paginate = true
+        @page = (params[:page].nil? ? 1 : params[:page].to_i)
+        @physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:status])
+      else
+        @physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, params[:status])
+      end
 	  else
 		  @physical_objects = []
 	  end
@@ -187,15 +194,20 @@ class PhysicalObjectsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_physical_object
-      @physical_object = PhysicalObject.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_physical_object
+    @physical_object = PhysicalObject.find(params[:id])
+  end
 
-    def set_cv
-      @cv = ControlledVocabulary.physical_object_cv
-      @l_cv = ControlledVocabulary.language_cv
-      @pod_cv = ControlledVocabulary.physical_object_date_cv
-    end
+  def set_cv
+    @cv = ControlledVocabulary.physical_object_cv
+    @l_cv = ControlledVocabulary.language_cv
+    @pod_cv = ControlledVocabulary.physical_object_date_cv
+  end
+
+  def page_link_path(page)
+	  physical_objects_path(page: page, status: params[:status])
+  end
+  helper_method :page_link_path
 
 end
