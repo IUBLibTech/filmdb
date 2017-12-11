@@ -36,9 +36,10 @@
 	      <% if cg.can_be_pulled? %>
 		      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
 	      <% end %>
-	      <% if policy(cg).destroy? %>
-		      <br/>
+	      <% if policy(cg).destroy? && !cg.in_active_workflow? %>
 		      <%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+	      <% elsif cg.in_active_workflow? %>
+	      <b>Active</b>
 	      <% end %>
 			</td>
     </tr>
