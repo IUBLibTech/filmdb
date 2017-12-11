@@ -370,7 +370,8 @@
   <h4>Sound</h4>
   <div>
     <b>Sound</b><%= f.select :sound, options_for_select(@cv[:sound], @physical_object.sound), {include_blank: ''}  %>
-    <%= f.check_box :close_caption %><b>Captions/Subtitles</b>
+	  <br>
+	  <b>Captions/Subtitles</b><%= f.select :close_caption, [['Yes'], ['No']], {include_blank: ''} %>
   </div>
   <div>
     <b>Captions/Subtitles Notes</b><br/>
