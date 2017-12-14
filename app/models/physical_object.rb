@@ -429,7 +429,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.trackCount track_count
 			xml.returnTo storage_location
 			if active_component_group != nil
-				xml.resolution (sound_only? ? 'Audio Only' : active_component_group.scan_resolution)
+				xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
 			end
 			if active_component_group != nil
 				xml.clean active_component_group.clean
