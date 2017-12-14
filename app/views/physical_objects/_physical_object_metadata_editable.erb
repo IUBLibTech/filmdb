@@ -298,7 +298,10 @@
 	    <div class="check_box"><%= f.check_box :stock_unknown %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div>
     </div>
   </div>
-
+	<div class="clear">
+		<b>Generation Notes</b>
+		<%= f.text_area :generation_notes %>
+	</div>
 </div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4>Image</h4>
