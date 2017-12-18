@@ -51,3 +51,21 @@
 		<% end %>
 	</tbod>
 </table>
+
+<h4>Created Component Groups</h4>
+<% @cgs.each do |cg| %>
+<table>
+	<tbody>
+	<tr>
+		<th colspan="2"><%= cg.group_type %></th>
+	</tr>
+	<% cg.physical_objects.each do |p| %>
+	<tr>
+		<td><%= p.iu_barcode %></td>
+		<td><%= p.current_location %></td>
+	</tr>
+	<% end %>
+	</tbody>
+</table>
+<br>
+<% end %>
