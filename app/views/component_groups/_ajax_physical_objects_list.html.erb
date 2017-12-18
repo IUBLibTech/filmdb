@@ -21,11 +21,9 @@
           <td><%= p.condition_rating %></td>
 					<td><%= p.current_workflow_status.type_and_location %></td>
           <td>
-            <%= link_to "Show", physical_object_path(p), target: "_blank" %> |
-            <%= link_to "Remove",
-                        remove_physical_object_from_component_group_path(id: @component_group.id, pid: p.id), data: { confirm: 'Are you sure you want to remove this Physica Object from the Component Group?' },
-                        method: :post
-            %>
+            <%= link_to "Show", physical_object_path(p), target: "_blank" %>
+	          <% unless @component_group == p.active_component_group %> | <%= link_to "Remove", remove_physical_object_from_component_group_path(id: @component_group.id, pid: p.id), data: { confirm: 'Are you sure you want to remove this Physica Object from the Component Group?' }, method: :post %>
+	          <% end %>
           </td>
         </tr>
     <% end %>

@@ -93,6 +93,7 @@ class TitlesController < ApplicationController
 	  @retitled = []
 	  # physical objects queued for pull
 	  @queued = []
+	  @cgs = []
 
 	  Title.transaction do
 		  @map.keys.each do |title_id|
@@ -103,9 +104,11 @@ class TitlesController < ApplicationController
 			  end
 			  @map[title_id].keys.each do |cg_type|
 				  cg = cg_type.blank? ? nil : ComponentGroup.new(title_id: (other_title.nil? ? @title.id : other_title.id), group_type: cg_type)
+				  @cgs << cg unless cg.nil?
 				  @map[title_id][cg_type].each do |p|
 					  p = PhysicalObject.find(p)
-					  # order matters... clear the active component group BEFORE assigning new workflow status
+					  # order matters... clear the active component group BEFORE assigning new workflow status, but record what previous cg was to determine where is goes if new CG is reformatting
+					  prev_cg = p.active_component_group
 					  p.active_component_group = nil
 
 					  # this physical object is being reassigned to another title so delete the title association and remove it from all component groups for the old title
@@ -118,7 +121,6 @@ class TitlesController < ApplicationController
 						  other_title.save
 						  @retitled << p
 					  end
-
 					  ws = nil
 					  # back to storage if no component group type specified
 					  if cg.nil?
@@ -129,10 +131,9 @@ class TitlesController < ApplicationController
 					  else
 						  cg.physical_objects << p
 						  p.active_component_group = cg
-
 						  # if reformatting, move to 2k/4k shelves, otherwise it needs to move to the respective best copy shelf (Alf/Wells)
 						  if cg.group_type == ComponentGroup::REFORMATTING_MDPI
-							  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p, true)
+							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == WorkflowStatus::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
 						  else
 							  ws = WorkflowStatus.build_workflow_status((cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_WELLS), p, true)
 						  end
