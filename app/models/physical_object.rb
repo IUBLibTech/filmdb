@@ -108,7 +108,7 @@ class PhysicalObject < ActiveRecord::Base
                     ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
-      generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite Print", generation_intermediate: "Intermediate",
+      generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",
       generation_mezzanine: "Mezzanine", generation_kinescope: "Kinescope", generation_magnetic_track: "Separate Magnetic Track", generation_optical_sound_track: "Separate Optical Track",
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_original_camera: "Camera Original", generation_original: "Original",
@@ -429,7 +429,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.trackCount track_count
 			xml.returnTo storage_location
 			if active_component_group != nil
-				xml.resolution (sound_only? ? 'Audio Only' : active_component_group.scan_resolution)
+				xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
 			end
 			if active_component_group != nil
 				xml.clean active_component_group.clean
@@ -480,7 +480,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.negative generation_negative
 				xml.opticalSoundTrack generation_optical_sound_track
 				xml.original generation_original
-				xml.outsAndTrims generation_outs_and_trims
+				xml.outsAndTrims generation_outs_and_trimsd
 				xml.positive generation_positive
 				xml.reversal generation_reversal
 				xml.separationMaster generation_separation_master
