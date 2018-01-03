@@ -480,7 +480,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.negative generation_negative
 				xml.opticalSoundTrack generation_optical_sound_track
 				xml.original generation_original
-				xml.outsAndTrims generation_outs_and_trimsd
+				xml.outsAndTrims generation_outs_and_trims
 				xml.positive generation_positive
 				xml.reversal generation_reversal
 				xml.separationMaster generation_separation_master
