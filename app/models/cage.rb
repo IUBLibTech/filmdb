@@ -86,12 +86,12 @@ class Cage < ActiveRecord::Base
     bottom_shelf.notes
   end
 
-  def can_by_shipped?
+  def can_be_shipped?
     total_physical_objects > 0 && top_shelf.can_ship? && middle_shelf.can_ship? && bottom_shelf.can_ship?
   end
 
   def all_shelves_returned?
-    can_by_shipped? && (top_shelf.returned || top_shelf.MDPI)
+    can_be_shipped? && (top_shelf.returned || top_shelf.mdpi_barcode.nil?) && (middle_shelf.returned || middle_shelf.mdpi_barcode.nil?) && (bottom_shelf.returned || bottom_shelf.mdpi_barcode.nil?)
   end
 
   def total_physical_objects
@@ -103,7 +103,7 @@ class Cage < ActiveRecord::Base
   end
 
   def status
-    shipped? ? "Shipped" : (ready_to_ship? ? 'Ready to Ship' : (can_by_shipped? ? 'Packing' : 'Empty'))
+    all_shelves_returned? ? "Returned" : shipped? ? "Shipped" : (ready_to_ship? ? 'Ready to Ship' : (can_be_shipped? ? 'Packing' : 'Empty'))
   end
 
   def to_xml(options)
