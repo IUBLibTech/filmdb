@@ -428,15 +428,10 @@ class PhysicalObject < ActiveRecord::Base
 			xml.anamorphic anamorphic
 			xml.trackCount track_count
 			xml.returnTo storage_location
-			if active_component_group != nil
-				xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
-			end
-			if active_component_group != nil
-				xml.clean active_component_group.clean
-			end
-			if active_component_group != nil
-				xml.returnOnOriginalReel active_component_group.return_on_reel
-			end
+			xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
+			xml.colorSpace active_component_group.color_space
+			xml.clean active_component_group.clean
+			xml.returnOnOriginalReel active_component_group.return_on_reel
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
 					xml.identifier oi.identifier

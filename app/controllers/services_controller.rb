@@ -1,6 +1,9 @@
 class ServicesController < ApplicationController
 	require 'net/http'
 	require 'uri'
+	# Prevent CSRF attacks by raising an exception.
+	# For APIs, you may want to use :null_session instead.
+	protect_from_forgery with: :null_session
 	include CagesHelper
 	include BasicAuthenticationHelper
 
@@ -26,10 +29,11 @@ class ServicesController < ApplicationController
 						p.workflow_statuses << ws
 						p.save
 					end
-					if shelf.cage.all_returned?
+					if shelf.cage.all_shelves_returned?
 						shelf.cage.update(shipped: false, ready_to_ship: false, returned: true)
 					end
 					@success = 'SUCCESS'
+					shelf.update(returned: true)
 				end
 			rescue Exception => error
 				@sucess = 'FAILURE'
