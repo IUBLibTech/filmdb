@@ -121,7 +121,7 @@
         <%= f.submit "Mark Not Ready to Ship" %>
       <% end  %>
     </div>
-  <% elsif @cage.can_by_shipped? && !@cage.shipped? %>
+  <% elsif @cage.can_be_shipped? && !@cage.shipped? %>
     <div class="clear">
       <%= form_for @cage, url: mark_ready_to_ship_path(@cage.id), method: :post do |f| %>
         <%= f.submit "Mark Ready to Ship" %>
