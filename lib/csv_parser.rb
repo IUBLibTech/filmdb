@@ -16,7 +16,7 @@ class CsvParser
       'Shrinkage', 'Mold', 'Condition Type', 'Missing Footage', 'Miscellaneous Condition Type', 'Conservation Actions', 'Creator',
       'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part', 'Accompanying Documentation',
       'Created By', 'Email Address', 'Research Value Notes', 'Date Created', 'Location', 'Date', 'Accompanying Documentation Location', 'Title Summary', 'Title Notes', 'ALF Shelf Location',
-      'Subject', 'Name Authority', 'Generation Notes'
+      'Subject', 'Name Authority', 'Generation Notes', 'Catalog Key'
   ]
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
   TITLE, DURATION, SERIES_NAME, MEDIA_TYPE, MEDIUM, UNIT, COLLECTION, CURRENT_LOCATION, IU_BARCODE, MDPI_BARCODE, IUCAT_TITLE_NO = 0,1,2,3,4,5,6,7,8,9,10
@@ -26,11 +26,11 @@ class CsvParser
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
   CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHELF_LOCATION = 54,55,56,57,58,59,60,61,62,63
-	SUBJECT, NAME_AUTHORITY, GENERATION_NOTES = 64, 65, 66
+	SUBJECT, NAME_AUTHORITY, GENERATION_NOTES, CATALOG_KEY = 64, 65, 66, 67
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
-      COLUMN_HEADERS[IUCAT_TITLE_NO] => :title_control_number=, COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
+      COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
       COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
       COLUMN_HEADERS[MISSING_FOOTAGE] => :missing_footage=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
@@ -197,6 +197,22 @@ class CsvParser
       end
     end
 
+    # title control number
+    tcn = row[column_index IUCAT_TITLE_NO]
+    if !tcn.blank? && tcn.starts_with?('a')
+	    po.title_control_number = tcn
+    elsif !tcn.blank?
+	    po.errors.add(:title_control_number, "Malformed IUCAT Title No: #{tcn}")
+    end
+
+    # catalog key
+    ck = row[column_index CATALOG_KEY]
+    if !ck.blank? && !ck.starts_with?('a')
+	    po.catalog_key = ck
+    elsif !ck.blank?
+	    po.errors.add(:catalog_key, "Malformed Catalog Key: #{ck}")
+    end
+
 
     media_type = row[column_index MEDIA_TYPE]
     if media_type.blank? || !po.media_types.include?(media_type)
@@ -302,6 +318,9 @@ class CsvParser
     @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0] }
     @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0] }
     title = Title.new(title_text: row[column_index TITLE])
+    if title.title_text.blank?
+      po.errors.add(:title, "Title title text cannot be blank.")
+    end
     title.spreadsheet_id = @spreadsheet.id
     title_summary = row[column_index TITLE_SUMMARY]
     unless title_summary.blank?

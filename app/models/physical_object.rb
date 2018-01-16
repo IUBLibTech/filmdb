@@ -221,6 +221,10 @@ class PhysicalObject < ActiveRecord::Base
 		current_workflow_status.status_name
 	end
 
+	def previous_location
+		workflow_statuses[workflow_statuses.size - 2]&.status_name
+	end
+
 	def workflow
 		current_workflow_status&.workflow_type
 	end
@@ -428,15 +432,10 @@ class PhysicalObject < ActiveRecord::Base
 			xml.anamorphic anamorphic
 			xml.trackCount track_count
 			xml.returnTo storage_location
-			if active_component_group != nil
-				xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
-			end
-			if active_component_group != nil
-				xml.clean active_component_group.clean
-			end
-			if active_component_group != nil
-				xml.returnOnOriginalReel active_component_group.return_on_reel
-			end
+			xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
+			xml.colorSpace active_component_group.color_space
+			xml.clean active_component_group.clean
+			xml.returnOnOriginalReel active_component_group.return_on_reel
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
 					xml.identifier oi.identifier
@@ -480,7 +479,7 @@ class PhysicalObject < ActiveRecord::Base
 				xml.negative generation_negative
 				xml.opticalSoundTrack generation_optical_sound_track
 				xml.original generation_original
-				xml.outsAndTrims generation_outs_and_trimsd
+				xml.outsAndTrims generation_outs_and_trims
 				xml.positive generation_positive
 				xml.reversal generation_reversal
 				xml.separationMaster generation_separation_master

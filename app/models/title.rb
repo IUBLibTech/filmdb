@@ -162,10 +162,10 @@ class Title < ActiveRecord::Base
 				sql << "((title_dates.end_date is null AND year(title_dates.start_date) = #{dates[0]}) OR "+
 					"(title_dates.end_date is not null AND year(title_dates.start_date) <= #{dates[0]} AND year(title_dates.end_date) >=  #{dates[0]}))"
 			else
-				sql << "((title_dates.end_date is null AND #{dates[0]} <= year(title_dates.start_date) AND #{dates[0]} >= year(title_dates.start_date)) OR "+
+				sql << "((title_dates.end_date is null AND year(title_dates.start_date) >= #{dates[0]} AND year(title_dates.start_date) <= #{dates[1]})  OR "+
 					"(title_dates.end_date is not null AND "+
-					"((#{dates[0]} <= year(title_dates.start_date) AND #{dates[1]} >= year(title_dates.start_date)) OR "+
-					"(#{dates[0]} <= year(title_dates.end_date) AND #{dates[1]} >= year(title_dates.end_date)) OR "+
+					"((year(title_dates.start_date) >= #{dates[0]} AND year(title_dates.start_date) <= #{dates[1]}) OR "+
+					"(year(title_dates.end_date) >= #{dates[0]} AND year(title_dates.end_date) <= #{dates[1]}) OR "+
 					"(year(title_dates.start_date) < #{dates[0]} AND year(title_dates.end_date) > #{dates[1]}))))"
 			end
 		end

@@ -144,6 +144,9 @@ Rails.application.routes.draw do
   get '/workflow/return_from_mold_abatement/', to: 'workflow#return_from_mold_abatement', as: 'return_from_mold_abatement'
   get '/workflow/ajax_mold_abatement_barcode/:bc', to: 'workflow#ajax_mold_abatement_barcode', as: 'ajax_mold_abatement_barcode'
   post '/workflow/update_return_from_mold_abatement/:id', to: 'workflow#update_return_from_mold_abatement', as: 'update_return_from_mold_abatement'
+  get '/workflow/ajax_mark_found/:iu_barcode', to: 'workflow#ajax_mark_found', as: 'ajax_mark_found'
+  get '/workflow/update_mark_found', to: 'workflow#show_mark_found', as: 'show_mark_found'
+  post '/workflow/update_mark_found', to: 'workflow#update_mark_found', as: 'update_mark_found'
 
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 
