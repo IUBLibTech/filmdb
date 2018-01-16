@@ -430,6 +430,40 @@ class WorkflowController < ApplicationController
 		redirect_to :return_from_mold_abatement
 	end
 
+	def show_mark_found
+		render 'mark_found'
+	end
+
+	def update_mark_found
+		@physical_object = PhysicalObject.joins(:workflow_statuses).where(iu_barcode: params[:iu_barcode]).first
+		if @physical_object.nil?
+			flash[:warning] = "Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
+		elsif !po_missing?(@physical_object)
+			flash[:warning] = "#{params[:iu_barcode]} is not currently marked missing. It should be at #{@physical_object.current_location}"
+		elsif @physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.inlcude?(@physical_object.previous_location)
+			flash[:warning] = "Currently, only Physical Object with an active component group, or objects that went missing in storage can be marked found."
+		else
+			ws = WorkflowStatus.build_workflow_status(@physical_object.previous_location, @physical_object)
+			@physical_object.workflow_statuses << ws
+			@physical_object.save
+			flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_location}"
+		end
+		render 'mark_found'
+	end
+
+	def ajax_mark_found
+		bc = params[:iu_barcode]
+		@physical_object = PhysicalObject.joins(:workflow_statuses).where(iu_barcode: bc).first
+		if @physical_object.nil?
+			@msg = "Could not find Physical Object with IU Barcode #{bc}"
+		elsif !po_missing?(@physical_object)
+			@msg = "#{bc} is not currently marked as missing. It should be at #{@physical_object.current_location}"
+		elsif @physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.include?(@physical_object.previous_location)
+			@msg = "#{bc} cannot currently be marked Found. It no longer has an active component group and was lost in active workflow. Use 'Return to Storage' instead"
+		end
+		render partial: 'ajax_return_to_storage'
+	end
+
 	private
 	def set_physical_object
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
@@ -440,6 +474,10 @@ class WorkflowController < ApplicationController
 	end
 	def set_po
 		@po = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
+	end
+
+	def po_missing?(po)
+		po.current_location == WorkflowStatus::MISSING
 	end
 
 

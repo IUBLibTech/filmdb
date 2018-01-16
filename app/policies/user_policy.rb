@@ -28,4 +28,8 @@ class UserPolicy < ApplicationPolicy
 		current_user_object.can_delete?
 	end
 
+	def can_delete_objects?
+		current_user_object.can_delete?
+	end
+
 end
