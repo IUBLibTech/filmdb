@@ -1,0 +1,39 @@
+<%= form_tag update_mark_found_path do %>
+<table>
+	<tbody>
+	<tr>
+		<th>Scan IU Barcode</th>
+		<td>
+			<%= text_field_tag :iu_barcode  %>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">
+			<%= submit_tag "Mark Found" %>
+		</th>
+	</tr>
+	</tbody>
+</table>
+<% end %>
+<div id="msg">
+
+</div>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('#iu_barcode').bind('input', function() {
+			bc = $(this).val();
+			$('#msg').html('')
+			if (bc.length > 0) {
+				$.ajax({
+					url: './ajax_mark_found/' + bc,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						swal({title: 'Ajax Error', text: "An error occurred while scanning barcode at Mark Found: " + errorThrown});
+					},
+					success: function (result) {
+						$('#msg').html(result)
+					}
+				});
+			}
+		})
+	});
+</script>
