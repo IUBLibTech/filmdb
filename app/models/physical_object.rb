@@ -221,6 +221,10 @@ class PhysicalObject < ActiveRecord::Base
 		current_workflow_status.status_name
 	end
 
+	def previous_location
+		workflow_statuses[workflow_statuses.size - 2]&.status_name
+	end
+
 	def workflow
 		current_workflow_status&.workflow_type
 	end

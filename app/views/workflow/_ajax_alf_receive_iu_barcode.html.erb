@@ -51,8 +51,12 @@
 					<%= f.select :workflow, options_for_select(WorkflowStatus.mdpi_receive_options(@physical_object.storage_location)) %>
 				</td>
 			</tr>
+			<tr>
+				<th>Accompanying Documentation?</th>
+				<td colspan="2"><%= link_to @physical_object.iu_barcode, edit_physical_object_path(@physical_object, anchor: 'accompanying_documentation_metadata'), class: 'btn-link', target: '_blank' %></td>
+			</tr>
 			<tr id="rejected_options" class="hidden">
-				<th>Did You Update Condition Notes for <%= link_to "#{@physical_object.iu_barcode}?", edit_physical_object_path(@physical_object), target: '_blank' %></th>
+				<th>Did You Update Condition Notes</th>
 				<td>
 					<%= f.check_box :updated %>
 				</td>

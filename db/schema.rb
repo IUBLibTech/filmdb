@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214142940) do
+ActiveRecord::Schema.define(version: 20180108210552) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -365,6 +365,7 @@ ActiveRecord::Schema.define(version: 20171214142940) do
     t.boolean  "sound_content_narration"
     t.string   "close_caption",                         limit: 255
     t.text     "generation_notes",                      limit: 65535
+    t.string   "catalog_key",                           limit: 255
   end
 
   create_table "pod_pushes", force: :cascade do |t|
@@ -545,12 +546,5 @@ ActiveRecord::Schema.define(version: 20171214142940) do
   end
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
-
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
 
 end
