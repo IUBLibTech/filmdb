@@ -63,7 +63,7 @@ class CagesController < ApplicationController
 	end
 
 	def mark_ready_to_ship
-		if @cage.can_by_shipped?
+		if @cage.can_be_shipped?
 			@cage.update_attributes(ready_to_ship: true)
 			flash[:notice] = "Cage #{@cage.identifier} is ready to ship to Memnon"
 			redirect_to :cages
