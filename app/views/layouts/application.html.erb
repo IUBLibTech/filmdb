@@ -44,8 +44,10 @@
       <li><%= link_to 'AD Strip', edit_ad_strip_path %></li>
       <li><%= link_to 'Send for Mold Abatement', send_for_mold_abatement_path %></li>
       <li><%= link_to 'Send to Freexer', send_to_freezer_path %></li>
-      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
-      <li><%= link_to 'Mark Item Found', '' %></li>
+	    <% if policy(User).can_delete_objects? %>
+	      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
+	      <li><%= link_to 'Mark Item Found', '' %></li>
+	    <% end %>
 	    <% if policy(PhysicalObject).update_location? %>
 		    <br>
 		    <li><%= link_to 'Change Location', update_location_url %></li>
