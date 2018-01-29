@@ -2,7 +2,7 @@ module PhysicalObjectsHelper
   include MailHelper
 
   GAUGES_TO_FRAMES_PER_FOOT = {
-	  '8mm' => 72, 'Super 8mm' => 72, '9.5 mm' => 40.5, '16mm' => 40, 'Super 16mm' => 40, '28mm' => 20.5, '35mm' => 16, '35/32mm' => 40, '70mm' => 12.8
+	  '8mm' => 72, 'Super 8mm' => 72, '9.5mm' => 40.5, '16mm' => 40, 'Super 16mm' => 40, '28mm' => 20.5, '35mm' => 16, '35/32mm' => 40, '70mm' => 12.8
   }
 
   def hh_mm_sec(totalSeconds)
@@ -58,7 +58,12 @@ module PhysicalObjectsHelper
   def calc_estimated_duration(pos)
     d = 0
     pos.each do |p|
+      begin
       d += (PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * (p.footage.blank? ? 0 : p.footage)) / 24
+      rescue
+        debugger
+      end
+
     end
     d
   end
@@ -111,7 +116,7 @@ module PhysicalObjectsHelper
         :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :anamorphic, :track_count,
+        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count,
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
         languages_attributes: [:id, :language, :language_type, :_destroy],

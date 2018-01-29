@@ -89,7 +89,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def receive_from_storage
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
 		u = User.current_user_object
 		if u.worksite_location == 'ALF'
 			@alf = true
@@ -167,12 +167,12 @@ class WorkflowController < ApplicationController
 			flash.now[:notice] = "#{@physical_object.iu_barcode} workflow status was updated to <b>#{WorkflowStatus::IN_WORKFLOW_WELLS}</b> "+
 				"#{others ? " #{others} are also part of this objects pull request and have not yet been received at Wells" : ''}".html_safe
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
 		redirect_to :receive_from_storage
 	end
 
 	def return_to_storage
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
 		ws = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
@@ -196,7 +196,7 @@ class WorkflowController < ApplicationController
 	def send_to_freezer
 	end
 	def process_send_to_freezer
-		ws = WorkflowStatus.new(WorkflowStatus::IN_FREEZER, @po)
+		ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_FREEZER, @po)
 		@po.workflow_statuses << ws
 		@po.save
 		flash.now[:notice] = "#{@po.iu_barcode}'s location has been updated to' #{WorkflowStatus::IN_FREEZER}"
@@ -204,19 +204,24 @@ class WorkflowController < ApplicationController
 	end
 
 	def mark_missing
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
 	end
+
 	def process_mark_missing
-		ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po)
-		@po.workflow_statuses << ws
-		@po.save
-		flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}"
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		if @po.nil?
+			flash[:warning] = "Could not find Physical Object with barcode #{params[:physical_object][:iu_barcode]}"
+		else
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po)
+			@po.workflow_statuses << ws
+			@po.save
+			flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}"
+			@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		end
 		render :mark_missing
 	end
 
 	def receive_from_external
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::SHIPPED_EXTERNALLY)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::SHIPPED_EXTERNALLY)
 		@action_text = 'Returned From External'
 		@url = '/workflow/ajax/received_external/'
 	end
@@ -268,7 +273,7 @@ class WorkflowController < ApplicationController
 
 
 	def best_copy_selection
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_MDPI_WELLS)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_MDPI_WELLS)
 	end
 
 	def ajax_best_copy_selection_barcode
@@ -330,7 +335,7 @@ class WorkflowController < ApplicationController
 				p.save!
 			end
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF)
 		render 'best_copy_selection'
 	end
 
@@ -431,6 +436,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def show_mark_found
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
 		render 'mark_found'
 	end
 
@@ -440,7 +446,7 @@ class WorkflowController < ApplicationController
 			flash[:warning] = "Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
 		elsif !po_missing?(@physical_object)
 			flash[:warning] = "#{params[:iu_barcode]} is not currently marked missing. It should be at #{@physical_object.current_location}"
-		elsif @physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.inlcude?(@physical_object.previous_location)
+		elsif (@physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.include?(@physical_object.previous_location) && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_WELLS && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_ALF)
 			flash[:warning] = "Currently, only Physical Object with an active component group, or objects that went missing in storage can be marked found."
 		else
 			ws = WorkflowStatus.build_workflow_status(@physical_object.previous_location, @physical_object)
@@ -448,6 +454,7 @@ class WorkflowController < ApplicationController
 			@physical_object.save
 			flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_location}"
 		end
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
 		render 'mark_found'
 	end
 
@@ -458,7 +465,7 @@ class WorkflowController < ApplicationController
 			@msg = "Could not find Physical Object with IU Barcode #{bc}"
 		elsif !po_missing?(@physical_object)
 			@msg = "#{bc} is not currently marked as missing. It should be at #{@physical_object.current_location}"
-		elsif @physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.include?(@physical_object.previous_location)
+		elsif (@physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.include?(@physical_object.previous_location) && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_WELLS && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_ALF)
 			@msg = "#{bc} cannot currently be marked Found. It no longer has an active component group and was lost in active workflow. Use 'Return to Storage' instead"
 		end
 		render partial: 'ajax_return_to_storage'
