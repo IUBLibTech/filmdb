@@ -89,7 +89,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def receive_from_storage
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
 		u = User.current_user_object
 		if u.worksite_location == 'ALF'
 			@alf = true
@@ -167,12 +167,12 @@ class WorkflowController < ApplicationController
 			flash.now[:notice] = "#{@physical_object.iu_barcode} workflow status was updated to <b>#{WorkflowStatus::IN_WORKFLOW_WELLS}</b> "+
 				"#{others ? " #{others} are also part of this objects pull request and have not yet been received at Wells" : ''}".html_safe
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
 		redirect_to :receive_from_storage
 	end
 
 	def return_to_storage
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
 		ws = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
@@ -204,7 +204,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def mark_missing
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
 	end
 
 	def process_mark_missing
@@ -215,13 +215,13 @@ class WorkflowController < ApplicationController
 			@po.workflow_statuses << ws
 			@po.save
 			flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}"
-			@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+			@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
 		end
 		render :mark_missing
 	end
 
 	def receive_from_external
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::SHIPPED_EXTERNALLY)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::SHIPPED_EXTERNALLY)
 		@action_text = 'Returned From External'
 		@url = '/workflow/ajax/received_external/'
 	end
@@ -273,7 +273,7 @@ class WorkflowController < ApplicationController
 
 
 	def best_copy_selection
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_MDPI_WELLS)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_MDPI_WELLS)
 	end
 
 	def ajax_best_copy_selection_barcode
@@ -335,7 +335,7 @@ class WorkflowController < ApplicationController
 				p.save!
 			end
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF)
 		render 'best_copy_selection'
 	end
 
