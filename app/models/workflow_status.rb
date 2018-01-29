@@ -103,7 +103,7 @@ class WorkflowStatus < ActiveRecord::Base
 				workflow_type: which_workflow_type(status_name),
 				whose_workflow: find_workflow(status_name, physical_object),
 				status_name: status_name,
-				component_group_id: ((STATUS_TYPES_TO_STATUSES['Storage'] << DEACCESSIONED).include?(status_name) ? nil : physical_object.active_component_group.id))
+				component_group_id: ((STATUS_TYPES_TO_STATUSES['Storage'] + [DEACCESSIONED, JUST_INVENTORIED_ALF, JUST_INVENTORIED_WELLS]).include?(status_name) ? nil : physical_object.active_component_group&.id))
 			if !physical_object.current_workflow_status&.external_entity_id.nil?
 				ws.external_entity_id = previous_workflow_status.external_entity_id
 			end

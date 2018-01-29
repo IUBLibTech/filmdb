@@ -403,6 +403,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
 			xml.iucatTitleControlNumber title_control_number
+			xml.catalogKey catalog_key
 			xml.format medium
 			xml.unit unit.abbreviation
 			xml.title titles.collect{ |t| t.title_text }.join(', ')

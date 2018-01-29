@@ -102,7 +102,7 @@ class Title < ActiveRecord::Base
 		sql = "SELECT count(*) FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 		res = connection.execute(sql)
 		connection.execute("DROP TABLE #{current_user}_title_search")
-		res.first[0]
+		res.first.nil? ? 0 :	res.first[0]
 	}
 
 	self.per_page = 100

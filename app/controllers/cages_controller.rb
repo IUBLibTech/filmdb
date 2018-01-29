@@ -111,7 +111,7 @@ class CagesController < ApplicationController
 			rescue ManualRollBackError => e
 				flash.now[:warning] = @msg
 			ensure
-				PodPush.new(cage_id: @cage.id, response: (@result.nil? ? 'success': @result.body)).save
+				PodPush.new(cage_id: @cage.id, response: @result.body).save
 			end
 		else
 			flash.now[:warning] = "#{@cage.identifier} could not be shipped to Memnon - it is not ready."
