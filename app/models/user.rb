@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
 		User.where(username: current_username).first
 	end
 
+	def self.active_user_emails
+		User.where(active: true).pluck(:email_address).join(',')
+	end
+
 	def name
 		first_name + ' ' + last_name
 	end

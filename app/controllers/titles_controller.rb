@@ -360,7 +360,6 @@ class TitlesController < ApplicationController
               @queued += 1
               p.workflow_statuses << ws
             else
-              debugger
               loc = nil
               case @cg.group_type
                 when ComponentGroup::BEST_COPY_ALF
@@ -376,9 +375,7 @@ class TitlesController < ApplicationController
                     raise "Cannot determine where physical object should move! Invalid previous cg: #{prev_cg.group_type}"
                   end
                 else
-                  debugger
               end
-              debugger
               ##loc = (@cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
               ws = WorkflowStatus.build_workflow_status(loc, p, true)
               p.workflow_statuses << ws

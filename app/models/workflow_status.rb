@@ -131,8 +131,18 @@ class WorkflowStatus < ActiveRecord::Base
 		end
 	end
 
-	def self.mdpi_receive_options(storage_string)
-		[BEST_COPY_ALF, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF].each.collect { |s| [s, s] }
+	def self.mdpi_receive_options(po)
+		a = []
+		if po.current_location == WorkflowStatus::WELLS_TO_ALF_CONTAINER
+			a << TWO_K_FOUR_K_SHELVES
+		elsif po.active_component_group.group_type == ComponentGroup::BEST_COPY_ALF
+			a << BEST_COPY_ALF
+			a << ISSUES_SHELF
+		elsif po.active_component_group.group_type == ComponentGroup::REFORMATTING_MDPI
+			a << TWO_K_FOUR_K_SHELVES
+			a << ISSUES_SHELF
+		end
+		a.each.collect { |s| [s, s] }
 	end
 
 	def self.workflow_type_from_status(status_name)
