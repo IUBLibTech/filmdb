@@ -48,7 +48,7 @@
 			<tr>
 				<th>Sent to Workflow</th>
 				<td>
-					<%= f.select :workflow, options_for_select(WorkflowStatus.mdpi_receive_options(@physical_object.storage_location)) %>
+					<%= f.select :workflow, options_for_select(WorkflowStatus.mdpi_receive_options(@physical_object)) %>
 				</td>
 			</tr>
 			<tr>
