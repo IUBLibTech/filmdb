@@ -103,7 +103,7 @@ class WorkflowController < ApplicationController
 			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[:physical_object][:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? && @physical_object.current_workflow_status.status_name != WorkflowStatus::MOLD_ABATEMENT && @physical_object.current_workflow_status.status_name != WorkflowStatus::WELLS_TO_ALF_CONTAINER
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
-		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.whose_workflow != WorkflowStatus::MDPI
+		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.deliver_to_wells?
 			flash[:warning] = "#{@physical_object.iu_barcode} should have been delivered to Wells 052, Component Group type: #{@physical_object.active_component_group.group_type}"
 		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank? && @physical_object.active_component_group.group_type != ComponentGroup::BEST_COPY_ALF
 			flash[:warning] = "You must specify footage for #{@physical_object.iu_barcode}"
@@ -128,7 +128,7 @@ class WorkflowController < ApplicationController
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT && !@physical_object.current_workflow_status.status_name == WorkflowStatus::WELLS_TO_ALF_CONTAINER
 			@msg = "Error: #{@physical_object.iu_barcode} has not been Requested From Storage. Current Workflow status/location: #{@physical_object.current_workflow_status.type_and_location}"
-		elsif @physical_object.active_component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
+		elsif @physical_object.active_component_group.deliver_to_wells?
 			@msg = "Error: #{@physical_object.iu_barcode} should have been delivered to Wells. Please contact Amber/Andrew immediately"
 		end
 		render partial: 'ajax_alf_receive_iu_barcode'
@@ -141,8 +141,8 @@ class WorkflowController < ApplicationController
 			@msg = "Could not find physical object with IU barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? || !@physical_object.current_location == WorkflowStatus::MOLD_ABATEMENT
 			@msg = "Error: #{@physical_object.iu_barcode} cannot be received at Wells - its current location is #{@physical_object.current_location}"
-		elsif @physical_object.active_component_group.group_type != ComponentGroup::BEST_COPY_MDPI_WELLS
-			@msg = "You have scanned a barcode for a Physical Object that was not pulled for Wells MDPI Best Copy work: #{@physical_object.active_component_group.group_type}"
+		elsif @physical_object.active_component_group.deliver_to_alf?
+			@msg = "#{@physical_object.iu_barcode} should have been delivered to ALF. It was pulled for: #{@physical_object.active_component_group.group_type}"
 		end
 		render partial: 'ajax_wells_receive_iu_barcode'
 	end
