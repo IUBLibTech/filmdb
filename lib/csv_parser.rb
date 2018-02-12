@@ -317,7 +317,7 @@ class CsvParser
     @title_date_types =  @title_date_cv[:date_type].collect{ |d| d[0] }
     @title_genre_cv = ControlledVocabulary.title_genre_cv[:genre].collect { |x| x[0] }
     @title_form_cv = ControlledVocabulary.title_form_cv[:form].collect { |x| x[0] }
-    title = Title.new(title_text: row[column_index TITLE])
+    title = Title.new(title_text: row[column_index TITLE], series_part: row[column_index SERIES_PART])
     if title.title_text.blank?
       po.errors.add(:title, "Title title text cannot be blank.")
     end

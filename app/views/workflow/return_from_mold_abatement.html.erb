@@ -34,13 +34,9 @@
 			if (valid) {
 				$.ajax({
 					url: './ajax_mold_abatement_barcode/'+$(this).val(),
-					error: function(jqxhr, status, error) {
-						swal({
-							title: 'Ajax Error',
-							text: 'Something unexpected happened while trying to retrieve the status:'+error,
-							type: 'error'
-						});
-					},
+					error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          },
 					success: function(result) {
 						$('#result_div').html(result)
 					}

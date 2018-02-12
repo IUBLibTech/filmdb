@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   get '/cages/cage_shelf/:id/ajax_cage_shelf_stats', to: 'cages#ajax_cage_shelf_stats', as: 'ajax_cage_shelf_stats'
   get '/cages/ajax_add_physical_object_iu_barcode_scan/:iu_barcode', to: 'cages#ajax_add_physical_object_iu_barcode_scan', as: 'ajax_add_physical_object_iu_barcode_scan'
 
+  get '/cage_shelves', to: 'cage_shelves#index', as: 'cage_shelves'
+  get '/cage_shelves/:id', to: 'cage_shelves#show', as: 'cage_shelf'
+
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
   post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
@@ -48,6 +51,10 @@ Rails.application.routes.draw do
   get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
   post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
 
+  # pod_pushes
+  get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
+  get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'
+
   # pull requests
   get '/pull_requests', to: 'pull_requests#index', as: 'pull_requests'
   get '/pull_requests/:id', to: 'pull_requests#show', as: 'show_pull_request'
@@ -61,6 +68,7 @@ Rails.application.routes.draw do
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
 
   resources :series_titles
+
 
 	# services URLs
 	post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
