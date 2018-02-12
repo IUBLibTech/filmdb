@@ -36,8 +36,8 @@
         var url = '../../../titles/ajax/'+title_id;
         $.ajax({
           url: url,
-          error: function(result) {
-            alert('Something bad happened when trying to call the title summary...');
+          error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
           },
           success: function(result) {
             el = $('#pop_up');

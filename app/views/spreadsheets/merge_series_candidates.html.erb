@@ -35,8 +35,8 @@
         var url = '../../../series/ajax/'+series_id;
         $.ajax({
           url: url,
-          error: function(result) {
-            alert('Something bad happened when trying to call the series summary...');
+          error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
           },
           success: function(result) {
             el = $('#pop_up');

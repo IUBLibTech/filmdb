@@ -24,9 +24,9 @@ class CagesController < ApplicationController
   def new
 	  max = Cage.maximum('id')
     @cage = Cage.new(identifier: "Cage #{max.nil? ? 1 : max + 1}")
-	  @cage.top_shelf.identifier = "TS_#{max.nil? ? 1 : max + 1}"
-	  @cage.middle_shelf.identifier ="MS_#{max.nil? ? 1 : max + 1}"
-	  @cage.bottom_shelf.identifier = "BS_#{max.nil? ? 1 : max + 1}"
+	  @cage.top_shelf.identifier = "Top Shelf"
+	  @cage.middle_shelf.identifier ="Middle Shelf"
+	  @cage.bottom_shelf.identifier = "Bottom Shelf"
   end
 
   # POST /cages
@@ -87,15 +87,35 @@ class CagesController < ApplicationController
 		if @cage.ready_to_ship
 			begin
 				PhysicalObject.transaction do
+					# format identifier as FDB-000y-FILM
+					# use length instead of size: if using size, what is returned is a hash of cage shelf ids mapped to the count
+					# of physical objects on the shelf, not the number of shelves with at least 1 physical object
+					batch_count = CageShelf.joins(:physical_objects).group('cage_shelves.id').length
+					if @cage.top_shelf.physical_objects.size > 0
+						@cage.top_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
+						@cage.top_shelf.save
+						batch_count+= 1
+					end
 					@cage.update_attributes(shipped: true)
 					flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
 					@cage.top_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
+
+					if @cage.middle_shelf.physical_objects.size > 0
+						@cage.middle_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
+						@cage.middle_shelf.save
+						batch_count+= 1
+					end
 					@cage.middle_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
+					end
+
+					if @cage.bottom_shelf.physical_objects.size > 0
+						@cage.bottom_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
+						@cage.bottom_shelf.save
 					end
 					@cage.bottom_shelf.physical_objects.each do |p|
 						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
@@ -109,9 +129,9 @@ class CagesController < ApplicationController
 					end
 				end
 			rescue ManualRollBackError => e
-				flash.now[:warning] = @msg
+				flash.now[:warning] = "An error occured while trying to push the cage to POD."
 			ensure
-				PodPush.new(cage_id: @cage.id, response: @result.body).save
+				PodPush.new(cage_id: @cage.id, response: @result&.body).save
 			end
 		else
 			flash.now[:warning] = "#{@cage.identifier} could not be shipped to Memnon - it is not ready."
@@ -233,7 +253,7 @@ class CagesController < ApplicationController
 	end
 
 	def set_cages
-		@cages = Cage.all.order('updated_at DESC')
+		@cages = Cage.all.order('id DESC')
 	end
 
 	def set_cage_shelf

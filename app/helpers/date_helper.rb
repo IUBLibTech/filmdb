@@ -25,7 +25,7 @@ module DateHelper
 		# remove white space and replace all en/em dashes (thank you MS Excel...) with hyphens
 		dates = date.gsub(/\s+/,"").gsub(/[\xE2\x80\x94\xE2\x80\x93]/,'-').split('-')
 		set = {}
-		if dates.size == 1
+		if dates.size == 1 && !dates[0].blank?
 			match = @@year_rgx.match(dates[0])
 			if match.nil?
 				set[:start_date] = convert_month_day_date(dates[0])
@@ -38,7 +38,8 @@ module DateHelper
 					set[:start_date] = convert_year_date(match[1])
 				end
 			end
-		else
+			set[:start_date][:approximation] = (dates[0][0] == '[' && dates[0][-1] == ']')
+		elsif dates.size == 2 && (!dates[0].blank? && !dates[1].blank?)
 			match = @@year_only_rgx.match(dates[0])
 			if match.nil?
 				set[:start_date] = convert_month_day_date(dates[0])
@@ -55,6 +56,10 @@ module DateHelper
 			if set[:start_date].nil? || set[:end_date].nil?
 				set = {}
 			end
+			set[:start_date][:approximation] = (dates[0][0] == '[' && dates[0][-1] == ']')
+			set[:end_date][:approximation] = (dates[1][0] == '[' && dates[1][-1] == ']')
+		else
+			# do what?
 		end
 		set
 	end
