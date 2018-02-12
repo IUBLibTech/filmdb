@@ -18,9 +18,9 @@
 			if (isValidBarcode(val) || isValidBarcode(val, true)) {
 				$.ajax({
 					url: './ajax_update_location_get/' + val,
-					error: function (jqxhr, status, error) {
-						swal('An error was encounted during the ajax call...', error);
-					},
+					error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          },
 					success: function(result){
 						$('#ajax').html(result);
 					}

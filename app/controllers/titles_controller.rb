@@ -501,7 +501,7 @@ class TitlesController < ApplicationController
         :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes, :subject, :name_authority,
         title_creators_attributes: [:id, :name, :role, :_destroy],
         title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
-        title_genres_attributes: [:id, :genre, :_destroy],
+       title_genres_attributes: [:id, :genre, :_destroy],
         title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
         title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],
         title_forms_attributes: [:id, :form, :_destroy],

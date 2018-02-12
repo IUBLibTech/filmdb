@@ -282,8 +282,17 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	def ingested_by_alf?
+		last = workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at DESC').limit(1).first
+		last.status_name == WorkflowStatus::IN_STORAGE_INGESTED
+	end
 
-	# title_text, series_title_text, and collection_text are all necesasary for javascript autocomplete on these fields for
+	def notify_alf
+		ingested_by_alf? && (storage_location == WorkflowStatus::IN_FREEZER || storage_location == WorkflowStatus::AWAITING_FREEZER)
+	end
+
+
+	# title_text, series_title_text, and collection_text are all necessary for javascript autocomplete on these fields for
 	# forms. They provide a display value for the title/series/collection but are never set directly - the id of the model record
 	# is set and passed as the param for assignment
 	def titles_text
@@ -433,6 +442,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.anamorphic anamorphic
 			xml.trackCount track_count
 			xml.returnTo storage_location
+			xml.notifyAlf notify_alf
 			xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
 			xml.colorSpace active_component_group.color_space
 			xml.clean active_component_group.clean

@@ -15,10 +15,9 @@
 				$.ajax({
 					url: url,
 					method: 'POST',
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
-						$('#cg').html('');
-					},
+					error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          },
 					success: function (result) {
 						$('#cg').html(result);
 					}

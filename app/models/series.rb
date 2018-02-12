@@ -36,5 +36,13 @@ class Series < ActiveRecord::Base
     Series.where(title: series_title).where('spreadsheet_id IS NULL OR spreadsheet_id != ?', ss_id)
   }
 
+  scope :series_without_titles, -> {
+    Series.find_by_sql("select * from series where series.id not in (select distinct(series_id) from titles where series_id is not null)")
+  }
+  scope :series_without_titles_count, -> {
+    res = connection.execute("select count(distinct(id)) from series where series.id not in (select distinct(series_id) from titles where series_id is not null)")
+    res.first.nil? ? 0 : res.first[0]
+  }
+
 
 end

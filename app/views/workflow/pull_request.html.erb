@@ -124,9 +124,9 @@
 						$.ajax({
 							url: './ajax_cancel_queued_pull_request/' + id,
 							method: 'POST',
-							error: function (XMLHttpRequest, textStatus, errorThrown) {
-								swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
-							},
+							error: function(jqXHR, textStatus, errorThrown) {
+                  window.location.replace(jqXHR.url)
+              },
 							success: function (result) {
 								swal({
 										title: 'Reponse',

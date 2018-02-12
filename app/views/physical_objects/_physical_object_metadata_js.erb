@@ -162,9 +162,8 @@
       series_id = 0;
       $.ajax({
         url: window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id,
-        error: function(result) {
-          x = 237;
-          alert("Error:\n"+result);
+        error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
         },
         success: function(result) {
           el = $('#title_popup_content');
@@ -205,8 +204,8 @@
                   alert(result['error']);
                 }
               },
-              error: function(result) {
-                alert(result['error']);
+              error: function(jqXHR, textStatus, errorThrown) {
+                window.location.replace(jqXHR.url)
               },
               complete: function() {
                 $('#title_popup').hideTitlePopup();

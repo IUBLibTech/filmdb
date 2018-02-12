@@ -27,7 +27,15 @@ class CageShelf < ActiveRecord::Base
 
   def can_ship?
 	  (!mdpi_barcode.blank? && physical_objects.size > 0) || (physical_objects.size == 0 && mdpi_barcode.blank?)
-  end
+	end
+
+	def status
+		if returned?
+			"Returned"
+		else
+			cage.status
+		end
+	end
 
 	private
 	def calc_duration_from_footage(ft)

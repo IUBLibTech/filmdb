@@ -62,7 +62,10 @@
 					},
 					success: function (data) {
 						response(data)
-					}
+					},
+          error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          }
 				});
 			},
 			focus: function (event, ui) {
@@ -115,9 +118,9 @@
 	function ajaxTitleSummary(id) {
 		$.ajax({
 			url: '/titles/ajax/' + id,
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
-			},
+			error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
+      },
 			success: function (result) {
 				$('#title_sum').html(result);
 				$('#title_sum').show();
@@ -147,11 +150,8 @@
 	function updatePoCount(el, titleId) {
 		$.ajax({
 			url: '../ajax_reel_count/'+titleId,
-			error: function(xmlHttpRequest, textStatus, errorThrown) {
-				swal({
-					title: 'Ajax Error',
-					text: 'An error occurred while retreiving the physical object count for title '+titleId+': '+errorThrown
-				})
+			error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
 			},
 			success: function(response) {
 				el.parent().next().next().html(response[0]+'/'+response[1])

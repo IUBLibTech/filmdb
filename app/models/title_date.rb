@@ -11,7 +11,18 @@ class TitleDate < ActiveRecord::Base
 
   def ==(another)
     self.class == another.class && self.date_type == another.date_type && self.date_to_s == another.date_to_s
-  end
+	end
+
+	def date_text=(dt)
+    puts "Before parse: #{dt}"
+		super(dt)
+		parse_date_text
+    puts "After parse: #{dt}"
+	end
+
+	def reparse_date
+		parse_date_text
+	end
 
 
 end

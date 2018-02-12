@@ -27,13 +27,9 @@
 			if (valid) {
 				$.ajax({
 					url: '../physical_objects/ajax_show_storage/' + $(this).val(),
-					error: function (result) {
-						swal({
-							title: 'Ajax Error',
-							text: 'Something unexpected happened while trying to retreive the storage location',
-							type: 'error'
-						})
-					},
+					error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          },
 					success: function (result) {
 						$('#ajax_show_storage_message').html(result)
 					}
