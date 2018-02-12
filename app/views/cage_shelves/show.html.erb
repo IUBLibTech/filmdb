@@ -1,0 +1,37 @@
+<h4>Cage Shelf</h4>
+<table>
+  <tbody>
+  <tr>
+    <th>Identifier</th>
+    <th>Barcode</th>
+    <th>Physical Object Count</th>
+    <th>Status</th>
+    <th>Cage</th>
+  </tr>
+  <tr>
+    <td><%= @cage_shelf.identifier %></td>
+    <td><%= @cage_shelf.mdpi_barcode %></td>
+    <td><%= @cage_shelf.physical_objects.size %></td>
+    <td><%= @cage_shelf.status %></td>
+    <td><%= link_to "#{@cage_shelf.cage.identifier}", cage_path(@cage_shelf.cage) %></td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<h4>Physical Objects</h4>
+<table>
+  <tbody>
+  <tr>
+    <th>IU Barcode</th>
+    <th>MDPI Barcode</th>
+    <th>Title</th>
+  </tr>
+  <% @cage_shelf.physical_objects.each do |p| %>
+    <tr>
+      <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
+      <td><%= link_to "#{p.mdpi_barcode}", physical_object_path(p) %></td>
+      <td><%= p.titles_text %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

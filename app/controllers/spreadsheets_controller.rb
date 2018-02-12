@@ -168,6 +168,11 @@ class SpreadsheetsController < ApplicationController
             @master_title.title_locations << tl
           end
         end
+        m.component_groups.each do |cg|
+          cg.group_summary += " [* This component group belonged to another title pre-merge *] "
+          cg.title = @master_title
+          cg.save
+        end
         PhysicalObjectTitle.where(title_id: m.id).update_all(title_id: @master_title.id)
         m.delete
       end

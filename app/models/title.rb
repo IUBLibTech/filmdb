@@ -105,6 +105,15 @@ class Title < ActiveRecord::Base
 		res.first.nil? ? 0 :	res.first[0]
 	}
 
+	scope :titles_without_physical_objects, -> {
+		Title.find_by_sql("select * from titles where id not in (select title_id from physical_object_titles)")
+	}
+
+	scope :count_titles_without_physical_objects, -> {
+		res = connection.execute("select count(distinct(id)) from titles where id not in (select title_id from physical_object_titles)")
+		res.first.nil? ? 0 : res.first[0]
+	}
+
 	self.per_page = 100
 
 	def series_title_text

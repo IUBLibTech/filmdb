@@ -29,9 +29,9 @@
 			if (bc.length > 0) {
 				$.ajax({
 					url: './ajax_mark_found/' + bc,
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						swal({title: 'Ajax Error', text: "An error occurred while scanning barcode at Mark Found: " + errorThrown});
-					},
+					error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
+          },
 					success: function (result) {
 						$('#msg').html(result)
 					}

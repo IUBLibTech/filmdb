@@ -37,6 +37,10 @@
 					<%= f.select :can_size, options_for_select(@cv[:can_size], @physical_object.can_size), {include_blank: ''} %>
 				</td>
 			</tr>
+      <tr>
+        <th>AD Strip</th>
+        <td><%= @physical_object.ad_strip %></td>
+      </tr>
 			<% if !@physical_object.active_component_group&.scan_resolution.blank? %>
 			<tr>
 				<th>Scan Resolution</th>
@@ -48,7 +52,7 @@
 			<tr>
 				<th>Sent to Workflow</th>
 				<td>
-					<%= f.select :workflow, options_for_select(WorkflowStatus.mdpi_receive_options(@physical_object.storage_location)) %>
+					<%= f.select :workflow, options_for_select(WorkflowStatus.mdpi_receive_options(@physical_object)) %>
 				</td>
 			</tr>
 			<tr>

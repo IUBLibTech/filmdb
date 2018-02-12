@@ -61,7 +61,10 @@
 						},
 						success: function(data) {
 							response(data)
-						}
+						},
+            error: function(jqXHR, textStatus, errorThrown) {
+                window.location.replace(jqXHR.url)
+            }
 					});
 				},
 				focus: function (event, ui) {
@@ -105,9 +108,9 @@
 	function addTitle(id) {
 		$.ajax({
 			url: '/title_merge_selection_table_row/'+id,
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
-			},
+			error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
+      },
 			success: function(result) {
 				$('.title_merge_remove').unbind('click.title_merge_remove_title')
 				$('#title_table').append(result)
@@ -129,9 +132,9 @@
 	function ajaxTitleSummary(id) {
 		$.ajax({
 			url: '/titles/ajax/'+id,
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
-			},
+			error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
+      },
 			success: function(result) {
 				$('#title_summary').html(result);
 				$('#title_summary').show();
@@ -143,9 +146,9 @@
 		$.ajax({
 			url: "<%= title_merge_physical_object_candidates_path %>",
 			data: {ids: selectedTitleIds()},
-			error: function(MLHttpRequest, textStatus, errorThrown) {
-				swal({title: 'Ajax Error', text: "An error occurred during autocomplete lookup: " + errorThrown});
-			},
+			error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
+      },
 			success: function(result) {
 				$('#physical_objects').html(result)
 				$('.po_check').click(function() {
@@ -164,8 +167,8 @@
 	}
 
 	function selectedTitleIds(includeMaster=true) {
-		var vals = []
-		var sel = (includeMaster ? $('.title_row') : $('.title_row').not('.master_selection'))
+		var vals = [];
+		var sel = (includeMaster ? $('.title_row') : $('.title_row').not('.master_selection'));
 		sel.each(function() {
 			vals.push($(this).attr('id'))
 		});
@@ -174,16 +177,17 @@
 
 	function initTitleSelect() {
 		// remove the event handlers as we don't want to double up on them everytime a new row is added/removed
-		$('#title_table > tbody > tr').off("click.title_select")
-		$('#title_table > tbody > tr').on('click.title_select', function() {
+		el = $('#title_table > tbody > tr');
+    el.off("click.title_select");
+		el.on('click.title_select', function() {
 			if ($(this).hasClass('master_selection')) {
-				$(this).removeClass('master_selection')
+				$(this).removeClass('master_selection');
 				$('#master_title_id').attr('value', null)
 			} else {
 				$('.master_selection').removeClass('master_selection');
-				$(this).addClass('master_selection')
+				$(this).addClass('master_selection');
 				$('#master_title_id').attr('value', $(this).attr('id'))
-			}
+			};
 			setHiddenTitleIds();
 		});
 		setHiddenTitleIds();
@@ -193,10 +197,10 @@
 		$('#mergees').attr('value', tids.join(','))
 	}
 	function getPoIds() {
-		var pos = []
+		var pos = [];
 		$('.po_check:checked').each(function() {
 			pos.push($(this).attr('id').substring(3))
-		})
+		});
 		return pos
 	}
 </script>

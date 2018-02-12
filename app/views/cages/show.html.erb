@@ -133,12 +133,8 @@
       id = $(this).attr('id').substring(6)
       $.ajax({
         url: './cage_shelf/'+id+'/ajax_physical_objects',
-        error: function(result) {
-          swal({
-            title: 'Ajax Error',
-            text: 'Something unexpected happened while trying to retreive the list of physical objects in the shelf',
-            type: 'error'
-          });
+        error: function(jqXHR, exception) {
+            window.location.replace(jqXHR.url)
         },
         success: function(result) {
           setShelfContent(result);
@@ -155,9 +151,8 @@
 	    } else if (isValidBarcode($(this).val())) {
 		    $.ajax({
 			    url: './ajax_add_physical_object_iu_barcode_scan/'+$(this).val(),
-				    error: function(XMLHttpRequest, textStatus, errorThrown) {
-				    $('#edit_summary_dialog').dialog("close");
-				    swal({title: 'Ajax Error', text: "An error occurred during IU Barcode scan: " + errorThrown});
+          error: function(jqXHR, textStatus, errorThrown) {
+				    window.location.replace(jqXHR.url)
 			    },
 			    success: function(result) {
 				    h = $('#shelf_objects_header');
@@ -209,9 +204,8 @@
     function update_shelf_stats() {
 	    $.ajax({
 		    url: './cage_shelf/'+id+'/ajax_cage_shelf_stats',
-		    error: function (XMLHttpRequest, textStatus, errorThrown) {
-			    $('#edit_summary_dialog').dialog("close");
-			    swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+		    error: function (jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
 		    },
 		    success: function(result) {
 			    $('#po_count').html(result['count']);
@@ -227,8 +221,8 @@
     function update_digi_stats() {
 	    $.ajax({
 		    url: "<%= digitization_staging_stats_path %>",
-		    error: function(xmlHttpRequest, status, error) {
-			    swal({title: 'Ajax error', text: 'An error occurred while trying to retrieve digitization staging shelf stats'})
+		    error: function(jqXHR, status, error) {
+			    window.location.replace(jqXHR.url)
 		    },
 		    success: function(result) {
 			    $('#digi_staging').html(result)
@@ -256,12 +250,8 @@
           $.ajax({
             url: './cage_shelf/'+cage_id+'/ajax_remove_physical_object_from_shelf/'+po_id,
             method: 'DELETE',
-            error: function(result) {
-              swal({
-                title: 'Ajax Error',
-                text: "Something went wrong when trying to remove the physical object from the Shelf:\n" + response,
-                type: error
-              });
+            error: function(jqXHR, textStatus, errorThrown) {
+              window.location.replace(jqXHR.url)
             },
             success: function(result) {
               setShelfContent(result);

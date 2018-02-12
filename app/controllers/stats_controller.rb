@@ -33,9 +33,9 @@ class StatsController < ApplicationController
 			@series_count = Series.find_by_sql(series_count_sql).size
 		else
 			@title_count = Title.all.size
-			@empty_title_count = Title.includes(:physical_object_titles).where(physical_object_titles: {title_id: nil}).size
+			@empty_title_count = Title.count_titles_without_physical_objects
 			@series_count = Series.all.size
-			@empty_series_count = Series.includes(:titles).where(titles: {id: nil}).size
+			@empty_series_count = Series.series_without_titles_count
 			@physical_object_count = PhysicalObject.all.size
 		end
 

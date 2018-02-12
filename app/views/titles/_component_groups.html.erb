@@ -76,7 +76,7 @@
 						data: $('#summary_form').serialize(),
 						error: function (XMLHttpRequest, textStatus, errorThrown) {
 							$('#edit_summary_dialog').dialog("close");
-							swal({title: 'Ajax Error', text: "An error has occurred making the request: " + errorThrown});
+							window.location.replace(XMLHttpRequest.url)
 						},
 						success: function (data) {
 							if (data == 'success') {
@@ -117,8 +117,8 @@
     var url = '../../component_groups/ajax/'+id;
     $.ajax({
       url: url,
-      error: function(result) {
-        alert('Something bad happened when trying to call the component group summary...');
+      error: function(jqXHR, textStatus, errorThrown) {
+          window.location.replace(jqXHR.url)
       },
       success: function(result) {
         el = $('#cg_summary');
@@ -136,10 +136,7 @@
 			url: '../component_groups/'+id+'/ajax_queue_pull_request',
 			method: 'POST',
 			error: function(jqXHR, textStatus, error) {
-				swal({
-					title: 'Ajax Error',
-					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
-				})
+				window.location.replace(jqXHR.url)
 			},
 			success: function(data, status, xhr) {
         title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
@@ -173,10 +170,7 @@
 			url: './ajax/edit_cg_params/'+id,
 			method: 'GET',
 			error: function(jqXHR, textStatus, error) {
-				swal({
-					title: 'Ajax Error',
-					text: "Something bad happened while trying to queue this Component Group for a pull request\n"+error
-				})
+				window.location.replace(jqXHR.url)
 			},
 			success: function(data, status, xhr) {
 				swal({
