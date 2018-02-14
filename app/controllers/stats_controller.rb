@@ -28,14 +28,14 @@ class StatsController < ApplicationController
 			# the associtions to unit/collect are through physical object and not title.
 			@title_count = Title.find_by_sql(title_count_sql).size
 			@physical_object_count = PhysicalObject.where(po_sql_where).size
-			@empty_title_count = "N/A"
-			@empty_series_count = "N/A"
+			#@empty_title_count = "N/A"
+			#@empty_series_count = "N/A"
 			@series_count = Series.find_by_sql(series_count_sql).size
 		else
 			@title_count = Title.all.size
-			@empty_title_count = Title.count_titles_without_physical_objects
+			#@empty_title_count = Title.count_titles_without_physical_objects
 			@series_count = Series.all.size
-			@empty_series_count = Series.series_without_titles_count
+			#@empty_series_count = Series.series_without_titles_count
 			@physical_object_count = PhysicalObject.all.size
 		end
 
