@@ -25,7 +25,7 @@
 	      <% end %>
       </td>
       <td><%= physical_object.current_workflow_status.type_and_location %></td>
-      <td><%= physical_object.active_component_group.group_type %></td>
+      <td><%= physical_object.active_component_group&.group_type %></td>
       <td>
         <%= link_to 'Show', physical_object %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object) %>
