@@ -3,6 +3,7 @@
 # provide ajax functionality to move individual physical objects on to the next workflow state
 class WorkflowController < ApplicationController
 	include AlfHelper
+	include WorkflowHelper
 
 	before_action :set_physical_object, only: [:process_receive_from_storage, :process_return_to_storage ]
 	before_action :set_onsite_pos, only: [:send_for_mold_abatement,
@@ -469,6 +470,13 @@ class WorkflowController < ApplicationController
 			@msg = "#{bc} cannot currently be marked Found. It no longer has an active component group and was lost in active workflow. Use 'Return to Storage' instead"
 		end
 		render partial: 'ajax_return_to_storage'
+	end
+
+	def digitization_staging_list
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+		respond_to do |format|
+			format.csv {send_data pos_to_cvs(@physical_objects), filename: 'digitization_staging.csv' }
+    end
 	end
 
 	private

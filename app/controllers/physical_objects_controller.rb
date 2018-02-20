@@ -183,6 +183,11 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  def digiprovs
+    @physical_object = PhysicalObject.find(params[:id])
+    @dp = Digiprov.where(physical_object_id: params[:id])
+  end
+
   def test_email
     @success = true
     begin
