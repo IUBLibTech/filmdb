@@ -6,7 +6,7 @@ module ServicesHelper
 	# does the work of generating the XML file, and then sending it, to POD for digitization workflow
 	def push_cage_to_pod(cage)
 		file_path = write_xml(cage)
-		return post_multipart(file_path)
+		post_multipart(file_path)
 	end
 
 	def test_basic_auth
@@ -19,6 +19,9 @@ module ServicesHelper
 		render text: result.to_yaml
 	end
 
+
+
+
 	private
 	def post_multipart(file_path)
 		uri = URI.parse(Rails.configuration.pod_batch_url)
@@ -28,9 +31,7 @@ module ServicesHelper
 		request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
 		request.body = File.open(file_path).read
 
-		# Send the request
-		result = http.request(request)
-		result
+		http.request(request)
 	end
 
 end

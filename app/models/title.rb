@@ -129,8 +129,12 @@ class Title < ActiveRecord::Base
 		FROM physical_objects INNER JOIN physical_object_titles ON physical_objects.id = physical_object_titles.physical_object_id "+
 			"INNER JOIN workflow_statuses on physical_objects.id = workflow_statuses.physical_object_id "+
 			"INNER JOIN component_groups ON workflow_statuses.component_group_id = component_groups.id "+
-			"WHERE physical_object_titles.title_id = #{self.id} AND component_groups.group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)' )"
+			"WHERE physical_object_titles.title_id = #{self.id} AND component_groups.group_type in ('Best Copy (MDPI - Wells)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)' )"
 		ActiveRecord::Base.connection.execute(sql).first[0]
+	end
+
+	def digitized?
+		physical_objects.any?{ |p| p.digitized? }
 	end
 
 	def in_active_workflow?

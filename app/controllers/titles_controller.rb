@@ -133,7 +133,7 @@ class TitlesController < ApplicationController
 						  p.active_component_group = cg
 						  # if reformatting, move to 2k/4k shelves, otherwise it needs to move to the respective best copy shelf (Alf/Wells)
 						  if cg.group_type == ComponentGroup::REFORMATTING_MDPI
-							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == WorkflowStatus::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
+							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == ComponentGroup::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
 						  else
 							  ws = WorkflowStatus.build_workflow_status((cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_MDPI_WELLS), p, true)
 						  end

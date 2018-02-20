@@ -20,6 +20,7 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :physical_object_dates
 	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
+	has_many :digiprovs
 
   validates :physical_object_titles, physical_object_titles: true
   validates :iu_barcode, iu_barcode: true
@@ -411,6 +412,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.titleId active_component_group.title.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
+			xml.redigitize digitized
 			xml.iucatTitleControlNumber title_control_number
 			xml.catalogKey catalog_key
 			xml.format medium
