@@ -1,3 +1,6 @@
+<div class="right">
+  <%= link_to "Get Digital Status", get_digiprov_path(@cage_shelf) %>
+</div>
 <h4>Cage Shelf</h4>
 <table>
   <tbody>
@@ -25,12 +28,18 @@
     <th>IU Barcode</th>
     <th>MDPI Barcode</th>
     <th>Title</th>
+    <th>Digitized</th>
   </tr>
   <% @cage_shelf.physical_objects.each do |p| %>
     <tr>
       <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
       <td><%= link_to "#{p.mdpi_barcode}", physical_object_path(p) %></td>
       <td><%= p.titles_text %></td>
+      <% if p.digitized? %>
+        <td><%= link_to "Yes", digiprovs_path(p)%></td>
+      <% else %>
+        <td><%= p.digitized.nil? ? "N/A" : p.digitized %></td>
+      <% end %>
     </tr>
   <% end %>
   </tbody>

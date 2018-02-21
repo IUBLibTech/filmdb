@@ -40,7 +40,7 @@
 	$(document).ready(function() {
 		$('#alf_iu_barcode').bind("input",function(event) {
 			valid = validateIUBarcode($(this));
-			$('#alf_form_div').replaceWith('')
+			$('#alf_form_div').replaceWith('');
 			if (valid) {
 				$.ajax({
 					url: './ajax_alf_barcode/'+$(this).val(),
@@ -48,7 +48,7 @@
               window.location.replace(jqXHR.url)
           },
 					success: function(result) {
-						div = $('#alf_form_div');
+						var div = $('#alf_form_div');
 						if (div.size() > 0) {
 							div.replaceWith(result);
 						} else {
@@ -56,9 +56,9 @@
 						}
 						$('#receive_physical_object_form').submit(function(event) {
 							event.preventDefault();
-							footage = $.isNumeric($('#physical_object_footage').val());
-							can_size = $('#physical_object_can_size').val() != "";
-							checked = !($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked"));
+							var footage = $.isNumeric($('#physical_object_footage').val());
+							var can_size = $('#physical_object_can_size').val() != "";
+							var checked = !($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked"));
 							if (footage && can_size && checked) {
 								document.getElementById('receive_physical_object_form').submit();
 								return;
@@ -85,7 +85,7 @@
 					},
 					complete: function() {
 						$('#physical_object_workflow').change(function() {
-							if ($('#physical_object_workflow')[0].selectedIndex > 1) {
+							if ($('#physical_object_workflow')[0].selectedIndex > 0) {
 								$("#rejected_options").show();
 							} else {
 								$("#rejected_options").hide();
@@ -115,7 +115,6 @@
 	function hookForm() {
 		$('#receive_physical_object_form').submit(function(event) {
 			event.preventDefault();
-
 		});
 	}
 </script>

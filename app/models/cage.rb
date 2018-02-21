@@ -87,7 +87,7 @@ class Cage < ActiveRecord::Base
   end
 
   def can_be_shipped?
-    total_physical_objects > 0 && top_shelf.can_ship? && middle_shelf.can_ship? && bottom_shelf.can_ship?
+    total_physical_objects > 0 && (top_shelf.can_ship? || middle_shelf.can_ship? || bottom_shelf.can_ship?)
   end
 
   def all_shelves_returned?

@@ -14,16 +14,24 @@ class PhysicalObjectsController < ApplicationController
   def index
 		@statuses = WorkflowStatus::ALL_STATUSES.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
-      @count = PhysicalObject.count_where_current_workflow_status_is(params[:status])
+      @count = PhysicalObject.count_where_current_workflow_status_is(params[:digitized], params[:status])
       if @count > PhysicalObject.per_page
         @paginate = true
         @page = (params[:page].nil? ? 1 : params[:page].to_i)
-        @physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:status])
+        @physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:digitized], params[:status])
       else
-        @physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, params[:status])
+        @physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, params[:digitized], params[:status])
       end
-	  else
-		  @physical_objects = []
+    elsif params[:status] == ''
+      @count = (params[:digitized] ? PhysicalObject.where(digitized: true).size : PhysicalObject.all.size)
+      @page = (params[:page].nil? ? 1 : params[:page].to_i)
+      @paginate = true
+		  @physical_objects = (params[:digitized] ?
+         PhysicalObject.where(digitized: true).offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page) :
+         PhysicalObject.all.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
+      )
+    else
+      @physical_objects = []
 	  end
   end
 
@@ -183,6 +191,11 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  def digiprovs
+    @physical_object = PhysicalObject.find(params[:id])
+    @dp = Digiprov.where(physical_object_id: params[:id])
+  end
+
   def test_email
     @success = true
     begin
@@ -206,7 +219,7 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def page_link_path(page)
-	  physical_objects_path(page: page, status: params[:status])
+	  physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
   end
   helper_method :page_link_path
 

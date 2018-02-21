@@ -1,6 +1,7 @@
 class ServicesController < ApplicationController
 	require 'net/http'
 	require 'uri'
+	require 'memnon_digiprov_collector'
 	# Prevent CSRF attacks by raising an exception.
 	# For APIs, you may want to use :null_session instead.
 	protect_from_forgery with: :null_session
@@ -9,7 +10,6 @@ class ServicesController < ApplicationController
 
 	before_action :authenticate, only: [:receive]
 	skip_before_action :signed_in_user
-
 
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
@@ -40,6 +40,8 @@ class ServicesController < ApplicationController
 				@reason = 'Unexpected failure in Filmdb updating physical objects to Returned to Storage - Please contact Andrew Albrecht'
 				logger.debug $!
 			end
+			MemnonDigiprovCollector.new.collect_shelf_in_thread(shelf.id)
+			)
 		end
 		data = {success: @success, error: (@reason.nil? ? '' : @reason)}
 		render xml: data.to_xml(root: 'filmdbService')
