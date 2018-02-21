@@ -24,6 +24,11 @@
   <div><b>Creator</b></div><div><%= @title.creator&.name %></div>
   <div><b>Last Modified By</b></div><div><%= @title.modifier&.name %></div>
 </div>
+<% if @title.digitized? %>
+  <div class="digitized clear">
+    Digitized
+  </div>
+<% end %>
 <div id="main">
   <div class="left_div">
     <div class="label"><b>Title</b></div><div class="field"><%= @title.title_text %></div>
