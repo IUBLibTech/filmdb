@@ -12,9 +12,9 @@ class CageShelvesController < ApplicationController
   def get_digiprov
     @cage_shelf = CageShelf.find(params[:id])
     MemnonDigiprovCollector.new.collect_shelf_in_thread(params[:id])
-    flash.now[:notice] = "A request has been started to collect digital statuses and digital provenance for "+
+    flash[:notice] = "A request has been started to collect digital statuses and digital provenance for "+
         "#{@cage_shelf.identifier}. Depending on the number of physical objects in the cage shelf, this may take awhile."
-    render :show
+    redirect_to cage_shelf_path(@cage_shelf)
   end
 
 end

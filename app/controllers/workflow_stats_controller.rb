@@ -3,7 +3,7 @@ class WorkflowStatsController < ApplicationController
 
 	def digitization_staging_stats
 		ns = 'Not Specified'
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
 		@gauges = {}
 		@can_sizes = {ns => 0}
 		@scan_resolutions = {"nil" => 0}
