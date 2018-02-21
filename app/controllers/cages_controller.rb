@@ -115,7 +115,6 @@ class CagesController < ApplicationController
 
 					if @cage.bottom_shelf.physical_objects.size > 0
 						@cage.bottom_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
-						debugger
 						@cage.bottom_shelf.save
 					end
 					@cage.bottom_shelf.physical_objects.each do |p|
