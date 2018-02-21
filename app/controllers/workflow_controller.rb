@@ -231,7 +231,7 @@ class WorkflowController < ApplicationController
 	# item checked out already. This page lists all items in transit from storage and provides links to either cancel the
 	# pull request (which puts the item back in storage), or to requeue the item so that it appears on the "Request Pull From Storage" page
 	def cancel_after_pull_request
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::PULL_REQUESTED)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::PULL_REQUESTED)
 	end
 
 	def process_cancel_after_pull_request
@@ -341,7 +341,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def issues_shelf
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::ISSUES_SHELF)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::ISSUES_SHELF)
 	end
 
 	def ajax_issues_shelf_barcode
@@ -375,7 +375,7 @@ class WorkflowController < ApplicationController
 		else
 			flash.now[:warning] = "Physical Object not updated! Invalid workflow status location: '#{status_name}'"
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::ISSUES_SHELF)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::ISSUES_SHELF)
 		render 'issues_shelf'
 	end
 
@@ -419,7 +419,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def return_from_mold_abatement
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MOLD_ABATEMENT)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MOLD_ABATEMENT)
 	end
 
 	def ajax_mold_abatement_barcode
@@ -437,7 +437,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def show_mark_found
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
 		render 'mark_found'
 	end
 
@@ -455,7 +455,7 @@ class WorkflowController < ApplicationController
 			@physical_object.save
 			flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_location}"
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::MISSING)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
 		render 'mark_found'
 	end
 
@@ -473,7 +473,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def digitization_staging_list
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
+		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
 		respond_to do |format|
 			format.csv {send_data pos_to_cvs(@physical_objects), filename: 'digitization_staging.csv' }
     end
