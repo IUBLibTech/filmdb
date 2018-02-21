@@ -33,6 +33,8 @@ class CageShelf < ActiveRecord::Base
 	def status
 		if returned?
 			"Returned"
+		elsif physical_objects.size == 0
+			"Empty"
 		else
 			cage.status
 		end
