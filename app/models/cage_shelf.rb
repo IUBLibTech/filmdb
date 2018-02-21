@@ -2,6 +2,7 @@ class CageShelf < ActiveRecord::Base
 
   belongs_to :cage
   has_many :physical_objects
+	has_many :digiprovs
   validates :mdpi_barcode, mdpi_barcode: true
 
 	SEC = 1
@@ -32,6 +33,8 @@ class CageShelf < ActiveRecord::Base
 	def status
 		if returned?
 			"Returned"
+		elsif physical_objects.size == 0
+			"Empty"
 		else
 			cage.status
 		end

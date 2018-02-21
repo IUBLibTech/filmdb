@@ -130,7 +130,7 @@
   <% end  %>
   <script type="text/javascript" charset="utf-8">
     $('.shelf').click(function() {
-      id = $(this).attr('id').substring(6)
+      var id = $(this).attr('id').substring(6);
       $.ajax({
         url: './cage_shelf/'+id+'/ajax_physical_objects',
         error: function(jqXHR, exception) {

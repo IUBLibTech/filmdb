@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180209192605) do
+ActiveRecord::Schema.define(version: 20180219192602) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -129,6 +129,14 @@ ActiveRecord::Schema.define(version: 20180209192605) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active_status",               default: true
+  end
+
+  create_table "digiprovs", force: :cascade do |t|
+    t.integer  "physical_object_id",      limit: 8
+    t.text     "digital_provenance_text", limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "cage_shelf_id",           limit: 8
   end
 
   create_table "languages", force: :cascade do |t|
@@ -366,6 +374,7 @@ ActiveRecord::Schema.define(version: 20180209192605) do
     t.string   "close_caption",                         limit: 255
     t.text     "generation_notes",                      limit: 65535
     t.string   "catalog_key",                           limit: 255
+    t.boolean  "digitized"
   end
 
   create_table "pod_pushes", force: :cascade do |t|

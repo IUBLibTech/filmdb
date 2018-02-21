@@ -133,7 +133,7 @@ class TitlesController < ApplicationController
 						  p.active_component_group = cg
 						  # if reformatting, move to 2k/4k shelves, otherwise it needs to move to the respective best copy shelf (Alf/Wells)
 						  if cg.group_type == ComponentGroup::REFORMATTING_MDPI
-							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == WorkflowStatus::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
+							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == ComponentGroup::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
 						  else
 							  ws = WorkflowStatus.build_workflow_status((cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_MDPI_WELLS), p, true)
 						  end
@@ -337,13 +337,12 @@ class TitlesController < ApplicationController
         if @physical_objects.size > 0
           @cg = ComponentGroup.new(
             title_id: @master.id,
-            group_type: params[:group_type], title_id: @title.id,
+            group_type: params[:group_type],
             group_summary: (params[:group_summary] + (params[:group_summary].blank? ? sum : " | #{sum}")),
             scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
             return_on_reel: (params[:return_on_reel] == 'Yes' ? true : false),
             clean: params[:clean],
-            color_space: params[:color_space],
-            return_on_reel: params[:return_on_reel]
+            color_space: params[:color_space]
           )
           # update physical objects in the component group
           @physical_objects.each do |p|

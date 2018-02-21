@@ -90,7 +90,7 @@ class CagesController < ApplicationController
 					# format identifier as FDB-000y-FILM
 					# use length instead of size: if using size, what is returned is a hash of cage shelf ids mapped to the count
 					# of physical objects on the shelf, not the number of shelves with at least 1 physical object
-					batch_count = CageShelf.joins(:physical_objects).group('cage_shelves.id').length
+					batch_count = CageShelf.joins(:cage).where('cages.shipped = true').joins(:physical_objects).group('cage_shelves.id').length
 					if @cage.top_shelf.physical_objects.size > 0
 						@cage.top_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
 						@cage.top_shelf.save
