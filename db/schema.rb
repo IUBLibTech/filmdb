@@ -131,6 +131,14 @@ ActiveRecord::Schema.define(version: 20180209192605) do
     t.boolean  "active_status",               default: true
   end
 
+  create_table "digiprovs", force: :cascade do |t|
+    t.integer  "physical_object_id",      limit: 8
+    t.text     "digital_provenance_text", limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "cage_shelf_id",           limit: 8
+  end
+
   create_table "languages", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
     t.string   "language",           limit: 255
