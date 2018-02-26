@@ -41,7 +41,6 @@ class ServicesController < ApplicationController
 				logger.debug $!
 			end
 			MemnonDigiprovCollector.new.collect_shelf_in_thread(shelf.id)
-			)
 		end
 		data = {success: @success, error: (@reason.nil? ? '' : @reason)}
 		render xml: data.to_xml(root: 'filmdbService')
