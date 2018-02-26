@@ -20,6 +20,7 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :physical_object_dates
 	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
+	has_many :digiprovs
 
   validates :physical_object_titles, physical_object_titles: true
   validates :iu_barcode, iu_barcode: true
@@ -49,7 +50,7 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
-	scope :where_current_workflow_status_is, lambda { |offset, limit, *status|
+	scope :where_current_workflow_status_is, lambda { |offset, limit, digitized, *status|
 
 		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
 		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
@@ -59,12 +60,13 @@ class PhysicalObject < ActiveRecord::Base
 			"FROM ( SELECT workflow_statuses.physical_object_id "+
 			  "FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses GROUP BY physical_object_id) AS x "+
 			    "INNER JOIN workflow_statuses on (workflow_statuses.physical_object_id = x.physical_object_id AND x.status = workflow_statuses.created_at) "+
-			    "WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id #{(offset.nil? || limit.nil?) ? '' : "LIMIT #{limit} OFFSET #{offset}"}"
+			    "WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id #{(offset.nil? || limit.nil?) ? '' : "LIMIT #{limit} OFFSET #{offset}"}"+
+				(digitized ? " WHERE physical_objects.digitized = true" : "")
 		PhysicalObject.find_by_sql(sql)
 	}
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
-	scope :count_where_current_workflow_status_is, lambda { |*status|
+	scope :count_where_current_workflow_status_is, lambda { |digitized, *status|
 
 		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
 		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
@@ -74,12 +76,9 @@ class PhysicalObject < ActiveRecord::Base
 			"FROM ( SELECT workflow_statuses.physical_object_id "+
 			"FROM (	SELECT physical_object_id, max(created_at) AS status FROM workflow_statuses GROUP BY physical_object_id) AS x "+
 			"INNER JOIN workflow_statuses on (workflow_statuses.physical_object_id = x.physical_object_id AND x.status = workflow_statuses.created_at) "+
-			"WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"
+			"WHERE workflow_statuses.status_name in (#{status.map(&:inspect).join(', ')})) as y INNER JOIN physical_objects on physical_object_id = physical_objects.id"+
+		(digitized ? " WHERE physical_objects.digitized = true" : "")
 		ActiveRecord::Base::connection.execute(sql).first[0]
-	}
-
-	scope :in_active_workflow, -> {
-		where_current_workflow_status_is()
 	}
 
 	FREEZER_AD_STRIP_VALS = ControlledVocabulary.where(model_attribute: ':ad_strip').order('value DESC').limit(3).collect{ |cv| cv.value }
@@ -411,6 +410,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.titleId active_component_group.title.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
+			xml.redigitize digitized
 			xml.iucatTitleControlNumber title_control_number
 			xml.catalogKey catalog_key
 			xml.format medium
