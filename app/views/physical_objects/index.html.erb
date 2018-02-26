@@ -9,6 +9,10 @@
         </td>
       </tr>
       <tr>
+        <th>Digitized</th>
+        <td><%= check_box_tag 'digitized' %></td>
+      </tr>
+      <tr>
         <td colspan="2">
           <%= submit_tag 'Filter Results' %>
         </td>
@@ -16,7 +20,7 @@
     </table>
 <% end %>
 <br>
-<h2>Physical Objects: <%= params[:status].blank? ? 'All' : params[:status]  %></h2>
+<h2>Physical Objects: <%= params[:status].blank? ? 'All' : params[:status]  %> <%= params[:digitized] ? "(Digitized)" : "" %></h2>
 <%= render partial: 'physical_objects_table' %>
 <br>
 

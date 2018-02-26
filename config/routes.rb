@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get '/cage_shelves', to: 'cage_shelves#index', as: 'cage_shelves'
   get '/cage_shelves/:id', to: 'cage_shelves#show', as: 'cage_shelf'
+  get '/cage_shelf/memnon_digiprov/:id', to: 'cage_shelves#get_digiprov', as: 'get_digiprov'
 
   resources :collections
   get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
@@ -50,7 +51,7 @@ Rails.application.routes.draw do
   get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
   get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
   post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
-
+  get '/physical_objects/digiprov/:id', to: 'physical_objects#digiprovs', as: 'digiprovs'
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
   get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'
@@ -155,7 +156,7 @@ Rails.application.routes.draw do
   get '/workflow/ajax_mark_found/:iu_barcode', to: 'workflow#ajax_mark_found', as: 'ajax_mark_found'
   get '/workflow/update_mark_found', to: 'workflow#show_mark_found', as: 'show_mark_found'
   post '/workflow/update_mark_found', to: 'workflow#update_mark_found', as: 'update_mark_found'
-
+  get '/workflow/digitization_staging_list', to: 'workflow#digitization_staging_list', as: 'digitization_staging_list'
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
 
   # workflow_stats routes

@@ -13,10 +13,11 @@
     <th>Reel Number</th>
     <th>Can Size</th>
 	  <th>Collection</th>
+    <th>Digitized</th>
 	  <th>Location</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
-  <tr>
+  <tr class=<%= "digitized_tr" if p.digitized? %>>
     <td><%= check_box_tag "physical_object_#{p.id}", "physical_object_#{p.id}", false, class: "po_check_box" %></td>
     <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
     <td><%= p.medium %></td>
@@ -26,6 +27,11 @@
     <td><%= p.reel_number %></td>
     <td><%= p.can_size %></td>
 	  <td><%= p.collection&.name %></td>
+    <% if p.digitized? %>
+      <td><%= link_to "Yes", digiprovs_path(p)%></td>
+    <% else %>
+      <td><%= p.digitized.nil? ? "N/A" : p.digitized %></td>
+    <% end %>
 	  <td><%= p.current_workflow_status.status_name %></td>
   </tr>
   <% end %>

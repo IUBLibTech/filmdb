@@ -2,6 +2,7 @@ class CageShelf < ActiveRecord::Base
 
   belongs_to :cage
   has_many :physical_objects
+	has_many :digiprovs
   validates :mdpi_barcode, mdpi_barcode: true
 
 	SEC = 1
