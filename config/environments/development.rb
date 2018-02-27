@@ -42,6 +42,6 @@ Rails.application.configure do
 
 	config.pod_batch_url = 'https://pod-dev.mdpi.iu.edu/responses/objects/push_filmdb_objects'
 	# so I can tail log file output from dev server while ssh'd in from local
-	config.web_console.whitelisted_ips = '129.79.34.168'
+	#config.web_console.whitelisted_ips = '129.79.34.168'
 
 end
