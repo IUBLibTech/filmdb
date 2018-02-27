@@ -39,4 +39,6 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.pod_batch_url = 'https://pod-test.mdpi.iu.edu/responses/objects/push_filmdb_objects'
 end

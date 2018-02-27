@@ -164,7 +164,7 @@ class CsvParser
 
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
   def parse_physical_object(row, i)
-
+    puts("Parsing Physical Object at Row: #{i + 1}")
     # read all auto parse fields
     po = PhysicalObject.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
