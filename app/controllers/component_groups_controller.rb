@@ -18,7 +18,9 @@ class ComponentGroupsController < ApplicationController
 
   # GET /component_groups/new
   def new
-    @component_group = ComponentGroup.new
+    @title = Title.find(params[:title_id])
+    @component_group = ComponentGroup.new(title_id: @title.id)
+    @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
   # GET /component_groups/1/edit
@@ -29,7 +31,6 @@ class ComponentGroupsController < ApplicationController
   # POST /component_groups.json
   def create
     @component_group = ComponentGroup.new(component_group_params)
-    @component_group.scan_resolution(params['2k'] ? '2k' : (params['4k'] ? '4k' : '5k'))
     respond_to do |format|
       if @component_group.save
         format.html { redirect_to @component_group, notice: 'Component group was successfully created.' }
@@ -151,7 +152,8 @@ class ComponentGroupsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_group_params
       params.require(:component_group).permit(
-        :scan_resolution, :color_space, :return_on_reel, :clean
+        :group_type, :group_summary, :title_id,
+        component_group_physical_objects_attributes: [:id, :physical_object_id, :component_group_id, :scan_resolution, :clean, :return_on_reel, :color_space, :_destroy]
       )
     end
 end
