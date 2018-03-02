@@ -336,7 +336,7 @@ class WorkflowController < ApplicationController
 				p.save!
 			end
 		end
-		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, WorkflowStatus::BEST_COPY_ALF)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::::BEST_COPY_ALF)
 		render 'best_copy_selection'
 	end
 
