@@ -191,6 +191,14 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  # and ajax call to determine if a given IU barcoded physical object exists, and belongs to the specified title
+  # call should come in with iu_barcode and title_id params
+  def ajax_belongs_to_title?
+    po = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
+    title = Title.where(id: params[:title_id]).first
+    render json: [!po.nil?, (po.nil? || !po.titles.include?(title) ? false : po.id)]
+  end
+
   def digiprovs
     @physical_object = PhysicalObject.find(params[:id])
     @dp = Digiprov.where(physical_object_id: params[:id])

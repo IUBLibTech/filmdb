@@ -10,6 +10,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
+	belongs_to :active_scan_settings, class_name: 'ComponentGroupPhysicalObject', foreign_key: 'active_scan_settings_id', autosave: true
 
 	has_many :physical_object_old_barcodes
   has_many :component_group_physical_objects, dependent: :delete_all
@@ -51,7 +52,6 @@ class PhysicalObject < ActiveRecord::Base
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
 	scope :where_current_workflow_status_is, lambda { |offset, limit, digitized, *status|
-
 		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
 		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
 		status = status.flatten
@@ -207,6 +207,14 @@ class PhysicalObject < ActiveRecord::Base
 	def media_types
 		MEDIA_TYPES
 	end
+	def active_component_group=(cg)
+		super(cg)
+		if cg.nil?
+			self.active_scan_settings = nil
+		else
+			self.active_scan_settings = component_group_physical_objects.where(component_group_id: cg.id).first
+		end
+	end
 
 	def media_type_mediums
 		MEDIA_TYPE_MEDIUMS
@@ -315,6 +323,7 @@ class PhysicalObject < ActiveRecord::Base
   end
 
   def generations_text
+		self.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS)
   end
 
   def belongs_to_title?(title_id)
