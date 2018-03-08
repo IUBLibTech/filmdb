@@ -199,6 +199,11 @@ class PhysicalObjectsController < ApplicationController
     render json: [!po.nil?, (po.nil? || !po.titles.include?(title) ? false : po.id)]
   end
 
+  def ajax_lookup_barcode
+    po = PhysicalObject.find(params[:id])
+    render text: po.iu_barcode
+  end
+
   def digiprovs
     @physical_object = PhysicalObject.find(params[:id])
     @dp = Digiprov.where(physical_object_id: params[:id])

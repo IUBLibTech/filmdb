@@ -1,8 +1,7 @@
-<%= nested_form_for(@component_group) do |f| %>
+<%= nested_form_for([@title, @component_group]) do |f| %>
   <% if @component_group.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@component_group.errors.count, "error") %> prohibited this component_group from being saved:</h2>
-
       <ul>
       <% @component_group.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -21,33 +20,38 @@
     </div>
     <div id="cgpo_div" class="fields_for_div">
       <%= f.fields_for :component_group_physical_objects do |cgpo| %>
-        <%= cgpo.hidden_field :physical_object_id %>
-        <%= cgpo.hidden_field :title_id, value: @title.id %>
+        <%= cgpo.hidden_field :physical_object_id, class: 'poid' %>
         <table>
           <tbody>
           <tr>
             <th>IU Barcode</th>
-            <td><input type="text" class="iu_barcode"></td>
+            <td>
+              <% if action_name == 'edit' %>
+                <input type="text" class="iu_barcode" readonly>
+              <% else %>
+                <input type="text" class="iu_barcode">
+              <% end %>
+            </td>
           </tr>
           <tr>
             <th>Scan Resolution</th>
-            <td><%= cgpo.select :scan_resolution, options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}) %></td>
+            <td><%= cgpo.select :scan_resolution, options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, cgpo.object.scan_resolution) %></td>
           </tr>
           <tr>
             <th>Clean</th>
-            <td><%= cgpo.select :clean, options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}) %></td>
+            <td><%= cgpo.select :clean, options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, cgpo.object.clean ) %></td>
           </tr>
           <tr>
             <th>Return On Original Reel</th>
-            <td><%= cgpo.select :return_on_reel, options_for_select(%w(No Yes).collect{|s| [s,s]})%></td>
+            <td><%= cgpo.select :return_on_reel, options_for_select([["No", false], ["Yes", true]], cgpo.object.return_on_reel)%></td>
           </tr>
           <tr>
             <th>Color Space</th>
-            <td><%= cgpo.select :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]})%></td>
+            <td><%= cgpo.select :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, cgpo.object.color_space)%></td>
           </tr>
           </tbody>
         </table>
-        <div class="clear"><%= cgpo.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
+        <div class="clear"><%= cgpo.link_to_remove 'Delete' %></div>
       <% end %>
       <%= f.link_to_add "Add Physical Object", :component_group_physical_objects%>
     </div>
@@ -56,15 +60,14 @@
 <% end %>
 <script type="text/javascript" charset="utf-8">
     $(document).on('nested:fieldAdded', function(event){
-        // this field was just inserted into your form
         var field = event.field;
         // it's a jQuery object already! Now you can find date input
+        field.closest('.fields').find('.iu_barcode').first().removeAttr('readonly');
         var iubc = field.find('.iu_barcode');
         iubc.bind("input", function () {
             var valid = validateIUBarcode($(this));
             if (valid) {
-              var belongs = testBarcode(iubc);
-
+              testBarcode(iubc);
             }
         });
     });
@@ -110,4 +113,28 @@
            return this.value === iubc.val();
         }).size() !== 1;
     }
+    function lookup_callback(el, result) {
+        console.log(el.outerHTML);
+        var text = $(el).closest('.fields').find('.iu_barcode').first();
+        console.log(text.outerHTML);
+        text.attr('value', result);
+        console.log("\n\n");
+    }
+
+  <% if action_name == 'edit' %>
+    $(document).ready(function() {
+        $('.poid[value!=""][value]').each(function() {
+            var el = this;
+            $.ajax({
+                url: '../../../../physical_objects/'+el.value+'/ajax_lookup_barcode',
+                success: function(result) {
+                    lookup_callback(el, result)
+                },
+                error: function(jqXHR) {
+                    //window.location.replace(jqXHR.url)
+                }
+            });
+        })
+    });
+  <% end %>
 </script>

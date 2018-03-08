@@ -23,9 +23,9 @@ Rails.application.routes.draw do
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
   get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
 
-  #resources :component_groups, except: [:create]
 
-  post '/component_groups/create/:title_id', to: 'component_groups#create', as: 'component_group'
+
+  #post '/component_groups/create/:title_id', to: 'component_groups#create', as: 'component_group'
   get '/component_groups/ajax/:id', to: 'component_groups#ajax_physical_objects_list', as: 'ajax_physical_objects_list'
   post '/component_groups/:id/ajax/remove_physical_object/:pid', to:'component_groups#remove_physical_object', as: 'remove_physical_object_from_component_group'
   post '/component_groups/:id/add_to_component_group/', to: 'component_groups#add_physical_objects', as: 'add_physical_objects_to_component_group'
@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
   get '/physical_objects/digiprov/:id', to: 'physical_objects#digiprovs', as: 'digiprovs'
   get '/physical_objects/ajax_belongs_to_title/:iu_barcode/:title_id', to: 'physical_objects#ajax_belongs_to_title?', as: 'ajax_physical_object_belongs_to_title'
-
+  get '/physical_objects/:id/ajax_lookup_barcode', to: 'physical_objects#ajax_lookup_barcode', as: 'ajax_lookup_barcode'
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
   get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'
@@ -93,8 +93,15 @@ Rails.application.routes.draw do
 	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
-  resources :titles, except: [:index]
-  get '/titles/filter_seected/:selected', to: 'titles#index', as: 'selected_titles'
+  resources :titles, except: [:index] do
+    resources :component_groups, only: [:new, :create, :edit, :update, :show, :destroy] do
+      get 'best_copy_selection'
+      post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_update', as: 'best_copy_selection_create'
+      get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
+    end
+  end
+
+  get '/titles/filter_selected/:selected', to: 'titles#index', as: 'selected_titles'
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'

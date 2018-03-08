@@ -240,6 +240,16 @@ class PhysicalObject < ActiveRecord::Base
 		titles.first.id
 	end
 
+	def scan_settings(component_group)
+		cgpo = component_group_physical_objects.where(component_group_id: component_group.id).first
+		{
+				scan_resolution: cgpo.scan_resolution,
+				color_space: cgpo.color_space,
+				return_on_reel: cgpo.return_on_reel,
+				clean: cgpo.clean
+		}
+	end
+
 	# tests if the physical object is currently on IULMIA staff workflow space
 	def onsite?
 		current_workflow_status.workflow_type
@@ -452,10 +462,12 @@ class PhysicalObject < ActiveRecord::Base
 			xml.trackCount track_count
 			xml.returnTo storage_location
 			xml.notifyAlf notify_alf
-			xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
-			xml.colorSpace active_component_group.color_space
-			xml.clean active_component_group.clean
-			xml.returnOnOriginalReel active_component_group.return_on_reel
+
+			xml.resolution (sound_only? ? 'Audio only' : active_scan_settings.scan_resolution)
+			xml.colorSpace active_scan_settings.color_space
+			xml.clean active_scan_settings.clean
+			xml.returnOnOriginalReel active_scan_settings.return_on_reel
+
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
 					xml.identifier oi.identifier
