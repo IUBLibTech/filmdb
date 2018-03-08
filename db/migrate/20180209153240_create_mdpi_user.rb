@@ -1,5 +1,6 @@
 class CreateMdpiUser < ActiveRecord::Migration
   def up
+    User.reset_column_information
     User.new(username: 'filmdb', first_name: "Filmdb", last_name: "User", active: true, can_delete: false, can_update_physical_object_location: false, email_address: 'filmdb@indiana.edu').save
   end
 

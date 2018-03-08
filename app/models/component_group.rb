@@ -3,6 +3,8 @@ class ComponentGroup < ActiveRecord::Base
   has_many :component_group_physical_objects
   has_many :physical_objects, through: :component_group_physical_objects
 
+  accepts_nested_attributes_for :component_group_physical_objects, allow_destroy: true
+
   BEST_COPY_WELLS = 'Best Copy (Wells)'
   BEST_COPY_MDPI_WELLS = 'Best Copy (MDPI - WELLS)'
   BEST_COPY_ALF = 'Best Copy (MDPI)'
@@ -25,7 +27,10 @@ class ComponentGroup < ActiveRecord::Base
   COLOR_SPACE_LIN_10 = 'Linear 10 bit'
   COLOR_SPACE_LIN_16 = 'Linear 16 bit'
   COLOR_SPACE_LOG_10 = 'Logarithmic 10 bit'
-  COLOR_SPACES = [COLOR_SPACE_LOG_10, COLOR_SPACE_LIN_10, COLOR_SPACE_LIN_16]
+  COLOR_SPACES = [COLOR_SPACE_LIN_10, COLOR_SPACE_LIN_16, COLOR_SPACE_LOG_10]
+
+  SCAN_RESOLUTIONS = %w(2k 4k 5k HD)
+  CLEAN = %w(Yes No Hand\ clean\ only)
 
 
   def generations

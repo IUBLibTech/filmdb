@@ -6,11 +6,13 @@
 	<% if policy(Title).destroy? %>
 		| <%= link_to 'Destroy', @title, method: :delete, data: { confirm: 'Are you sure?' } %>
 	<% end %>
+  <%= link_to "Create Component Group", new_title_component_group_path(@title.id) %>
 </div>
 <%= render partial: "show" %>
 
+<%= render partial: 'physical_objects' %>
+<BR>
 <%= render partial: 'component_groups' %>
 
-<%= render partial: 'physical_objects' %>
 
-<%= render partial: 'component_group_form' %>
+<%#= render partial: 'component_group_form' %>

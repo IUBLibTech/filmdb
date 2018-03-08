@@ -110,4 +110,8 @@ class Cage < ActiveRecord::Base
 
   end
 
+  def po_count
+    top_shelf.physical_objects.size + middle_shelf.physical_objects.size + bottom_shelf.physical_objects.size
+  end
+
 end

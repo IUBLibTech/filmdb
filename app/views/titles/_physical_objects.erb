@@ -4,7 +4,6 @@
 <% else %>
 <table class="_100">
   <tr>
-    <th></th>
     <th>Barcode</th>
     <th>Medium</th>
     <th>Gauge</th>
@@ -18,7 +17,6 @@
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr class=<%= "digitized_tr" if p.digitized? %>>
-    <td><%= check_box_tag "physical_object_#{p.id}", "physical_object_#{p.id}", false, class: "po_check_box" %></td>
     <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
     <td><%= p.medium %></td>
     <td><%= p.gauge %></td>

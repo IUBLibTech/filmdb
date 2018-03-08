@@ -2,8 +2,7 @@ class ComponentGroupsController < ApplicationController
   include AlfHelper
 
   before_action :set_component_group, only:
-		[:show, :edit, :update, :destroy, :ajax_physical_objects_list,
-		 :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_edit_summary]
+		[:destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_edit_summary]
 
   # GET /component_groups
   # GET /component_groups.json
@@ -14,31 +13,38 @@ class ComponentGroupsController < ApplicationController
   # GET /component_groups/1
   # GET /component_groups/1.json
   def show
+    @title = Title.find(params[:title_id])
+    @component_group = ComponentGroup.find(params[:id])
   end
 
-  # GET /component_groups/new
   def new
-    @component_group = ComponentGroup.new
-  end
-
-  # GET /component_groups/1/edit
-  def edit
+    @title = Title.find(params[:title_id])
+    @component_group = ComponentGroup.new(title_id: @title.id)
+    @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
   # POST /component_groups
   # POST /component_groups.json
   def create
+    @title = Title.find(params[:title_id])
     @component_group = ComponentGroup.new(component_group_params)
-    @component_group.scan_resolution(params['2k'] ? '2k' : (params['4k'] ? '4k' : '5k'))
+    @component_group.title = @title
     respond_to do |format|
       if @component_group.save
-        format.html { redirect_to @component_group, notice: 'Component group was successfully created.' }
+        format.html { redirect_to @title, notice: 'Component group was successfully created.' }
         format.json { render :show, status: :created, location: @component_group }
       else
         format.html { render :new }
         format.json { render json: @component_group.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # GET /component_groups/1/edit
+  def edit
+    @title = Title.find(params[:title_id])
+    @component_group = ComponentGroup.find(params[:id])
+    @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
   # PATCH/PUT /component_groups/1
@@ -56,10 +62,6 @@ class ComponentGroupsController < ApplicationController
     end
   end
 
-  def on_site
-
-  end
-
   # DELETE /component_groups/1
   # DELETE /component_groups/1.json
   def destroy
@@ -70,6 +72,16 @@ class ComponentGroupsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def best_copy_selection
+    @title = Title.find(params[:title_id])
+    @component_group = ComponentGroup.find(params[:component_group_id])
+  end
+
+  def best_copy_selection_create
+    debugger
+  end
+
 
   def ajax_queue_pull_request
     # result = pull_request([@component_group.id])
@@ -151,7 +163,9 @@ class ComponentGroupsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_group_params
       params.require(:component_group).permit(
-        :scan_resolution, :color_space, :return_on_reel, :clean
+        :group_type, :group_summary,
+        title_attributes: [:id],
+        component_group_physical_objects_attributes: [:id, :physical_object_id, :component_group_id, :scan_resolution, :clean, :return_on_reel, :color_space, :_destroy]
       )
     end
 end
