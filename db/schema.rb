@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180222185449) do
+ActiveRecord::Schema.define(version: 20180227161408) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -104,6 +104,11 @@ ActiveRecord::Schema.define(version: 20180222185449) do
     t.integer  "physical_object_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "scan_resolution",    limit: 255
+    t.string   "clean",              limit: 255
+    t.boolean  "hand_clean_only"
+    t.boolean  "return_on_reel"
+    t.string   "color_space",        limit: 255
   end
 
   create_table "component_groups", force: :cascade do |t|
@@ -375,6 +380,7 @@ ActiveRecord::Schema.define(version: 20180222185449) do
     t.text     "generation_notes",                      limit: 65535
     t.string   "catalog_key",                           limit: 255
     t.boolean  "digitized"
+    t.integer  "active_scan_settings_id",               limit: 8
   end
 
   create_table "pod_pushes", force: :cascade do |t|
