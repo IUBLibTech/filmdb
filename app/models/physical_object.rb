@@ -2,6 +2,8 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
+	after_commit :update_active_scan_settings
+
 	belongs_to :title
 	belongs_to :spreadhsheet
 	belongs_to :collection, autosave: true
@@ -206,14 +208,6 @@ class PhysicalObject < ActiveRecord::Base
 
 	def media_types
 		MEDIA_TYPES
-	end
-	def active_component_group=(cg)
-		super(cg)
-		if cg.nil?
-			self.active_scan_settings = nil
-		else
-			self.active_scan_settings = component_group_physical_objects.where(component_group_id: cg.id).first
-		end
 	end
 
 	def media_type_mediums
@@ -427,6 +421,13 @@ class PhysicalObject < ActiveRecord::Base
 
   def test_after_save
     puts "\n\nAfter Save: #{self.created_at}\n\n"
+	end
+
+	def update_active_scan_settings
+		if (active_scan_settings.nil? && component_group_id != nil) || (!active_scan_settings.nil? && component_group_id.nil?) || (!active_scan_settings.nil? && !component_group_id.nil? && active_scan_settings.component_group_id != component_group_id)
+			new_id = ComponentGroupPhysicalObject.where(physical_object_id: self.id, component_group_id: self.component_group_id).first
+			self.update_attributes(active_scan_settings_id: new_id)
+		end
 	end
 
 	# noinspection RubyResolve,RubyResolve
