@@ -1,4 +1,6 @@
-<h4>Best Copy Selection for <b><i><%= @title.title_text %></i></b></h4>
+<h3>Best Copy Selection for <b><i><%= @title.title_text %></i></b></h3>
+<br>
+<h4>Original Best Copy Component Group</h4>
 <table>
   <tbody>
   <tr>
@@ -9,16 +11,45 @@
       </textarea>
     </td>
   </tr>
+  <tr>
+    <th>IU Barcode</th>
+    <th>Scan Resolution</th>
+    <th>Color</th>
+    <th>Return on Reel</th>
+    <th>Clean</th>
+    <th>Location</th>
+  </tr>
+  <% @component_group.physical_objects.each do |p| %>
+  <tr>
+    <td><%= p.iu_barcode %></td>
+    <% if p.current_scan_settings.nil? %>
+      <td></td><td></td><td></td><td></td>
+    <% else %>
+      <td><%= p.current_scan_settings.scan_resolution %></td>
+      <td><%= p.current_scan_settings.color_space %></td>
+      <td><%= p.current_scan_settings.return_on_reel %></td>
+      <td><%= p.current_scan_settings.clean %></td>
+    <% end %>
+    <td><%= p.current_location %></td>
+  </tr>
+  <% end %>
   </tbody>
 </table>
 <br>
-<h4>Physical Objects</h4>
-<p>Select physical objects you wish to add to a Reformatting Component Group. Unselected physical objects will be returned
+<% if @component_group.all_present? %>
+<h4>New Reformatting Component Group</h4>
+<p>Select physical objects you wish to add to a <b>Reformatting Component Group</b>. Unselected physical objects will be returned
   to their <i>last</i> storage location - In Storage (Ingested), In Storage (Awaiting Ingest), In Freezer, or Awaiting Freezer</p>
-<%= form_tag title_component_group_best_copy_selection_update_path(@title, @component_group), method: :post do %>
+<%= form_tag title_component_group_best_copy_selection_create_path(@title, @component_group), method: :post do %>
   <%= hidden_field_tag 'poids' %>
   <table>
     <tbody>
+    <tr>
+      <th>Reformatting CG Group Summary</th>
+      <td colspan="5">
+        <%= text_area_tag 'group_summary' %>
+      </td>
+    </tr>
     <tr>
       <th>Add to CG</th>
       <th>IU Barcode</th>
@@ -44,6 +75,9 @@
     </tr>
     </tbody>
   </table>
+<% end %>
+<% else %>
+  <p class="warning">Not all physical objects are present. Reformatting Component Group cannot be created.</p>
 <% end %>
 <script type="text/javascript" charset="utf-8">
   var po_ids = [];
