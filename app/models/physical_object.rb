@@ -405,6 +405,14 @@ class PhysicalObject < ActiveRecord::Base
 		return (medium == 'Film' && (generation_separation_master || generation_optical_sound_track))
 	end
 
+	def current_scan_settings
+		if active_component_group.nil?
+			nil
+		else
+			component_group_physical_objects.where(component_group_id: active_component_group.id).first
+		end
+	end
+
   def test_after_create
     puts "\n\nAfter Creation: #{self.created_at}\n\n"
   end

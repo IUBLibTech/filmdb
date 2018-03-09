@@ -76,6 +76,7 @@ class ComponentGroupsController < ApplicationController
   def best_copy_selection
     @title = Title.find(params[:title_id])
     @component_group = ComponentGroup.find(params[:component_group_id])
+
   end
 
   def best_copy_selection_create
