@@ -15,7 +15,6 @@
 <%= form_tag title_autocomplete_selection_merge_path, id: 'title_autocomplete_select_form' do %>
 	<%= hidden_field_tag :master_title_id %>
 	<%= hidden_field_tag :mergees %>
-	<%= hidden_field_tag :cg_pos %>
 	<div id="selected_titles" class="clear">
 		<h4 class="m_top_10px">Titles To Merge</h4>
 		<p class="warning">Click to select the master Title record - all other titles will be merged into this record</p>
@@ -84,8 +83,8 @@
 
 		$('#title_autocomplete_select_form').submit(function(event) {
 			event.preventDefault();
-			m_id = $('#master_title_id').attr('value');
-			pos = getPoIds()
+			var m_id = $('#master_title_id').attr('value');
+			var pos = getPoIds();
 			if (m_id == null || m_id.length == 0) {
 				swal('Select a Master Title', 'You must select a master title to merge. Click the row of the title you wish to be the master record. All metadata from other titles will be merged into this record' )
 			} else if (pos.length == 0) {
@@ -151,19 +150,11 @@
       },
 			success: function(result) {
 				$('#physical_objects').html(result)
-				$('.po_check').click(function() {
-					var pos = []
-					$('.po_check:checked').each(function() {
-						pos.push($(this).attr('id').substring(3))
-					})
-					$('#cg_pos').attr('value', pos.join())
-				});
 			}
 		})
 	}
 	function clearTitleSummary() {
-		$('#title_summary').hide();
-		$('#title_summary').html('');
+		$('#title_summary').hide().html('');
 	}
 
 	function selectedTitleIds(includeMaster=true) {

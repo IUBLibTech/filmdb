@@ -50,6 +50,7 @@ class ComponentGroupsController < ApplicationController
   # PATCH/PUT /component_groups/1
   # PATCH/PUT /component_groups/1.json
   def update
+    @component_group = ComponentGroup.find(params[:id])
     respond_to do |format|
       if @component_group.update(component_group_params)
 	      # currently, the only place a CG can be updated is on the Titles page so redirect there
@@ -76,13 +77,43 @@ class ComponentGroupsController < ApplicationController
   def best_copy_selection
     @title = Title.find(params[:title_id])
     @component_group = ComponentGroup.find(params[:component_group_id])
-
   end
 
   def best_copy_selection_create
-    debugger
-  end
+    @component_group = ComponentGroup.find(params[:component_group_id])
+    @title = Title.find(params[:title_id])
+    keys = params[:component_group][:component_group_physical_objects_attributes].keys
+    checked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked] == "true"}
+    unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked] == "false"}
+    ComponentGroup.transaction do
+      if checked.size > 0
+        @new_cg = ComponentGroup.new(group_type: ComponentGroup::REFORMATTING_MDPI, group_summary: params[:component_group][:group_summary])
+        @new_cg.title = @title
+        @new_cg.save
+        checked.each do |pid|
+          settings = params[:component_group][:component_group_physical_objects_attributes][pid]
+          if true?(settings[:checked])
+            p = PhysicalObject.find(pid)
+            p.active_component_group = @component_group
+            cgpo = ComponentGroupPhysicalObject.new(component_group_id: @new_cg.id, physical_object_id: pid,
+                      scan_resolution: settings[:scan_resolution], color_space: settings[:color_space],
+                      return_on_reel: settings[:return_on_reel], clean: settings[:clean])
+            p.component_group_physical_objects << cgpo
+            ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
+            p.workflow_statuses << ws
+            p.save
+          end
+        end
+      end
+      unchecked.each do |pid|
+        p = PhysicalObject.find(pid)
+        #p.update_attributes(active_scan_settings_id: nil)
+      end
+    end
+    #flash[:notice] = "[:notice] #{unchecked.size} POs returned to storage.<br/>"+"#{checked.size > 0 ? "New Reformatting CG created with #{checked.size} Physical Objects": "A Reformatting CG was not created."}"
 
+    redirect_to @title
+  end
 
   def ajax_queue_pull_request
     # result = pull_request([@component_group.id])
@@ -159,6 +190,10 @@ class ComponentGroupsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_component_group
       @component_group = ComponentGroup.find(params[:id])
+    end
+
+    def true?(s)
+      s.to_s.downcase == "true"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

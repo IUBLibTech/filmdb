@@ -316,87 +316,40 @@ class TitlesController < ApplicationController
 	  @component_group_cv = ControlledVocabulary.component_group_cv
 	  render partial: 'merge_physical_object_candidates'
   end
+
   # does the actual title merge for ajax search based merging
   def merge_autocomplete_titles
     Title.transaction do
       @component_group_cv = ControlledVocabulary.component_group_cv
       @master = Title.find(params[:master_title_id])
       @title = @master
-      if @master.nil?
-        flash.now[:warning] = "You did not specify a master title record - merge aborted"
-        redirect_to 'title_merge_selection'
-      else
-        # 1) Merge the titles
-        @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
-        title_merge(@master, @mergees, true)
-        # 2) Create any necessary component group
-        @physical_objects = PhysicalObject.where("id in (?)", params[:cg_pos].split(',').collect{ |s| s.to_i})
-        @queued = 0
-        @returned = 0
-        sum = "This Component Group was created by merging titles."
-        if @physical_objects.size > 0
-          @cg = ComponentGroup.new(
-            title_id: @master.id,
-            group_type: params[:group_type],
-            group_summary: (params[:group_summary] + (params[:group_summary].blank? ? sum : " | #{sum}")),
-            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
-            return_on_reel: (params[:return_on_reel] == 'Yes' ? true : false),
-            clean: params[:clean],
-            color_space: params[:color_space]
-          )
-          # update physical objects in the component group
-          @physical_objects.each do |p|
-            # need to determine where the physical objects are (Wells/ALF) because if being moved into a reformatting CG,
-            # Wells items go to WELLS_TO_ALF_CONTAINER, and ALF items go to TWO_K_FOUR_K_SHELVES - see last 2 case conditions.
-            prev_cg = p.active_component_group
-            @cg.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @cg.id, physical_object_id: p.id)
-            p.active_component_group = @cg
-            # queue pulls for any CG physical objects that are in storage
-            if WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include?(p.current_workflow_status.status_name)
-              ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p, true)
-              p.workflow_statuses << ws
-              p.save
-              @queued += 1
-              p.workflow_statuses << ws
-            else
-              loc = nil
-              case @cg.group_type
-                when ComponentGroup::BEST_COPY_ALF
-                  loc = WorkflowStatus::BEST_COPY_ALF
-                when ComponentGroup::BEST_COPY_MDPI_WELLS
-                  loc = WorkflowStatus::BEST_COPY_MDPI_WELLS
-                when ComponentGroup::REFORMATTING_MDPI
-                  if prev_cg.group_type == ComponentGroup::BEST_COPY_ALF
-                    loc = WorkflowStatus::TWO_K_FOUR_K_SHELVES
-                  elsif prev_cg.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
-                    loc = WorkflowStatus::WELLS_TO_ALF_CONTAINER
-                  else
-                    raise "Cannot determine where physical object should move! Invalid previous cg: #{prev_cg.group_type}"
-                  end
-                else
-              end
-              ##loc = (@cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
-              ws = WorkflowStatus.build_workflow_status(loc, p, true)
-              p.workflow_statuses << ws
-            end
-            p.save
-          end
-          @cg.save
-        end
+      @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
+      keys = params[:component_group][:component_group_physical_objects_attributes].keys
+      # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
+      # One must manually check the presence of the attribute - HTML forms do no post unchecked checkboxes so if it's present, it was checked
+      checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+      unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
 
-        # 3) Update physical objects not in the component group
-        others = @master.physical_objects.to_a - @physical_objects.to_a
-        others.each do |p|
-          in_storage = WorkflowStatus.is_storage_status?(p.current_workflow_status.status_name)
-          shipped = p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY
-          if (shipped || in_storage)
-            next
-          else
-            ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
-            p.workflow_statuses << ws
-            p.save
-            @returned += 1
-          end
+      if checked.size > 0
+        sum = params[:component_group][:group_summary].blank? ? "This Component Group was created from merging titles." : " | \nThis Component Group was created from merging titles."
+        @component_group = ComponentGroup.new(title_id: master.id, group_type: params[:component_group][:group_type], group_summary: sum)
+        checked.each do |poid|
+          po = PhysicalObject.find(poid)
+          
+        end
+      end
+
+      others = @master.physical_objects.to_a - @physical_objects.to_a
+      others.each do |p|
+        in_storage = WorkflowStatus.is_storage_status?(p.current_workflow_status.status_name)
+        shipped = p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY
+        if (shipped || in_storage)
+          next
+        else
+          ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
+          p.workflow_statuses << ws
+          p.save
+          @returned += 1
         end
       end
     end

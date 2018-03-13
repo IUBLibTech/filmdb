@@ -96,7 +96,7 @@ Rails.application.routes.draw do
   resources :titles, except: [:index] do
     resources :component_groups, only: [:new, :create, :edit, :update, :show, :destroy] do
       get 'best_copy_selection'
-      post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_update', as: 'best_copy_selection_create'
+      post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_create', as: 'best_copy_selection_create'
       get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
     end
   end

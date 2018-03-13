@@ -435,6 +435,21 @@ ul {
     margin: 0;
     padding: 0;
 }
+
+ul.bullets {
+  list-style-type: disc;
+  margin: 10px 0;
+  padding: 0 0 0 20px;
+}
+
+ul.bullets > li {
+  margin: 5px 0
+}
+
+ul.bullets > li > ul {
+  list-style-type: square;
+  margin-left: 20px;
+}
 .selectable li {
     margin: 3px;
     padding: 0.4em;
