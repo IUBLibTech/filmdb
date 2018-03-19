@@ -36,7 +36,7 @@ class WorkflowStatus < ActiveRecord::Base
 	ALL_STATUSES = [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, MISSING,	IN_CAGE, QUEUED_FOR_PULL_REQUEST,	PULL_REQUESTED,
 	                RECEIVED_FROM_STORAGE_STAGING, TWO_K_FOUR_K_SHELVES, ISSUES_SHELF, BEST_COPY_ALF, IN_WORKFLOW_WELLS, SHIPPED_EXTERNALLY, DEACCESSIONED, JUST_INVENTORIED_WELLS,
 	                JUST_INVENTORIED_ALF, BEST_COPY_WELLS, BEST_COPY_MDPI_WELLS, WELLS_TO_ALF_CONTAINER]
-	WELLS_STATUSES = [JUST_INVENTORIED_WELLS, BEST_COPY_ALF, IN_WORKFLOW_WELLS]
+	WELLS_STATUSES = [JUST_INVENTORIED_WELLS, BEST_COPY_WELLS, IN_WORKFLOW_WELLS]
   STATUS_TYPES_TO_STATUSES = {
 		# physical location is ALF
 		'Storage' => [IN_STORAGE_INGESTED, IN_STORAGE_AWAITING_INGEST, IN_FREEZER, AWAITING_FREEZER ],
@@ -94,14 +94,14 @@ class WorkflowStatus < ActiveRecord::Base
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
 				workflow_type: which_workflow_type(status_name),
-				whose_workflow: IULMIA,
+				whose_workflow: '',
 				status_name: status_name,
 				component_group_id: nil)
 		else
 			ws = WorkflowStatus.new(
 				physical_object_id: physical_object.id,
 				workflow_type: which_workflow_type(status_name),
-				whose_workflow: find_workflow(status_name, physical_object),
+				whose_workflow: '',
 				status_name: status_name,
 				component_group_id: ((STATUS_TYPES_TO_STATUSES['Storage'] + [DEACCESSIONED, JUST_INVENTORIED_ALF, JUST_INVENTORIED_WELLS]).include?(status_name) ? nil : physical_object.active_component_group&.id))
 			if !physical_object.current_workflow_status&.external_entity_id.nil?
@@ -158,6 +158,19 @@ class WorkflowStatus < ActiveRecord::Base
 		s = workflow_type_from_status(status_name)
 		s != nil && s == 'Storage'
 	end
+
+	def is_storage_status?
+		WorkflowStatus.is_storage_status?(self.status_name)
+  end
+
+  def self.in_workflow?(status_name)
+    workflow_type_from_status(status_name) == 'In Workflow'
+  end
+
+  def in_workflow?
+    WorkflowStatus.in_workflow?(self.status_name)
+  end
+
 
 	def can_be_pulled?
 		STATUS_TYPES_TO_STATUSES['Storage'].include?(status_name) && status_name != MISSING && status_name != MOLD_ABATEMENT

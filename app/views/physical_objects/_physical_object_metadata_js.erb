@@ -42,20 +42,6 @@
     });
   });
 
-  /*
-  Automcomplete is a bit complicated because it has dependencies on what is selected first (series vs. title). There are
-  three cases that need to be handled:
-
-  1) A known series is selected first in which case, autocomplete on title should only suggest titles that are part of the
-  selected series.
-  2) A know title is selected, in which case, if it belongs to a series, the series is set for the physical object and the
-  editable ability of the series title is disabled
-  3) some combination of know title or series but unknown opposite (know title, unknow series OR know series, unknown title)
-
-  The handlers work as follows: when a series/title field gains focus remove the autcomplete if it is installed the install the
-  correct autocompleter based on whether a series is set
-   */
-
   // autocomplete for titles
   $('#physical_object_title_text').focus(function() {
     if ($(this).data('autocomplete')) {
