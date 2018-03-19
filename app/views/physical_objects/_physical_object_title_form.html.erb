@@ -7,7 +7,7 @@
         <%= Title.find(t).title_text %>
       </div>
       <div  class="remove_title_button">
-        <%= link_to "-", '#', remote: true, class: 'button', id: "remove_title_button_#{t}", title: 'Click to remove this Physical Object/Title association' %>
+        <%= link_to "-", '#', remote: true, class: 'remove_button', id: "remove_title_button_#{t}", title: 'Click to remove this Physical Object/Title association' %>
       </div>
     </li>
     <% end %>
@@ -19,5 +19,5 @@
 	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remove this Physical Object/Title association' %>
 </div>
 <script type="text/javascript">
-  $('.button').click(function() { removeTitle($(this)); })
+  $('.remove_button').click(function() { removeTitle($(this)); })
 </script>
