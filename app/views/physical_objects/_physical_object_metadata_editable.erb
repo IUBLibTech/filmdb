@@ -34,8 +34,9 @@
           <%= @collection.name%>
       <% else %>
 		    <%= f.text_field :collection_text%>
+        <% debugger %>
 		    <div>
-			    No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection">
+			    No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection" <%= (action_name == 'edit' && @collection.nil?) ? 'checked' : '' %>>
 		    </div>
 	    <% end %>
       <%= f.hidden_field :collection_id %>
