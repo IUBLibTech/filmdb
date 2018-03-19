@@ -2,7 +2,7 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
-	after_commit :update_active_scan_settings
+	#after_save :update_active_scan_settings
 
 	belongs_to :title
 	belongs_to :spreadhsheet
@@ -12,7 +12,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
-	belongs_to :active_scan_settings, class_name: 'ComponentGroupPhysicalObject', foreign_key: 'active_scan_settings_id', autosave: true
+	#belongs_to :active_scan_settings, class_name: 'ComponentGroupPhysicalObject', foreign_key: 'active_scan_settings_id', autosave: true
 
 	has_many :physical_object_old_barcodes
   has_many :component_group_physical_objects, dependent: :delete_all
@@ -423,12 +423,12 @@ class PhysicalObject < ActiveRecord::Base
     puts "\n\nAfter Save: #{self.created_at}\n\n"
 	end
 
-	def update_active_scan_settings
-		if (active_scan_settings.nil? && component_group_id != nil) || (!active_scan_settings.nil? && component_group_id.nil?) || (!active_scan_settings.nil? && !component_group_id.nil? && active_scan_settings.component_group_id != component_group_id)
-			new_id = ComponentGroupPhysicalObject.where(physical_object_id: self.id, component_group_id: self.component_group_id).first
-			self.update_attributes(active_scan_settings_id: new_id)
+	def active_scan_settings
+		if !active_component_group.nil?
+			active_component_group.component_group_physical_objects.where(physical_object_id: self.id).first
 		end
 	end
+
 
 	# noinspection RubyResolve,RubyResolve
 	def to_xml(options)
