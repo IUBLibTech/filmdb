@@ -83,8 +83,8 @@ class ComponentGroupsController < ApplicationController
     @component_group = ComponentGroup.find(params[:component_group_id])
     @title = Title.find(params[:title_id])
     keys = params[:component_group][:component_group_physical_objects_attributes].keys
-    checked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked] == "true"}
-    unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked] == "false"}
+    checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:selected].nil?}
+    unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:selected].nil? }
     ComponentGroup.transaction do
       if checked.size > 0
         @new_cg = ComponentGroup.new(group_type: ComponentGroup::REFORMATTING_MDPI, group_summary: params[:component_group][:group_summary])
@@ -92,26 +92,26 @@ class ComponentGroupsController < ApplicationController
         @new_cg.save
         checked.each do |pid|
           settings = params[:component_group][:component_group_physical_objects_attributes][pid]
-          if true?(settings[:checked])
-            p = PhysicalObject.find(pid)
-            p.active_component_group = @component_group
-            cgpo = ComponentGroupPhysicalObject.new(component_group_id: @new_cg.id, physical_object_id: pid,
-                      scan_resolution: settings[:scan_resolution], color_space: settings[:color_space],
-                      return_on_reel: settings[:return_on_reel], clean: settings[:clean])
-            p.component_group_physical_objects << cgpo
-            ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
-            p.workflow_statuses << ws
-            p.save
-          end
+          p = PhysicalObject.find(pid)
+          p.active_component_group = @new_cg
+          cgpo = ComponentGroupPhysicalObject.new(component_group_id: @new_cg.id, physical_object_id: pid,
+                    scan_resolution: settings[:scan_resolution], color_space: settings[:color_space],
+                    return_on_reel: settings[:return_on_reel], clean: settings[:clean])
+          p.component_group_physical_objects << cgpo
+          ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
+          p.workflow_statuses << ws
+          p.save
         end
       end
       unchecked.each do |pid|
         p = PhysicalObject.find(pid)
-        #p.update_attributes(active_scan_settings_id: nil)
+        ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
+        p.workflow_statuses << ws
+        p.active_component_group = nil
+        p.save
       end
     end
-    #flash[:notice] = "[:notice] #{unchecked.size} POs returned to storage.<br/>"+"#{checked.size > 0 ? "New Reformatting CG created with #{checked.size} Physical Objects": "A Reformatting CG was not created."}"
-
+    flash[:notice] = "A new Reformatting Component Group was successfully created."
     redirect_to @title
   end
 

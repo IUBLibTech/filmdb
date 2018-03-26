@@ -35,7 +35,8 @@
         </table>
       </li>
     <% end %>
-    <% if @unchecked.size > 0 %>
+
+    <% if @unchecked && @unchecked.size > 0 %>
       <li>
         <%= @unchecked.size %> Physical Objects were returned to Storage
       </li>
@@ -47,7 +48,7 @@
           <tbody>
           <tr>
             <th>IU Barcode</th>
-            <th>Previous Location</th>
+            <th>Current Physical Location</th>
             <th>Move To</th>
           </tr>
           <% @moved.each do |p| %>
