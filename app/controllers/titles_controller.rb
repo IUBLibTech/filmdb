@@ -343,6 +343,7 @@ class TitlesController < ApplicationController
           raise ManualRollBackError.new("The following titles could not be merged: #{failed.collect{|t| [t.title_text]}.join(',')}")
         end
         unless params[:component_group].nil?
+          flash[:merged] ||= {}
           flash[:merged][:all] = true
           keys = params[:component_group][:component_group_physical_objects_attributes].keys
           # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
