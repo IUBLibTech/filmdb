@@ -1,19 +1,11 @@
 class TitlesController < ApplicationController
+  require 'manual_roll_back_error'
   include PhysicalObjectsHelper
   include TitlesHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
   before_action :set_series, only: [:create, :create_ajax, :update]
   before_action :set_physical_object_cv, only:[:create_physical_object, :new_physical_object]
   before_action :set_all_title_cv, only: [:new, :edit, :new_ajax]
-
-
-  # def old_index
-  #   if params[:selected] && params[:selected] == 'true'
-  #     @titles = Title.titles_selected_for_digitization
-  #   else
-  #     @titles = Title.titles_not_selected_for_digitization
-  #   end
-  # end
 
   def search
 	  if params[:title_text]
@@ -75,6 +67,14 @@ class TitlesController < ApplicationController
         format.json { render json: @title.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def split_title
+    @title = Title.find(params[:id])
+  end
+
+  def split_title_update
+
   end
 
   def show_split_title
@@ -286,6 +286,15 @@ class TitlesController < ApplicationController
 	  redirect_to @master
   end
 
+  # action that merges only titles that are in storage
+  def merge_in_storage
+    render 'title_merge_selection'
+  end
+  # the POST counter
+  def merge_in_storage_update
+
+  end
+
   # returns an array containing the total count of physical objects for this title at index 0,
   # followed by the total count of physical objects in active workflow at index 1
   def ajax_reel_count
@@ -308,7 +317,11 @@ class TitlesController < ApplicationController
   # ajax page returns a table row for the specified title
   def title_merge_selection_table_row
     @title = Title.find(params[:id])
-    render partial: 'title_merge_selection_table_row'
+    if (params[:merge_all] == 'true' || (params[:merge_all] == 'false' && !@title.in_active_workflow?))
+      render partial: 'title_merge_selection_table_row'
+    else
+      render text: "Active"
+    end
   end
   # ajax call that renders a table containing all the physical objects for the specified title ids
   def merge_physical_object_candidates
@@ -316,97 +329,82 @@ class TitlesController < ApplicationController
 	  @component_group_cv = ControlledVocabulary.component_group_cv
 	  render partial: 'merge_physical_object_candidates'
   end
+
   # does the actual title merge for ajax search based merging
   def merge_autocomplete_titles
-    Title.transaction do
-      @component_group_cv = ControlledVocabulary.component_group_cv
-      @master = Title.find(params[:master_title_id])
-      @title = @master
-      if @master.nil?
-        flash.now[:warning] = "You did not specify a master title record - merge aborted"
-        redirect_to 'title_merge_selection'
-      else
-        # 1) Merge the titles
-        @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
-        title_merge(@master, @mergees, true)
-        # 2) Create any necessary component group
-        @physical_objects = PhysicalObject.where("id in (?)", params[:cg_pos].split(',').collect{ |s| s.to_i})
-        @queued = 0
-        @returned = 0
-        sum = "This Component Group was created by merging titles."
-        if @physical_objects.size > 0
-          @cg = ComponentGroup.new(
-            title_id: @master.id,
-            group_type: params[:group_type],
-            group_summary: (params[:group_summary] + (params[:group_summary].blank? ? sum : " | #{sum}")),
-            scan_resolution: (params['HD'] ? 'HD' : (params['5k'] ? '5k' : (params['4k'] ? '4k' : params['2k'] ? '2k' : nil))),
-            return_on_reel: (params[:return_on_reel] == 'Yes' ? true : false),
-            clean: params[:clean],
-            color_space: params[:color_space]
-          )
-          # update physical objects in the component group
-          @physical_objects.each do |p|
-            # need to determine where the physical objects are (Wells/ALF) because if being moved into a reformatting CG,
-            # Wells items go to WELLS_TO_ALF_CONTAINER, and ALF items go to TWO_K_FOUR_K_SHELVES - see last 2 case conditions.
-            prev_cg = p.active_component_group
-            @cg.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @cg.id, physical_object_id: p.id)
-            p.active_component_group = @cg
-            # queue pulls for any CG physical objects that are in storage
-            if WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].include?(p.current_workflow_status.status_name)
-              ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p, true)
-              p.workflow_statuses << ws
-              p.save
-              @queued += 1
-              p.workflow_statuses << ws
-            else
-              loc = nil
-              case @cg.group_type
-                when ComponentGroup::BEST_COPY_ALF
-                  loc = WorkflowStatus::BEST_COPY_ALF
-                when ComponentGroup::BEST_COPY_MDPI_WELLS
-                  loc = WorkflowStatus::BEST_COPY_MDPI_WELLS
-                when ComponentGroup::REFORMATTING_MDPI
-                  if prev_cg.group_type == ComponentGroup::BEST_COPY_ALF
-                    loc = WorkflowStatus::TWO_K_FOUR_K_SHELVES
-                  elsif prev_cg.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
-                    loc = WorkflowStatus::WELLS_TO_ALF_CONTAINER
-                  else
-                    raise "Cannot determine where physical object should move! Invalid previous cg: #{prev_cg.group_type}"
-                  end
-                else
-              end
-              ##loc = (@cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES)
-              ws = WorkflowStatus.build_workflow_status(loc, p, true)
-              p.workflow_statuses << ws
-            end
-            p.save
-          end
-          @cg.save
+    @component_group_cv = ControlledVocabulary.component_group_cv
+    @master = Title.find(params[:master_title_id])
+    @title = @master
+    @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
+    begin
+      PhysicalObject.transaction do
+        failed = title_merge(@master, @mergees, true)
+        if failed.size > 0
+          raise ManualRollBackError.new("The following titles could not be merged: #{failed.collect{|t| [t.title_text]}.join(',')}")
         end
+        unless params[:component_group].nil?
+          flash[:merged][:all] = true
+          keys = params[:component_group][:component_group_physical_objects_attributes].keys
+          # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
+          # One must manually check the presence of the attribute - HTML forms do no post unchecked checkboxes so if it's present, it was checked
+          checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          @unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          if checked.size > 0
+            sum = params[:component_group][:group_summary].blank? ? "This Component Group was created from merging titles." : "#{params[:component_group][:group_summary]} | \nThis Component Group was created from merging titles."
+            @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: sum)
+            @component_group.save
+            checked.each do |poid|
+              po = PhysicalObject.find(poid)
+              cl = po.current_location
+              ws = nil
+              if @component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
+                ws = WorkflowStatus.build_workflow_status(cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po)
+              elsif @component_group.group_type == ComponentGroup::REFORMATTING_MDPI
+                raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
+              elsif (@component_group.group_type == ComponentGroup::BEST_COPY_ALF || @component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
+                # need to force these workflow location changes because some items might be at best already, and going from
+                # there to there isn't normally allowed - it only happens during title merge/split
+                que = po.current_workflow_status.is_storage_status?
 
-        # 3) Update physical objects not in the component group
-        others = @master.physical_objects.to_a - @physical_objects.to_a
-        others.each do |p|
-          in_storage = WorkflowStatus.is_storage_status?(p.current_workflow_status.status_name)
-          shipped = p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY
-          if (shipped || in_storage)
-            next
-          else
-            ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
-            p.workflow_statuses << ws
-            p.save
-            @returned += 1
+                if @component_group.group_type == ComponentGroup::BEST_COPY_ALF
+                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true)
+                else
+                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true)
+                end
+              else
+                flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
+                raise "Cannot add to component group..."
+              end
+              settings = params[:component_group][:component_group_physical_objects_attributes][poid]
+              po.workflow_statuses << ws
+              @component_group.physical_objects << po
+              @component_group.save
+              po.active_component_group = @component_group
+              po.save
+              po.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
+            end
+            @unchecked.each do |poid|
+              po = PhysicalObject.find(poid)
+              if po.current_workflow_status.in_workflow?
+                ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
+                po.workflow_statuses << ws
+                po.save
+              end
+            end
           end
         end
       end
+      flash[:merge] = true
+      @moved = @title.physical_objects.select{|p| (!WorkflowStatus.is_storage_status?(p.previous_location) && (p.current_location != p.previous_location))}
+    rescue ManualRollBackError => e
+      puts e.message
+      puts e.backtrace.join('\n')
+      flash[:merge] = false
+      flash[:warning] = "Something bad happened: #{e.message}"
     end
-	  @title.reload
-    flash[:merge] = true
+    @title.reload
     render 'titles/show'
   end
-
-
-
 
   def new_physical_object
     @em = 'Creating New Physical Object'
@@ -445,8 +443,6 @@ class TitlesController < ApplicationController
   end
 
   def ajax_summary
-    #@title = Title.find(params[:id]).to_json(include: [:title_creators, :title_dates, :title_original_identifiers, :title_publishers, :title_genres, :title_forms, :title_locations])
-    #render :json => @title
     render partial: 'ajax_show'
   end
 

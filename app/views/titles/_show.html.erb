@@ -1,23 +1,67 @@
 <% if flash[:merge] == true %>
-	<p class="notice">Merge successful. The following happened as a result:	</p>
+	<p class="notice">Title merge successful.</p>
 	<ul class="notice">
-		<li><%= pluralize(@mergees.size, 'Title') %> merged into this Title</li>
-		<li>A new Component Group <%= @physical_objects.size > 0 ? 'was' : 'was not' %> created.</li>
-		<% if @queued > 0 %>
-			<li>
-				<%= pluralize(@queued, 'Physical Object') %> in the created Component Group <%= @queued.size > 1 ? 'are' : 'is' %> in storage.
-				<%= @queued.size > 1 ? 'They have' : 'It has' %> been Queued for Pull Request
-			</li>
-		<% end %>
-		<% if (@cg && @cg.physical_objects.size > @queued)%>
-			<li>
-				<%= "#{pluralize(@cg.physical_objects.size - @queued, 'Physical Object')} #{(@cg.physical_objects.size - @queued > 1) ? 'have' : 'has'}" %> moved to
-				<%= @cg.group_type == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::TWO_K_FOUR_K_SHELVES %>
-			</li>
-		<% end %>
-		<% if @returned > 0 %>
-			<li><%= "#{pluralize(@returned, 'Physical Object')} returned to storage" %></li>
-		<% end %>
+    <% if @mergees.size > 0 %>
+      <li><%= @mergees.size %> other Titles were merged into this Title record</li>
+    <% end %>
+    <% unless @component_group.nil? %>
+      <li>A <%= @component_group.group_type %> Component Group was created containing: <br>
+        <table>
+          <tbody>
+          <tr>
+            <th>IU Barcode</th>
+            <th>Gauge</th>
+            <th>Generation</th>
+            <th>Location</th>
+            <th>Scan Settings</th>
+          </tr>
+          <% @component_group.physical_objects.each do |p|%>
+            <tr>
+              <td><%= p.iu_barcode %></td>
+              <td><%= p.gauge %></td>
+              <td><%= p.generations_text %></td>
+              <td><%= p.current_location %></td>
+              <td>
+                <ul>
+                  <li>Scan Resolution: <%= p.active_scan_settings.scan_resolution %></li>
+                  <li>Color Space: <%= p.active_scan_settings.color_space %></li>
+                  <li>Return on Reel: <%= p.active_scan_settings.return_on_reel %></li>
+                  <li>Clean: <%= p.active_scan_settings.clean %></li>
+                </ul>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </li>
+    <% end %>
+
+    <% if @unchecked && @unchecked.size > 0 %>
+      <li>
+        <%= @unchecked.size %> Physical Objects were returned to Storage
+      </li>
+    <% end %>
+    <% if @moved.size > 0 %>
+      <li>
+        The following Physical Objects will need to be moved from their physical location <br>
+        <table>
+          <tbody>
+          <tr>
+            <th>IU Barcode</th>
+            <th>Current Physical Location</th>
+            <th>Move To</th>
+          </tr>
+          <% @moved.each do |p| %>
+            <tr>
+              <td><%= p.iu_barcode %></td>
+              <td><%= p.previous_location %></td>
+              <td><%= p.current_location %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </li>
+    <% end %>
 	</ul>
 <% end %>
 <div id="whodoneit">

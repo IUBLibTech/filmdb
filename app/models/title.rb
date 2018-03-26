@@ -166,7 +166,8 @@ class Title < ActiveRecord::Base
 	def self.title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)
 		sql = (title_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && collection_id.blank?) ? "" : "WHERE"
 		if !title_text.blank?
-			sql << " titles.title_text like '%#{title_text}%'"
+			quoted = ActiveRecord::Base.connection.quote("%#{title_text}%") # properly escapes special characters
+			sql << " titles.title_text like #{quoted}"
 		end
 		if !date.blank?
 			add_and(sql)

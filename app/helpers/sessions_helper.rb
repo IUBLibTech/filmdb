@@ -1,5 +1,5 @@
 module SessionsHelper
-  TIME_OUT = 5.minutes
+  TIME_OUT = 15.minutes
 
   def sign_in(username)
     self.current_username = username

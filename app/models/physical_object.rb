@@ -2,6 +2,8 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
+	#after_save :update_active_scan_settings
+
 	belongs_to :title
 	belongs_to :spreadhsheet
 	belongs_to :collection, autosave: true
@@ -10,6 +12,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
+	#belongs_to :active_scan_settings, class_name: 'ComponentGroupPhysicalObject', foreign_key: 'active_scan_settings_id', autosave: true
 
 	has_many :physical_object_old_barcodes
   has_many :component_group_physical_objects, dependent: :delete_all
@@ -51,7 +54,6 @@ class PhysicalObject < ActiveRecord::Base
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
 	scope :where_current_workflow_status_is, lambda { |offset, limit, digitized, *status|
-
 		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
 		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
 		status = status.flatten
@@ -232,6 +234,16 @@ class PhysicalObject < ActiveRecord::Base
 		titles.first.id
 	end
 
+	def scan_settings(component_group)
+		cgpo = component_group_physical_objects.where(component_group_id: component_group.id).first
+		{
+				scan_resolution: cgpo.scan_resolution,
+				color_space: cgpo.color_space,
+				return_on_reel: cgpo.return_on_reel,
+				clean: cgpo.clean
+		}
+	end
+
 	# tests if the physical object is currently on IULMIA staff workflow space
 	def onsite?
 		current_workflow_status.workflow_type
@@ -315,6 +327,7 @@ class PhysicalObject < ActiveRecord::Base
   end
 
   def generations_text
+		self.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS)
   end
 
   def belongs_to_title?(title_id)
@@ -386,6 +399,14 @@ class PhysicalObject < ActiveRecord::Base
 		return (medium == 'Film' && (generation_separation_master || generation_optical_sound_track))
 	end
 
+	def current_scan_settings
+		if active_component_group.nil?
+			nil
+		else
+			component_group_physical_objects.where(component_group_id: active_component_group.id).first
+		end
+	end
+
   def test_after_create
     puts "\n\nAfter Creation: #{self.created_at}\n\n"
   end
@@ -401,6 +422,13 @@ class PhysicalObject < ActiveRecord::Base
   def test_after_save
     puts "\n\nAfter Save: #{self.created_at}\n\n"
 	end
+
+	def active_scan_settings
+		if !active_component_group.nil?
+			active_component_group.component_group_physical_objects.where(physical_object_id: self.id).first
+		end
+	end
+
 
 	# noinspection RubyResolve,RubyResolve
 	def to_xml(options)
@@ -443,10 +471,12 @@ class PhysicalObject < ActiveRecord::Base
 			xml.trackCount track_count
 			xml.returnTo storage_location
 			xml.notifyAlf notify_alf
-			xml.resolution (sound_only? ? 'Audio only' : active_component_group.scan_resolution)
-			xml.colorSpace active_component_group.color_space
-			xml.clean active_component_group.clean
-			xml.returnOnOriginalReel active_component_group.return_on_reel
+
+			xml.resolution (sound_only? ? 'Audio only' : active_scan_settings.scan_resolution)
+			xml.colorSpace active_scan_settings.color_space
+			xml.clean active_scan_settings.clean
+			xml.returnOnOriginalReel active_scan_settings.return_on_reel
+
 			xml.originalIdentifiers do
 				physical_object_original_identifiers.each do |oi|
 					xml.identifier oi.identifier
