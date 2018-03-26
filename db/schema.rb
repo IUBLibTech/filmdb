@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180222185449) do
+ActiveRecord::Schema.define(version: 20180227161408) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -104,6 +104,11 @@ ActiveRecord::Schema.define(version: 20180222185449) do
     t.integer  "physical_object_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "scan_resolution",    limit: 255
+    t.string   "clean",              limit: 255
+    t.boolean  "hand_clean_only"
+    t.boolean  "return_on_reel"
+    t.string   "color_space",        limit: 255
   end
 
   create_table "component_groups", force: :cascade do |t|
@@ -556,16 +561,11 @@ ActiveRecord::Schema.define(version: 20180222185449) do
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
 
-  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
-  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
-  execute(<<-TRIGGERSQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
-FOR EACH ROW
-BEGIN
-    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
-        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
-    END IF;
-END
-  TRIGGERSQL
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
+  end
 
 end

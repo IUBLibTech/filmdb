@@ -6,13 +6,12 @@
     <th>Gauge</th>
     <th>Generations</th>
 		<th>Workflow Status(es)</th>
-    <th>Type Specific Attributes</th>
     <th>Actions</th>
   </thead>
   <tbody>
   <% @title.component_groups.order('id DESC').each do |cg| %>
     <tr id="<%= cg.id %>">
-      <td id="cg_<%= cg.id %>_group_type" title="<%= cg.group_type %>"><%= cg.group_type %> (<%= cg.physical_objects.size %>)
+      <td id="cg_<%= cg.id %>_group_type" title="<%= cg.group_type %>"><%= cg.group_type %> (<%= "#{pluralize(cg.physical_objects.size, 'Object')}" %>)
 	      <% if cg.group_type == 'Reformating' %><%= " [#{cg.scan_resolution}]" %><% end %></td>
       <td class="no_border_right"><%= cg.group_summary %></td>
 			<td class="edit_icon">
@@ -20,27 +19,19 @@
 			</td>
       <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
-			<td><%= cg.physical_objects.collect { |p| p.current_workflow_status.type_and_location }.uniq.join(', ') %></td>
-	    <td>
-		    <% if cg.is_reformating? %>
-		    <%= link_to image_tag('edit2.png'), '#', class: 'edit_dig_params', id: "edit_dig_params_#{cg.id}", title: 'Click to edit digitization parameters' %>
-		    <ul class="dig_params">
-			    <li>Scan resolution: <%= cg.scan_resolution %></li>
-			    <li>Color space: <%= cg.color_space %></li>
-			    <li>Clean: <%= cg.clean %></li>
-			    <li>Return on Original Reel: <%= cg.return_on_reel ? 'Yes' : 'No' %></li>
-		    </ul>
-		    <% end %>
-	    </td>
+			<td><%= cg.physical_objects.collect { |p| p.current_location }.uniq.join(', ') %></td>
       <td>
 	      <% if cg.can_be_pulled? %>
 		      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
 	      <% end %>
 	      <% if policy(cg).destroy? && !cg.in_active_workflow? %>
-		      <%= link_to "Delete", component_group_path(cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+		      <%= link_to "Delete", title_component_group_path(@title, cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+          <br>
 	      <% elsif cg.in_active_workflow? %>
 	      <b>Active</b>
 	      <% end %>
+        <%= link_to "Show", title_component_group_path(@title, cg) %>
+        <%= link_to "Edit", edit_title_component_group_path(@title, cg) %>
 			</td>
     </tr>
   <% end %>

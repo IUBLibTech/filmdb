@@ -1,4 +1,4 @@
-class ServicesController < ApplicationController
+class ServicesController < ActionController::Base
 	require 'net/http'
 	require 'uri'
 	require 'memnon_digiprov_collector'

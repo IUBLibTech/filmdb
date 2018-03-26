@@ -1,38 +1,56 @@
 <% if @physical_objects.size > 0 %>
-<h4 class="m_top_10px">Physical Objects</h4>
+  <br><br>
 <p class="warning">
-	<i>Select physical objects below to add to a new component group.
-		<ul>
-			<li>Physical objects in active workflow that are not selected will be marked returned to storage.</li>
-			<li>If a Reformating (MDPI) component group is created, selected items will be marked as being on the Digitization Staging shelf (2k/4k).</li>
-			<li>If a Best Copy MDPI component	group is created, all physical objects currently in storage will be queued for a pull request (you must still request those objects though).</li>
-		</ul>
-	</i>
+  <i>Select physical objects below to add to a new Component Group.</i>
 </p>
+<ul class="bullets">
+  <li>Reformatting Component Groups can only be created from Physical Objects that are at Best Copy (ALF or Wells)</li>
+  <li>Best Copy Component Groups can be created from Physical Objects anywhere in workflow <i><b>except</b></i> Shipped Externally</li>
+  <li>Unselected Physical Objects in active workflow will be marked returned to storage in their last storage location.</li>
+  <li>Selected Physical Objects will be added to the new Component Group and have their locations updated:
+    <ul>
+      <li>Best Copy Component Groups will have members in active workflow moved to Best Copy</li>
+      <li>Best Copy Component Groups will have members in storage Queued for Pull Request</li>
+      <li>Reformatting Component Groups will have members moved to the 2k/4k Shelf</li>
+    </ul>
+  </li>
+</ul>
 <table id="po_table">
 	<tbody>
+  <tr>
+    <td colspan="7">
+      <h4>Create Merged Component group</h4>
+      <div id="cg_attributes_form" class="boxsizingBorder">
+        <div><b>Group Type: </b><%= select_tag "component_group[group_type]", options_for_select([[ComponentGroup::BEST_COPY_ALF, ComponentGroup::BEST_COPY_ALF], [ComponentGroup::BEST_COPY_MDPI_WELLS, ComponentGroup::BEST_COPY_MDPI_WELLS], [ComponentGroup::REFORMATTING_MDPI, ComponentGroup::REFORMATTING_MDPI]]) %></div>
+        <div>
+          <b class="block">Group Summary</b>
+          <%= text_area_tag "component_group[group_summary]" %>
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="9">
+      <h4>Physical Objects</h4>
+    </td>
+  </tr>
 	<tr>
-		<th>Title</th>
-		<th>Location</th>
-		<th>IU Barode</th>
-		<th>Can Size</th>
+    <th>IU Barcode</th>
+    <th>Location</th>
 		<th>Gauge</th>
-		<th>Generation</th>
-		<th></th>
+    <th>Generation</th>
+    <th>Scan Resolution</th>
+    <th>Color Space</th>
+    <th>Return on Reel</th>
+    <th>Clean</th>
 	</tr>
 	<% @physical_objects.each do |p| %>
 	<tr class="<%= p.active_component_group.nil? ? 'storage' : 'active'  %>">
 		<td>
-			<%= p.titles_text %>
+			<%= p.iu_barcode %>
 		</td>
 		<td <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>class="warning" <% end %>>
 			<%= p.current_location %>
-		</td>
-		<td>
-			<%= p.iu_barcode %>
-		</td>
-		<td>
-			<%= p.can_size %>
 		</td>
 		<td>
 			<%= p.gauge %>
@@ -40,32 +58,19 @@
 		<td>
 			<%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %>
 		</td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][scan_resolution", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]]) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}) %></td>
 		<td>
-			<% unless p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
-				<%= check_box_tag "po_#{p.id}", "po_#{p.id}", false,  class: 'po_check' %>
+			<% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+        <p class="warning">Shipped Externally</p>
+      <% else %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
 			<% end %>
 		</td>
 	</tr>
 	<% end %>
-	<tr>
-		<td colspan="7">
-			<h4>Create Merged Component group</h4>
-			<div id="cg_attributes_form" class="boxsizingBorder">
-				<div><b>Group Type: </b><%= select_tag :group_type, options_for_select(@component_group_cv[:group_type]) %></div>
-				<div>
-					<b>Scan Resolution: </b>2k <%= check_box_tag '2k', '2k', true, class: 'mutually_exclusive' %> | 4k <%= check_box_tag '4k', '4k', false, class: 'mutually_exclusive' %> | 5k <%= check_box_tag '5k', '5k', false, class: 'mutually_exclusive' %> | HD <%= check_box_tag 'HD', 'HD', false, class: 'mutually_exclusive' %>
-					<b>Color Space: </b><%= select_tag :color_space, options_for_select(ComponentGroup::COLOR_SPACES.collect{ |cs| [cs,cs]}, 'Linear 10 bit') %>
-					<br>
-					<b>Clean: </b><%= select_tag :clean, options_for_select([['Yes', 'Yes'],['No', 'No'],['Hand clean only', 'Hand clean only']]) %>
-					<b>Return on Reel: </b><%= select_tag :return_on_reel, options_for_select([['Yes', 'Yes'],['No', 'No']], 'No') %>
-				</div>
-				<div>
-					<b class="block">Group Summary</b>
-					<%= text_area_tag :group_summary %>
-				</div>
-			</div>
-		</td>
-	</tr>
 	</tbody>
 </table>
 <% end %>
