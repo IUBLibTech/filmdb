@@ -147,6 +147,18 @@ a:hover {
     background-color: rgba(0,0,0,0);
 }
 
+a.orange {
+  color: #e69a37;
+}
+a.orange:hover {
+  color: #042037;
+  background-color: rgba(0,0,0,0);
+}
+a.orange:visited {
+  color: #e69a37;
+  background-color: rgba(0,0,0,0);
+}
+
 .red {
     color: #8F2609;
 }

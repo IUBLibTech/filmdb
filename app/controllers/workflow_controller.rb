@@ -293,12 +293,13 @@ class WorkflowController < ApplicationController
 				@msg = "Physical Object #{params[:iu_barcode]}'s current active component group is not Best Copy. It is: #{@physical_object.active_component_group.group_type}'"
 				render partial: 'ajax_best_copy_selection_error'
 			else
-				render partial: 'new_ajax_best_copy_selection_component_group'
+				redirect_to title_component_group_best_copy_selection_path(@cg.title, @cg)
+				#render partial: 'ajax_best_copy_selection_component_group'
 			end
 		end
 	end
 
-	def best_copy_selection_update
+	def old_best_copy_selection_update
 		@component_group = ComponentGroup.find(params[:component_group][:id])
 		po_ids = params[:pos].split(',').collect { |p| p.to_i }
 		@pos = PhysicalObject.where(id: po_ids)
