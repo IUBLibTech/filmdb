@@ -330,6 +330,15 @@ class TitlesController < ApplicationController
 	  render partial: 'merge_physical_object_candidates'
   end
 
+  # ajax call for a set of titles associated with physical objects (pre-split) for creating component groups
+  def split_title_cg_table
+    @title = Title.find(params[:id])
+    @map = JSON.parse(params[:title_map]).collect{|v| [v[0], v[1]]}
+    @retitled_ids = @map.select{|v| v[0] != @title.id }.collect{|v| v[1]}.flatten
+    @map = @map.to_h
+    render partial: 'split_title_cg_table'
+  end
+
   # does the actual title merge for ajax search based merging
   def merge_autocomplete_titles
     @component_group_cv = ControlledVocabulary.component_group_cv
