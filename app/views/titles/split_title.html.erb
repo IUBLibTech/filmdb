@@ -9,7 +9,7 @@
     <th></th>
   </tr>
   <% @title.physical_objects.each do |p| %>
-  <tr>
+  <tr id="<%= "po_#{p.id}" %>">
     <td><%= p.iu_barcode %></td>
     <td id="po_<%= p.id %>"><%= text_field_tag "retitled[physical_objects[#{p.id}]]", nil, class: 'title_text', size: 50 %></td>
     <td><%= link_to "+", '#', remote: true, class: 'remove_button cg_button', id: "add_component_group#{p.id}", title: 'Click to add a Component Group to the new Title' %></td>
@@ -17,18 +17,23 @@
   <% end %>
   </tbody>
 </table>
-<% end %>
-<div id="title_sum" style="top: 300px; right: 420px" >
+<h3>Component Group Creation</h3>
+<div id="split_titles_div">
 
 </div>
-
+<% end %>
 <script type="text/javascript" charset="utf-8">
-  // tracks retitled ids and maps them to the physical object ids being reassigned
-  var title_map = {};
+  var title_id = <%= @title.id %>;
+  var pos = <%= @title.physical_objects.collect{|p| p.id}.to_json %>;
+  var title_map = new Map();
+  // tracks physical object title (re)assignment. this is initialized to have the splitting title's id mapped to an array
+  // of its physical object's ids. As POs are reassigning to other titles, new title id keys are added, with the reassigned
+  // PO id being appended to the array for the new title. See retitlePo() and resetPoAssoc() below for how this works
+  title_map.set(title_id, pos);
+
   $(document).ready(function() {
-      $(".cg_button").hide();
       $('.title_text').autocomplete({
-        minLength: 2,
+        minLength: 3,
         //source: '<%= autocomplete_title_path %>',
         source: function (request, response) {
             $.ajax({
@@ -55,17 +60,19 @@
             $(this).val(ui.item['label']);
             $(this).attr('value', ui.item['label']);
             $(this).attr('title_id', ui.item['value']);
-            showCgButton($(this));
+            retitlePo($(this));
+            getCgTable();
             return false;
         }
     }).focusout(function () {
         toggleTitleSum();
     }).focusin(function() {
         if ($(this).val().length > 0) {
+            resetPoAssoc($(this));
             $(this).val('');
             $(this).attr('value', '');
             $(this).attr('title_id', null);
-            hideCgButton($(this))
+            getCgTable();
         }
     });
   });
@@ -86,10 +93,51 @@
       $('#title_sum').hide().html('');
   }
 
-  function showCgButton(jq) {
-      jq.parent().parent().find(".cg_button").show();
+  // this function is responsible for updating title_map when a physical object is reassigned to another title.
+  // The autocomplete text box (wrapped as a JQuery object) is passed to this function.
+  function retitlePo(jq) {
+      var newTitleId = jq.attr('title_id');
+      var poId = Number(jq.parent().parent().attr('id').substring(3));
+      removePoFromMap(poId);
+      var array = title_map.get(newTitleId);
+      if (array == null) {
+          title_map.set(Number(newTitleId), [Number(poId)]);
+      } else {
+          array.push(poId);
+          array.sort();
+      }
   }
-  function hideCgButton(jq) {
-      jq.parent().parent().find(".cg_button").hide();
+  // after clearing a title assignment for a physical object, reassigns the PO to the source title.
+  function resetPoAssoc(jq) {
+      var poId = Number(jq.parent().parent().attr('id').substring(3));
+      removePoFromMap(poId);
+      var array = title_map.get(title_id);
+      array.push(Number(poId));
+      array.sort();
   }
+  function removePoFromMap(poId) {
+      title_map.forEach(function(value, key, map) {
+          if (value != null && value.indexOf(poId) > -1) {
+              value.splice(value.indexOf(poId), 1);
+          }
+      });
+  }
+
+  function getCgTable() {
+      $.ajax({
+          url: "<%= split_title_cg_table_path %>",
+          method: "POST",
+          data: {
+              title_map: JSON.stringify([...title_map]),
+              id: <%= @title.id %>
+          },
+          success: function (data) {
+              $('#split_titles_div').html(data)
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              //window.location.replace(jqXHR.url)
+          }
+      });
+  }
+
 </script>
