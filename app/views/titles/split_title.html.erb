@@ -6,13 +6,11 @@
   <tr>
     <th>IU Barcode</th>
     <th>Reassign to Title</th>
-    <th></th>
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr id="<%= "po_#{p.id}" %>">
     <td><%= p.iu_barcode %></td>
     <td id="po_<%= p.id %>"><%= text_field_tag "retitled[physical_objects[#{p.id}]]", nil, class: 'title_text', size: 50 %></td>
-    <td><%= link_to "+", '#', remote: true, class: 'remove_button cg_button', id: "add_component_group#{p.id}", title: 'Click to add a Component Group to the new Title' %></td>
   </tr>
   <% end %>
   </tbody>
