@@ -121,6 +121,7 @@ Rails.application.routes.draw do
   get '/title_merge_selection/merge_physical_object_candidates', to: 'titles#merge_physical_object_candidates', as: 'title_merge_physical_object_candidates'
   post '/title_merge_select/merge_titles', to: 'titles#merge_autocomplete_titles', as: 'title_autocomplete_selection_merge'
   get '/titles/:id/show_split_title', to: 'titles#split_title', as: 'show_split_title'
+  post '/titles/ajax_split_title_cg_table', to: 'titles#split_title_cg_table', as: 'split_title_cg_table'
   post '/titles/:id/update_split_title', to: 'titles#update_split_title', as: 'update_split_title'
   get '/titles/ajax_reel_count/:id', to: 'titles#ajax_reel_count', as: 'ajax_reel_count'
   get '/titles/merge/in_instorage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
