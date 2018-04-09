@@ -69,7 +69,7 @@ class Title < ActiveRecord::Base
       "SELECT distinct(titles.id) FROM workflow_statuses inner join component_groups on workflow_statuses.component_group_id = component_groups.id "+
       "inner join physical_objects on workflow_statuses.physical_object_id = physical_objects.id inner join physical_object_titles on "+
       "physical_objects.id = physical_object_titles.physical_object_id inner join titles on physical_object_titles.title_id = titles.id "+
-      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)'))) ORDER BY title_text"
+      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Best Copy (MDPI - WELLS)'))) ORDER BY title_text"
     Title.find_by_sql(sql)
   }
   scope :titles_not_selected_for_digitization, -> {
@@ -78,7 +78,7 @@ class Title < ActiveRecord::Base
       "SELECT distinct(titles.id) FROM workflow_statuses inner join component_groups on workflow_statuses.component_group_id = component_groups.id "+
       "inner join physical_objects on workflow_statuses.physical_object_id = physical_objects.id inner join physical_object_titles on "+
       "physical_objects.id = physical_object_titles.physical_object_id inner join titles on physical_object_titles.title_id = titles.id "+
-      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)'))))) ORDER BY title_text"
+      "WHERE EXISTS (SELECT 1 FROM component_groups WHERE group_type in ('Best Copy (MDPI)', 'Reformatting (MDPI)', 'Best Copy (MDPI - WELLS)'))))) ORDER BY title_text"
     Title.find_by_sql(sql)
   }
 
@@ -114,7 +114,9 @@ class Title < ActiveRecord::Base
 		res.first.nil? ? 0 : res.first[0]
 	}
 
-	self.per_page = 100
+	def self.per_page
+		100
+	end
 
 	def series_title_text
 		self.series.title if self.series
@@ -129,7 +131,7 @@ class Title < ActiveRecord::Base
 		FROM physical_objects INNER JOIN physical_object_titles ON physical_objects.id = physical_object_titles.physical_object_id "+
 			"INNER JOIN workflow_statuses on physical_objects.id = workflow_statuses.physical_object_id "+
 			"INNER JOIN component_groups ON workflow_statuses.component_group_id = component_groups.id "+
-			"WHERE physical_object_titles.title_id = #{self.id} AND component_groups.group_type in ('Best Copy (MDPI - Wells)', 'Reformatting (MDPI)', 'Reformatting Replacement (MDPI)' )"
+			"WHERE physical_object_titles.title_id = #{self.id} AND component_groups.group_type in ('Best Copy (MDPI - Wells)', 'Reformatting (MDPI)', 'Best Copy (MDPI)' )"
 		ActiveRecord::Base.connection.execute(sql).first[0]
 	end
 
