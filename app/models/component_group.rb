@@ -65,9 +65,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def all_present?
-	  all = true
-    all &= (physical_objects.first.waiting_active_component_group_members? == false) if physical_objects.size > 0
-    all
+    physical_objects.size == 0 || physical_objects.collect{|p| p.current_location}.uniq.size == 1
   end
 
   def whose_workflow
