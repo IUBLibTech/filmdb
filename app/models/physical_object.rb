@@ -21,7 +21,7 @@ class PhysicalObject < ActiveRecord::Base
   has_many :titles, through: :physical_object_titles
 	has_many :series, through: :titles
 	has_many :physical_object_dates
-	has_many :physical_object_pull_requestssssss
+	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
 	has_many :digiprovs
 
