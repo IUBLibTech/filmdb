@@ -330,14 +330,23 @@ class TitlesController < ApplicationController
 	  render partial: 'merge_physical_object_candidates'
   end
 
+  # ajax call for a set of titles associated with physical objects (pre-split) for creating component groups
+  def split_title_cg_table
+    @title = Title.find(params[:id])
+    @map = JSON.parse(params[:title_map]).collect{|v| [v[0], v[1]]}
+    @retitled_ids = @map.select{|v| v[0] != @title.id }.collect{|v| v[1]}.flatten
+    @map = @map.to_h
+    render partial: 'split_title_cg_table'
+  end
+
   # does the actual title merge for ajax search based merging
   def merge_autocomplete_titles
-    @component_group_cv = ControlledVocabulary.component_group_cv
-    @master = Title.find(params[:master_title_id])
-    @title = @master
-    @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
     begin
       PhysicalObject.transaction do
+        @component_group_cv = ControlledVocabulary.component_group_cv
+        @master = Title.find(params[:master_title_id])
+        @title = @master
+        @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
         failed = title_merge(@master, @mergees, true)
         if failed.size > 0
           raise ManualRollBackError.new("The following titles could not be merged: #{failed.collect{|t| [t.title_text]}.join(',')}")
@@ -359,7 +368,7 @@ class TitlesController < ApplicationController
               cl = po.current_location
               ws = nil
               if @component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
-                ws = WorkflowStatus.build_workflow_status(cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po)
+                ws = WorkflowStatus.build_workflow_status(cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
               elsif @component_group.group_type == ComponentGroup::REFORMATTING_MDPI
                 raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
               elsif (@component_group.group_type == ComponentGroup::BEST_COPY_ALF || @component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
@@ -368,16 +377,16 @@ class TitlesController < ApplicationController
                 que = po.current_workflow_status.is_storage_status?
 
                 if @component_group.group_type == ComponentGroup::BEST_COPY_ALF
-                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true)
+                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
                 else
-                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true)
+                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
                 end
               else
                 flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
                 raise "Cannot add to component group..."
               end
               settings = params[:component_group][:component_group_physical_objects_attributes][poid]
-              po.workflow_statuses << ws
+              po.workflow_statuses << ws unless ws.nil?
               @component_group.physical_objects << po
               @component_group.save
               po.active_component_group = @component_group
@@ -396,7 +405,7 @@ class TitlesController < ApplicationController
         end
       end
       flash[:merge] = true
-      @moved = @title.physical_objects.select{|p| (!WorkflowStatus.is_storage_status?(p.previous_location) && (p.current_location != p.previous_location))}
+      @moved = params[:component_group].nil? ? [] : @title.physical_objects.select{|p| (!WorkflowStatus.is_storage_status?(p.previous_location) && (p.current_location != p.previous_location))}
     rescue ManualRollBackError => e
       puts e.message
       puts e.backtrace.join('\n')

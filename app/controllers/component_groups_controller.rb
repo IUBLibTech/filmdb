@@ -98,7 +98,15 @@ class ComponentGroupsController < ApplicationController
                     scan_resolution: settings[:scan_resolution], color_space: settings[:color_space],
                     return_on_reel: settings[:return_on_reel], clean: settings[:clean])
           p.component_group_physical_objects << cgpo
-          ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
+          location = nil
+          if @component_group.group_type == ComponentGroup::BEST_COPY_ALF
+            location = WorkflowStatus::TWO_K_FOUR_K_SHELVES
+          elsif @component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
+            location = WorkflowStatus::WELLS_TO_ALF_CONTAINER
+          else
+            raise "Cannot create reformatting component group from #{@component_group.group_type}"
+          end
+          ws = WorkflowStatus.build_workflow_status(location, p)
           p.workflow_statuses << ws
           p.save
         end
