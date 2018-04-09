@@ -21,7 +21,7 @@ class PhysicalObject < ActiveRecord::Base
   has_many :titles, through: :physical_object_titles
 	has_many :series, through: :titles
 	has_many :physical_object_dates
-	has_many :physical_object_pull_requests
+	has_many :physical_object_pull_requestssssss
 	has_many :pull_requests, through: :physical_object_pull_requests
 	has_many :digiprovs
 
@@ -204,7 +204,9 @@ class PhysicalObject < ActiveRecord::Base
               SOUND_CONTENT_FIELDS_HUMANIZED.merge(SOUND_CONFIGURATION_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
               ))))))))
 
-	self.per_page = 100
+	def self.per_page
+		100
+	end
 
 	def media_types
 		MEDIA_TYPES

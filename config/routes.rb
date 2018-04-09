@@ -154,7 +154,7 @@ Rails.application.routes.draw do
   get '/workflow/best_copy_selection', to: 'workflow#best_copy_selection', as: 'workflow_best_copy_selection'
   post '/workflow/ajax_best_copy_selection_barcode/:iu_barcode', to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode'
   get '/workflow/ajax_best_copy_selection_barcode/:iu_barcode',  to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode_test'
-  post '/workflow/best_copy_selection_update', to: 'workflow#best_copy_selection_update', as: 'best_copy_selection_update'
+  #post '/workflow/best_copy_selection_update', to: 'workflow#best_copy_selection_update', as: 'best_copy_selection_update'
   get '/workflow/issues_shelf', to: 'workflow#issues_shelf', as: 'issues_shelf'
   post '/workflow/ajax_issues_shelf_barcode/:iu_barcode', to: 'workflow#ajax_issues_shelf_barcode', as: 'ajax_issues_shelf_barcode'
   patch '/workflow/ajax_issues_shelf_update/:id', to: 'workflow#ajax_issues_shelf_update', as: 'ajax_issues_shelf_update'
