@@ -162,12 +162,10 @@ class TitlesController < ApplicationController
 		  end
 	  end
 
-
 	  # is this necessary still?
 	  @returned = @returned.uniq{|p| p.id}
 	  @retitled = @retitled.uniq{|p| p.id}
 	  @queued = @queued.uniq{|p| p.id}
-
   end
 
   def create_component_group
