@@ -26,7 +26,7 @@
     <% else %>
       <td><%= p.current_scan_settings.scan_resolution %></td>
       <td><%= p.current_scan_settings.color_space %></td>
-      <td><%= p.current_scan_settings.return_on_reel %></td>
+      <td><%= p.current_scan_settings.return_on_reel ? "Yes" : "No" %></td>
       <td><%= p.current_scan_settings.clean %></td>
     <% end %>
     <td><%= p.current_location %></td>

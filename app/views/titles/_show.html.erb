@@ -25,7 +25,7 @@
                 <ul>
                   <li>Scan Resolution: <%= p.active_scan_settings.scan_resolution %></li>
                   <li>Color Space: <%= p.active_scan_settings.color_space %></li>
-                  <li>Return on Reel: <%= p.active_scan_settings.return_on_reel %></li>
+                  <li>Return on Reel: <%= p.active_scan_settings.return_on_reel ? "Yes" : "No" %></li>
                   <li>Clean: <%= p.active_scan_settings.clean %></li>
                 </ul>
               </td>
