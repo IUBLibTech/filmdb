@@ -110,9 +110,9 @@
 	$('#split_title_form').submit(function (event) {
 		if (!isSplit()) {
 			event.preventDefault();
-			swal('Cannot split Title - No Physical Objects assigned to other Titles')
+			swal('Cannot split Title - No Physical Objects assigned to other Titles');
 		}
-	})
+	});
 
 	// performs an ajax call to get an html element displaying the specified title and shows this title summary in the popup div
 	function ajaxTitleSummary(id) {
