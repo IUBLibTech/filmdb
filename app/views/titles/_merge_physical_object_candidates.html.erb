@@ -45,7 +45,7 @@
     <th>Clean</th>
 	</tr>
 	<% @physical_objects.each do |p| %>
-	<tr class="<%= p.active_component_group.nil? ? 'storage' : 'active'  %>">
+	<tr class="<%= p.active_component_group.nil? ? (p.digitized? ? 'digitized storage' : 'storage') : (p.digitized? ? 'digitized active' : 'active')  %>">
 		<td>
 			<%= p.iu_barcode %>
 		</td>
