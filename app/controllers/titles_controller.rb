@@ -80,93 +80,7 @@ class TitlesController < ApplicationController
   def show_split_title
 	  @title = Title.find(params[:id])
   end
-  def update_split_title
-	  @component_group_cv = ControlledVocabulary.component_group_cv
-	  @title = Title.find(params[:id])
-	  # map { title_1_id: {cg_type1: [array of physical object ids], ..., cg_typeN: [array of physical object ids] }, ..., title_N_id: {}}
-	  # a title id of '' means @title - no reassignment
-	  @map = JSON.parse(params[:map])
 
-	  # pos returned to storage
-	  @returned = []
-	  # physical objects retitled
-	  @retitled = []
-	  # physical objects queued for pull
-	  @queued = []
-	  @cgs = []
-
-	  Title.transaction do
-		  @map.keys.each do |title_id|
-			  other_title = nil
-			  if (!title_id.blank? && title_id != @title.id.to_s)
-				  # convert the id into the active record
-				  other_title = Title.find(title_id)
-			  end
-			  @map[title_id].keys.each do |cg_type|
-				  cg = cg_type.blank? ? nil : ComponentGroup.new(title_id: (other_title.nil? ? @title.id : other_title.id), group_type: cg_type)
-				  @cgs << cg unless cg.nil?
-				  @map[title_id][cg_type].each do |p|
-					  p = PhysicalObject.find(p)
-					  # order matters... clear the active component group BEFORE assigning new workflow status, but record what previous cg was to determine where is goes if new CG is reformatting
-					  prev_cg = p.active_component_group
-					  p.active_component_group = nil
-
-					  # this physical object is being reassigned to another title so delete the title association and remove it from all component groups for the old title
-					  if (!other_title.nil? && other_title != @title)
-						  @title.component_groups.each do |cgi|
-							  ComponentGroupPhysicalObject.where(component_group_id: cgi.id, physical_object_id: p.id).delete_all
-						  end
-						  PhysicalObjectTitle.where(title_id: @title.id, physical_object_id: p.id).delete_all
-						  other_title.physical_objects << p
-						  other_title.save
-						  @retitled << p
-					  end
-					  ws = nil
-					  # back to storage if no component group type specified
-					  if cg.nil?
-						  ws = WorkflowStatus.build_workflow_status(p.storage_location, p, true)
-						  p.workflow_statuses << ws
-						  p.save
-						  @returned << p
-					  else
-						  cg.physical_objects << p
-						  p.active_component_group = cg
-						  # if reformatting, move to 2k/4k shelves, otherwise it needs to move to the respective best copy shelf (Alf/Wells)
-						  if cg.group_type == ComponentGroup::REFORMATTING_MDPI
-							  ws = WorkflowStatus.build_workflow_status((prev_cg.nil? || prev_cg.group_type == ComponentGroup::BEST_COPY_ALF) ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, p, true)
-						  else
-							  ws = WorkflowStatus.build_workflow_status((cg.group_type == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_MDPI_WELLS), p, true)
-						  end
-						  p.workflow_statuses << ws
-						  p.save
-					  end
-				  end
-				  cg.save unless cg.nil?
-
-				  # after adding all the PO's to a new component group we need to check if it was a new title assignmenet for a new CG
-				  # if yes, any physical objects that were part of the new title and not part of the old title and in storage, need to be added to (only) best copy cgs and queued
-				  if (!other_title.nil? && other_title != @title && !cg.nil? && cg.group_type != ComponentGroup::REFORMATTING_MDPI)
-					  # add in storage pos to the best copy component group and queue
-					  (cg.title.physical_objects.to_a - cg.physical_objects.to_a).each do |op|
-						  if op.in_storage?
-							  cg.physical_objects << op
-							  op.active_component_group = cg
-							  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, op)
-							  op.workflow_statuses << ws
-							  op.save
-							  @queued << op
-						  end
-					  end
-				  end
-			  end
-		  end
-	  end
-
-	  # is this necessary still?
-	  @returned = @returned.uniq{|p| p.id}
-	  @retitled = @retitled.uniq{|p| p.id}
-	  @queued = @queued.uniq{|p| p.id}
-  end
 
   def create_component_group
     @component_group_cv = ControlledVocabulary.component_group_cv
@@ -363,26 +277,7 @@ class TitlesController < ApplicationController
             @component_group.save
             checked.each do |poid|
               po = PhysicalObject.find(poid)
-              cl = po.current_location
-              ws = nil
-              if @component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
-                ws = WorkflowStatus.build_workflow_status(cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
-              elsif @component_group.group_type == ComponentGroup::REFORMATTING_MDPI
-                raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
-              elsif (@component_group.group_type == ComponentGroup::BEST_COPY_ALF || @component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
-                # need to force these workflow location changes because some items might be at best already, and going from
-                # there to there isn't normally allowed - it only happens during title merge/split
-                que = po.current_workflow_status.is_storage_status?
-
-                if @component_group.group_type == ComponentGroup::BEST_COPY_ALF
-                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
-                else
-                  ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
-                end
-              else
-                flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
-                raise "Cannot add to component group..."
-              end
+              ws = get_merge_workflow_status(@component_group, po)
               settings = params[:component_group][:component_group_physical_objects_attributes][poid]
               po.workflow_statuses << ws unless ws.nil?
               @component_group.physical_objects << po
@@ -412,6 +307,68 @@ class TitlesController < ApplicationController
     end
     @title.reload
     render 'titles/show'
+  end
+
+  def update_split_title
+    @component_group_cv = ControlledVocabulary.component_group_cv
+    @title = Title.find(params[:id])
+    # converts the JavaScript Map object into a Ruby hash { title_id: [array of physical object ids]}. This map contains
+    # title ids mapped to the list of physical object ids the user selected for retitling. It also contains a mapping of
+    # the title that is being split mapped to any remain physical objects that still belong to it after the split
+    @map = JSON.parse(params[:title_map]).to_h
+
+    # removes the list of po ids for this title from the map so iteration is only over those po's that were retitled
+    # @src_title_list = @map.delete(@title.id)
+
+    # contains a map of title ids pointing to a hash that contains :retitled => all PhysicalObjects that were reassiggned
+    # :checked => all PhysicalObjects (including those from the target title) that were selected for inclusion in the created
+    # component group (if any), and :unchecked => all PhysicalObjects (including those from target title) that were not selected for inclusion
+    @retitled = {}
+
+    Title.transaction do
+      @map.keys.each do |t_id|
+        if @map[t_id].size == 0
+          next
+        else
+          pos = PhysicalObject.where(id: @map[t_id])
+          @retitled[t_id] = {retitled: pos, moved: []} unless t_id == @title.id
+          # grabs all physical object ids listed for this TARGET title, both it's own and any that are being retitled from THIS title
+          keys = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes].keys
+          # grabs all physical object ids that were selected for inclusion in the created component group - empty means no component group created
+          @checked = keys.select{|k| !params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          # grabs all physical object ids not selected for inclusion in the created component group - all of these are returned to storage
+          @unchecked = keys.select{|k| params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          if @checked.size > 0
+            @new_cg = ComponentGroup.new(title_id: t_id.to_s, group_type: params[:titles][t_id.to_s][:component_group][:group_type], group_summary: params[:titles][t_id.to_s][:component_group][:group_summary])
+            @new_cg.save
+          end
+          # retitled all the specified physical objects
+          pos.each do |p|
+            p.physical_object_titles.where(title_id: @title.id).first.update_attributes(title_id: t_id)
+            if @checked.include?(p.id.to_s)
+              ws = get_merge_workflow_status(@new_cg, p)
+              p.workflow_statuses << ws unless params[:titles][@title.id.to_s][:component_group][:component_group_physical_objects_attributes].keys.include?(p.id.to_s)
+              @retitled[t_id][:moved] << p unless t_id == @title.id
+              settings = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][p.id.to_s]
+              @new_cg.physical_objects << p
+              @new_cg.save
+              p.active_component_group = @new_cg
+              p.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
+
+            # it's not checked AND it's in active workflow - it goes back to storage
+            elsif WorkflowStatus::STATUS_TYPES_TO_STATUSES['In Workflow'].include?(p.current_location)
+              ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
+              p.workflow_statuses << ws unless ws.nil?
+              @retitled[t_id][:moved] << p unless params[:titles][@title.id.to_s][:component_group][:component_group_physical_objects_attributes].keys.include?(p.id.to_s)
+            end
+            p.save
+          end
+        end
+      end
+      debugger
+    end
+    flash[:split] = true
+    render 'show'
   end
 
   def new_physical_object
@@ -465,6 +422,30 @@ class TitlesController < ApplicationController
 
 
   private
+
+  def get_merge_workflow_status(component_group, po)
+    cl = po.current_location
+    ws = nil
+    if component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
+      ws = WorkflowStatus.build_workflow_status(cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+    elsif component_group.group_type == ComponentGroup::REFORMATTING_MDPI
+      raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
+    elsif (component_group.group_type == ComponentGroup::BEST_COPY_ALF || component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
+      # need to force these workflow location changes because some items might be at best already, and going from
+      # there to there isn't normally allowed - it only happens during title merge/split
+      que = po.current_workflow_status.is_storage_status?
+      if component_group.group_type == ComponentGroup::BEST_COPY_ALF
+        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+      else
+        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+      end
+    else
+      flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
+      raise "Cannot add to component group..."
+    end
+    ws
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_title
     @title = Title.find(params[:id])

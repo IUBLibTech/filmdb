@@ -1,4 +1,5 @@
-<%= form_tag update_split_title_path do %>
+<%= form_tag update_split_title_path, id: 'split_title_form' do %>
+  <%= hidden_field_tag 'title_map' %>
 <h4>Splitting <%= link_to @title.title_text, title_path(@title), class: 'orange' %></h4>
 <p>Reassign Physical Objects in this Title by selecting their new titles in the title field below</p>
 <table>
@@ -75,7 +76,11 @@
             $(this).attr('title_id', null);
             getCgTable();
         }
-    });
+      });
+      $('#split_titles_form').submit(function(event) {
+          event.preventDefault();
+
+      });
   });
 
   function ajaxTitleSummary(id) {
@@ -107,6 +112,7 @@
           array.push(poId);
           array.sort();
       }
+      setTitleMapHash();
   }
   // after clearing a title assignment for a physical object, reassigns the PO to the source title.
   function resetPoAssoc(jq) {
@@ -122,6 +128,11 @@
               value.splice(value.indexOf(poId), 1);
           }
       });
+      setTitleMapHash();
+  }
+
+  function setTitleMapHash() {
+      $('#title_map').val(JSON.stringify([...title_map]));
   }
 
   function getCgTable() {

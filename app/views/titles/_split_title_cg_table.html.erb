@@ -24,7 +24,7 @@
         <th colspan="8">Remaining Physical Objects</th>
       </tr>
       <% PhysicalObject.where(id: @map[t_id]).each do |p| %>
-        <tr>
+        <tr class="<%= 'digitized_tr' unless !p.digitized? %>">
           <td><%= p.iu_barcode %></td>
           <td><%= p.current_location %></td>
           <td><%= p.gauge %></td>
@@ -47,7 +47,7 @@
         <th colspan="8">Existing Physical Objects</th>
       </tr>
       <% title.physical_objects.each do |p| %>
-          <tr>
+          <tr  class="<%= 'digitized_tr' unless !p.digitized? %>">
             <td><%= p.iu_barcode %></td>
             <td><%= p.current_location %></td>
             <td><%= p.gauge %></td>
@@ -69,7 +69,7 @@
         <th colspan="8">Retitled Physical Objects</th>
       </tr>
       <% PhysicalObject.where(id: @map[t_id]).each do |p| %>
-          <tr>
+          <tr  class="<%= 'digitized_tr' unless !p.digitized? %>">
             <td><%= p.iu_barcode %></td>
             <td><%= p.current_location %></td>
             <td><%= p.gauge %></td>
