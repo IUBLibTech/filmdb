@@ -22,7 +22,10 @@ class WorkflowStatsController < ApplicationController
 				@can_sizes[p.can_size] += 1
 			end
 
-			cg = p.active_component_group
+			cg = p.active_scan_settings
+			if cg.nil?
+				debugger
+			end
 			if @scan_resolutions[cg.scan_resolution].nil?
 				if cg.scan_resolution.blank?
 					@scan_resolutions['nil'] += 1
