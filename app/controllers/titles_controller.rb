@@ -312,30 +312,40 @@ class TitlesController < ApplicationController
   def update_split_title
     @component_group_cv = ControlledVocabulary.component_group_cv
     @title = Title.find(params[:id])
-    # converts the JavaScript Map object into a Ruby hash { title_id: [array of physical object ids]}. This map contains
-    # title ids mapped to the list of physical object ids the user selected for retitling. It also contains a mapping of
-    # the title that is being split mapped to any remain physical objects that still belong to it after the split
+    # converts the JavaScript Map object into a Ruby hash { title_id => [array of physical object ids]}. This map contains
+    # title ids mapped to the list of physical object ids. If the map key == @title (the title that is being split),
+    # this particular key binding signifies those physical objects that should REMAIN associated with @title. Everything else is a retitle.
     @map = JSON.parse(params[:title_map]).to_h
-
-    # removes the list of po ids for this title from the map so iteration is only over those po's that were retitled
-    # @src_title_list = @map.delete(@title.id)
-
-    # contains a map of title ids pointing to a hash that contains :retitled => all PhysicalObjects that were reassiggned
-    # :checked => all PhysicalObjects (including those from the target title) that were selected for inclusion in the created
-    # component group (if any), and :unchecked => all PhysicalObjects (including those from target title) that were not selected for inclusion
+    # convenience map of title ids pointing to a hash that contains :retitled => all PhysicalObjects that were reassigned,
+    # :moved => all PhysicalObjects (including those from the target title) whose location was updated as a result of retitling
+    # {title_id => {:retitled => [POs reassigned to title_id], :moved => [POs whose location was changed as a result]}, ...}
     @retitled = {}
 
     Title.transaction do
       @map.keys.each do |t_id|
-        if @map[t_id].size == 0
-          next
-        else
+        if @map[t_id].size > 0
+          cur_title = Title.find(t_id)
           pos = PhysicalObject.where(id: @map[t_id])
-          @retitled[t_id] = {retitled: pos, moved: []} unless t_id == @title.id
-          # grabs all physical object ids listed for this TARGET title, both it's own and any that are being retitled from THIS title
+
+          # remove association with old title and add new association if it doesn't already exist
+          if cur_title != @title
+            p.component_group_physical_objects.where(title_id: @title.id).delete_all!
+            p.physical_object_titles.where(title_id: @title.id).delete_all
+            p.active_component_group = nil
+            # it's remotely possible that the PO already belongs to this title (AND  @title)
+            PhysicalObjectTitle.new(title_id: cur_title.id, physical_object_id: p.id).save! unless p.titles.include?(cur_title)
+          end
+
+          # create component groups if necessary
+
+
+
+          # grabs all existing physical object ids belonging to cur_title AND any that are being reassigned from @title
           keys = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes].keys
-          # grabs all physical object ids that were selected for inclusion in the created component group - empty means no component group created
+          # grabs all physical object ids that were selected for inclusion in the component group
           @checked = keys.select{|k| !params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+
+
           # grabs all physical object ids not selected for inclusion in the created component group - all of these are returned to storage
           @unchecked = keys.select{|k| params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           if @checked.size > 0
@@ -344,17 +354,15 @@ class TitlesController < ApplicationController
           end
           # retitled all the specified physical objects
           pos.each do |p|
-            p.physical_object_titles.where(title_id: @title.id).first.update_attributes(title_id: t_id)
+
+            p.physical_object_titles.where(title_id: @title.id).first.update_attributes(title_id: t_id) unless t_id == @title.id
             if @checked.include?(p.id.to_s)
               ws = get_merge_workflow_status(@new_cg, p)
-              p.workflow_statuses << ws unless params[:titles][@title.id.to_s][:component_group][:component_group_physical_objects_attributes].keys.include?(p.id.to_s)
+              p.workflow_statuses << ws unless ws.status_name == p.current_location
               @retitled[t_id][:moved] << p unless t_id == @title.id
               settings = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][p.id.to_s]
-              @new_cg.physical_objects << p
-              @new_cg.save
               p.active_component_group = @new_cg
-              p.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
-
+              p.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @new_cg.id, physical_object_id: p.id, scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
             # it's not checked AND it's in active workflow - it goes back to storage
             elsif WorkflowStatus::STATUS_TYPES_TO_STATUSES['In Workflow'].include?(p.current_location)
               ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
