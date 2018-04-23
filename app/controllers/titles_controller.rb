@@ -354,9 +354,6 @@ class TitlesController < ApplicationController
               if po.nil?
                 po = cur_title.physical_objects.find {|p| p.id == pid.to_i }
               end
-              if po.nil?
-                debugger
-              end
               raise "How'd this happen?!?" if po.nil?
               settings = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][pid]
               ComponentGroupPhysicalObject.new(
@@ -365,9 +362,6 @@ class TitlesController < ApplicationController
               ).save!
               po.active_component_group = @new_cg
               ws = get_merge_workflow_status(@new_cg, po)
-              if ws.nil?
-                debugger
-              end
               raise "Workflow status should not be null..." if ws.nil?
               if ws.status_name != po.current_location
                 @retitled[t_id][:moved] << po
@@ -387,7 +381,6 @@ class TitlesController < ApplicationController
           end
         end
       end
-      debugger
     end
     flash[:split] = true
     render 'show'
