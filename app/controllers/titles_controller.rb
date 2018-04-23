@@ -323,53 +323,67 @@ class TitlesController < ApplicationController
 
     Title.transaction do
       @map.keys.each do |t_id|
+        @retitled[t_id] = {:retitled => [], :moved => []}
         if @map[t_id].size > 0
           cur_title = Title.find(t_id)
           pos = PhysicalObject.where(id: @map[t_id])
 
           # remove association with old title and add new association if it doesn't already exist
           if cur_title != @title
-            p.component_group_physical_objects.where(title_id: @title.id).delete_all!
-            p.physical_object_titles.where(title_id: @title.id).delete_all
-            p.active_component_group = nil
-            # it's remotely possible that the PO already belongs to this title (AND  @title)
-            PhysicalObjectTitle.new(title_id: cur_title.id, physical_object_id: p.id).save! unless p.titles.include?(cur_title)
+            @retitled[t_id][:retitled] = pos
+            pos.each do |p|
+              p.component_group_physical_objects.where(physical_object_id: p.id).delete_all
+              p.physical_object_titles.where(title_id: @title.id).delete_all
+              p.active_component_group = nil
+              # it's remotely possible that the PO already belongs to this title (AND  @title)
+              PhysicalObjectTitle.new(title_id: cur_title.id, physical_object_id: p.id).save! unless p.titles.include?(cur_title)
+            end
           end
 
           # create component groups if necessary
-
-
-
           # grabs all existing physical object ids belonging to cur_title AND any that are being reassigned from @title
           keys = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes].keys
           # grabs all physical object ids that were selected for inclusion in the component group
           @checked = keys.select{|k| !params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
-
-
-          # grabs all physical object ids not selected for inclusion in the created component group - all of these are returned to storage
           @unchecked = keys.select{|k| params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           if @checked.size > 0
             @new_cg = ComponentGroup.new(title_id: t_id.to_s, group_type: params[:titles][t_id.to_s][:component_group][:group_type], group_summary: params[:titles][t_id.to_s][:component_group][:group_summary])
             @new_cg.save
-          end
-          # retitled all the specified physical objects
-          pos.each do |p|
-
-            p.physical_object_titles.where(title_id: @title.id).first.update_attributes(title_id: t_id) unless t_id == @title.id
-            if @checked.include?(p.id.to_s)
-              ws = get_merge_workflow_status(@new_cg, p)
-              p.workflow_statuses << ws unless ws.status_name == p.current_location
-              @retitled[t_id][:moved] << p unless t_id == @title.id
-              settings = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][p.id.to_s]
-              p.active_component_group = @new_cg
-              p.component_group_physical_objects << ComponentGroupPhysicalObject.new(component_group_id: @new_cg.id, physical_object_id: p.id, scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
-            # it's not checked AND it's in active workflow - it goes back to storage
-            elsif WorkflowStatus::STATUS_TYPES_TO_STATUSES['In Workflow'].include?(p.current_location)
-              ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
-              p.workflow_statuses << ws unless ws.nil?
-              @retitled[t_id][:moved] << p unless params[:titles][@title.id.to_s][:component_group][:component_group_physical_objects_attributes].keys.include?(p.id.to_s)
+            @checked.each do |pid|
+              po = pos.find{ |po| po.id == pid.to_i}
+              if po.nil?
+                po = cur_title.physical_objects.find {|p| p.id == pid.to_i }
+              end
+              if po.nil?
+                debugger
+              end
+              raise "How'd this happen?!?" if po.nil?
+              settings = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][pid]
+              ComponentGroupPhysicalObject.new(
+                  component_group_id: @new_cg.id, physical_object_id: po.id,
+                  scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
+              ).save!
+              po.active_component_group = @new_cg
+              ws = get_merge_workflow_status(@new_cg, po)
+              if ws.nil?
+                debugger
+              end
+              raise "Workflow status should not be null..." if ws.nil?
+              if ws.status_name != po.current_location
+                @retitled[t_id][:moved] << po
+              end
+              po.workflow_statuses << ws
+              po.save
             end
-            p.save
+          end
+          if @unchecked.size > 0
+            @unchecked.each do |pid|
+              po = PhysicalObject.find(pid)
+              @retitled[t_id][:moved] << po unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
+              po.workflow_statuses << WorkflowStatus.build_workflow_status(po.storage_location, po) unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
+              po.active_component_group = nil
+              po.save
+            end
           end
         end
       end
@@ -490,10 +504,11 @@ class TitlesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def title_params
     params.require(:title).permit(
-        :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes, :subject, :name_authority,
+        :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
+        :subject, :name_authority, :compilation, :country_of_origin,
         title_creators_attributes: [:id, :name, :role, :_destroy],
         title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
-       title_genres_attributes: [:id, :genre, :_destroy],
+        title_genres_attributes: [:id, :genre, :_destroy],
         title_original_identifiers_attributes: [:id, :identifier, :identifier_type, :_destroy],
         title_publishers_attributes: [:id, :name, :publisher_type, :_destroy],
         title_forms_attributes: [:id, :form, :_destroy],
