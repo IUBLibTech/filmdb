@@ -41,11 +41,11 @@
         <th>AD Strip</th>
         <td><%= @physical_object.ad_strip %></td>
       </tr>
-			<% if !@physical_object.active_component_group&.scan_resolution.blank? %>
+			<% if !@physical_object.current_scan_settings&.scan_resolution.blank? %>
 			<tr>
 				<th>Scan Resolution</th>
 				<td>
-					<%= @physical_object.active_component_group.scan_resolution %>
+					<%= @physical_object.current_scan_settings.scan_resolution %>
 				</td>
 			</tr>
 			<% end %>
