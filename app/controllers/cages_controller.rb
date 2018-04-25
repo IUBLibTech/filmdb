@@ -218,10 +218,10 @@ class CagesController < ApplicationController
 			fourK = 0
 			durationSec = 0
 			pos.each do |p|
-				if p.active_component_group.scan_resolution == '2k'
+				if p.current_scan_settings.scan_resolution == '2k'
 					twoK += 1
 				end
-				if p.active_component_group.scan_resolution == '4k'
+				if p.current_scan_settings.scan_resolution == '4k'
 					fourK += 1
 				end
 				unless p.footage.blank? || p.gauge.blank?
