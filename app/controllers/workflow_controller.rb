@@ -13,7 +13,7 @@ class WorkflowController < ApplicationController
 
 
 	def pull_request
-		@physical_objects = PhysicalObject.joins(:active_component_group).where_current_workflow_status_is(nil, nil, false, WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
+		@physical_objects = PhysicalObject.includes(:active_component_group).where_current_workflow_status_is(nil, nil, false, WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
 		@ingested = []
 		@not_ingested = []
 		@best_copy_alf_count = 0
