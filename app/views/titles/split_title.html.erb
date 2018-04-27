@@ -102,10 +102,13 @@
   // this function is responsible for updating title_map when a physical object is reassigned to another title.
   // The autocomplete text box (wrapped as a JQuery object) is passed to this function.
   function retitlePo(jq) {
+      if (title_map.size > 1) {
+          var x = 237;
+      }
       var newTitleId = jq.attr('title_id');
       var poId = Number(jq.parent().parent().attr('id').substring(3));
       removePoFromMap(poId);
-      var array = title_map.get(newTitleId);
+      var array = title_map.get(Number(newTitleId));
       if (array == null) {
           title_map.set(Number(newTitleId), [Number(poId)]);
       } else {
@@ -118,7 +121,7 @@
   function resetPoAssoc(jq) {
       var poId = Number(jq.parent().parent().attr('id').substring(3));
       removePoFromMap(poId);
-      var array = title_map.get(title_id);
+      var array = title_map.get(Number(title_id));
       array.push(Number(poId));
       array.sort();
   }
