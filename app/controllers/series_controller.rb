@@ -5,7 +5,7 @@ class SeriesController < ApplicationController
   # GET /series
   # GET /series.json
   def index
-    @series = Series.all
+    @series = Series.all.order(:title)
   end
 
   # GET /series/1
@@ -64,6 +64,14 @@ class SeriesController < ApplicationController
       format.html { redirect_to series_index_url, notice: 'Series was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def show_merge_series
+
+  end
+  def ajax_show_series
+    @series = Series.find(params[:id])
+    render partial: 'ajax_show_series'
   end
 
   def new_physical_object
