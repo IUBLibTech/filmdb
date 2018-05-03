@@ -16,7 +16,7 @@ class ServicesController < ActionController::Base
 		bc = params[:bin_barcode]
 		shelf = CageShelf.where(mdpi_barcode: bc.to_i).first
 		if shelf.nil?
-			@success = 'FAIURE'
+			@success = 'FAILURE'
 			@reason = "Could not find cage shelf with MDPI Barcode: '#{bc}'"
 		elsif !shelf.cage.shipped
 			@success = 'FAILURE'
@@ -27,6 +27,7 @@ class ServicesController < ActionController::Base
 					shelf.physical_objects.each do |p|
 						ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
 						p.workflow_statuses << ws
+						p.cage_shelf = nil
 						p.save
 					end
 					if shelf.cage.all_shelves_returned?

@@ -18,10 +18,12 @@
       <th>Color Space</th>
       <th>Return on Reel</th>
       <th>Clean</th>
+      <th>Add to CG</th>
+      <th>Return to Storage</th>
     </tr>
     <% if @title.id == t_id %>
       <tr>
-        <th colspan="8">Remaining Physical Objects</th>
+        <th colspan="10">Remaining Physical Objects</th>
       </tr>
       <% PhysicalObject.where(id: @map[t_id]).each do |p| %>
         <% ss = p.active_scan_settings.nil? ? nil : p.active_scan_settings %>
@@ -41,11 +43,18 @@
               <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
             <% end %>
           </td>
+          <td>
+            <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+              <p class="warning">Shipped Externally</p>
+            <% else %>
+              <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     <% else %>
       <tr>
-        <th colspan="8">Existing Physical Objects</th>
+        <th colspan="10">Existing Physical Objects</th>
       </tr>
       <% title.physical_objects.each do |p| %>
         <% ss = p.active_scan_settings.nil? ? nil : p.active_scan_settings %>
@@ -65,10 +74,17 @@
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
               <% end %>
             </td>
+            <td>
+              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+                <p class="warning">Shipped Externally</p>
+              <% else %>
+                <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
+              <% end %>
+            </td>
           </tr>
       <% end %>
       <tr>
-        <th colspan="8">Retitled Physical Objects</th>
+        <th colspan="10">Retitled Physical Objects</th>
       </tr>
       <% PhysicalObject.where(id: @map[t_id]).each do |p| %>
         <% ss = p.active_scan_settings.nil? ? nil : p.active_scan_settings %>
@@ -86,6 +102,13 @@
                 <p class="warning">Shipped Externally</p>
               <% else %>
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
+              <% end %>
+            </td>
+            <td>
+              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+                <p class="warning">Shipped Externally</p>
+              <% else %>
+                <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
               <% end %>
             </td>
           </tr>

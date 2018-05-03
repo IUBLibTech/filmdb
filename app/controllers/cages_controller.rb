@@ -272,7 +272,7 @@ class CagesController < ApplicationController
 			@physical_object = PhysicalObject.new
 			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{iu_barcode}")
 		elsif !@physical_object.cage_shelf.nil?
-			@physical_object.errors.add(:cage_shelf, "#{IU_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
+			@physical_object.errors.add(:cage_shelf, "#{iu_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
 		else
 			# need to check validity of both barcodes
 			mbc = params[:cage] ? params[:cage][:physical_object_mdpi_barcode] : nil?

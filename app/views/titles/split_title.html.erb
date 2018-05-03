@@ -146,11 +146,22 @@
               title_map: JSON.stringify([...title_map]),
               id: <%= @title.id %>
           },
-          success: function (data) {
-              $('#split_titles_div').html(data)
+          success: function(data) {
+              $('#split_titles_div').html(data);
+              registerCheckboxes();
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: function(jqXHR, textStatus, errorThrown) {
               //window.location.replace(jqXHR.url)
+          }
+      });
+  }
+
+  // after loading the ajax call results of getCgTable we need to register the checkboxes with event listeners so that
+  // we can make them mutually exclusive in their selectivity.
+  function registerCheckboxes() {
+      $('input:checkbox').change(function() {
+          if (this.checked) {
+
           }
       });
   }
