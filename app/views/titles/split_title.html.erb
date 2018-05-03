@@ -79,7 +79,6 @@
       });
       $('#split_titles_form').submit(function(event) {
           event.preventDefault();
-
       });
   });
 
@@ -161,7 +160,12 @@
   function registerCheckboxes() {
       $('input:checkbox').change(function() {
           if (this.checked) {
-
+              var kids = $(this).parent().parent().find('input:checkbox');
+              if (kids[0] == this) {
+                  $(kids[1]).attr('checked', false);
+              } else {
+                  $(kids[0]).attr('checked', false);
+              }
           }
       });
   }
