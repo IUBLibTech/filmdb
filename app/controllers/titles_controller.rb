@@ -320,7 +320,6 @@ class TitlesController < ApplicationController
     # :moved => all PhysicalObjects (including those from the target title) whose location was updated as a result of retitling
     # {title_id => {:retitled => [POs reassigned to title_id], :moved => [POs whose location was changed as a result]}, ...}
     @retitled = {}
-
     Title.transaction do
       @map.keys.each do |t_id|
         @retitled[t_id] = {:retitled => [], :moved => []}
