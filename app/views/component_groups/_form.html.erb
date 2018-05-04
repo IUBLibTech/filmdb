@@ -12,7 +12,7 @@
   <br><br><br><br>
   <div class="actions">
     <div>
-      <b>Group Type</b> <%= f.select :group_type, options_for_select(@component_group_cv[:group_type]) %>
+      <b>Group Type</b> <%= f.select :group_type, options_for_select(@component_group_cv[:group_type],(@component_group.nil? ? '' : @component_group.group_type)) %>
     </div>
     <div>
       <b>Group Summary</b><br>
