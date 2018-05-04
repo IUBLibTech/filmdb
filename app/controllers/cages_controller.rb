@@ -218,10 +218,10 @@ class CagesController < ApplicationController
 			fourK = 0
 			durationSec = 0
 			pos.each do |p|
-				if p.active_component_group.scan_resolution == '2k'
+				if p.current_scan_settings.scan_resolution == '2k'
 					twoK += 1
 				end
-				if p.active_component_group.scan_resolution == '4k'
+				if p.current_scan_settings.scan_resolution == '4k'
 					fourK += 1
 				end
 				unless p.footage.blank? || p.gauge.blank?
@@ -272,7 +272,7 @@ class CagesController < ApplicationController
 			@physical_object = PhysicalObject.new
 			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{iu_barcode}")
 		elsif !@physical_object.cage_shelf.nil?
-			@physical_object.errors.add(:cage_shelf, "#{IU_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
+			@physical_object.errors.add(:cage_shelf, "#{iu_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
 		else
 			# need to check validity of both barcodes
 			mbc = params[:cage] ? params[:cage][:physical_object_mdpi_barcode] : nil?

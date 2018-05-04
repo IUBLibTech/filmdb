@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180423120248) do
+ActiveRecord::Schema.define(version: 20180423115538) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -189,6 +189,13 @@ ActiveRecord::Schema.define(version: 20180423120248) do
   end
 
   add_index "physical_object_titles", ["physical_object_id", "title_id"], name: "index_physical_object_titles_on_physical_object_id_and_title_id", unique: true, using: :btree
+
+  create_table "physical_object_workflow_statuses", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "workflow_status_id", limit: 8
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
   create_table "physical_objects", force: :cascade do |t|
     t.datetime "created_at"
@@ -505,7 +512,6 @@ ActiveRecord::Schema.define(version: 20180423120248) do
     t.text     "subject",            limit: 65535
     t.text     "name_authority",     limit: 65535
     t.text     "compilation",        limit: 65535
-    t.text     "country_of_origin",  limit: 65535
   end
 
   create_table "units", force: :cascade do |t|
