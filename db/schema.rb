@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180423120248) do
+ActiveRecord::Schema.define(version: 20180423115538) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -189,6 +189,13 @@ ActiveRecord::Schema.define(version: 20180423120248) do
   end
 
   add_index "physical_object_titles", ["physical_object_id", "title_id"], name: "index_physical_object_titles_on_physical_object_id_and_title_id", unique: true, using: :btree
+
+  create_table "physical_object_workflow_statuses", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "workflow_status_id", limit: 8
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
   create_table "physical_objects", force: :cascade do |t|
     t.datetime "created_at"
@@ -505,7 +512,6 @@ ActiveRecord::Schema.define(version: 20180423120248) do
     t.text     "subject",            limit: 65535
     t.text     "name_authority",     limit: 65535
     t.text     "compilation",        limit: 65535
-    t.text     "country_of_origin",  limit: 65535
   end
 
   create_table "units", force: :cascade do |t|
@@ -562,17 +568,5 @@ ActiveRecord::Schema.define(version: 20180423120248) do
   end
 
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
-
-  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
-  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
-  execute(<<-TRIGGERSQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
-FOR EACH ROW
-BEGIN
-    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
-        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
-    END IF;
-END
-  TRIGGERSQL
 
 end
