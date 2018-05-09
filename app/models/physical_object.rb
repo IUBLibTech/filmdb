@@ -13,7 +13,6 @@ class PhysicalObject < ActiveRecord::Base
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
 
-
 	belongs_to :current_workflow_status, class_name: 'WorkflowStatus', foreign_key: 'current_workflow_status_id', autosave: true
 
 	has_many :physical_object_old_barcodes
