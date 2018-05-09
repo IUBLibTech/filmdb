@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
+ActiveRecord::Schema.define(version: 20180504131955) do
+=======
 ActiveRecord::Schema.define(version: 20180423115538) do
+>>>>>>> master
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -387,7 +391,10 @@ ActiveRecord::Schema.define(version: 20180423115538) do
     t.text     "generation_notes",                      limit: 65535
     t.string   "catalog_key",                           limit: 255
     t.boolean  "digitized"
+    t.integer  "current_workflow_status_id",            limit: 8
   end
+
+  add_index "physical_objects", ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
 
   create_table "pod_pushes", force: :cascade do |t|
     t.text     "response",   limit: 4294967295
