@@ -12,7 +12,7 @@ class PhysicalObject < ActiveRecord::Base
 	belongs_to :modifier, class_name: "User", foreign_key: "modified_by", autosave: true
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
-	#belongs_to :active_scan_settings, class_name: 'ComponentGroupPhysicalObject', foreign_key: 'active_scan_settings_id', autosave: true
+
 
 	belongs_to :current_workflow_status, class_name: 'WorkflowStatus', foreign_key: 'current_workflow_status_id', autosave: true
 

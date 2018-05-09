@@ -380,7 +380,6 @@ class TitlesController < ApplicationController
           end
         end
       end
-      debugger
     end
     flash[:split] = true
     render 'show'
