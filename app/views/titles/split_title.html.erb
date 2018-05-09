@@ -7,15 +7,24 @@
   <tr>
     <th>IU Barcode</th>
     <th>Reassign to Title</th>
+    <th>Location</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr id="<%= "po_#{p.id}" %>">
     <td><%= p.iu_barcode %></td>
-    <td id="po_<%= p.id %>"><%= text_field_tag "retitled[physical_objects[#{p.id}]]", nil, class: 'title_text', size: 50 %></td>
+    <% if p.current_location == WorkflowStatus::BEST_COPY_MDPI_WELLS || p.current_location == WorkflowStatus::BEST_COPY_ALF %>
+      <td id="po_<%= p.id %>"><%= text_field_tag "retitled[physical_objects[#{p.id}]]", nil, class: 'title_text', size: 50 %></td>
+    <% else %>
+      <td class="warning">Not at Best Copy</td>
+    <% end %>
+    <td><%= p.current_location %></td>
   </tr>
   <% end %>
   </tbody>
 </table>
+<div id="title_sum" class="left _75 ml_10" >
+
+</div>
 <h3>Component Group Creation</h3>
 <div id="split_titles_div">
 
