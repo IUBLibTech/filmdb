@@ -6,7 +6,7 @@ class CreatePhysicalObjectWorkflowStatuses < ActiveRecord::Migration
     count = PhysicalObject.all.size
     PhysicalObject.all.each_with_index do |p, i|
       puts "#{i} of #{count}"
-      p.update_attributes(current_workflow_status_id: p.current_workflow_status.id)
+      p.update_attributes(current_workflow_status_id: p.workflow_statuses.last.id)
     end
   end
 end
