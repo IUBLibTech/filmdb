@@ -81,7 +81,7 @@ class WorkflowStatus < ActiveRecord::Base
 		JUST_INVENTORIED_WELLS => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, IN_WORKFLOW_WELLS, IN_FREEZER, MISSING, MOLD_ABATEMENT],
 		JUST_INVENTORIED_ALF => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, RECEIVED_FROM_STORAGE_STAGING, BEST_COPY_ALF, MISSING]
 	}
-	
+
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
 	def self.build_workflow_status(status_name, physical_object, override=false)
