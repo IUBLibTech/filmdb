@@ -3,6 +3,7 @@ class WorkflowStatus < ActiveRecord::Base
 	belongs_to :component_group
 	belongs_to :user, class_name: 'User', foreign_key: 'created_by'
 
+	after_create :update_physical_object
 
 	WORKFLOW_TYPES = ['Storage', 'In Workflow', 'Shipped', 'Deaccessioned']
 	WORK_LOCATIONS = ['ALF', 'Wells 052']
@@ -77,11 +78,10 @@ class WorkflowStatus < ActiveRecord::Base
 		WELLS_TO_ALF_CONTAINER => [TWO_K_FOUR_K_SHELVES, IN_FREEZER, MISSING],
 		SHIPPED_EXTERNALLY => (PULLABLE_STORAGE + [IN_WORKFLOW_WELLS, MISSING]),
 		DEACCESSIONED => [],
-		JUST_INVENTORIED_WELLS => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, IN_WORKFLOW_WELLS, IN_FREEZER, MISSING],
+		JUST_INVENTORIED_WELLS => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, AWAITING_FREEZER, IN_WORKFLOW_WELLS, IN_FREEZER, MISSING, MOLD_ABATEMENT],
 		JUST_INVENTORIED_ALF => [IN_STORAGE_AWAITING_INGEST, IN_STORAGE_INGESTED, IN_FREEZER, AWAITING_FREEZER, MOLD_ABATEMENT, RECEIVED_FROM_STORAGE_STAGING, BEST_COPY_ALF, MISSING]
 	}
-
-
+	
 	# Constructs the next status that a physical object will be moving to based on status_name. Will (eventually) validate whether the previous_workflow_status
 	# permits movement into status_name
 	def self.build_workflow_status(status_name, physical_object, override=false)
@@ -209,6 +209,10 @@ class WorkflowStatus < ActiveRecord::Base
 	end
 
 	private
+	def update_physical_object
+		PhysicalObject.find(physical_object_id).update_attributes(current_workflow_status_id: id)
+	end
+
 	def self.find_workflow(status_name, po)
 		if po.active_component_group.nil?
 			#clear the MDPI IULMIA workflow when it is no longer in their workflow
@@ -221,7 +225,6 @@ class WorkflowStatus < ActiveRecord::Base
 			po.active_component_group.whose_workflow
 		end
 	end
-
 	def self.which_workflow_type(status_name)
 		STATUS_TYPES_TO_STATUSES.keys.each do |k|
 			if STATUS_TYPES_TO_STATUSES[k].include? status_name
