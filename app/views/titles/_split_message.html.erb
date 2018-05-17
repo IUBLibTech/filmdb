@@ -1,6 +1,6 @@
 <p class="notice">Title Split successful.</p>
 <% if @retitled.keys.size > 0 %>
-  <h4>The Following Physical Objects were reassigned to these titles</h4>
+  <h2>The Following Physical Objects were reassigned to these titles</h2>
   <% @retitled.keys.each do |tid| %>
     <table>
       <tr>
@@ -21,6 +21,7 @@
         <th>New Location</th>
       </tr>
       <% @retitled[tid][:moved].each do |po| %>
+        <% po.reload %>
         <tr>
           <td><%= po.iu_barcode %></td>
           <td><%= po.previous_location %></td>
@@ -28,5 +29,6 @@
         </tr>
       <% end %>
     </table>
+    <br><br><br>
   <% end %>
 <% end %>
