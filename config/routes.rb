@@ -69,11 +69,11 @@ Rails.application.routes.draw do
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'
   post 'series/:id/create_physical_object', to: 'series#create_physical_object', as: 'series_create_physical_object'
-  get '/series/ajax/:id', to: 'series#ajax_summary', as: 'series_ajax'
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
-
-  resources :series_titles
-
+  get '/series/ajax/show/:id', to: 'series#ajax_show_series', as: 'ajax_show_series'
+  get '/series/merge/merge_series', to: 'series#show_merge_series', as: 'show_merge_series'
+  post '/series/merge/merge_selected_series', to: 'series#series_autocomplete_selection_merge', as: 'series_autocomplete_selection_merge'
+  get '/series/merge/series_table_row/:id', to: 'series#ajax_series_merge_table_row', as: 'ajax_series_merge_table_row'
 
 	# services URLs
 	post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
