@@ -1,6 +1,6 @@
 class SeriesController < ApplicationController
   include PhysicalObjectsHelper
-  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :create_physical_object, :ajax_summary]
+  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :ajax_summary]
 
   # GET /series
   # GET /series.json
@@ -67,11 +67,16 @@ class SeriesController < ApplicationController
   end
 
   def show_merge_series
-
   end
+
   def ajax_show_series
     @series = Series.find(params[:id])
     render partial: 'ajax_show_series'
+  end
+
+  def ajax_series_merge_table_row
+    @series = Series.find(params[:id])
+    render partial: 'ajax_series_merge_table_row'
   end
 
   def new_physical_object
@@ -82,7 +87,12 @@ class SeriesController < ApplicationController
 
   def autocomplete_series
     if params[:term]
-      json = Series.where("title like ?", "%#{params[:term]}%").select(:id, :title, :summary).to_json
+      if params[:exclude]
+        @series = Series.where("title like ? AND series.id not in (?)", "%#{params[:term]}%", params[:exclude]).select('id, title')
+      else
+        @series = Series.where("title like ? ", "%#{params[:term]}%").select('id, title, summary')
+      end
+      json = @series.to_json
       json.gsub! "\"title\":", "\"label\":"
       json.gsub! "\"id\":", "\"value\":"
       render json: json
@@ -91,8 +101,35 @@ class SeriesController < ApplicationController
     end
   end
 
-  def ajax_summary
-    render partial: 'ajax_show'
+  def series_auto_complete_selection_merge
+    @master = Series.find(params[:master_series_id])
+    @mergees = Series.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
+    begin
+      Series.transaction do
+        @mergees.each do |s|
+          s.titles.each do |t|
+            t.update_attributes!(series_id: @master)
+          end
+          if @master.production_number != m.production_number
+            @master.production_number += " | #{m.production_number}"
+          end
+          if @master.date != m.date
+            @master.date += " | #{m.date}"
+          end
+          if @master.total_episodes != m.total_episode
+            @master.total_episodes += " | #{m.total_episodes}"
+          end
+          if @master.summary != m.summary
+            @master.summary += " | #{m.summary}"
+          end
+        end
+        if @master.changed?
+          @master.save!
+        end
+      end
+    rescue => ActiveRecord::RecordNotFound => e
+      flash[:warning] = "There merge was"
+    end
   end
 
   private
