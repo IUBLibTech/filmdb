@@ -272,8 +272,7 @@ class TitlesController < ApplicationController
           checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           @unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           if checked.size > 0
-            sum = params[:component_group][:group_summary].blank? ? "This Component Group was created from merging titles." : "#{params[:component_group][:group_summary]} | \nThis Component Group was created from merging titles."
-            @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: sum)
+            @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: params[:component_group][:group_summary])
             @component_group.save
             checked.each do |poid|
               po = PhysicalObject.find(poid)
@@ -344,7 +343,7 @@ class TitlesController < ApplicationController
           keys = params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes].keys
           # grabs all physical object ids that were selected for inclusion in the component group
           @checked = keys.select{|k| !params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
-          @unchecked = keys.select{|k| params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          @return = keys.select{|k| !params[:titles][t_id.to_s][:component_group][:component_group_physical_objects_attributes][k][:return].nil?}
           if @checked.size > 0
             @new_cg = ComponentGroup.new(title_id: t_id.to_s, group_type: params[:titles][t_id.to_s][:component_group][:group_type], group_summary: params[:titles][t_id.to_s][:component_group][:group_summary])
             @new_cg.save
@@ -369,14 +368,12 @@ class TitlesController < ApplicationController
               po.save
             end
           end
-          if @unchecked.size > 0
-            @unchecked.each do |pid|
-              po = PhysicalObject.find(pid)
-              @retitled[t_id][:moved] << po unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
-              po.workflow_statuses << WorkflowStatus.build_workflow_status(po.storage_location, po) unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
-              po.active_component_group = nil
-              po.save
-            end
+          @return.each do |pid|
+            po = PhysicalObject.find(pid)
+            @retitled[t_id][:moved] << po unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
+            po.workflow_statuses << WorkflowStatus.build_workflow_status(po.storage_location, po) unless (po.current_workflow_status.is_storage_status? || po.current_location == WorkflowStatus::SHIPPED_EXTERNALLY)
+            po.active_component_group = nil
+            po.save
           end
         end
       end
@@ -449,9 +446,9 @@ class TitlesController < ApplicationController
       # there to there isn't normally allowed - it only happens during title merge/split
       que = po.current_workflow_status.is_storage_status?
       if component_group.group_type == ComponentGroup::BEST_COPY_ALF
-        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_ALF, po, true)
       else
-        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+        ws = WorkflowStatus.build_workflow_status(que ? WorkflowStatus::QUEUED_FOR_PULL_REQUEST : WorkflowStatus::BEST_COPY_MDPI_WELLS, po, true)
       end
     else
       flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
