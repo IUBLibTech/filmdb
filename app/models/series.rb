@@ -44,5 +44,4 @@ class Series < ActiveRecord::Base
     res.first.nil? ? 0 : res.first[0]
   }
 
-
 end
