@@ -13,6 +13,7 @@ class PhysicalObject < ActiveRecord::Base
   belongs_to :cage_shelf
 	belongs_to :active_component_group, class_name: 'ComponentGroup', foreign_key: 'component_group_id', autosave: true
 
+	belongs_to :current_workflow_status, class_name: 'WorkflowStatus', foreign_key: 'current_workflow_status_id', autosave: true
 
 	has_many :physical_object_old_barcodes
   has_many :component_group_physical_objects, dependent: :delete_all
@@ -216,9 +217,9 @@ class PhysicalObject < ActiveRecord::Base
 		MEDIA_TYPE_MEDIUMS
 	end
 
-	def current_workflow_status
-		workflow_statuses.last
-	end
+	# def current_workflow_status
+	# 	workflow_statuses.last
+	# end
 
 	def current_location
 		current_workflow_status.status_name
@@ -440,7 +441,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.titleId active_component_group.title.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
-			xml.redigitize digitized
+			xml.redigitize (digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
 			xml.iucatTitleControlNumber title_control_number
 			xml.catalogKey catalog_key
 			xml.format medium
