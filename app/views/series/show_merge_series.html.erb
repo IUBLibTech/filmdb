@@ -16,8 +16,8 @@
   <%= hidden_field_tag :master_series_id %>
   <%= hidden_field_tag :mergees %>
   <div id="selected_titles" class="clear">
-    <h4 class="m_top_10px">Titles To Merge</h4>
-    <p class="warning">Click to select the master Title record - all other titles will be merged into this record</p>
+    <h4 class="m_top_10px">Series To Merge</h4>
+    <p class="warning">Click to select the master Series record - all other Series will be merged into this record</p>
     <table id="series_table">
       <tbody>
         <tr>
@@ -86,21 +86,17 @@
               swal("AJAX Error", jqXHR +"<br><br>"+textStatus+"<br><br>"+errorThrown);
           },
           success: function(result) {
-              if (!merge_all && result === "Active") {
-                  swal("Cannot Merge", "The title you selected is in active workflow and cannot be merged here. Please use the 'Merge Titles' link instead.")
-              } else {
-                  $('.title_merge_remove').unbind('click.title_merge_remove_title');
-                  $('#series_table').append(result);
-                  $('.title_merge_remove').bind('click.title_merge_remove_title', function(event) {
-                      var id = $(this).parent().parent().attr('id');
-                      $(this).parent().parent().remove();
-                      if (id == $('#master_title_id').attr(('value'))) {
-                          $('#master_title_id').attr('value', null);
-                      }
-                      initSeriesSelect();
-                  });
-                  initSeriesSelect();
-              }
+            $('.series_merge_remove').unbind('click.series_merge_remove_series');
+            $('#series_table').append(result);
+            $('.series_merge_remove').bind('click.series_merge_remove_series', function(event) {
+                var id = $(this).parent().parent().attr('id');
+                $(this).parent().parent().remove();
+                if (id == $('#master_series_id').attr(('value'))) {
+                    $('#master_series_id').attr('value', null);
+                }
+                initSeriesSelect();
+            });
+            initSeriesSelect();
           }
       });
   }
@@ -112,11 +108,11 @@
       $('#series_table > tbody > tr').off("click.title_select").on('click.title_select', function() {
         if ($(this).hasClass('master_selection')) {
             $(this).removeClass('master_selection');
-            $('#master_title_id').attr('value', null)
+            $('#master_series_id').attr('value', null)
         } else {
             $('.master_selection').removeClass('master_selection');
             $(this).addClass('master_selection');
-            $('#master_title_id').attr('value', $(this).attr('id'))
+            $('#master_series_id').attr('value', $(this).attr('id'))
         }
       setHiddenSeriesIds();
       });
@@ -139,9 +135,8 @@
       event.preventDefault();
       var m_id = $('#master_series_id').attr('value');
       if (merge_all) {
-          var pos = getPoIds();
           if (m_id == null || m_id.length == 0) {
-              swal('Select a Master Title', 'You must select a master title to merge. Click the row of the title you wish to be the master record. All metadata from other titles will be merged into this record' )
+              swal('Select a Master Series', 'You must select a master Series to merge. Click the row of the Series you wish to be the master record. All metadata from other Series will be merged into this record' )
           } else {
               document.getElementById('series_autocomplete_select_form').submit();
           }

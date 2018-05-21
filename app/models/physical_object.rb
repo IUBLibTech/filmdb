@@ -441,7 +441,7 @@ class PhysicalObject < ActiveRecord::Base
 			xml.titleId active_component_group.title.id
 			xml.mdpiBarcode mdpi_barcode
 			xml.iucatBarcode iu_barcode
-			xml.redigitize digitized
+			xml.redigitize (digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
 			xml.iucatTitleControlNumber title_control_number
 			xml.catalogKey catalog_key
 			xml.format medium

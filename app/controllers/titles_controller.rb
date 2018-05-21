@@ -272,8 +272,7 @@ class TitlesController < ApplicationController
           checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           @unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           if checked.size > 0
-            sum = params[:component_group][:group_summary].blank? ? "This Component Group was created from merging titles." : "#{params[:component_group][:group_summary]} | \nThis Component Group was created from merging titles."
-            @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: sum)
+            @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: params[:component_group][:group_summary])
             @component_group.save
             checked.each do |poid|
               po = PhysicalObject.find(poid)

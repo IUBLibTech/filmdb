@@ -72,7 +72,7 @@ Rails.application.routes.draw do
   get '/autocomplete_series/', to: 'series#autocomplete_series', as: 'autocomplete_series'
   get '/series/ajax/show/:id', to: 'series#ajax_show_series', as: 'ajax_show_series'
   get '/series/merge/merge_series', to: 'series#show_merge_series', as: 'show_merge_series'
-  post '/series/merge/merge_selected_series', to: 'series#series_autocomplete_selection_merge', as: 'series_autocomplete_selection_merge'
+  post '/series/merge/merge_selected_series', to: 'series#series_auto_complete_selection_merge', as: 'series_autocomplete_selection_merge'
   get '/series/merge/series_table_row/:id', to: 'series#ajax_series_merge_table_row', as: 'ajax_series_merge_table_row'
 
 	# services URLs

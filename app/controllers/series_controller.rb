@@ -110,26 +110,26 @@ class SeriesController < ApplicationController
           s.titles.each do |t|
             t.update_attributes!(series_id: @master)
           end
-          if @master.production_number != m.production_number
-            @master.production_number += " | #{m.production_number}"
+          if !s.production_number.blank? && @master.production_number != s.production_number
+            @master.production_number += " | #{s.production_number}"
           end
-          if @master.date != m.date
-            @master.date += " | #{m.date}"
+          if !s.date.blank? && @master.date != s.date
+            @master.date += " | #{s.date}"
           end
-          if @master.total_episodes != m.total_episode
-            @master.total_episodes += " | #{m.total_episodes}"
+          if !s.summary.blank? && @master.summary != s.summary
+            @master.summary += " | #{s.summary}"
           end
-          if @master.summary != m.summary
-            @master.summary += " | #{m.summary}"
-          end
+          s.destroy
         end
         if @master.changed?
           @master.save!
         end
       end
-    rescue => ActiveRecord::RecordNotFound => e
-      flash[:warning] = "There merge was"
+      flash[:notice] = "#{@mergees.size} other Series #{@mergees.size > 1 ? "were" : "was"} merged into this Series."
+    rescue ActiveRecord::RecordNotFound => e
+      flash[:warning] = "An error occurred, the merge was unsuccessful. No changes have been made to the database."
     end
+    redirect_to series_path(@master)
   end
 
   private
