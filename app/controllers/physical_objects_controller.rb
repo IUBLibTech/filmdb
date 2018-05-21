@@ -12,7 +12,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-		@statuses = WorkflowStatus::ALL_STATUSES.collect{ |t| [t, t]}
+		@statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
       @count = PhysicalObject.count_where_current_workflow_status_is(params[:digitized], params[:status])
       if @count > PhysicalObject.per_page
