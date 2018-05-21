@@ -37,14 +37,14 @@
           <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]], (ss.return_on_reel if ss)) %></td>
           <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, (ss.clean if ss)) %></td>
           <td>
-            <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+            <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
               <p class="warning">Shipped Externally</p>
             <% else %>
               <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
             <% end %>
           </td>
           <td>
-            <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+            <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
               <p class="warning">Shipped Externally</p>
             <% else %>
               <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
@@ -68,14 +68,14 @@
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]], (ss.return_on_reel if ss))%></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, (ss.clean if ss)) %></td>
             <td>
-              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+              <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
                 <p class="warning">Shipped Externally</p>
               <% else %>
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
               <% end %>
             </td>
             <td>
-              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+              <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
                 <p class="warning">Shipped Externally</p>
               <% else %>
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
@@ -98,14 +98,14 @@
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]], (ss.return_on_reel if ss)) %></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, (ss.clean if ss)) %></td>
             <td>
-              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+              <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
                 <p class="warning">Shipped Externally</p>
               <% else %>
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
               <% end %>
             </td>
             <td>
-              <% if p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY %>
+              <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
                 <p class="warning">Shipped Externally</p>
               <% else %>
                 <%= check_box_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
