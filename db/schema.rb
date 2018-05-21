@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180504131955) do
+ActiveRecord::Schema.define(version: 20180521161913) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 20180504131955) do
     t.datetime "updated_at",                                 null: false
     t.boolean  "returned",                   default: false
   end
+
+  add_index "cage_shelves", ["mdpi_barcode"], name: "index_cage_shelves_on_mdpi_barcode", unique: true, using: :btree
 
   create_table "cages", force: :cascade do |t|
     t.string   "identifier",      limit: 255
@@ -166,6 +168,8 @@ ActiveRecord::Schema.define(version: 20180504131955) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "physical_object_old_barcodes", ["iu_barcode"], name: "index_physical_object_old_barcodes_on_iu_barcode", unique: true, using: :btree
 
   create_table "physical_object_original_identifiers", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -384,6 +388,7 @@ ActiveRecord::Schema.define(version: 20180504131955) do
   end
 
   add_index "physical_objects", ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
+  add_index "physical_objects", ["iu_barcode", "mdpi_barcode"], name: "index_physical_objects_on_iu_barcode_and_mdpi_barcode", unique: true, using: :btree
 
   create_table "pod_pushes", force: :cascade do |t|
     t.text     "response",   limit: 4294967295
