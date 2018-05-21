@@ -23,6 +23,8 @@ config/database.yml
 # files from Passenger
 passenger.*
 
+db/schema.rb
+
 # settings contains the service credentials for push/pull pod/filmdb accounts, so don't include
 config/settings/development.yml
 config/settings/test.yml
