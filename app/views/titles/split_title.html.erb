@@ -86,8 +86,15 @@
             getCgTable();
         }
       });
-      $('#split_titles_form').submit(function(event) {
+      $('#split_title_form').submit(function(event) {
           event.preventDefault();
+          safe = allChecked();
+          if (safe) {
+              document.getElementById('split_title_form').submit();
+          } else {
+              swal("Cannot Process Request", "You must explicitly select whether each Physical Object should be added to the Component Group, returned to storage, or left in workflow.");
+          }
+          return false;
       });
   });
 
@@ -101,6 +108,17 @@
               $('#title_sum').html(result).show();
           }
       })
+  }
+
+  function allChecked() {
+      var rv = true;
+    $('.po_row').each(function() {
+        kids = $(this).find('input:checked');
+        if (kids.size() === 0) {
+            return rv = false;
+        }
+    });
+    return rv;
   }
 
   function toggleTitleSum() {
@@ -172,8 +190,13 @@
               var kids = $(this).parent().parent().find('input:checkbox');
               if (kids[0] == this) {
                   $(kids[1]).attr('checked', false);
+                  $(kids[2]).attr('checked', false);
+              } else if (kids[1] == this) {
+                  $(kids[0]).attr('checked', false);
+                  $(kids[2]).attr('checked', false);
               } else {
                   $(kids[0]).attr('checked', false);
+                  $(kids[1]).attr('checked', false);
               }
           }
       });

@@ -82,8 +82,10 @@
           </tr>
         </table>
     <% end %>
+  <% end %>
   </div>
-	  <div class="left" style="width: 25%; margin-bottom: 10px">
+  <% if !@cage.all_shelves_returned? %>
+	  <div class="left" style="width: 25%; margin: 0 0 10px 15px">
 		  <table>
 			  <tr>
 				  <th>Physical Object Count</th>
@@ -111,7 +113,7 @@
 			  </tr>
 		  </table>
 	  </div>
-  <% end %>
+<% end %>
   <div id="shelf_content">
     <p><i>Click a shelf on the left to see its contents, or add physical objects.</i></p>
   </div>

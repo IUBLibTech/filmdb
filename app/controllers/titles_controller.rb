@@ -359,7 +359,7 @@ class TitlesController < ApplicationController
                   scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
               ).save!
               po.active_component_group = @new_cg
-              ws = get_merge_workflow_status(@new_cg, po)
+              ws = get_split_workflow_status(@new_cg, po)
               raise "Workflow status should not be null..." if ws.nil?
               if ws.status_name != po.current_location
                 @retitled[t_id][:moved] << po
@@ -433,6 +433,48 @@ class TitlesController < ApplicationController
 
 
   private
+  def get_split_workflow_status(component_group, po)
+    cl = po.current_location
+    ws = nil
+    if component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
+      ws = WorkflowStatus.build_workflow_status(
+          cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po
+      ) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+    elsif component_group.group_type == ComponentGroup::REFORMATTING_MDPI
+      raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
+    elsif (component_group.group_type == ComponentGroup::BEST_COPY_ALF || component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
+      # need to force these workflow location changes because some items might be at best already, and going from
+      # there to there isn't normally allowed - it only happens during title merge/split
+      loc = next_bc_loc(component_group, po)
+      if component_group.group_type == ComponentGroup::BEST_COPY_ALF
+        ws = WorkflowStatus.build_workflow_status(loc, po, true)
+      else
+        ws = WorkflowStatus.build_workflow_status(loc, po, true)
+      end
+    else
+      flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
+      raise "Cannot add to component group..."
+    end
+    ws
+  end
+
+  def next_bc_loc(component_group, po)
+    if po.current_workflow_status.is_storage_status?
+      WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+    elsif po.current_location == WorkflowStatus::QUEUED_FOR_PULL_REQUEST || po.current_location == WorkflowStatus::PULL_REQUESTED
+      po.current_location
+    elsif po.current_workflow_status.in_workflow?
+      if component_group.group_type == ComponentGroup::BEST_COPY_ALF
+        WorkflowStatus::BEST_COPY_ALF
+      elsif component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
+        WorkflowStatus::BEST_COPY_MDPI_WELLS
+      else
+        raise "Cannot add #{po.iu_barcode} to component group. It's current location is: #{po.current_location}"
+      end
+    else
+      raise "Cannot add #{po.iu_barcode} to component group. It's current location is: #{po.current_location}"
+    end
+  end
 
   def get_merge_workflow_status(component_group, po)
     cl = po.current_location
