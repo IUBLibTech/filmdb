@@ -13,13 +13,15 @@ class WorkflowController < ApplicationController
 
 
 	def pull_request
-		@physical_objects = PhysicalObject.joins(:active_component_group).where_current_workflow_status_is(nil, nil, false, WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
+		#PhysicalObject.includes(:titles).joins(:active_component_group).where_current_workflow_status_is(nil, nil, false, WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
+
+		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::QUEUED_FOR_PULL_REQUEST}'")
 		@ingested = []
 		@not_ingested = []
 		@best_copy_alf_count = 0
 		@best_copy_wells_count = 0
 		@physical_objects.each do |p|
-			if p.storage_location == WorkflowStatus::IN_STORAGE_INGESTED
+			if p.current_workflow_status.status_name == WorkflowStatus::IN_STORAGE_INGESTED
 				@ingested << p
 			else
 				@not_ingested << p
@@ -31,6 +33,7 @@ class WorkflowController < ApplicationController
 			end
 		end
 	end
+
 	def process_pull_requested
 		ids = params[:ids]
 		if ids.blank?
@@ -342,7 +345,8 @@ class WorkflowController < ApplicationController
 	end
 
 	def issues_shelf
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::ISSUES_SHELF)
+		#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::ISSUES_SHELF)
+		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::ISSUES_SHELF}'")
 	end
 
 	def ajax_issues_shelf_barcode
