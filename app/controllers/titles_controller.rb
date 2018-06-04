@@ -10,15 +10,15 @@ class TitlesController < ApplicationController
   def search
 	  if params[:title_text]
 		  # find out whether or not to do pagination
-		  @count = Title.title_search_count(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+		  @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 		                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
 		  if @count > Title.per_page
 			  @paginate = true
 			  @page = (params[:page] ? params[:page].to_i : 1)
-			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, (@page - 1) * Title.per_page, Title.per_page)
 		  else
-			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
 		  end
 	  end
@@ -270,13 +270,13 @@ class TitlesController < ApplicationController
           # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
           # One must manually check the presence of the attribute - HTML forms do no post unchecked checkboxes so if it's present, it was checked
           checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
-          @unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          @return = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:return].nil?}
           if checked.size > 0
             @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: params[:component_group][:group_summary])
             @component_group.save
             checked.each do |poid|
               po = PhysicalObject.find(poid)
-              ws = get_merge_workflow_status(@component_group, po)
+              ws = get_split_workflow_status(@component_group, po)
               settings = params[:component_group][:component_group_physical_objects_attributes][poid]
               po.workflow_statuses << ws unless ws.nil?
               @component_group.physical_objects << po
@@ -285,7 +285,7 @@ class TitlesController < ApplicationController
               po.save
               po.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
             end
-            @unchecked.each do |poid|
+            @return.each do |poid|
               po = PhysicalObject.find(poid)
               if po.current_workflow_status.in_workflow?
                 ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
@@ -359,7 +359,7 @@ class TitlesController < ApplicationController
                   scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
               ).save!
               po.active_component_group = @new_cg
-              ws = get_merge_workflow_status(@new_cg, po)
+              ws = get_split_workflow_status(@new_cg, po)
               raise "Workflow status should not be null..." if ws.nil?
               if ws.status_name != po.current_location
                 @retitled[t_id][:moved] << po
@@ -433,6 +433,48 @@ class TitlesController < ApplicationController
 
 
   private
+  def get_split_workflow_status(component_group, po)
+    cl = po.current_location
+    ws = nil
+    if component_group.group_type == ComponentGroup::REFORMATTING_MDPI && (cl == WorkflowStatus::BEST_COPY_MDPI_WELLS || cl == WorkflowStatus::BEST_COPY_ALF)
+      ws = WorkflowStatus.build_workflow_status(
+          cl == WorkflowStatus::BEST_COPY_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER, po
+      ) unless cl == WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+    elsif component_group.group_type == ComponentGroup::REFORMATTING_MDPI
+      raise ManualRollBackError.new("The merge failed: #{po.iu_barcode}'s current location is #{cl}. It cannot be added to a Reformatting (MDPI) component group.")
+    elsif (component_group.group_type == ComponentGroup::BEST_COPY_ALF || component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS) && (po.current_workflow_status.in_workflow? || po.current_workflow_status.is_storage_status?)
+      # need to force these workflow location changes because some items might be at best already, and going from
+      # there to there isn't normally allowed - it only happens during title merge/split
+      loc = next_bc_loc(component_group, po)
+      if component_group.group_type == ComponentGroup::BEST_COPY_ALF
+        ws = WorkflowStatus.build_workflow_status(loc, po, true)
+      else
+        ws = WorkflowStatus.build_workflow_status(loc, po, true)
+      end
+    else
+      flash.now[:warning] = "Cannot add #{po.iu_barcode} to a #{@component_group.group_type} Component Group. It is currently #{po.current_location}"
+      raise "Cannot add to component group..."
+    end
+    ws
+  end
+
+  def next_bc_loc(component_group, po)
+    if po.current_workflow_status.is_storage_status?
+      WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+    elsif po.current_location == WorkflowStatus::QUEUED_FOR_PULL_REQUEST || po.current_location == WorkflowStatus::PULL_REQUESTED
+      po.current_location
+    elsif po.current_workflow_status.in_workflow?
+      if component_group.group_type == ComponentGroup::BEST_COPY_ALF
+        WorkflowStatus::BEST_COPY_ALF
+      elsif component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
+        WorkflowStatus::BEST_COPY_MDPI_WELLS
+      else
+        raise "Cannot add #{po.iu_barcode} to component group. It's current location is: #{po.current_location}"
+      end
+    else
+      raise "Cannot add #{po.iu_barcode} to component group. It's current location is: #{po.current_location}"
+    end
+  end
 
   def get_merge_workflow_status(component_group, po)
     cl = po.current_location

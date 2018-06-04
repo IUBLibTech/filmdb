@@ -48,7 +48,7 @@
 	      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
 	      <li><%= link_to 'Mark Item Found', show_mark_found_url %></li>
 	    <% end %>
-	    <% if policy(PhysicalObject).update_location? %>
+	    <% if policy(User).can_edit_users? %>
 		    <br>
 		    <li><%= link_to 'Change Location', update_location_url %></li>
 	    <% end %>
@@ -76,13 +76,18 @@
     <ul class="nav">
       <li><%= link_to "Cage Shelves", cage_shelves_path %></li>
       <li><%= link_to "Collections", collections_path %></li>
+      <% if policy(User).can_add_cv? %>
+        <li><%= link_to "Controlled Cocabulary", controlled_vocabularies_path %></li>
+      <% end %>
       <li><%= link_to "Physical Objects", physical_objects_path %></li>
       <li><%= link_to "Series", series_index_path %></li>
       <li><%= link_to "Spreadsheets", spreadsheets_path %></li>
 	    <li><%= link_to "Stats", stats_index_path %></li>
       <li><%= link_to "Titles", titles_index_path %></li>
       <li><%= link_to "Units", units_path %></li>
-      <li><%= link_to "Users", users_path %></li>
+      <% if policy(User).can_edit_users? %>
+        <li><%= link_to "Users", users_path %></li>
+      <% end %>
 	    <li><%= link_to 'View Pull Requests', pull_requests_path %></li>
 	    <li><%= link_to "Workflow Statuses", workflow_statuses_path %></li>
       <li><%= link_to "Digitization Staging (CSV)", "/workflow/digitization_staging_list.csv" %></li>

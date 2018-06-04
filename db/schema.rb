@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521161913) do
+ActiveRecord::Schema.define(version: 20180530193042) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -542,6 +542,8 @@ ActiveRecord::Schema.define(version: 20180521161913) do
     t.string   "worksite_location",                   limit: 255
     t.boolean  "works_in_both_locations",                         default: false
     t.boolean  "can_update_physical_object_location",             default: false
+    t.boolean  "can_edit_users",                                  default: false
+    t.boolean  "can_add_cv",                                      default: false
   end
 
   create_table "value_conditions", force: :cascade do |t|
@@ -574,7 +576,7 @@ ActiveRecord::Schema.define(version: 20180521161913) do
   # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
   # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
   execute(<<-TRIGGERSQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
+CREATE DEFINER = 'iulmia_inv_test'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
 FOR EACH ROW
 BEGIN
     IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
