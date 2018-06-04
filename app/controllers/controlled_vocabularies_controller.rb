@@ -4,7 +4,7 @@ class ControlledVocabulariesController < ApplicationController
   # GET /controlled_vocabularies
   # GET /controlled_vocabularies.json
   def index
-    @controlled_vocabularies = ControlledVocabulary.all
+    @cv = ControlledVocabulary.new
   end
 
   # GET /controlled_vocabularies/1

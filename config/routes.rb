@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
 
+  get '/ajax/title_date/type/', to: 'ajax#title_date_type', as: 'ajax_title_date_type'
+  get '/ajax/title_genre/genre/', to: 'ajax#title_genre', as: 'ajax_title_genre'
+  get '/ajax/title_form/form', to: 'ajax#title_form', as: 'ajax_title_form'
+  get '/ajax/title_creator/role', to: 'ajax#title_creator_role', as: 'ajax_title_creator_role'
+  get '/ajax/title_publisher/role', to: 'ajax#title_publisher_role', as: 'ajax_publisher_role'
+  get '/ajax/title_original_identifier/type', to: 'ajax#title_original_idientifer', as: 'ajax_title_original_identifier'
   resources :cages
 	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
 	post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'

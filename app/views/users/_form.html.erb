@@ -51,10 +51,20 @@
 		  <th>Can Update Physical Object Location?</th>
 	    <td><%= f.check_box :can_update_physical_object_location %></td>
 	  </tr>
+    <tr>
+      <th>Can Edit Users</th>
+      <td>
+        <%= f.check_box :can_edit_users %>
+      </td>
+    </tr>
+    <tr>
+      <th>Can Add Controlled Vocabulary</th>
+      <td><%= f.check_box :can_add_cv %></td>
+    </tr>
 	  <tr>
 		  <th>Worksite</th>
 		  <td>
-			  <%= f.select :worksite_location, options_for_select(WorkflowStatus::WORK_LOCATIONS.collect{ |l| [l,l]}) %>
+			  <%= f.select :worksite_location, options_for_select(WorkflowStatus::WORK_LOCATIONS.collect{ |l| [l,l]}, User.current_user_object.worksite_location) %>
 		  </td>
 	  </tr>
 	  <tr>

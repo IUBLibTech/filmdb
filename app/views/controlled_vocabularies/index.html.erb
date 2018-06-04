@@ -1,22 +1,90 @@
 <h1>Listing Controlled Vocabularies</h1>
-<table>
+<%= form_for @cv do |f| %>
+<table class="left _50">
   <thead>
     <tr>
-      <th colspan="3"></th>
+      <th>Select Title Attribute</th>
+      <td colspan="2">
+        <%= f.select :model_attribute, options_for_select(ControlledVocabulary.editable_title_cv.collect{|t| [ControlledVocabulary.human_attribute_name(t),t]}, 'Date') %>
+      </td>
+    </tr>
+    <tr>
+      <th>Create New Term</th>
+      <td colspan="2">
+        <%= f.text_field :value %>
+      </td>
+    </tr>
+    <tr>
+      <th></th>
+      <td colspan="2">
+        <%= f.submit "Create Term", id: 'createTermButton' %>
+      </td>
     </tr>
   </thead>
-
-  <tbody>
-    <% @controlled_vocabularies.each do |controlled_vocabulary| %>
-      <tr>
-        <td><%= link_to 'Show', controlled_vocabulary %></td>
-        <td><%= link_to 'Edit', edit_controlled_vocabulary_path(controlled_vocabulary) %></td>
-        <td><%= link_to 'Destroy', controlled_vocabulary, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
 </table>
+<div id="vocab_list" class="left _45 ml_10">
+  <h4>Existing Terms</h4>
+  <div id="list_content"></div>
+</div>
+<% end %>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      $('#new_controlled_vocabulary').submit(function(e) {
+          e.preventDefault();
+          return false;
+      });
+      $('#controlled_vocabulary_value').bind("input", function(event) {
+          if (event.target.value.length === 0) {
+              $('#list_content').html("");
+              return;
+          }
+          var val = event.target.value;
+          var type = $('#controlled_vocabulary_model_attribute option:selected')[0].text;
+          var url;
+          switch(type) {
+              case 'Date':
+                  url = "<%= ajax_title_date_type_path %>";
+                  break;
+              case 'Form':
+                  url = "<%= ajax_title_form_path %>";
+                  break;
+              case 'Genre':
+                  url = "<%= ajax_title_genre_path %>";
+                  break;
+              case 'Creator Role':
+                  url = "<%= ajax_title_creator_role_path %>";
+                  break;
+              case 'Original Identifier':
+                  url = "<%= ajax_title_original_identifier_path %>";
+                  break;
+              case 'Publisher Role':
+                  url = "<%= ajax_publisher_role_path %>";
+                  break;
+              default:
+                  swal("Error", "Cannot retrieve controlled vocabulary for "+type)
+          }
+          $.ajax({
+              url: url,
+              dataType: "json",
+              data: {
+                  term: val
+              },
+              success: function(data) {
+                  $('#list_content').html("");
+                  var ul = $('<ul>').addClass('vocabList');
+                  $.each(data, function(i) {
+                     var li = $('<li>').text(data[i]);
+                     ul.append(li);
+                  });
+                  $('#list_content').html(ul);
+                  var disable = $.map(data, function(n, i){ return n.toLowerCase(); }).indexOf(val.toLowerCase()) !== -1;
+                  $('#createTermButton').prop('disabled', disable)
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  window.location.replace(jqXHR.url);
+              }
+          })
+      });
+  });
 
-<br>
-
-<%= link_to 'New Controlled vocabulary', new_controlled_vocabulary_path %>
+</script>
