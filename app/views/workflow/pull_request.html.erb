@@ -76,7 +76,7 @@
 			<td><%=  p.iu_barcode %></td>
 			<td><%= p.can_size %></td>
 			<td><%= p.gauge %></td>
-			<td><%=  p.storage_location %></td>
+			<td><%=  p.current_location %></td>
 			<td><%= p.active_component_group&.group_type %></td>
 			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
 		</tr>
