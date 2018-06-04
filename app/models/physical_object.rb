@@ -2,8 +2,6 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
-	after_create :where
-
 	belongs_to :title
 	belongs_to :spreadhsheet
 	belongs_to :collection, autosave: true
@@ -651,8 +649,5 @@ class PhysicalObject < ActiveRecord::Base
 			end
 		end
 	end
-	private
-	def where
-		puts "I was just created!"
-	end
+
 end
