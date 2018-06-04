@@ -15,7 +15,7 @@ class WorkflowController < ApplicationController
 	def pull_request
 		#PhysicalObject.includes(:titles).joins(:active_component_group).where_current_workflow_status_is(nil, nil, false, WorkflowStatus::QUEUED_FOR_PULL_REQUEST)
 
-		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::QUEUED_FOR_PULL_REQUEST}'")
+		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::QUEUED_FOR_PULL_REQUEST}'").sort_by{ |p| p.titles_text}
 		@ingested = []
 		@not_ingested = []
 		@best_copy_alf_count = 0
@@ -346,7 +346,7 @@ class WorkflowController < ApplicationController
 
 	def issues_shelf
 		#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::ISSUES_SHELF)
-		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::ISSUES_SHELF}'")
+		@physical_objects = PhysicalObject.includes([:titles, :active_component_group, :current_workflow_status]).joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus}")
 	end
 
 	def ajax_issues_shelf_barcode
