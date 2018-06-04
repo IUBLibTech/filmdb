@@ -211,11 +211,7 @@ class WorkflowStatus < ActiveRecord::Base
 
 	private
 	def update_physical_object
-		po = PhysicalObject.find(physical_object_id)
-		old = po.current_location
-		PhysicalObject.transaction do
-			po.update_attributes!(current_workflow_status_id: id);
-		end
+		physical_object.update_attributes!(current_workflow_status_id: id);
 	end
 
 	def self.find_workflow(status_name, po)

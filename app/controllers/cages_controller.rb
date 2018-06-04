@@ -218,11 +218,13 @@ class CagesController < ApplicationController
 			fourK = 0
 			durationSec = 0
 			pos.each do |p|
-				if p.current_scan_settings.scan_resolution == '2k'
-					twoK += 1
-				end
-				if p.current_scan_settings.scan_resolution == '4k'
-					fourK += 1
+				if !p.current_scan_settings.nil?
+					if p.current_scan_settings.scan_resolution == '2k'
+						twoK += 1
+					end
+					if p.current_scan_settings.scan_resolution == '4k'
+						fourK += 1
+					end
 				end
 				unless p.footage.blank? || p.gauge.blank?
 					durationSec += ((PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24)

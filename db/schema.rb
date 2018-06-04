@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521161913) do
+ActiveRecord::Schema.define(version: 20180530193042) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -542,6 +542,8 @@ ActiveRecord::Schema.define(version: 20180521161913) do
     t.string   "worksite_location",                   limit: 255
     t.boolean  "works_in_both_locations",                         default: false
     t.boolean  "can_update_physical_object_location",             default: false
+    t.boolean  "can_edit_users",                                  default: false
+    t.boolean  "can_add_cv",                                      default: false
   end
 
   create_table "value_conditions", force: :cascade do |t|
