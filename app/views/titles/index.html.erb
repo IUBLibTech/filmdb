@@ -5,9 +5,15 @@
 	<tr>
 		<th>Title Text</th>
 		<td>
-			<%= text_field_tag :title_text, params[:title_text] %>
+      <%= text_field_tag :title_text, params[:title_text] %>
 		</td>
 	</tr>
+  <tr>
+    <th>Series Name</th>
+    <td>
+      <%= text_field_tag :series_name_text, params[:series_name_text] %>
+    </td>
+  </tr>
 	<tr>
 		<th>Date</th>
 		<td>
@@ -23,9 +29,21 @@
 	<tr>
 		<th>Creator</th>
 		<td>
-			<%= text_field_tag :creator_text, params[:creator_text] %>
+      <%= text_field_tag :creator_text, params[:creator_text] %>
 		</td>
 	</tr>
+  <tr>
+    <th>Summary</th>
+    <td><%= text_field_tag :summary_text, params[:summary_text] %></td>
+  </tr>
+  <tr>
+    <th>Location</th>
+    <td><%= text_field_tag :location_text, params[:location_text] %></td>
+  </tr>
+  <tr>
+    <th>Subject</th>
+    <td><%= text_field_tag :subject_text, params[:subject_text] %></td>
+  </tr>
 	<tr>
 		<th>Search Within Collection</th>
 		<td>

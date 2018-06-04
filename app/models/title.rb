@@ -82,22 +82,22 @@ class Title < ActiveRecord::Base
     Title.find_by_sql(sql)
   }
 
-  scope :title_search, -> (title_text, date, publisher_text, creator_text, collection_id, current_user, offset, limit) {
+  scope :title_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, current_user, offset, limit) {
 	  connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 	  tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
-		  "#{title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)} "+
-		  "#{title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)})"
+		  "#{title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)} "+
+		  "#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)})"
 	  connection.execute(tempTblSql)
 	  sql = "SELECT titles.* FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 	  res = Title.find_by_sql(sql)
 	  connection.execute("DROP TABLE #{current_user}_title_search")
 	  res
   }
-	scope :title_search_count, -> (title_text, date, publisher_text, creator_text, collection_id, current_user, offset, limit) {
+	scope :title_search_count, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, current_user, offset, limit) {
 		connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 		tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
-			"#{title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)} "+
-			"#{title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)})"
+			"#{title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)} "+
+			"#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)})"
 		connection.execute(tempTblSql)
 		sql = "SELECT count(*) FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 		res = connection.execute(sql)
@@ -147,8 +147,11 @@ class Title < ActiveRecord::Base
 	end
 
 	private
-	def self.title_search_from_sql(title_text, date, publisher_text, creator_text, collection_id)
+	def self.title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
 		sql = "FROM titles"
+		if !series_name_text.blank?
+			sql << " INNER JOIN series on titles.series_id = series.id"
+		end
 		if !date.blank?
 			sql << " INNER JOIN title_dates ON title_dates.title_id = titles.id"
 		end
@@ -158,6 +161,9 @@ class Title < ActiveRecord::Base
 		if !creator_text.blank?
 			sql << " INNER JOIN title_creators ON title_creators.title_id = titles.id"
 		end
+		if !location_text.blank?
+			sql << " INNER JOIN title_locations ON title_locations.title_id = titles.id"
+		end
 		if !collection_id.blank?
 			sql << " INNER JOIN physical_object_titles ON physical_object_titles.title_id = titles.id "+
 				"INNER JOIN physical_objects ON physical_objects.id = physical_object_titles.physical_object_id "+
@@ -165,11 +171,13 @@ class Title < ActiveRecord::Base
 		end
 		sql
 	end
-	def self.title_search_where_sql(title_text, date, publisher_text, creator_text, collection_id)
-		sql = (title_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && collection_id.blank?) ? "" : "WHERE"
+	def self.title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
+		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank?) ? "" : "WHERE"
 		if !title_text.blank?
-			quoted = ActiveRecord::Base.connection.quote("%#{title_text}%") # properly escapes special characters
-			sql << " titles.title_text like #{quoted}"
+			sql << " titles.title_text like #{escape_wildcard(title_text)}"
+		end
+		if !series_name_text.blank?
+			sql << " series.title like #{escape_wildcard(series_name_text)}"
 		end
 		if !date.blank?
 			add_and(sql)
@@ -187,11 +195,23 @@ class Title < ActiveRecord::Base
 		end
 		if !publisher_text.blank?
 			add_and(sql)
-			sql << "title_publishers.name like '%#{publisher_text}%'"
+			sql << "title_publishers.name like #{escape_wildcard(publisher_text)}"
 		end
 		if !creator_text.blank?
 			add_and(sql)
-			sql << "title_creators.name like '%#{creator_text}%'"
+			sql << "title_creators.name like #{escape_wildcard(creator_text)}"
+		end
+		if !summary_text.blank?
+			add_and(sql)
+			sql << "titles.summary like #{escape_wildcard(summary_text)}"
+		end
+		if !location_text.blank?
+			add_and(sql)
+			sql << "title_locations.location like #{escape_wildcard(location_text)}"
+		end
+		if !subject_text.blank?
+			add_and(sql)
+			sql << "titles.subject like #{escape_wildcard(subject_text)}"
 		end
 		if !collection_id.blank?
 			add_and(sql)
@@ -201,6 +221,9 @@ class Title < ActiveRecord::Base
 	end
 	def self.add_and(sql)
 		sql << ((sql.length > "WHERE ".length) ? ' AND ' : ' ')
+	end
+	def self.escape_wildcard(value)
+		ActiveRecord::Base.connection.quote("%#{value}%")
 	end
 
 end

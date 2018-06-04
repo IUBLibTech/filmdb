@@ -10,15 +10,15 @@ class TitlesController < ApplicationController
   def search
 	  if params[:title_text]
 		  # find out whether or not to do pagination
-		  @count = Title.title_search_count(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+		  @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 		                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
 		  if @count > Title.per_page
 			  @paginate = true
 			  @page = (params[:page] ? params[:page].to_i : 1)
-			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, (@page - 1) * Title.per_page, Title.per_page)
 		  else
-			  @titles = Title.title_search(params[:title_text], params[:date], params[:publisher_text], params[:creator_text],
+			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
 		  end
 	  end
@@ -270,13 +270,13 @@ class TitlesController < ApplicationController
           # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
           # One must manually check the presence of the attribute - HTML forms do no post unchecked checkboxes so if it's present, it was checked
           checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
-          @unchecked = keys.select{|k| params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
+          @return = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:return].nil?}
           if checked.size > 0
             @component_group = ComponentGroup.new(title_id: @master.id, group_type: params[:component_group][:group_type], group_summary: params[:component_group][:group_summary])
             @component_group.save
             checked.each do |poid|
               po = PhysicalObject.find(poid)
-              ws = get_merge_workflow_status(@component_group, po)
+              ws = get_split_workflow_status(@component_group, po)
               settings = params[:component_group][:component_group_physical_objects_attributes][poid]
               po.workflow_statuses << ws unless ws.nil?
               @component_group.physical_objects << po
@@ -285,7 +285,7 @@ class TitlesController < ApplicationController
               po.save
               po.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
             end
-            @unchecked.each do |poid|
+            @return.each do |poid|
               po = PhysicalObject.find(poid)
               if po.current_workflow_status.in_workflow?
                 ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
