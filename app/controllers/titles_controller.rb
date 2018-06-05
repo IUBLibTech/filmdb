@@ -259,6 +259,7 @@ class TitlesController < ApplicationController
         @master = Title.find(params[:master_title_id])
         @title = @master
         @mergees = Title.where("id in (?)", params[:mergees].split(',').collect{ |s| s.to_i})
+        @moved = []
         failed = title_merge(@master, @mergees, true)
         if failed.size > 0
           raise ManualRollBackError.new("The following titles could not be merged: #{failed.collect{|t| [t.title_text]}.join(',')}")
@@ -277,6 +278,7 @@ class TitlesController < ApplicationController
             checked.each do |poid|
               po = PhysicalObject.find(poid)
               ws = get_split_workflow_status(@component_group, po)
+              @moved << po if po.current_location != ws.status_name
               settings = params[:component_group][:component_group_physical_objects_attributes][poid]
               po.workflow_statuses << ws unless ws.nil?
               @component_group.physical_objects << po
@@ -291,13 +293,14 @@ class TitlesController < ApplicationController
                 ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
                 po.workflow_statuses << ws
                 po.save
+                @moved << po
               end
             end
           end
         end
       end
       flash[:merge] = true
-      @moved = params[:component_group].nil? ? [] : @title.physical_objects.select{|p| (!WorkflowStatus.is_storage_status?(p.previous_location) && (p.current_location != p.previous_location))}
+
     rescue ManualRollBackError => e
       puts e.message
       puts e.backtrace.join('\n')
