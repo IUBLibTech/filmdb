@@ -432,6 +432,14 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	def estimated_duration_in_sec
+		if footage.blank? || gauge.blank?
+			0
+		else
+			(PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[gauge] * footage) / 24
+		end
+	end
+
 
 	# noinspection RubyResolve,RubyResolve
 	def to_xml(options)
