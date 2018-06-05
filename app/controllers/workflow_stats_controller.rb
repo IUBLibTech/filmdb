@@ -1,6 +1,14 @@
 class WorkflowStatsController < ApplicationController
 	include PhysicalObjectsHelper
 
+	def shipped_so_far
+		@physical_objects = PhysicalObject.joins(:workflow_statuses).where("workflow_statuses.status_name = '#{WorkflowStatus::SHIPPED_EXTERNALLY}' and physical_object_id is not null").uniq
+		#@total = @physical_objects.inject(0){|sum, p| p.estimated_duration_in_sec + sum}
+		respond_to do |format|
+			format.csv {send_data pos_to_cvs(@physical_objects), filename: 'shipped_so_far.csv' }
+		end
+	end
+
 	def digitization_staging_stats
 		ns = 'Not Specified'
 		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::TWO_K_FOUR_K_SHELVES)
@@ -35,6 +43,18 @@ class WorkflowStatsController < ApplicationController
 
 		end
 		render partial: 'digitization_staging_stats'
+	end
+
+	private
+	def pos_to_cvs(physical_objects)
+		headers = ["IU Barcode", "Title(s)", "Collection", "Estimated Duration"]
+		CSV.generate(headers: true) do |csv|
+			csv << headers
+			physical_objects.each do |p|
+				csv << [p.iu_barcode, p.titles_text, (p.collection.blank? ? "" : p.collection.name), p.estimated_duration_in_sec]
+			end
+			csv << ['', '', '', hh_mm_sec(physical_objects.inject(0){|sum, p| sum + p.estimated_duration_in_sec})]
+		end
 	end
 
 end
