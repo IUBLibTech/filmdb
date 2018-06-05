@@ -53,6 +53,7 @@ class WorkflowStatsController < ApplicationController
 			physical_objects.each do |p|
 				csv << [p.iu_barcode, p.titles_text, (p.collection.blank? ? "" : p.collection.name), p.estimated_duration_in_sec]
 			end
+			csv << ['', '', '', hh_mm_sec(physical_objects.inject(0){|sum, p| sum + p.estimated_duration_in_sec})]
 		end
 	end
 
