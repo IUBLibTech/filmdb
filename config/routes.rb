@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get '/ajax/title_form/form', to: 'ajax#title_form', as: 'ajax_title_form'
   get '/ajax/title_creator/role', to: 'ajax#title_creator_role', as: 'ajax_title_creator_role'
   get '/ajax/title_publisher/role', to: 'ajax#title_publisher_role', as: 'ajax_publisher_role'
-  get '/ajax/title_original_identifier/type', to: 'ajax#title_original_idientifer', as: 'ajax_title_original_identifier'
+  get '/ajax/title_original_identifier/type', to: 'ajax#title_original_identifier', as: 'ajax_title_original_identifier'
   resources :cages
 	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
 	post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 	post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
 	post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
 
-  resources :controlled_vocabularies
+  resources :controlled_vocabularies, only: [:index]
 
   resources :collection_inventory_configurations do
     #get '/collection_inventory_configurations/:id/new_physical_object'

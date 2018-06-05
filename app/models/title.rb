@@ -177,6 +177,7 @@ class Title < ActiveRecord::Base
 			sql << " titles.title_text like #{escape_wildcard(title_text)}"
 		end
 		if !series_name_text.blank?
+			add_and(sql)
 			sql << " series.title like #{escape_wildcard(series_name_text)}"
 		end
 		if !date.blank?
