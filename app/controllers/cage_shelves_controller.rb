@@ -2,7 +2,8 @@ class CageShelvesController < ApplicationController
   require 'memnon_digiprov_collector'
 
   def index
-    @cage_shelves = CageShelf.joins(:physical_objects).group('cage_shelves.id').order('id DESC')
+    @cage_shelves = CageShelf.all.joins(:physical_objects).group('cage_shelves.id').pluck(:id)
+    @cage_shelves = CageShelf.where(id: @cage_shelves).includes(:physical_objects, :cage).order('cage_shelves.id DESC')
   end
 
   def show
