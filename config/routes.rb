@@ -181,6 +181,7 @@ Rails.application.routes.draw do
 
   # workflow_stats routes
   get '/workflow_stats/digitization_staging_stats', to: 'workflow_stats#digitization_staging_stats', as: 'digitization_staging_stats'
+  get '/workflow_stats/shipped_so_far', to: 'workflow_stats#shipped_so_far', as: 'shipped_so_far'
 
   match '/signin', to: 'sessions#new', via: :get
   match '/signout', to: 'sessions#destroy', via: :delete
