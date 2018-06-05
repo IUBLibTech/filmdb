@@ -12,6 +12,10 @@ class CagesController < ApplicationController
 	skip_before_filter :verify_authenticity_token, only: [:mark_shipped]
 	protect_from_forgery with: :null_session, only: [:mark_shipped]
 
+	def index
+		@cages = Cage.includes(:top_shelf, :middle_shelf, :bottom_shelf, [top_shelf: :physical_objects, middle_shelf: :physical_objects, bottom_shelf: :physical_objects]).order('cages.id DESC').load
+	end
+
 	# GET /cages/1
   # GET /cages/1.json
   def show
@@ -218,11 +222,13 @@ class CagesController < ApplicationController
 			fourK = 0
 			durationSec = 0
 			pos.each do |p|
-				if p.current_scan_settings.scan_resolution == '2k'
-					twoK += 1
-				end
-				if p.current_scan_settings.scan_resolution == '4k'
-					fourK += 1
+				if !p.current_scan_settings.nil?
+					if p.current_scan_settings.scan_resolution == '2k'
+						twoK += 1
+					end
+					if p.current_scan_settings.scan_resolution == '4k'
+						fourK += 1
+					end
 				end
 				unless p.footage.blank? || p.gauge.blank?
 					durationSec += ((PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge] * p.footage) / 24)

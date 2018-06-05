@@ -1,4 +1,10 @@
 class ControlledVocabulary < ActiveRecord::Base
+
+  MODEL_ATTRIBUTE_FIELDS = [:title_creator_role_type, :title_publisher_role_type]
+  HUMANIZED_SYMBOLS = {
+      title_creator_role_type: 'Creator Role', title_publisher_role_type: 'Publisher Role',
+      title_original_identifier_type: 'Original Identifier', date_type: 'Date' }
+
   scope :physical_object_cv, -> {
     cv = ControlledVocabulary.where(model_type: 'PhysicalObject').select(:model_attribute, :value).order(:model_attribute, :value, :menu_index)
     cv_map(cv)
@@ -47,6 +53,16 @@ class ControlledVocabulary < ActiveRecord::Base
     end
     map
   }
+
+  scope :editable_title_cv, -> {
+    ControlledVocabulary.where("model_type like 'Title%'").order(:model_attribute).pluck(:model_attribute).uniq
+  }
+
+  def self.human_attribute_name(attribute, options = {})
+    attribute = attribute.tr(':','').to_sym
+    self.const_get(:HUMANIZED_SYMBOLS)[attribute] || super(attribute)
+  end
+
   private
   def self.cv_map(scope_result)
     map = {}

@@ -2,8 +2,6 @@ class PhysicalObject < ActiveRecord::Base
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
-	#after_save :update_active_scan_settings
-
 	belongs_to :title
 	belongs_to :spreadhsheet
 	belongs_to :collection, autosave: true
@@ -54,6 +52,8 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values
+	#
+	# FIXME: PhysicalObject.joins(:current_workflow_status).where("workflow_statuses.status_name = '#{WorkflowStatus::QUEUED_FOR_PULL_REQUEST}'")
 	scope :where_current_workflow_status_is, lambda { |offset, limit, digitized, *status|
 		# status values are concatenated into an array so if you want to pass an array of values (constants stored in other classes for instance) the passed array is wrapped in
 		# an enclosing array. flattening it allows an array to be passed and leaves any params passed the 'normal' way untouched
