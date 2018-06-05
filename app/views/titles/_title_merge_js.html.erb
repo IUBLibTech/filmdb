@@ -98,7 +98,6 @@
                   });
                   initTitleSelect();
                   showPhysicalObjects();
-                  registerCheckboxes();
                 }
             }
         });
@@ -128,6 +127,11 @@
                 },
                 success: function (result) {
                     $('#physical_objects').html(result)
+                },
+                complete: function(jqXHR, textStatus) {
+                    if (textStatus === "success") {
+                        registerCheckboxes();
+                    }
                 }
             })
         }
@@ -179,7 +183,8 @@
   // after loading the ajax call results of getCgTable we need to register the checkboxes with event listeners so that
   // we can make them mutually exclusive in their selectivity.
   function registerCheckboxes() {
-      $('input:checkbox').change(function() {
+      $('input:checkbox').off('change.checkbox_click');
+      $('input:checkbox').on("change.checkbox_click",function() {
           if (this.checked) {
               var kids = $(this).parent().parent().find('input:checkbox');
               if (kids[0] == this) {

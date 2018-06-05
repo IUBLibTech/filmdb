@@ -25,7 +25,7 @@ class AjaxController < ApplicationController
     genres = ControlledVocabulary.where(model_type: 'TitleGenre', model_attribute: ':genre').where("value like #{ActiveRecord::Base.connection.quote("%#{params[:term]}%")}").order('value ASC').pluck(:value).uniq.to_json
     render json: genres
   end
-  def original_identifier
+  def title_original_identifier
     roles = ControlledVocabulary.where(model_type: 'Title', model_attribute: ':title_original_identifier_type').where("value like #{ActiveRecord::Base.connection.quote("%#{params[:term]}%")}").order('value ASC').pluck(:value).uniq.to_json
     render json: roles
   end
