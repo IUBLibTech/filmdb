@@ -12,6 +12,10 @@ class CagesController < ApplicationController
 	skip_before_filter :verify_authenticity_token, only: [:mark_shipped]
 	protect_from_forgery with: :null_session, only: [:mark_shipped]
 
+	def index
+		@cages = Cage.includes(:top_shelf, :middle_shelf, :bottom_shelf, [top_shelf: :physical_objects, middle_shelf: :physical_objects, bottom_shelf: :physical_objects]).order('cages.id DESC').load
+	end
+
 	# GET /cages/1
   # GET /cages/1.json
   def show
