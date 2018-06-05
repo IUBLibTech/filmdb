@@ -44,26 +44,32 @@
         $('#title_autocomplete_select_form').submit(function(event) {
             event.preventDefault();
             var m_id = $('#master_title_id').attr('value');
-            if (merge_all) {
-              var pos = getPoIds();
-              if (m_id == null || m_id.length == 0) {
-                  swal('Select a Master Title', 'You must select a master title to merge. Click the row of the title you wish to be the master record. All metadata from other titles will be merged into this record' )
-              } else if (pos.length == 0) {
-                  swal({
-                          title: 'No Component Group',
-                          text: ' No physical objects are selected. All physical objects for all titles will be returned to storage. Do you wish to continue?',
-                          type: 'warning',
-                          showCancelButton: true,
-                          confirmButtonText: 'Return all to storage'
-                      },
-                      function() {
-                          document.getElementById('title_autocomplete_select_form').submit();
-                      });
-              } else {
-                  document.getElementById('title_autocomplete_select_form').submit();
-              }
+            if (allChecked()) {
+                if (merge_all) {
+                    var pos = getPoIds();
+                    if (m_id == null || m_id.length == 0) {
+                        swal('Select a Master Title', 'You must select a master title to merge. Click the row of the title you wish to be the master record. All metadata from other titles will be merged into this record' )
+                        return false;
+                    } else if (pos.length == 0) {
+                        swal({
+                                title: 'No Component Group',
+                                text: ' No physical objects are selected. All physical objects for all titles will be returned to storage. Do you wish to continue?',
+                                type: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Return all to storage'
+                            },
+                            function() {
+                                document.getElementById('title_autocomplete_select_form').submit();
+                            });
+                        return false;
+                    } else {
+                        document.getElementById('title_autocomplete_select_form').submit();
+                    }
+                } else {
+                    document.getElementById('title_autocomplete_select_form').submit();
+                }
             } else {
-                document.getElementById('title_autocomplete_select_form').submit();
+                swal("Cannot Process Request", "You must explicitly select whether each Physical Object should be added to the Component Group, returned to storage, or left in workflow.");
             }
         })
     });
@@ -80,7 +86,7 @@
                     swal("Cannot Merge", "The title you selected is in active workflow and cannot be merged here. Please use the 'Merge Titles' link instead.")
                 } else {
                   $('.title_merge_remove').unbind('click.title_merge_remove_title');
-                  $('#title_table').append(result)
+                  $('#title_table').append(result);
                   $('.title_merge_remove').bind('click.title_merge_remove_title', function(event) {
                       var id = $(this).parent().parent().attr('id');
                       $(this).parent().parent().remove();
@@ -92,6 +98,7 @@
                   });
                   initTitleSelect();
                   showPhysicalObjects();
+                  registerCheckboxes();
                 }
             }
         });
@@ -168,4 +175,35 @@
         return pos
       }
     }
+
+  // after loading the ajax call results of getCgTable we need to register the checkboxes with event listeners so that
+  // we can make them mutually exclusive in their selectivity.
+  function registerCheckboxes() {
+      $('input:checkbox').change(function() {
+          if (this.checked) {
+              var kids = $(this).parent().parent().find('input:checkbox');
+              if (kids[0] == this) {
+                  $(kids[1]).attr('checked', false);
+                  $(kids[2]).attr('checked', false);
+              } else if (kids[1] == this) {
+                  $(kids[0]).attr('checked', false);
+                  $(kids[2]).attr('checked', false);
+              } else {
+                  $(kids[0]).attr('checked', false);
+                  $(kids[1]).attr('checked', false);
+              }
+          }
+      });
+  }
+
+  function allChecked() {
+      var rv = true;
+      $('.po_row').each(function() {
+          kids = $(this).find('input:checked');
+          if (kids.size() === 0) {
+              return rv = false;
+          }
+      });
+      return rv;
+  }
 </script>

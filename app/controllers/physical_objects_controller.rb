@@ -14,21 +14,29 @@ class PhysicalObjectsController < ApplicationController
   def index
 		@statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
-      @count = PhysicalObject.count_where_current_workflow_status_is(params[:digitized], params[:status])
+      @count = PhysicalObject.joins(:current_workflow_status).where("workflow_statuses.status_name = '#{params[:status]}'")
+      @count = @count.where("physical_objects.digitized = true") if params[:digitized]
+      @count = @count.size
+      #@count = PhysicalObject.count_where_current_workflow_status_is(params[:digitized], params[:status])
       if @count > PhysicalObject.per_page
         @paginate = true
         @page = (params[:page].nil? ? 1 : params[:page].to_i)
-        @physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:digitized], params[:status])
+        #@physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:digitized], params[:status])
+        @physical_objects = PhysicalObject.joins(:current_workflow_status).includes([:current_workflow_status, :titles, :active_component_group]).where("workflow_statuses.status_name = '#{params[:status]}'")
+        @physical_objects = @physical_object.where('physlca_objects.digitized = true') if params[:digited]
+        @physical_objects.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
       else
-        @physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, params[:digitized], params[:status])
+        #@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, params[:digitized], params[:status])
+        @physical_objects = PhysicalObject.joins(:current_workflow_status).includes([:current_workflow_status, :titles, :active_component_group]).where("workflow_statuses.status_name = '#{params[:status]}'")
+        @physical_objects = @physical_objects.where('physical_objects.digitized = true') if params[:digitized]
       end
     elsif params[:status] == ''
       @count = (params[:digitized] ? PhysicalObject.where(digitized: true).size : PhysicalObject.all.size)
       @page = (params[:page].nil? ? 1 : params[:page].to_i)
       @paginate = true
 		  @physical_objects = (params[:digitized] ?
-         PhysicalObject.where(digitized: true).offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page) :
-         PhysicalObject.all.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
+         PhysicalObject.where(digitized: true).includes([:current_workflow_status, :titles, :active_component_group]).offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page) :
+         PhysicalObject.includes([:current_workflow_status, :titles, :active_component_group]).all.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
       )
     else
       @physical_objects = []
