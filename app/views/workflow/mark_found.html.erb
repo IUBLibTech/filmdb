@@ -24,9 +24,9 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		$('#iu_barcode').bind('input', function() {
-			bc = $(this).val();
+      valid = validateIUBarcode($(this));
 			$('#msg').html('');
-			if (bc.length > 0) {
+			if (valid) {
 				$.ajax({
 					url: './ajax_mark_found/' + bc,
 					error: function(jqXHR, textStatus, errorThrown) {
