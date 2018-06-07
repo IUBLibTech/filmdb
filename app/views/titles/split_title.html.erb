@@ -73,6 +73,7 @@
             $(this).attr('title_id', ui.item['value']);
             retitlePo($(this));
             getCgTable();
+            $(this).blur();
             return false;
         }
     }).focusout(function () {

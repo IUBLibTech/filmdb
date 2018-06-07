@@ -25,7 +25,7 @@
 	$(document).ready(function() {
 		$('#iu_barcode').bind('input', function() {
 			bc = $(this).val();
-			$('#msg').html('')
+			$('#msg').html('');
 			if (bc.length > 0) {
 				$.ajax({
 					url: './ajax_mark_found/' + bc,
