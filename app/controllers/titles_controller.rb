@@ -287,20 +287,20 @@ class TitlesController < ApplicationController
               po.save
               po.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
             end
-            @return.each do |poid|
-              po = PhysicalObject.find(poid)
-              if po.current_workflow_status.in_workflow?
-                ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
-                po.workflow_statuses << ws
-                po.save
-                @moved << po
-              end
+          end
+          @return.each do |poid|
+            po = PhysicalObject.find(poid)
+            if po.current_workflow_status.in_workflow?
+              ws = WorkflowStatus.build_workflow_status(po.storage_location, po)
+              po.workflow_statuses << ws
+              po.save
+              @moved << po
             end
           end
         end
       end
       flash[:merge] = true
-
+      debugger
     rescue ManualRollBackError => e
       puts e.message
       puts e.backtrace.join('\n')
