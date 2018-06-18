@@ -32,7 +32,7 @@
       //hoverIn handler
       function() {
         var series_id = $(this).attr('series_id');
-        var url = '../../../series/ajax/'+series_id;
+        var url = '../../../series/ajax/show/'+series_id;
         $.ajax({
           url: url,
           error: function(jqXHR, textStatus, errorThrown) {
