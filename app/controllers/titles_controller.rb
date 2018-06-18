@@ -300,7 +300,6 @@ class TitlesController < ApplicationController
         end
       end
       flash[:merge] = true
-      debugger
     rescue ManualRollBackError => e
       puts e.message
       puts e.backtrace.join('\n')
