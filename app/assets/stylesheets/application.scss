@@ -238,6 +238,11 @@ table.version_table > tbody > tr > td > input {
     margin: 0;
 }
 
+h4.clean {
+  background: rgba(16,180,35,0.57);
+  padding-left: 10px;
+}
+
 #image_metadata > table, #sound_metadata > table {
     width: 485px;
 }

@@ -30,6 +30,9 @@ class TitlesController < ApplicationController
   def show
     @physical_objects = @title.physical_objects
     @component_group_cv = ControlledVocabulary.component_group_cv
+    if @physical_objects.any?{|p| p.digitized?}
+
+    end
   end
 
   # GET /titles/new_physical_object
@@ -433,8 +436,6 @@ class TitlesController < ApplicationController
 	  render partial: 'ajax_edit_cg_params'
   end
 
-
-  private
   def get_split_workflow_status(component_group, po)
     cl = po.current_location
     ws = nil

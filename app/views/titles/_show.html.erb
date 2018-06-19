@@ -8,8 +8,17 @@
   <div><b>Last Modified By</b></div><div><%= @title.modifier&.name %></div>
 </div>
 <% if @title.digitized? %>
-  <div class="digitized clear">
-    Digitized
+  <div class="m_bottom_10px">
+    <div class="clear">
+      <h4 class="clean">Digitized</h4>
+      <% if @title&.group_key&.avalon_url.blank? %>
+        <div class="warning clear" style="font-size: inherit; padding-left: 10px">Could not generate Dark Avalon URL - no mapping between Filmdb Title id and POD Group Key
+      <% else %>
+        <div class="_25 left m_bottom_10px">
+        <%= link_to "Dark Avalon Files", "#{@title.group_key.avalon_url}" %>
+      <% end %>
+      </div>
+    </div>
   </div>
 <% end %>
 <div id="main">

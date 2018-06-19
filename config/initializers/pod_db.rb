@@ -1,0 +1,1 @@
+POD_DB = YAML.load_file(File.join(Rails.root, "config", "pod_db.yml"))["production"]
