@@ -102,35 +102,40 @@ class CagesController < ApplicationController
 					end
 					@cage.update_attributes(shipped: true)
 					flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
-					@cage.top_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
-						p.save!
-					end
 
 					if @cage.middle_shelf.physical_objects.size > 0
 						@cage.middle_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
 						@cage.middle_shelf.save
 						batch_count+= 1
 					end
-					@cage.middle_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
-						p.save!
-					end
 
 					if @cage.bottom_shelf.physical_objects.size > 0
 						@cage.bottom_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
 						@cage.bottom_shelf.save
 					end
-					@cage.bottom_shelf.physical_objects.each do |p|
-						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
-						p.save!
-					end
+
 					@result = push_cage_to_pod(@cage)
 					body = @result.body
 					unless body == 'SUCCESS'
 						@msg = "POD did not receive the push correctly - Responded with message<br/><pre>#{body}</pre>".html_safe
 						raise ManualRollBackError, @msg
 					end
+
+					# this needs to be done after a SUCCESSFUL push to POD as the new shipped externally status will flag the record
+					# as needing to be redigitized
+					@cage.top_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
+						p.save!
+					end
+					@cage.middle_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
+						p.save!
+					end
+					@cage.bottom_shelf.physical_objects.each do |p|
+						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
+						p.save!
+					end
+
 				end
 			rescue ManualRollBackError => e
 				flash.now[:warning] = "An error occured while trying to push the cage to POD."
@@ -148,7 +153,7 @@ class CagesController < ApplicationController
 	end
 
   def add_physical_object_to_shelf
-		bc = set_po(params[:cage][:physical_object_iu_barcode])
+		set_po(params[:cage][:physical_object_iu_barcode])
 		if @physical_object.errors.any?
       render partial: 'ajax_add_po_failure'
 		else
@@ -277,7 +282,7 @@ class CagesController < ApplicationController
 		if @physical_object.nil?
 			@physical_object = PhysicalObject.new
 			@physical_object.errors.add(:iu_barcode, "Could not find record with IU Barcode #{iu_barcode}")
-		elsif !@physical_object.cage_shelf.nil?
+		elsif !@physical_object.cage_shelf.nil? && @physical_object.current_workflow_status.status_name != WorkflowStatus::TWO_K_FOUR_K_SHELVES
 			@physical_object.errors.add(:cage_shelf, "#{iu_barcode} has already been added to Cage #{@physical_object.cage_shelf.cage.identifier}")
 		else
 			# need to check validity of both barcodes

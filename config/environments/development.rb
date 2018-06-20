@@ -40,7 +40,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
 
-	config.pod_batch_url = 'https://pod-dev.mdpi.iu.edu/responses/objects/push_filmdb_objects'
+	config.pod_batch_url = 'https://pod-test.mdpi.iu.edu/responses/objects/push_filmdb_objects'
 	# so I can tail log file output from dev server while ssh'd in from local
 	#config.web_console.whitelisted_ips = '129.79.34.168'
 
