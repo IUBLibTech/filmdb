@@ -16,6 +16,7 @@ log/*
 !/log/.keep
 tmp
 config/database.yml
+config/pod_db.yml
 
 # files for rubymine
 .idea/*
