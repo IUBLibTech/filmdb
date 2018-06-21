@@ -91,27 +91,28 @@ class CagesController < ApplicationController
 		if @cage.ready_to_ship
 			begin
 				PhysicalObject.transaction do
-					# format identifier as FDB-000y-FILM
-					# use length instead of size: if using size, what is returned is a hash of cage shelf ids mapped to the count
-					# of physical objects on the shelf, not the number of shelves with at least 1 physical object
-					batch_count = CageShelf.joins(:cage).where('cages.shipped = true').joins(:physical_objects).group('cage_shelves.id').length
+					@cage.update_attributes!(shipped: true)
+					batch_count = CageShelf.where('shipped is not null').size
+					shipped = DateTime.now
 					if @cage.top_shelf.physical_objects.size > 0
 						@cage.top_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
-						@cage.top_shelf.save
+						@cage.top_shelf.shipped = shipped
+						@cage.top_shelf.save!
 						batch_count+= 1
 					end
-					@cage.update_attributes(shipped: true)
 					flash.now[:notice] = "#{@cage.identifier} was shipped to Memnon"
 
 					if @cage.middle_shelf.physical_objects.size > 0
 						@cage.middle_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
-						@cage.middle_shelf.save
+						@cage.middle_shelf.shipped = shipped
+						@cage.middle_shelf.save!
 						batch_count+= 1
 					end
 
 					if @cage.bottom_shelf.physical_objects.size > 0
 						@cage.bottom_shelf.identifier = "FDB-#{(batch_count+1).to_s.rjust(4, "0")}-FILM"
-						@cage.bottom_shelf.save
+						@cage.bottom_shelf.shipped = shipped
+						@cage.bottom_shelf.save!
 					end
 
 					@result = push_cage_to_pod(@cage)
@@ -138,7 +139,7 @@ class CagesController < ApplicationController
 
 				end
 			rescue ManualRollBackError => e
-				flash.now[:warning] = "An error occured while trying to push the cage to POD."
+				flash.now[:warning] = "An error occurred while trying to push the cage to POD."
 			ensure
 				PodPush.new(cage_id: @cage.id, response: @result&.body).save
 			end
@@ -161,9 +162,10 @@ class CagesController < ApplicationController
 				PhysicalObject.transaction do
 					@physical_object.mdpi_barcode = params[:cage][:physical_object_mdpi_barcode].to_i if @physical_object.mdpi_barcode.nil?
 					@physical_object.cage_shelf_id = @cage_shelf.id
+					CageShelfPhysicalObject.new(cage_shelf_id: @cage_shelf.id, physical_object_id: @physical_object.id).save!
 					ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_CAGE, @physical_object)
 					@physical_object.workflow_statuses << ws
-					@physical_object.save
+					@physical_object.save!
 				end
 				@msg = "Physical Object #{@physical_object.mdpi_barcode} was successfully added to Shelf #{@physical_object.cage_shelf.identifier}"
 				list = @physical_object.waiting_active_component_group_members?
@@ -191,6 +193,8 @@ class CagesController < ApplicationController
 		else
 			@msg = "Physical Object #{@physical_object.mdpi_barcode} successfully removed from Shelf #{@cage_shelf.identifier}"
 			@physical_object.cage_shelf = nil
+			# also delete the join table reference
+			CageShelfPhysicalObject.where(cage_shelf_id: @cage_shelf.id, physical_object_id: @physical_object.id).delete_all
 			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, @physical_object)
 			@physical_object.workflow_statuses << ws
 			@physical_object.save
