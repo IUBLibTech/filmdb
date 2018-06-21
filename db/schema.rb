@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180530193042) do
+ActiveRecord::Schema.define(version: 20180621175048) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -24,14 +24,23 @@ ActiveRecord::Schema.define(version: 20180530193042) do
     t.datetime "updated_at"
   end
 
+  create_table "cage_shelf_physical_objects", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "cage_shelf_id",      limit: 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "cage_shelves", force: :cascade do |t|
-    t.integer  "cage_id",      limit: 8
-    t.integer  "mdpi_barcode", limit: 8
-    t.string   "identifier",   limit: 255
-    t.text     "notes",        limit: 65535
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.boolean  "returned",                   default: false
+    t.integer  "cage_id",       limit: 8
+    t.integer  "mdpi_barcode",  limit: 8
+    t.string   "identifier",    limit: 255
+    t.text     "notes",         limit: 65535
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.boolean  "returned",                    default: false
+    t.datetime "shipped"
+    t.datetime "returned_date"
   end
 
   add_index "cage_shelves", ["mdpi_barcode"], name: "index_cage_shelves_on_mdpi_barcode", unique: true, using: :btree

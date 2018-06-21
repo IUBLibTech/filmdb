@@ -23,6 +23,7 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :physical_object_pull_requests
 	has_many :pull_requests, through: :physical_object_pull_requests
 	has_many :digiprovs
+	has_many :cage_shelves, through:
 
   validates :physical_object_titles, physical_object_titles: true
   validates :iu_barcode, iu_barcode: true
