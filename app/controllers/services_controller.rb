@@ -27,14 +27,13 @@ class ServicesController < ActionController::Base
 					shelf.physical_objects.each do |p|
 						ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
 						p.workflow_statuses << ws
-						p.cage_shelf = nil
 						p.save
 					end
 					if shelf.cage.all_shelves_returned?
-						shelf.cage.update(shipped: false, ready_to_ship: false, returned: true)
+						shelf.cage.update!(shipped: false, ready_to_ship: false, returned: true)
 					end
 					@success = 'SUCCESS'
-					shelf.update(returned: true)
+					shelf.update!(returned: true, returned_date: DateTime.now)
 				end
 			rescue Exception => error
 				@sucess = 'FAILURE'
