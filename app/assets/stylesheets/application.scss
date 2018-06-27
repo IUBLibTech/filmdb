@@ -807,3 +807,8 @@ div#title_summary, div#series_summary {
   font-weight: bold;
   font-size: 1.2em;
 }
+
+input[type=text].bad {
+  background: red;
+  color: white;
+}

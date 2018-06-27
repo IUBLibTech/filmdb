@@ -5,7 +5,7 @@
     <tr>
       <th>Select Title Attribute</th>
       <td colspan="2">
-        <%= f.select :model_attribute, options_for_select(ControlledVocabulary.editable_title_cv.collect{|t| [ControlledVocabulary.human_attribute_name(t),t]}, 'Date') %>
+        <%= f.select :model_attribute, options_for_select(@map.keys.collect{|t| [ControlledVocabulary.human_attribute_name(t),t]}.sort, 'Date') %>
       </td>
     </tr>
     <tr>
@@ -23,68 +23,55 @@
   </thead>
 </table>
 <div id="vocab_list" class="left _45 ml_10">
-  <h4>Existing Terms</h4>
+  <h4 id="type_header">Existing Terms</h4>
   <div id="list_content"></div>
 </div>
 <% end %>
 <script type="text/javascript" charset="utf-8">
+  var map = <%= @map.to_json.html_safe %>;
   $(document).ready(function() {
-      $('#new_controlled_vocabulary').submit(function(e) {
-          e.preventDefault();
-          return false;
+      $('#controlled_vocabulary_value').bind("input",function() {
+          updateMatches();
       });
-      $('#controlled_vocabulary_value').bind("input", function(event) {
-          if (event.target.value.length === 0) {
-              $('#list_content').html("");
-              return;
-          }
-          var val = event.target.value;
-          var type = $('#controlled_vocabulary_model_attribute option:selected')[0].text;
-          var url;
-          switch(type) {
-              case 'Date':
-                  url = "<%= ajax_title_date_type_path %>";
-                  break;
-              case 'Form':
-                  url = "<%= ajax_title_form_path %>";
-                  break;
-              case 'Genre':
-                  url = "<%= ajax_title_genre_path %>";
-                  break;
-              case 'Creator Role':
-                  url = "<%= ajax_title_creator_role_path %>";
-                  break;
-              case 'Original Identifier':
-                  url = "<%= ajax_title_original_identifier_path %>";
-                  break;
-              case 'Publisher Role':
-                  url = "<%= ajax_publisher_role_path %>";
-                  break;
-              default:
-                  swal("Error", "Cannot retrieve controlled vocabulary for "+type)
-          }
-          $.ajax({
-              url: url,
-              dataType: "json",
-              data: {
-                  term: val
-              },
-              success: function(data) {
-                  $('#list_content').html("");
-                  var ul = $('<ul>').addClass('vocabList');
-                  $.each(data, function(i) {
-                     var li = $('<li>').text(data[i]);
-                     ul.append(li);
-                  });
-                  $('#list_content').html(ul);
-                  var disable = $.map(data, function(n, i){ return n.toLowerCase(); }).indexOf(val.toLowerCase()) !== -1;
-                  $('#createTermButton').prop('disabled', disable)
-              },
-              error: function(jqXHR, textStatus, errorThrown) {
-                  window.location.replace(jqXHR.url);
-              }
-          })
+      $('#controlled_vocabulary_model_attribute').change(function() {
+          updateMatches();
       });
+      updateMatches();
   });
+  function filterTerms(regExp, item) {
+      return regExp.test(item);
+  }
+  function updateMatches() {
+    var key = $('#controlled_vocabulary_model_attribute option:selected').val();
+    var typed = $('#controlled_vocabulary_value').val();
+    var reg = new RegExp(typed, 'gi');
+    var filtered = map[key].filter(function(item){
+        return filterTerms(reg, item);
+    });
+    var el = $('#list_content');
+    el.html("<ul id='list_content_ul'></ul>");
+    var el2 = $('#list_content_ul');
+    for (i = 0; i < filtered.length; i++) {
+      el2.append("<li>"+filtered[i]+"</li>")
+    }
+    $('#type_header').html("Existing "+$('#controlled_vocabulary_model_attribute option:selected').text()+" Terms");
+    reg = new RegExp(typed, 'im');
+    var exactMatch = false;
+    for (i = 0; i < map[key].length; i++) {
+        if (map[key][i].toLowerCase() === typed.toLowerCase() && typed.length > 0) {
+            exactMatch = true;
+            break;
+        }
+    }
+    if (typed.length === 0) {
+        $(':input[type="submit"]').prop('disabled', true);
+    } else if (exactMatch) {
+        $('#controlled_vocabulary_value').addClass('bad');
+        $(':input[type="submit"]').prop('disabled', true);
+    } else {
+        $(':input[type="submit"]').prop('disabled', false);
+        $('#controlled_vocabulary_value').removeClass('bad');
+    }
+  }
 
 </script>
