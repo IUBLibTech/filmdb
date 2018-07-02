@@ -24,5 +24,8 @@ class TitleDate < ActiveRecord::Base
 		parse_date_text
 	end
 
+	def humanize_class_name
+		"Date"
+	end
 
 end
