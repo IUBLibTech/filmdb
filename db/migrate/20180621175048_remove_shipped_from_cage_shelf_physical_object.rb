@@ -1,10 +1,8 @@
 class RemoveShippedFromCageShelfPhysicalObject < ActiveRecord::Migration
   def up
-    if ActiveRecord::Base.connection.column_exists?(:cage_shelf_physical_objects, :shipped)
-      remove_column :cage_shelf_physical_objects, :shipped
-      add_column :cage_shelves, :shipped, :datetime
-      add_column :cage_shelves, :returned_date, :datetime
-    end
+    remove_column :cage_shelf_physical_objects, :shipped
+    add_column :cage_shelves, :shipped, :datetime
+    add_column :cage_shelves, :returned_date, :datetime
     batches = PodBatch.where(format: 'Film')
     batches.each_with_index do |b, i|
       puts "Processing Batch #{i + 1 } of #{batches.size}"
@@ -14,6 +12,7 @@ class RemoveShippedFromCageShelfPhysicalObject < ActiveRecord::Migration
 
   def down
     remove_column :cage_shelves, :shipped
+    remove_column :cage_shelves, :returned_date
     add_column :cage_shelf_physical_objects, :shipped, :datetime
   end
 end

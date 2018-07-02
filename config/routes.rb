@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 	post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
 	post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
 
-  resources :controlled_vocabularies, only: [:index]
+  resources :controlled_vocabularies
 
   resources :collection_inventory_configurations do
     #get '/collection_inventory_configurations/:id/new_physical_object'
