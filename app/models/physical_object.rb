@@ -298,7 +298,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	def ingested_by_alf?
 		last = workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at DESC').limit(1).first
-		last.status_name == WorkflowStatus::IN_STORAGE_INGESTED
+		!last.nil? && last.status_name == WorkflowStatus::IN_STORAGE_INGESTED
 	end
 
 	def notify_alf
