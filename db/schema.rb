@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180621175048) do
+ActiveRecord::Schema.define(version: 20180702180714) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20180621175048) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "unit_id",    limit: 8
+    t.text     "summary",    limit: 65535
   end
 
   create_table "component_group_physical_objects", force: :cascade do |t|
