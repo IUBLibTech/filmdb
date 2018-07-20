@@ -18,7 +18,7 @@ class ComponentGroupsController < ApplicationController
   end
 
   def new
-    @title = Title.find(params[:title_id])
+    @title = Title.find(params[:id])
     @component_group = ComponentGroup.new(title_id: @title.id)
     @component_group_cv = ControlledVocabulary.component_group_cv
   end
@@ -26,24 +26,37 @@ class ComponentGroupsController < ApplicationController
   # POST /component_groups
   # POST /component_groups.json
   def create
-    @title = Title.find(params[:title_id])
-    @component_group = ComponentGroup.new(component_group_params)
-    @component_group.title = @title
-    respond_to do |format|
-      if @component_group.save
-        format.html { redirect_to @title, notice: 'Component group was successfully created.' }
-        format.json { render :show, status: :created, location: @component_group }
-      else
-        format.html { render :new }
-        format.json { render json: @component_group.errors, status: :unprocessable_entity }
+    @title = Title.find(params[:component_group][:title_id])
+    begin
+      ComponentGroup.transaction do
+        @component_group = ComponentGroup.new(component_group_params)
+        @checked = params[:component_group][:component_group_physical_objects].keys.select{|k| !params[:component_group][:component_group_physical_objects][k][:selected].nil?}
+        @component_group.save!
+        @checked.each do |po|
+          settings = params[:component_group][:component_group_physical_objects][po]
+          ComponentGroupPhysicalObject.new(
+              component_group_id: @component_group.id, physical_object_id: po.to_i,
+              scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
+          ).save!
+        end
       end
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace
     end
+
+    if @component_group.persisted?
+      flash[:notice] = "Component Group successfully created"
+    else
+      flash[:warning] = "Component Group was not created..."
+    end
+    redirect_to title_path(@title)
   end
 
   # GET /component_groups/1/edit
   def edit
-    @title = Title.find(params[:title_id])
-    @component_group = ComponentGroup.find(params[:id])
+    @title = Title.find(params[:t_id])
+    @component_group = ComponentGroup.includes(:physical_objects).find(params[:id])
     @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
@@ -51,16 +64,42 @@ class ComponentGroupsController < ApplicationController
   # PATCH/PUT /component_groups/1.json
   def update
     @component_group = ComponentGroup.find(params[:id])
-    respond_to do |format|
-      if @component_group.update(component_group_params)
-	      # currently, the only place a CG can be updated is on the Titles page so redirect there
-        format.html { redirect_to @component_group.title, notice: 'Component group was successfully updated.' }
-        format.json { render :show, status: :ok, location: @component_group }
-      else
-        format.html { render :edit }
-        format.json { render json: @component_group.errors, status: :unprocessable_entity }
+    begin
+      ComponentGroup.transaction do
+        @active = @component_group.in_active_workflow?
+        @original = @component_group.physical_objects
+        ComponentGroupPhysicalObject.where(component_group_id: @component_group.id).delete_all
+        @checked = params[:component_group][:component_group_physical_objects].keys.select{|k| !params[:component_group][:component_group_physical_objects][k][:selected].nil?}
+        @component_group.save!
+        @checked.each do |po|
+          settings = params[:component_group][:component_group_physical_objects][po]
+          ComponentGroupPhysicalObject.new(
+              component_group_id: @component_group.id, physical_object_id: po.to_i,
+              scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
+          ).save!
+           p = PhysicalObject.find(po)
+          if @active && p.in_storage?
+            p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
+            p.save
+          end
+        end
       end
+      msg = "Component Group successfully updated."
+      @original.select{|p| !@component_group.physical_objects.include?(p)}
+      if @original.size > 0 && @active
+        flash[:notice] = "Component Group successfully created. The following Physical Objects should be returned to storage #{(@original.select{|p| !@checked.include?(p.id.to_s)}).collect{|p| p.iu_barcode}.join(', ')}."
+      else
+        flash[:notice] = "Component Group successfully created."
+      end
+      @queued = @component_group.physical_objects.select{|p| p.current_location == WorkflowStatus::QUEUED_FOR_PULL_REQUEST}
+      if @queued.size > 0
+        flash[:notice] = "#{flash[:notice]} Additionally, the following Physical Objects have been Queued for Pull Request: #{@queued.collect{|p| p.iu_barcode}.join(', ')}"
+      end
+      debugger
+    rescue Exception => e
+      flash[:warning] = "An error occurred while editing the Component Group, no changes were made: #{e.message}"
     end
+    redirect_to title_path(@component_group.title)
   end
 
   # DELETE /component_groups/1
@@ -207,7 +246,7 @@ class ComponentGroupsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_group_params
       params.require(:component_group).permit(
-        :group_type, :group_summary,
+        :group_type, :group_summary, :title_id,
         title_attributes: [:id],
         component_group_physical_objects_attributes: [:id, :physical_object_id, :component_group_id, :scan_resolution, :clean, :return_on_reel, :color_space, :_destroy]
       )

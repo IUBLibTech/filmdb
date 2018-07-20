@@ -9,17 +9,23 @@
       </ul>
     </div>
   <% end %>
-	<table>
+  <table class="_75">
 	  <tr>
-	    <th>Collection Name</th>
+	    <th class="_20">Collection Name</th>
 	    <td>
 		    <%= f.text_field :name %>
 	    </td>
 	  </tr>
     <tr>
-      <th>Unit</th>
+      <th class="_20">Unit</th>
       <td>
         <%= f.select :unit_id, Unit.order('menu_index').collect { |u| [u.abbreviation, u.id] }, { }, multiple: false, size: 1 %>
+      </td>
+    </tr>
+    <tr>
+      <th class="_20">Summary</th>
+      <td>
+        <%= f.text_area :summary %>
       </td>
     </tr>
 	</table>
