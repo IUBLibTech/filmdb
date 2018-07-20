@@ -100,16 +100,22 @@ Rails.application.routes.draw do
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
   resources :titles, except: [:index] do
-    resources :component_groups, only: [:new, :create, :edit, :update, :show, :destroy] do
-      get 'best_copy_selection'
-      post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_create', as: 'best_copy_selection_create'
-      get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
-    end
+    # resources :component_groups, only: [:new, :create, :edit, :update, :show, :destroy] do
+    #   get 'best_copy_selection'
+    #   post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_create', as: 'best_copy_selection_create'
+    #   get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
+    # end
   end
 
   get '/titles/filter_selected/:selected', to: 'titles#index', as: 'selected_titles'
   get '/titles/:id/new_physical_object', to: 'titles#new_physical_object', as: 'title_new_physical_object'
   post 'titles/:id/create_physical_object', to: 'titles#create_physical_object', as: 'titles_create_physical_object'
+  get '/titles/:id/show_split_title', to: 'titles#split_title', as: 'show_split_title'
+  get '/titles/:id/component_groups/new', to: 'component_groups#new', as: 'new_title_component_group'
+  post '/titles/:id/component_groups/create', to: 'component_groups#create', as: 'create_title_component_group'
+  delete '/titles/:t_id/component_groups/delete/:id', to: 'component_groups#delete', as: 'delete_component_group'
+  get '/titles/:t_id/component_groups/:id', to: 'component_groups#edit', as: 'edit_component_group'
+  patch '/titles/:t_id/component_groups/:id', to: 'component_groups#update', as: 'update_component_group'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
   get '/titles/ajax/new/:series_id', to: 'titles#new_ajax', as: 'new_title_ajax'
   post '/titles/ajax/new_title', to: 'titles#create_ajax', as: 'create_title_ajax'
@@ -126,7 +132,6 @@ Rails.application.routes.draw do
   get '/title_merge_selection_table_row/:id', to: 'titles#title_merge_selection_table_row', as: 'title_merge_selection_table_row'
   get '/title_merge_selection/merge_physical_object_candidates', to: 'titles#merge_physical_object_candidates', as: 'title_merge_physical_object_candidates'
   post '/title_merge_select/merge_titles', to: 'titles#merge_autocomplete_titles', as: 'title_autocomplete_selection_merge'
-  get '/titles/:id/show_split_title', to: 'titles#split_title', as: 'show_split_title'
   post '/titles/ajax_split_title_cg_table', to: 'titles#split_title_cg_table', as: 'split_title_cg_table'
   post '/titles/:id/update_split_title', to: 'titles#update_split_title', as: 'update_split_title'
   get '/titles/ajax_reel_count/:id', to: 'titles#ajax_reel_count', as: 'ajax_reel_count'

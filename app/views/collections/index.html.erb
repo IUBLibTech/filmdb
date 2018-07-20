@@ -1,3 +1,4 @@
+<%= link_to 'New Collection', new_collection_path %>
 <h1>Listing Collections</h1>
 <table>
   <thead>
@@ -8,7 +9,6 @@
       <th>Actions</th>
     </tr>
   </thead>
-
   <tbody>
     <% @collections.each do |collection| %>
       <tr>
@@ -27,7 +27,3 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Collection', new_collection_path %>

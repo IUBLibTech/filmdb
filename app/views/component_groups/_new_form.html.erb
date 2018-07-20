@@ -1,0 +1,50 @@
+<h4>Create New Component Group</h4>
+<% url = (action_name == 'new') ? create_title_component_group_path(@title) : update_component_group_path(@title, @component_group) %>
+<%= form_for @component_group, url: url do |f| %>
+  <%= f.hidden_field :title_id %>
+  <table>
+    <tbody>
+    <tr>
+      <th>Group Type</th>
+      <td colspan="9">
+        <%= f.select :group_type, options_for_select(@component_group_cv[:group_type],(@component_group.nil? ? '' : @component_group.group_type)) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Group Summary</th>
+      <td colspan="9">
+        <%= f.text_area :group_summary %>
+      </td>
+    </tr>
+    <% @title.physical_objects.each do |p| %>
+      <tr>
+        <td>
+          <%= check_box_tag "component_group[component_group_physical_objects][#{p.id}][selected]", '', @component_group.physical_objects.include?(p) %> [<%= p.current_location %>]
+        </td>
+        <td><%= p.iu_barcode %></td>
+        <th>Scan Resolution</th>
+        <td>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]})  %>
+        </td>
+        <th>Clean</th>
+        <td>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}) %>
+        </td>
+        <th>Return on Reel</th>
+        <td>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]]) %>
+        </td>
+        <th>Color Space</th>
+        <td>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}) %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td>
+        <%= f.submit "Create Component Group" %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+<% end %>

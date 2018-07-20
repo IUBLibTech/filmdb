@@ -1,12 +1,14 @@
 <h4>Component Groups</h4>
 <table id="component_group_table" class="sel-table _100">
   <thead>
-    <th>Group Type</th>
-    <th colspan="2">Group Summary</th>
-    <th>Gauge</th>
-    <th>Generations</th>
-		<th>Workflow Status(es)</th>
-    <th>Actions</th>
+    <tr>
+      <th>Group Type</th>
+      <th colspan="2">Group Summary</th>
+      <th>Gauge</th>
+      <th>Generations</th>
+      <th>Workflow Status(es)</th>
+      <th>Actions</th>
+    </tr>
   </thead>
   <tbody>
   <% @title.component_groups.order('id DESC').each do |cg| %>
@@ -24,13 +26,12 @@
 		      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
 	      <% end %>
 	      <% if policy(cg).destroy? && !cg.in_active_workflow? %>
-		      <%= link_to "Delete", title_component_group_path(@title, cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
+		      <%= link_to "Delete", delete_component_group_path(@title, cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
           <br>
 	      <% elsif cg.in_active_workflow? %>
 	      <b>Active</b>
 	      <% end %>
-        <%= link_to "Show", title_component_group_path(@title, cg) %>
-        <%= link_to "Edit", edit_title_component_group_path(@title, cg) %>
+        <%= link_to "Edit", edit_component_group_path(@title, cg) %>
 			</td>
     </tr>
   <% end %>
