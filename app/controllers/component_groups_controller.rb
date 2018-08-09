@@ -95,7 +95,6 @@ class ComponentGroupsController < ApplicationController
       if @queued.size > 0
         flash[:notice] = "#{flash[:notice]} Additionally, the following Physical Objects have been Queued for Pull Request: #{@queued.collect{|p| p.iu_barcode}.join(', ')}"
       end
-      debugger
     rescue Exception => e
       flash[:warning] = "An error occurred while editing the Component Group, no changes were made: #{e.message}"
     end
