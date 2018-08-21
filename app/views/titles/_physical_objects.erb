@@ -5,23 +5,29 @@
 <table class="_100">
   <tr>
     <th>Barcode</th>
-    <th>Medium</th>
     <th>Gauge</th>
-    <th>Overall Condition</th>
     <th>Generation</th>
+    <th>Location</th>
+    <th>Overall Condition</th>
     <th>Reel Number</th>
     <th>Can Size</th>
 	  <th>Collection</th>
     <th>Digitized</th>
-	  <th>Location</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
   <tr class=<%= "digitized_tr" if p.digitized? %>>
     <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
-    <td><%= p.medium %></td>
     <td><%= p.gauge %></td>
-    <td><%= p.condition_rating %></td>
     <td><%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %></td>
+    <% if p.current_location == WorkflowStatus::DEACCESSIONED %>
+      <td class="warning">
+    <% else %>
+      <td>
+    <% end %>
+    <%= p.current_workflow_status.status_name %>
+    </td>
+
+    <td><%= p.condition_rating %></td>
     <td><%= p.reel_number %></td>
     <td><%= p.can_size %></td>
 	  <td><%= p.collection&.name %></td>
@@ -30,7 +36,6 @@
     <% else %>
       <td><%= p.digitized.nil? ? "N/A" : p.digitized %></td>
     <% end %>
-	  <td><%= p.current_workflow_status.status_name %></td>
   </tr>
   <% end %>
 </table>

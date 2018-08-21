@@ -1,5 +1,5 @@
 module TitlesHelper
-
+	include ApplicationHelper
 	# attempts to merge all mergees into the master title record - physical objects are reassigned, all non-duplicate creator,
 	# publisher, date, genre, form, etc data is also moved over to the master record.
 	# Titles that are in active workflow will not be merged unless force_merge = true. It is then up to the calling code to
@@ -80,6 +80,52 @@ module TitlesHelper
 				cg.title_id = master.id
 				cg.group_summary = (cg.group_summary.blank? ? ms : " | #{ms}" )
 				cg.save
+			end
+		end
+	end
+
+	def title_search_to_csv(titles)
+		headers = ["IU Barcode","MDPI Barcode", "All Title(s) on Media", "Matching Title (If more than one title on media)", "Series Title", "Series Part", "Title Compilation", "Title Country of Origin",
+							 "Title Summary", "Title Original Identifiers", "Title Publishers", "Title Creators",
+							 "Title Genres","Title Forms", "Title Dates",
+							 "Title Locations", "Title Notes", "Title Subject", "Title Name Authority",
+							 "IUCat Title Control Number","Catalog Key", "Alternative Title",
+							 "Media Type","Medium","Version","Unit","Collection",
+							 "Gauge", "Generation","Generation Notes", "Can Size", "Footage", "Duration", "Reel Dates",
+							 "Base", "Stock", "Original Identifiers",
+							 "Reel Number", "Multiple Items in Can", "Picture Type", "Frame Rate", "Color",
+							 "Aspect Ratio", "Anamorphic", "Sound",
+							 "Captions/Subtitles", "Format Type", "Content Type", "Sound Field",
+							 "Track Count", "Languages", "Format Notes",
+							 "Accompanying Documentation", "Accompanying Documentation Location", "Overall Condition", "Condition Notes",
+							 "Research Value", "Research Value Notes", "AD Strip", "Shrinkage", "Mold",
+							 "Conditions",
+							 "Missing Footage", "Miscellaneous", "Conservation Actions"
+
+							 ]
+		CSV.generate(headers: true) do |csv|
+			csv << headers
+			titles.each do |t|
+				t.physical_objects.each do |p|
+					csv << [
+							p.iu_barcode, p.mdpi_barcode, p.titles_text, t.title_text, t.series_title_text, t.series_part, t.compilation, t.country_of_origin,
+							t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') unless t.title_original_identifiers.size == 0), (t.title_publishers.collect {|p| "#{p.name} [#{p.publisher_type}]"}.join(', ') unless t.title_publishers.size == 0), (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') unless t.title_creators.size == 0),
+							(t.title_genres.collect {|g| g.genre}.join(', ') unless t.title_genres.size == 0), (t.title_forms.collect {|f| f.form}.join(', ') unless t.title_forms.size == 0), (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') unless t.title_dates.size == 0),
+							(t.title_locations.collect {|l| l.location}.join(', ') unless t.title_locations.size == 0), t.notes, t.subject, t.name_authority,
+							p.title_control_number, p.catalog_key, p.alternative_title,
+							p.media_type, p.medium, p.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS), p.unit.name, p.collection.name,
+							p.gauge, p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS), p.generation_notes, p.can_size, p.footage, p.duration, (p.physical_object_dates.collect {|d| "#{d.date} [#{d&.controlled_vocabulary.value}]"}.join(', ') unless p.physical_object_dates.size == 0),
+							p.humanize_boolean_fields(PhysicalObject::BASE_FIELDS), p.humanize_boolean_fields(PhysicalObject::STOCK_FIELDS), (p.physical_object_original_identifiers.collect {|oi| oi.identifier}.join(', ') unless p.physical_object_original_identifiers.size == 0),
+							p.reel_number, bool_to_yes_no(p.multiple_items_in_can), p.humanize_boolean_fields(PhysicalObject::PICTURE_TYPE_FIELDS), p.frame_rate, p.humanize_boolean_fields(PhysicalObject::COLOR_FIELDS),
+							p.humanize_boolean_fields(PhysicalObject::ASPECT_RATIO_FIELDS), p.anamorphic, p.sound,
+							bool_to_yes_no(p.close_caption), p.humanize_boolean_fields(PhysicalObject::SOUND_FORMAT_FIELDS), p.humanize_boolean_fields(PhysicalObject::SOUND_CONTENT_FIELDS), p.humanize_boolean_fields(PhysicalObject::SOUND_CONFIGURATION_FIELDS),
+							p.track_count, (p.languages.collect {|l| "#{l.language} [#{l.language_type}]"}.join(', ') unless p.languages.size == 0), p.format_notes,
+							p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
+              p.research_value, p.research_value_notes, p.ad_strip, p.shrinkage, p.mold,
+              ((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
+							p.missing_footage, p.miscellaneous, p.conservation_actions
+					]
+				end
 			end
 		end
 	end

@@ -5,7 +5,7 @@ class AddCanModifyUserCanUpdateCv < ActiveRecord::Migration
 
     User.reset_column_information
     %w(jaalbrec carcurt).each do |u|
-      User.where(username: u).first.update_attributes!(can_edit_users: true, can_add_cv: true)
+      User.where(username: u).first.update_attributes!(can_edit_users: true, can_add_cv: true) unless u.nil?
     end
   end
 end
