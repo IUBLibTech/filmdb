@@ -113,7 +113,7 @@ module TitlesHelper
 							(t.title_genres.collect {|g| g.genre}.join(', ') unless t.title_genres.size == 0), (t.title_forms.collect {|f| f.form}.join(', ') unless t.title_forms.size == 0), (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') unless t.title_dates.size == 0),
 							(t.title_locations.collect {|l| l.location}.join(', ') unless t.title_locations.size == 0), t.notes, t.subject, t.name_authority,
 							p.title_control_number, p.catalog_key, p.alternative_title,
-							p.media_type, p.medium, p.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS), p.unit.name, p.collection.name,
+							p.media_type, p.medium, p.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS), p.unit&.name, p.collection&.name,
 							p.gauge, p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS), p.generation_notes, p.can_size, p.footage, p.duration, (p.physical_object_dates.collect {|d| "#{d.date} [#{d&.controlled_vocabulary.value}]"}.join(', ') unless p.physical_object_dates.size == 0),
 							p.humanize_boolean_fields(PhysicalObject::BASE_FIELDS), p.humanize_boolean_fields(PhysicalObject::STOCK_FIELDS), (p.physical_object_original_identifiers.collect {|oi| oi.identifier}.join(', ') unless p.physical_object_original_identifiers.size == 0),
 							p.reel_number, bool_to_yes_no(p.multiple_items_in_can), p.humanize_boolean_fields(PhysicalObject::PICTURE_TYPE_FIELDS), p.frame_rate, p.humanize_boolean_fields(PhysicalObject::COLOR_FIELDS),
