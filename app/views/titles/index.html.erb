@@ -52,7 +52,14 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			<%= submit_tag 'Search' %>
+      <div class="left _50">
+        <%= submit_tag 'Search' %>
+      </div>
+      <div>
+        <% if @titles && @titles.size > 0 %>
+          <%= link_to "Download Search Results", title_csv_search_path(params.symbolize_keys.merge(format: :csv))  %>
+        <% end %>
+      </div>
 		</td>
 	</tr>
 </table>

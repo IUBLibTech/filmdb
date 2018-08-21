@@ -60,4 +60,12 @@ module ApplicationHelper
 		User.current_user_object
 	end
 
+	def bool_to_yes_no(val)
+		if val.is_a? String
+			val.blank? ? '' : (val == '0' ? 'No' : 'Yes')
+		else
+			val.nil? ? '' : (val ? 'Yes' : 'No')
+		end
+	end
+
 end

@@ -137,6 +137,7 @@ Rails.application.routes.draw do
   get '/titles/ajax_reel_count/:id', to: 'titles#ajax_reel_count', as: 'ajax_reel_count'
   get '/titles/merge/in_instorage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
   post '/titles/merge/in_storage_update', to: 'titles#merge_in_storage_update', as: 'merge_in_storage_update'
+  get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
   resources :units
 
 	resources :users
