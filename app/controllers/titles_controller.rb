@@ -21,8 +21,21 @@ class TitlesController < ApplicationController
 			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
 			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
 		  end
-	  end
-	  render 'index'
+    end
+    respond_to do |format|
+      format.html {render :index}
+    end
+  end
+
+  def csv_search
+    if params[:title_text]
+      # find out whether or not to do pagination
+      @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
+      @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
+    end
+    respond_to do |format|
+      format.csv {send_data title_search_to_csv(@titles), filename: 'title_search.csv' }
+    end
   end
 
   # GET /titles/1

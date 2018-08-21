@@ -26,7 +26,7 @@ class CsvParser
   SHRINKAGE, MOLD, CONDITION_TYPE, MISSING_FOOTAGE, MISCELLANEOUS_CONDITION_TYPE, CONSERVATION_ACTIONS, CREATOR = 39,40,41,42,43,44,45
   PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART, ACCOMPANYING_DOCUMENTATION = 46,47,48,49,50,51,52,53
   CREATED_BY, EMAIL_ADDRESS, RESEARCH_VALUE_NOTES, DATE_CREATED, LOCATION, DATE, ACCOMPANYING_DOCUMENTATION_LOCATION, TITLE_SUMMARY, TITLE_NOTES, ALF_SHELF_LOCATION = 54,55,56,57,58,59,60,61,62,63
-	NAME_AUTHORITY, GENERATION_NOTES, CATALOG_KEY = 64, 65, 66
+	SUBJECT, NAME_AUTHORITY, GENERATION_NOTES, CATALOG_KEY = 64, 65, 66, 67
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -132,7 +132,12 @@ class CsvParser
     @parse_headers_msg = ''
     # read all of the file's column headers
     row.each_with_index { |header, i|
-      unless header.nil?
+      puts "[#{header}, #{i}]"
+      if @headers.keys.include?(header)
+        @parse_headers_msg << "The header <b>#{header}</b> was duplicated at column #{i}<br/>"
+      elsif header.nil?
+        @parse_headers_msg << "The header is blank at column #{i}<br/>"
+      else
         @headers[header.strip] = i
       end
     }
@@ -168,10 +173,8 @@ class CsvParser
     # read all auto parse fields
     po = PhysicalObject.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
-      # not all attributes in a physical object may be present in the spreadsheet...
       po.send(HEADERS_TO_ASSIGNER[k], row[@headers[k]]) unless @headers[k].nil?
     end
-
     # date created
     begin
       d = Date.strptime(row[column_index DATE_CREATED], '%Y/%m/%d')
@@ -521,6 +524,7 @@ class CsvParser
     end
 
     # generation_notes
+
 
     # original identifiers
     o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
