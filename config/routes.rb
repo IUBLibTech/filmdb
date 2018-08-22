@@ -100,11 +100,11 @@ Rails.application.routes.draw do
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
 
   resources :titles, except: [:index] do
-    # resources :component_groups, only: [:new, :create, :edit, :update, :show, :destroy] do
-    #   get 'best_copy_selection'
-    #   post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_create', as: 'best_copy_selection_create'
-    #   get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
-    # end
+    resources :component_groups, only: [] do
+      get 'best_copy_selection'
+      post 'best_copy_selection_update', to: 'component_groups#best_copy_selection_create', as: 'best_copy_selection_create'
+      get 'ajax_best_copy_selection_membership/:iu_barcode', to: 'component_groups#ajax_best_copy_selection_membership', as: 'ajax_best_copy_selection_membership'
+    end
   end
 
   get '/titles/filter_selected/:selected', to: 'titles#index', as: 'selected_titles'
