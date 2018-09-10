@@ -25,12 +25,23 @@
 			$('#ajax_show_storage_message').html('');
 			valid = validateIUBarcode($(this));
 			if (valid) {
+          var url = '../workflow/ajax_show_storage_location/' + $(this).val();
 				$.ajax({
-					url: '../physical_objects/ajax_show_storage/' + $(this).val(),
+          url: url,
 					error: function(jqXHR, textStatus, errorThrown) {
-              window.location.replace(jqXHR.url)
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              });
           },
 					success: function (result) {
+            if (result.startsWith("Error:")) {
+                $('#ajax_show_storage_message').addClass('warning')
+            } else {
+                $('#ajax_show_storage_message').removeClass('warning')
+            }
 						$('#ajax_show_storage_message').html(result)
 					}
 				});
