@@ -48,10 +48,6 @@
 	      <li><%= link_to'Mark Item Missing', mark_missing_path %></li>
 	      <li><%= link_to 'Mark Item Found', show_mark_found_url %></li>
 	    <% end %>
-	    <% if policy(User).can_edit_users? %>
-		    <br>
-		    <li><%= link_to 'Change Location', update_location_url %></li>
-	    <% end %>
     </ul>
   </div>
   <div class="menuItem">
