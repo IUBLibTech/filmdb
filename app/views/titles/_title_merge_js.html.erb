@@ -11,8 +11,9 @@
                 minLength: 2,
                 //source: '<%= autocomplete_title_path %>',
                 source: function(request, response) {
+                    var url = "<%= autocomplete_title_path %>";
                     $.ajax({
-                        url: "<%= autocomplete_title_path %>",
+                        url: url,
                         dataType: "json",
                         data: {
                             term: request.term,
@@ -22,7 +23,12 @@
                             response(data)
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            window.location.replace(jqXHR.url)
+                            swal({
+                                title: 'Ajax Error',
+                                text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                            }, function() {
+                                window.location.replace(url)
+                            });
                         }
                     });
                 },
@@ -75,11 +81,17 @@
     });
 
     function addTitle(id) {
+        var url = '/title_merge_selection_table_row/'+id;
         $.ajax({
-            url: '/title_merge_selection_table_row/'+id,
+            url: url,
             data: {merge_all: merge_all},
             error: function(jqXHR, textStatus, errorThrown) {
-                window.location.replace(jqXHR.url)
+                swal({
+                    title: 'Ajax Error',
+                    text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                }, function() {
+                    window.location.replace(url)
+                });
             },
             success: function(result) {
                 if (!merge_all && result === "Active") {
@@ -104,10 +116,16 @@
     }
 
     function ajaxTitleSummary(id) {
+        var url = '/titles/ajax/'+id;
         $.ajax({
-            url: '/titles/ajax/'+id,
+            url: url,
             error: function(jqXHR, textStatus, errorThrown) {
-                window.location.replace(jqXHR.url)
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              });
             },
             success: function(result) {
                 $('#title_summary').html(result);
@@ -119,11 +137,17 @@
     function showPhysicalObjects() {
         // don't show physical objects when merging in storage titles
         if (merge_all) {
+            var url = "<%= title_merge_physical_object_candidates_path %>";
             $.ajax({
-                url: "<%= title_merge_physical_object_candidates_path %>",
+                url: url,
                 data: {ids: selectedTitleIds()},
                 error: function (jqXHR, textStatus, errorThrown) {
-                    window.location.replace(jqXHR.url)
+                    swal({
+                        title: 'Ajax Error',
+                        text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                    }, function() {
+                        window.location.replace(url)
+                    });
                 },
                 success: function (result) {
                     $('#physical_objects').html(result)

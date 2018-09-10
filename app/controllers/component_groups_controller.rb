@@ -57,6 +57,7 @@ class ComponentGroupsController < ApplicationController
   def edit
     @title = Title.find(params[:t_id])
     @component_group = ComponentGroup.includes(:physical_objects).find(params[:id])
+    @active = @component_group.in_active_workflow?
     @component_group_cv = ControlledVocabulary.component_group_cv
   end
 
@@ -70,30 +71,33 @@ class ComponentGroupsController < ApplicationController
         @original = @component_group.physical_objects
         ComponentGroupPhysicalObject.where(component_group_id: @component_group.id).delete_all
         @checked = params[:component_group][:component_group_physical_objects].keys.select{|k| !params[:component_group][:component_group_physical_objects][k][:selected].nil?}
+        @component_group.group_type = params[:component_group][:group_type]
+        @component_group.group_summary = params[:component_group][:group_summary]
         @component_group.save!
+        flash[:notice] = "Component Group successfully created.".html_safe
         @checked.each do |po|
           settings = params[:component_group][:component_group_physical_objects][po]
           ComponentGroupPhysicalObject.new(
               component_group_id: @component_group.id, physical_object_id: po.to_i,
               scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean]
           ).save!
-           p = PhysicalObject.find(po)
+          p = PhysicalObject.find(po)
+          # must do this before setting workflow status so that the correct CG can be assigned to the workflow status
+          p.active_component_group = @component_group
+          debugger
           if @active && p.in_storage?
             p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
-            p.save
+            flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} has been Queued for Pull Request"
+          elsif @active && (p.current_location == WorkflowStatus::JUST_INVENTORIED_ALF)
+            p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
+            flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 2k/4k staging shelf"
+          elsif @active && (p.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS)
+            debugger
+            p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::WELLS_TO_ALF_CONTAINER, p)
+            flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 'Wells to ALF Container'"
           end
+          p.save
         end
-      end
-      msg = "Component Group successfully updated."
-      @original.select{|p| !@component_group.physical_objects.include?(p)}
-      if @original.size > 0 && @active
-        flash[:notice] = "Component Group successfully created. The following Physical Objects should be returned to storage #{(@original.select{|p| !@checked.include?(p.id.to_s)}).collect{|p| p.iu_barcode}.join(', ')}."
-      else
-        flash[:notice] = "Component Group successfully created."
-      end
-      @queued = @component_group.physical_objects.select{|p| p.current_location == WorkflowStatus::QUEUED_FOR_PULL_REQUEST}
-      if @queued.size > 0
-        flash[:notice] = "#{flash[:notice]} Additionally, the following Physical Objects have been Queued for Pull Request: #{@queued.collect{|p| p.iu_barcode}.join(', ')}"
       end
     rescue Exception => e
       flash[:warning] = "An error occurred while editing the Component Group, no changes were made: #{e.message}"

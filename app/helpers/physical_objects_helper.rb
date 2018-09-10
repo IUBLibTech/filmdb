@@ -21,7 +21,8 @@ module PhysicalObjectsHelper
     begin
       PhysicalObject.transaction do
         process_titles
-        ws = WorkflowStatus.build_workflow_status(WorkflowStatus::JUST_INVENTORIED_WELLS, @physical_object)
+        status_name = (User.current_user_object.worksite_location == 'ALF' ? WorkflowStatus::JUST_INVENTORIED_ALF : WorkflowStatus::JUST_INVENTORIED_WELLS)
+        ws = WorkflowStatus.build_workflow_status(status_name, @physical_object)
 				@physical_object.workflow_statuses << ws
         respond_to do |format|
           if @physical_object.save
