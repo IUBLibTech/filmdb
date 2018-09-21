@@ -61,13 +61,19 @@
 			buttons: [{
 				text: 'Update',
 				click: function () {
+				    var url = "../component_groups/" + id + "/ajax_edit_summary";
 					$.ajax({
-						url: "../component_groups/" + id + "/ajax_edit_summary",
+						url: url,
 						type: "POST",
 						data: $('#summary_form').serialize(),
 						error: function (XMLHttpRequest, textStatus, errorThrown) {
 							$('#edit_summary_dialog').dialog("close");
-							window.location.replace(XMLHttpRequest.url)
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  // don't redirect here because it was a post
+              });
 						},
 						success: function (data) {
 							if (data == 'success') {
@@ -109,7 +115,12 @@
     $.ajax({
       url: url,
       error: function(jqXHR, textStatus, errorThrown) {
-          window.location.replace(jqXHR.url)
+        swal({
+            title: 'Ajax Error',
+            text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+        }, function() {
+            window.location.replace(url)
+        });
       },
       success: function(result) {
         el = $('#cg_summary');
@@ -123,11 +134,17 @@
 		var id = $(this).attr('id').substring(3);
 		event.preventDefault();
 	  event.stopPropagation();
+	  var url = '../component_groups/'+id+'/ajax_queue_pull_request';
 		$.ajax({
-			url: '../component_groups/'+id+'/ajax_queue_pull_request',
+			url: url,
 			method: 'POST',
 			error: function(jqXHR, textStatus, error) {
-				window.location.replace(jqXHR.url)
+        swal({
+            title: 'Ajax Error',
+            text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+        }, function() {
+            window.location.replace(url)
+        });
 			},
 			success: function(data, status, xhr) {
         title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
@@ -156,12 +173,18 @@
   $('a.edit_dig_params').click(function(event) {
 		event.preventDefault();
 	  event.stopPropagation();
-		id = $(this).attr('id').substring('edit_dig_params_'.length)
+		id = $(this).attr('id').substring('edit_dig_params_'.length);
+		var url = './ajax/edit_cg_params/'+id;
 		$.ajax({
-			url: './ajax/edit_cg_params/'+id,
+			url: url,
 			method: 'GET',
 			error: function(jqXHR, textStatus, error) {
-				window.location.replace(jqXHR.url)
+          swal({
+              title: 'Ajax Error',
+              text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+          }, function() {
+              window.location.replace(url)
+          });
 			},
 			success: function(data, status, xhr) {
 				swal({

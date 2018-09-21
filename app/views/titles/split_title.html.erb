@@ -47,8 +47,9 @@
         minLength: 3,
         //source: '<%= autocomplete_title_path %>',
         source: function (request, response) {
+            var url = "<%= autocomplete_title_path %>";
             $.ajax({
-                url: "<%= autocomplete_title_path %>",
+                url: url,
                 dataType: "json",
                 data: {
                     term: request.term,
@@ -58,7 +59,12 @@
                     response(data)
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    window.location.replace(jqXHR.url)
+                    swal({
+                        title: 'Ajax Error',
+                        text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                    }, function() {
+                        window.location.replace(url)
+                    });
                 }
             });
         },
@@ -100,10 +106,16 @@
   });
 
   function ajaxTitleSummary(id) {
+      var url = '../../titles/ajax/' + id;
       $.ajax({
-          url: '../../titles/ajax/' + id,
+          url: url,
           error: function(jqXHR, textStatus, errorThrown) {
-              window.location.replace(jqXHR.url)
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              });
           },
           success: function (result) {
               $('#title_sum').html(result).show();
@@ -178,7 +190,7 @@
               registerCheckboxes();
           },
           error: function(jqXHR, textStatus, errorThrown) {
-              //window.location.replace(jqXHR.url)
+              swal("Ajax Error", "An error occurred while making an AJAX call at function: getCgTable()")
           }
       });
   }

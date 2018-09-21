@@ -93,11 +93,17 @@
     or the id of the physical object to which the specified barcode belongs.
      */
     function testBarcode(iubc) {
+        var url = '/physical_objects/ajax_belongs_to_title/'+iubc.val()+'/'+$('.title').first().attr('id');
         $.ajax({
-            url: '/physical_objects/ajax_belongs_to_title/'+iubc.val()+'/'+$('.title').first().attr('id'),
+            url: url,
             dataType: 'json',
             error: function(jqXHR) {
-                window.location.replace(jqXHR.url)
+                swal({
+                    title: 'Ajax Error',
+                    text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                }, function() {
+                    window.location.replace(url)
+                })
             },
             success: function(result) {
                 testBarcodeCallBack(iubc, result)
@@ -125,13 +131,19 @@
     $(document).ready(function() {
         $('.poid[value!=""][value]').each(function() {
             var el = this;
+            var url = '../../../../physical_objects/'+el.value+'/ajax_lookup_barcode';
             $.ajax({
-                url: '../../../../physical_objects/'+el.value+'/ajax_lookup_barcode',
+                url: url,
                 success: function(result) {
                     lookup_callback(el, result)
                 },
                 error: function(jqXHR) {
-                    //window.location.replace(jqXHR.url)
+                    swal({
+                        title: 'Ajax Error',
+                        text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                    }, function() {
+                        window.location.replace(url)
+                    })
                 }
             });
         })

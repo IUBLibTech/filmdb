@@ -113,7 +113,7 @@ Rails.application.routes.draw do
   get '/titles/:id/show_split_title', to: 'titles#split_title', as: 'show_split_title'
   get '/titles/:id/component_groups/new', to: 'component_groups#new', as: 'new_title_component_group'
   post '/titles/:id/component_groups/create', to: 'component_groups#create', as: 'create_title_component_group'
-  delete '/titles/:t_id/component_groups/delete/:id', to: 'component_groups#delete', as: 'delete_component_group'
+  delete '/titles/:t_id/component_groups/delete/:id', to: 'component_groups#destroy', as: 'delete_component_group'
   get '/titles/:t_id/component_groups/:id', to: 'component_groups#edit', as: 'edit_component_group'
   patch '/titles/:t_id/component_groups/:id', to: 'component_groups#update', as: 'update_component_group'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
@@ -184,6 +184,7 @@ Rails.application.routes.draw do
   post '/workflow/update_mark_found', to: 'workflow#update_mark_found', as: 'update_mark_found'
   get '/workflow/digitization_staging_list', to: 'workflow#digitization_staging_list', as: 'digitization_staging_list'
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
+  get '/workflow/ajax_show_storage_location/:iu_barcode', to: 'workflow#ajax_return_to_storage_lookup', as: 'ajax_return_to_storage_lookup'
 
   # workflow_stats routes
   get '/workflow_stats/digitization_staging_stats', to: 'workflow_stats#digitization_staging_stats', as: 'digitization_staging_stats'

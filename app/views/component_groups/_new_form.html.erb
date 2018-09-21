@@ -32,7 +32,7 @@
         <% if p.current_location == WorkflowStatus::DEACCESSIONED  %>
           <td class="warning"><%= p.iu_barcode %></td>
         <% else %>
-          <td>
+          <td class="<%= @active && @component_group.physical_objects.include?(p) ? 'dont_uncheck' : ''%>">
             <%= check_box_tag "component_group[component_group_physical_objects][#{p.id}][selected]", '', @component_group.physical_objects.include?(p) %> [<%= p.iu_barcode %>]
           </td>
         <% end %>
@@ -45,22 +45,22 @@
           <td><%= p.digitized.nil? ? "N/A" : p.digitized %></td>
         <% end %>
         <td>
-          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]})  %>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, p.active_scan_settings&.scan_resolution)  %>
         </td>
         <td>
-          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}) %>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, p.active_scan_settings&.color_space) %>
         </td>
         <td>
-          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}) %>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, p.active_scan_settings&.clean) %>
         </td>
         <td>
-          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]]) %>
+          <%= select_tag "component_group[component_group_physical_objects][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]], p.active_scan_settings&.return_on_reel) %>
         </td>
       </tr>
     <% end %>
     <tr>
       <td>
-        <%= f.submit "Create Component Group" %>
+        <%= f.submit (action_name == 'new' ? "Create Component Group" : "Update Component Group") %>
       </td>
     </tr>
     </tbody>
@@ -72,6 +72,7 @@
         $('input:checkbox').click(function(e) {
             if (!lastChecked) {
                 lastChecked = this;
+                dontUncheck();
                 return;
             }
             if (e.shiftKey) {
@@ -80,6 +81,10 @@
                 $('input:checkbox').slice(Math.min(start, end), Math.max(start,end) + 1).prop('checked', lastChecked.checked)
             }
             lastChecked = this;
+            dontUncheck();
         });
     })
+    function dontUncheck() {
+        $('.dont_uncheck input:checkbox').prop('checked', true)
+    }
 </script>

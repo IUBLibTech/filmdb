@@ -134,10 +134,16 @@
     var id = null;
     $('.shelf').click(function() {
       id = $(this).attr('id').substring(6);
+      var url = './cage_shelf/'+id+'/ajax_physical_objects';
       $.ajax({
         url: './cage_shelf/'+id+'/ajax_physical_objects',
         error: function(jqXHR, exception) {
-            window.location.replace(jqXHR.url)
+            swal({
+                title: 'Ajax Error',
+                text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+            }, function() {
+                window.location.replace(url)
+            });
         },
         success: function(result) {
           setShelfContent(result);
@@ -152,10 +158,16 @@
 	    if (cage_id == null || cage_id.length < 1) {
 		    swal('You must first select a shelf on the left');
 	    } else if (isValidBarcode($(this).val())) {
+	        var url = './ajax_add_physical_object_iu_barcode_scan/'+$(this).val();
 		    $.ajax({
-			    url: './ajax_add_physical_object_iu_barcode_scan/'+$(this).val(),
+			    url: url,
           error: function(jqXHR, textStatus, errorThrown) {
-				    window.location.replace(jqXHR.url)
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              })
 			    },
 			    success: function(result) {
 				    h = $('#shelf_objects_header');
@@ -178,8 +190,9 @@
       } else if (iu_bc == null || iu_bc == '') {
         swal('You did not specify an IU barcode')
       }	else {
+          var url = './cage_shelf/'+id+'/ajax_physical_objects/';
         $.ajax({
-          url: './cage_shelf/'+id+'/ajax_physical_objects/',
+          url: url,
           method: 'POST',
           data: $('#add_cage_shelf_form').serializeArray(),
           error: function(result) {
@@ -205,10 +218,16 @@
     }
 
     function update_shelf_stats() {
+        var url = './cage_shelf/'+id+'/ajax_cage_shelf_stats';
 	    $.ajax({
-		    url: './cage_shelf/'+id+'/ajax_cage_shelf_stats',
+		    url: url,
 		    error: function (jqXHR, textStatus, errorThrown) {
-          window.location.replace(jqXHR.url)
+            swal({
+                title: 'Ajax Error',
+                text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+            }, function() {
+                window.location.replace(url)
+            })
 		    },
 		    success: function(result) {
 			    $('#po_count').html(result['count']);
@@ -222,10 +241,16 @@
     }
 
     function update_digi_stats() {
+        var url = "<%= digitization_staging_stats_path %>";
 	    $.ajax({
-		    url: "<%= digitization_staging_stats_path %>",
+		    url: url,
 		    error: function(jqXHR, status, error) {
-			    window.location.replace(jqXHR.url)
+            swal({
+                title: 'Ajax Error',
+                text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+            }, function() {
+                window.location.replace(url)
+            })
 		    },
 		    success: function(result) {
 			    $('#digi_staging').html(result)
@@ -250,11 +275,17 @@
           showCancelButton: 'true'
         },
         function() {
+            var url = './cage_shelf/'+cage_id+'/ajax_remove_physical_object_from_shelf/'+po_id;
           $.ajax({
-            url: './cage_shelf/'+cage_id+'/ajax_remove_physical_object_from_shelf/'+po_id,
+            url: url,
             method: 'DELETE',
             error: function(jqXHR, textStatus, errorThrown) {
-              window.location.replace(jqXHR.url)
+                swal({
+                    title: 'Ajax Error',
+                    text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                }, function() {
+                    window.location.replace(url)
+                })
             },
             success: function(result) {
               setShelfContent(result);
