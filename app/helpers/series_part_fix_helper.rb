@@ -61,7 +61,6 @@ module SeriesPartFixHelper
         end
       end
     end
-
   end
 
   def update_po(iu_barcode, title_text, series_part, row)

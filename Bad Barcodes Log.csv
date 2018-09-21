@@ -1,0 +1,1680 @@
+IU Barcode,Spreadsheet Name,Row,Reason for Failure
+30000136709627,AVC_Elements_SendtoDatabase_20180608.csv,9,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136844218,AVC_Elements_SendtoDatabase_20180608.csv,15,Title mismatch,"SS Title: Earthworm: Anatomy and Dissection
+Filmdb Title: Earthworm: Anatomy And Dissection"
+30000136844226,AVC_Elements_SendtoDatabase_20180608.csv,16,Title mismatch,"SS Title: Earthworm: Anatomy and Dissection
+Filmdb Title: Earthworm: Anatomy And Dissection"
+30000136849555,AVC_Elements_SendtoDatabase_20180608.csv,17,Title mismatch,"SS Title: Earthworm: Anatomy and Dissection
+Filmdb Title: Earthworm: Anatomy And Dissection"
+30000136938051,AVC_Elements_SendtoDatabase_20180608.csv,18,Title mismatch,"SS Title: Earthworm: Anatomy and Dissection
+Filmdb Title: Earthworm: Anatomy And Dissection"
+30000136810292,AVC_Elements_SendtoDatabase_20180608.csv,52,Title mismatch,"SS Title: The Solar SystemIts Motion
+Filmdb Title: The Solar SystemÉIts Motion"
+30000136810300,AVC_Elements_SendtoDatabase_20180608.csv,53,Title mismatch,"SS Title: The Solar SystemIts Motion
+Filmdb Title: The Solar SystemÉIts Motion"
+30000136942095,AVC_Elements_SendtoDatabase_20180608.csv,63,Title mismatch,"SS Title: Amoeba: Single Celled Organism
+Filmdb Title: Amoeba : single-celled organism"
+30000136942418,AVC_Elements_SendtoDatabase_20180608.csv,64,Title mismatch,"SS Title: Amoeba: Single Celled Organism
+Filmdb Title: Amoeba : single-celled organism"
+30000136614405,AVC_Elements_SendtoDatabase_20180608.csv,68,Title mismatch,"SS Title: For Better or For Worse
+Filmdb Title: For Better Or For Worse"
+30000136761248,AVC_Elements_SendtoDatabase_20180608.csv,80,Title mismatch,"SS Title: For Better or For Worse
+Filmdb Title: For Better Or For Worse"
+30000136761255,AVC_Elements_SendtoDatabase_20180608.csv,81,Title mismatch,"SS Title: For Better or For Worse
+Filmdb Title: For Better Or For Worse"
+30000136762949,AVC_Elements_SendtoDatabase_20180608.csv,82,Title mismatch,"SS Title: For Better or For Worse
+Filmdb Title: For Better Or For Worse"
+30000136707050,AVC_Elements_SendtoDatabase_20180608.csv,104,Title mismatch,"SS Title: News: What is it?
+Filmdb Title: News: What Is It?"
+30000136944950,AVC_Elements_SendtoDatabase_20180608.csv,107,Title mismatch,"SS Title: News: What is it?
+Filmdb Title: News: What Is It?"
+30000136944968,AVC_Elements_SendtoDatabase_20180608.csv,108,Title mismatch,"SS Title: News: What is it?
+Filmdb Title: News: What Is It?"
+30000136617259,AVC_Elements_SendtoDatabase_20180608.csv,163,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136613993,AVC_Elements_SendtoDatabase_20180608.csv,164,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136614017,AVC_Elements_SendtoDatabase_20180608.csv,165,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136614025,AVC_Elements_SendtoDatabase_20180608.csv,166,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136614074,AVC_Elements_SendtoDatabase_20180608.csv,167,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136707589,AVC_Elements_SendtoDatabase_20180608.csv,176,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136940651,AVC_Elements_SendtoDatabase_20180608.csv,187,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136941220,AVC_Elements_SendtoDatabase_20180608.csv,191,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136941238,AVC_Elements_SendtoDatabase_20180608.csv,192,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136942921,AVC_Elements_SendtoDatabase_20180608.csv,203,Title mismatch,"SS Title: Transport Systems in Animals
+Filmdb Title: Transport systems in animals"
+30000136612979,AVC_Elements_SendtoDatabase_20180608.csv,204,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136612987,AVC_Elements_SendtoDatabase_20180608.csv,205,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136612995,AVC_Elements_SendtoDatabase_20180608.csv,206,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136613001,AVC_Elements_SendtoDatabase_20180608.csv,207,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136613019,AVC_Elements_SendtoDatabase_20180608.csv,208,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136613548,AVC_Elements_SendtoDatabase_20180608.csv,209,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136613555,AVC_Elements_SendtoDatabase_20180608.csv,210,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136613571,AVC_Elements_SendtoDatabase_20180608.csv,211,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136613589,AVC_Elements_SendtoDatabase_20180608.csv,212,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136613597,AVC_Elements_SendtoDatabase_20180608.csv,213,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136613779,AVC_Elements_SendtoDatabase_20180608.csv,214,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136613787,AVC_Elements_SendtoDatabase_20180608.csv,215,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136706599,AVC_Elements_SendtoDatabase_20180608.csv,216,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136706664,AVC_Elements_SendtoDatabase_20180608.csv,217,Title mismatch,"SS Title: Microorganisms: Harmful Activities
+Filmdb Title: Microorganisms : Harmful Activities"
+30000136707662,AVC_Elements_SendtoDatabase_20180608.csv,220,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136841297,AVC_Elements_SendtoDatabase_20180608.csv,223,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136841305,AVC_Elements_SendtoDatabase_20180608.csv,224,PO has 0 Titles in Filmdb,SS Title: Microorganisms: Beneficial Activities
+30000136614876,AVC_Elements_SendtoDatabase_20180608.csv,229,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136705716,AVC_Elements_SendtoDatabase_20180608.csv,236,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136762618,AVC_Elements_SendtoDatabase_20180608.csv,237,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136762626,AVC_Elements_SendtoDatabase_20180608.csv,238,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136763608,AVC_Elements_SendtoDatabase_20180608.csv,239,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136763616,AVC_Elements_SendtoDatabase_20180608.csv,240,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136763624,AVC_Elements_SendtoDatabase_20180608.csv,241,Title mismatch,"SS Title: Handling and Sexing Fruit Flies
+Filmdb Title: Handling and sexing fruit flies"
+30000136705245,AVC_Elements_SendtoDatabase_20180608.csv,244,Title mismatch,"SS Title: Safety in the Chemistry Laboratory
+Filmdb Title: Safety in the chemistry laboratory"
+30000136611468,AVC_Elements_SendtoDatabase_20180608.csv,248,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136611666,AVC_Elements_SendtoDatabase_20180608.csv,249,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136611674,AVC_Elements_SendtoDatabase_20180608.csv,250,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136708033,AVC_Elements_SendtoDatabase_20180608.csv,253,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136709650,AVC_Elements_SendtoDatabase_20180608.csv,254,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136941048,AVC_Elements_SendtoDatabase_20180608.csv,258,Title mismatch,"SS Title: Camping--A Key to Conservation
+Filmdb Title: Camping: A Key to Conservation"
+30000136615493,AVC_Elements_SendtoDatabase_20180608.csv,265,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136615501,AVC_Elements_SendtoDatabase_20180608.csv,266,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Asexual Reproduction"
+30000136615519,AVC_Elements_SendtoDatabase_20180608.csv,267,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136615543,AVC_Elements_SendtoDatabase_20180608.csv,268,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136616475,AVC_Elements_SendtoDatabase_20180608.csv,269,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136616483,AVC_Elements_SendtoDatabase_20180608.csv,270,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136706813,AVC_Elements_SendtoDatabase_20180608.csv,279,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136707399,AVC_Elements_SendtoDatabase_20180608.csv,280,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136750225,AVC_Elements_SendtoDatabase_20180608.csv,283,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922527,AVC_Elements_SendtoDatabase_20180608.csv,290,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922535,AVC_Elements_SendtoDatabase_20180608.csv,291,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922543,AVC_Elements_SendtoDatabase_20180608.csv,292,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922568,AVC_Elements_SendtoDatabase_20180608.csv,294,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922592,AVC_Elements_SendtoDatabase_20180608.csv,295,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922600,AVC_Elements_SendtoDatabase_20180608.csv,296,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136922618,AVC_Elements_SendtoDatabase_20180608.csv,297,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136940701,AVC_Elements_SendtoDatabase_20180608.csv,304,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136943945,AVC_Elements_SendtoDatabase_20180608.csv,322,Title mismatch,"SS Title: Basic Nature of Sexual Reproduction
+Filmdb Title: Basic Nature Of Sexual Reproduction"
+30000136709411,AVC_Elements_SendtoDatabase_20180608.csv,369,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136709619,AVC_Elements_SendtoDatabase_20180608.csv,372,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136752171,AVC_Elements_SendtoDatabase_20180608.csv,373,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136765306,AVC_Elements_SendtoDatabase_20180608.csv,377,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136765314,AVC_Elements_SendtoDatabase_20180608.csv,378,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136841271,AVC_Elements_SendtoDatabase_20180608.csv,379,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136841289,AVC_Elements_SendtoDatabase_20180608.csv,380,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136940412,AVC_Elements_SendtoDatabase_20180608.csv,389,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136941360,AVC_Elements_SendtoDatabase_20180608.csv,394,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136942715,AVC_Elements_SendtoDatabase_20180608.csv,399,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136942723,AVC_Elements_SendtoDatabase_20180608.csv,400,Title mismatch,"SS Title: Development of the Chick: Extra Embryonic Membranes
+Filmdb Title: Development of the Chick: Extraembryonic Membranes"
+30000136611104,AVC_Elements_SendtoDatabase_20180608.csv,420,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136611112,AVC_Elements_SendtoDatabase_20180608.csv,421,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136611120,AVC_Elements_SendtoDatabase_20180608.csv,422,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136611138,AVC_Elements_SendtoDatabase_20180608.csv,423,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136611146,AVC_Elements_SendtoDatabase_20180608.csv,424,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136611153,AVC_Elements_SendtoDatabase_20180608.csv,425,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136613183,AVC_Elements_SendtoDatabase_20180608.csv,426,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136706540,AVC_Elements_SendtoDatabase_20180608.csv,429,Title mismatch,"SS Title: Static Electricity
+Filmdb Title: Electricity. Static Electricity"
+30000136706789,AVC_Elements_SendtoDatabase_20180608.csv,464,Title mismatch,"SS Title: ""Dick""--A Fifth Grader
+Filmdb Title: Dick--A Fifth Grader"
+30000136706797,AVC_Elements_SendtoDatabase_20180608.csv,465,Title mismatch,"SS Title: ""Alice""--A High School Junior
+Filmdb Title: Alice : a high school junior"
+30000136707860,AVC_Elements_SendtoDatabase_20180608.csv,466,Title mismatch,"SS Title: ""Greg""--An Eigth Grader
+Filmdb Title: Greg: An Eighth Grader"
+30000136811753,AVC_Elements_SendtoDatabase_20180608.csv,467,Title mismatch,"SS Title: ""Alice""--A High School Junior
+Filmdb Title: Alice : a high school junior"
+30000136811761,AVC_Elements_SendtoDatabase_20180608.csv,468,Title mismatch,"SS Title: ""Alice""--A High School Junior
+Filmdb Title: Alice : a high school junior"
+30000136844523,AVC_Elements_SendtoDatabase_20180608.csv,469,Title mismatch,"SS Title: ""Keith""--A Second Grader
+Filmdb Title: Keith - A Second Grader"
+30000136844531,AVC_Elements_SendtoDatabase_20180608.csv,470,Title mismatch,"SS Title: ""Keith""--A Second Grader
+Filmdb Title: Keith - A Second Grader"
+30000136849373,AVC_Elements_SendtoDatabase_20180608.csv,471,Title mismatch,"SS Title: ""Greg""--An Eigth Grader
+Filmdb Title: Greg: An Eighth Grader"
+30000136849381,AVC_Elements_SendtoDatabase_20180608.csv,472,Title mismatch,"SS Title: ""Greg""--An Eigth Grader
+Filmdb Title: Greg: An Eighth Grader"
+30000136941659,AVC_Elements_SendtoDatabase_20180608.csv,473,Title mismatch,"SS Title: ""Dick""--A Fifth Grader
+Filmdb Title: Dick--A Fifth Grader"
+30000136941667,AVC_Elements_SendtoDatabase_20180608.csv,474,Title mismatch,"SS Title: ""Dick""--A Fifth Grader
+Filmdb Title: Dick--A Fifth Grader"
+30000136925520,AVC_Elements_SendtoDatabase_20180608.csv,475,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136935974,AVC_Elements_SendtoDatabase_20180608.csv,476,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136935982,AVC_Elements_SendtoDatabase_20180608.csv,477,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136935990,AVC_Elements_SendtoDatabase_20180608.csv,478,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136936006,AVC_Elements_SendtoDatabase_20180608.csv,479,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136936014,AVC_Elements_SendtoDatabase_20180608.csv,480,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136936022,AVC_Elements_SendtoDatabase_20180608.csv,481,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136936030,AVC_Elements_SendtoDatabase_20180608.csv,482,Title mismatch,"SS Title: Career in Bacteriology
+Filmdb Title: A Career in Bacteriology"
+30000136707175,AVC_Elements_SendtoDatabase_20180608.csv,495,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136938887,AVC_Elements_SendtoDatabase_20180608.csv,501,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136938895,AVC_Elements_SendtoDatabase_20180608.csv,502,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136704925,AVC_Elements_SendtoDatabase_20180608.csv,510,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704412,AVC_Elements_SendtoDatabase_20180608.csv,515,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136704438,AVC_Elements_SendtoDatabase_20180608.csv,517,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136704461,AVC_Elements_SendtoDatabase_20180608.csv,519,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136704503,AVC_Elements_SendtoDatabase_20180608.csv,521,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136704610,AVC_Elements_SendtoDatabase_20180608.csv,531,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136704693,AVC_Elements_SendtoDatabase_20180608.csv,534,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136704743,AVC_Elements_SendtoDatabase_20180608.csv,536,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704750,AVC_Elements_SendtoDatabase_20180608.csv,537,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704768,AVC_Elements_SendtoDatabase_20180608.csv,538,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136704776,AVC_Elements_SendtoDatabase_20180608.csv,539,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704784,AVC_Elements_SendtoDatabase_20180608.csv,540,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704792,AVC_Elements_SendtoDatabase_20180608.csv,541,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704826,AVC_Elements_SendtoDatabase_20180608.csv,544,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136704834,AVC_Elements_SendtoDatabase_20180608.csv,545,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136704859,AVC_Elements_SendtoDatabase_20180608.csv,547,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136704883,AVC_Elements_SendtoDatabase_20180608.csv,550,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704941,AVC_Elements_SendtoDatabase_20180608.csv,553,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136704958,AVC_Elements_SendtoDatabase_20180608.csv,554,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704966,AVC_Elements_SendtoDatabase_20180608.csv,555,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704974,AVC_Elements_SendtoDatabase_20180608.csv,556,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136704982,AVC_Elements_SendtoDatabase_20180608.csv,557,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136705005,AVC_Elements_SendtoDatabase_20180608.csv,558,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136705039,AVC_Elements_SendtoDatabase_20180608.csv,559,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136705104,AVC_Elements_SendtoDatabase_20180608.csv,560,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136705112,AVC_Elements_SendtoDatabase_20180608.csv,561,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136705120,AVC_Elements_SendtoDatabase_20180608.csv,562,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136705146,AVC_Elements_SendtoDatabase_20180608.csv,563,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136705153,AVC_Elements_SendtoDatabase_20180608.csv,564,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136705161,AVC_Elements_SendtoDatabase_20180608.csv,565,Title mismatch,"SS Title: Texas Star
+Filmdb Title: Texas star"
+30000136705500,AVC_Elements_SendtoDatabase_20180608.csv,568,Title mismatch,"SS Title: Hoosier Promenade
+Filmdb Title: Hoosier promenade"
+30000136705518,AVC_Elements_SendtoDatabase_20180608.csv,569,Title mismatch,"SS Title: Take a Little Peek
+Filmdb Title: Take a little peek"
+30000136705708,AVC_Elements_SendtoDatabase_20180608.csv,570,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136705799,AVC_Elements_SendtoDatabase_20180608.csv,571,Title mismatch,"SS Title: Grapevine Twist
+Filmdb Title: Grapevine twist"
+30000136702358,AVC_Elements_SendtoDatabase_20180608.csv,590,Title mismatch,"SS Title: Otto: The Phenomenological Perspective
+Filmdb Title: Otto: The Psychoanalytic Perspective"
+30000136705294,AVC_Elements_SendtoDatabase_20180608.csv,615,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813213,AVC_Elements_SendtoDatabase_20180608.csv,622,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813221,AVC_Elements_SendtoDatabase_20180608.csv,623,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813239,AVC_Elements_SendtoDatabase_20180608.csv,624,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813247,AVC_Elements_SendtoDatabase_20180608.csv,625,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure"
+30000136813254,AVC_Elements_SendtoDatabase_20180608.csv,626,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813262,AVC_Elements_SendtoDatabase_20180608.csv,627,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813270,AVC_Elements_SendtoDatabase_20180608.csv,628,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136813288,AVC_Elements_SendtoDatabase_20180608.csv,629,Title mismatch,"SS Title: Exposure Meter: Theory and Use
+Filmdb Title: Exposure Meter: Theory And Use"
+30000136706136,AVC_Elements_SendtoDatabase_20180608.csv,638,Title mismatch,"SS Title: Northeast Farm Community
+Filmdb Title: New England Sea Community"
+30000136615675,AVC_Elements_SendtoDatabase_20180608.csv,686,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136615683,AVC_Elements_SendtoDatabase_20180608.csv,687,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136615709,AVC_Elements_SendtoDatabase_20180608.csv,688,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136940594,AVC_Elements_SendtoDatabase_20180608.csv,691,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136940602,AVC_Elements_SendtoDatabase_20180608.csv,692,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136940743,AVC_Elements_SendtoDatabase_20180608.csv,693,Title mismatch,"SS Title: Adaptation in Plants
+Filmdb Title: Adaptation in plants"
+30000136706102,AVC_Elements_SendtoDatabase_20180608.csv,720,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136706110,AVC_Elements_SendtoDatabase_20180608.csv,721,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136752494,AVC_Elements_SendtoDatabase_20180608.csv,729,Title mismatch,"SS Title: Handmade Materials for Projection
+Filmdb Title: Handmade materials for projection"
+30000136752502,AVC_Elements_SendtoDatabase_20180608.csv,730,Title mismatch,"SS Title: Handmade Materials for Projection
+Filmdb Title: Handmade materials for projection"
+30000136752510,AVC_Elements_SendtoDatabase_20180608.csv,731,Title mismatch,"SS Title: Handmade Materials for Projection
+Filmdb Title: Handmade materials for projection"
+30000136752528,AVC_Elements_SendtoDatabase_20180608.csv,732,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136753344,AVC_Elements_SendtoDatabase_20180608.csv,733,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136753351,AVC_Elements_SendtoDatabase_20180608.csv,734,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136753385,AVC_Elements_SendtoDatabase_20180608.csv,735,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136753393,AVC_Elements_SendtoDatabase_20180608.csv,736,Title mismatch,"SS Title: How to Make Handmade Lantern Slides
+Filmdb Title: How To Make Handmade Lantern Slides"
+30000136706904,AVC_Elements_SendtoDatabase_20180608.csv,781,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136813346,AVC_Elements_SendtoDatabase_20180608.csv,782,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136813353,AVC_Elements_SendtoDatabase_20180608.csv,783,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136813361,AVC_Elements_SendtoDatabase_20180608.csv,784,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136813379,AVC_Elements_SendtoDatabase_20180608.csv,785,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136813387,AVC_Elements_SendtoDatabase_20180608.csv,786,Title mismatch,"SS Title: The Corn Belt
+Filmdb Title: The corn belt"
+30000136707761,AVC_Elements_SendtoDatabase_20180608.csv,787,Title mismatch,"SS Title: The Cotton Belt: Yesterday and Today
+Filmdb Title: The cotton belt : yesterday and today "
+30000136707779,AVC_Elements_SendtoDatabase_20180608.csv,788,Title mismatch,"SS Title: The Cotton Belt: Yesterday and Today
+Filmdb Title: The cotton belt : yesterday and today "
+30000136754342,AVC_Elements_SendtoDatabase_20180608.csv,792,Title mismatch,"SS Title: The Wheat Belt
+Filmdb Title: Wheat Belt"
+30000136754359,AVC_Elements_SendtoDatabase_20180608.csv,793,Title mismatch,"SS Title: The Wheat Belt
+Filmdb Title: Wheat Belt"
+30000136754367,AVC_Elements_SendtoDatabase_20180608.csv,794,Title mismatch,"SS Title: The Wheat Belt
+Filmdb Title: Wheat Belt"
+30000136812074,AVC_Elements_SendtoDatabase_20180608.csv,795,Title mismatch,"SS Title: The Dairy Belt
+Filmdb Title: The dairy belt"
+30000136812082,AVC_Elements_SendtoDatabase_20180608.csv,796,Title mismatch,"SS Title: The Dairy Belt
+Filmdb Title: The dairy belt"
+30000136940115,AVC_Elements_SendtoDatabase_20180608.csv,797,Title mismatch,"SS Title: The Cotton Belt: Yesterday and Today
+Filmdb Title: The cotton belt : yesterday and today "
+30000136940123,AVC_Elements_SendtoDatabase_20180608.csv,798,Title mismatch,"SS Title: The Cotton Belt: Yesterday and Today
+Filmdb Title: The cotton belt : yesterday and today "
+30000136941675,AVC_Elements_SendtoDatabase_20180608.csv,799,Title mismatch,"SS Title: The Dairy Belt
+Filmdb Title: The dairy belt"
+30000136941683,AVC_Elements_SendtoDatabase_20180608.csv,800,Title mismatch,"SS Title: The Dairy Belt
+Filmdb Title: The dairy belt"
+30000136702689,AVC_Elements_SendtoDatabase_20180608.csv,803,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136611039,AVC_Elements_SendtoDatabase_20180608.csv,806,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136611047,AVC_Elements_SendtoDatabase_20180608.csv,807,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136611054,AVC_Elements_SendtoDatabase_20180608.csv,808,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136611070,AVC_Elements_SendtoDatabase_20180608.csv,809,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136612938,AVC_Elements_SendtoDatabase_20180608.csv,814,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136612946,AVC_Elements_SendtoDatabase_20180608.csv,815,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136612953,AVC_Elements_SendtoDatabase_20180608.csv,816,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136613654,AVC_Elements_SendtoDatabase_20180608.csv,826,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136613662,AVC_Elements_SendtoDatabase_20180608.csv,827,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136613670,AVC_Elements_SendtoDatabase_20180608.csv,828,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136613688,AVC_Elements_SendtoDatabase_20180608.csv,829,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136613696,AVC_Elements_SendtoDatabase_20180608.csv,830,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136615881,AVC_Elements_SendtoDatabase_20180608.csv,867,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136615899,AVC_Elements_SendtoDatabase_20180608.csv,868,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136616426,AVC_Elements_SendtoDatabase_20180608.csv,869,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136616434,AVC_Elements_SendtoDatabase_20180608.csv,870,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136616459,AVC_Elements_SendtoDatabase_20180608.csv,871,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136616467,AVC_Elements_SendtoDatabase_20180608.csv,872,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136616905,AVC_Elements_SendtoDatabase_20180608.csv,879,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136616913,AVC_Elements_SendtoDatabase_20180608.csv,880,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136616921,AVC_Elements_SendtoDatabase_20180608.csv,881,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136616954,AVC_Elements_SendtoDatabase_20180608.csv,882,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136616962,AVC_Elements_SendtoDatabase_20180608.csv,883,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136700071,AVC_Elements_SendtoDatabase_20180608.csv,901,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136700444,AVC_Elements_SendtoDatabase_20180608.csv,902,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136700451,AVC_Elements_SendtoDatabase_20180608.csv,903,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136706128,AVC_Elements_SendtoDatabase_20180608.csv,921,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136706557,AVC_Elements_SendtoDatabase_20180608.csv,931,Title mismatch,"SS Title: Controlled Experiments
+Filmdb Title: Controlled experiments"
+30000136706805,AVC_Elements_SendtoDatabase_20180608.csv,938,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136706912,AVC_Elements_SendtoDatabase_20180608.csv,944,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136706920,AVC_Elements_SendtoDatabase_20180608.csv,945,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136707217,AVC_Elements_SendtoDatabase_20180608.csv,950,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136707282,AVC_Elements_SendtoDatabase_20180608.csv,954,Title mismatch,"SS Title: Earth Science: Minerals and Rocks
+Filmdb Title: Earth Science: Minerals And Rocks"
+30000136707449,AVC_Elements_SendtoDatabase_20180608.csv,958,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136707605,AVC_Elements_SendtoDatabase_20180608.csv,967,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136707639,AVC_Elements_SendtoDatabase_20180608.csv,968,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136707951,AVC_Elements_SendtoDatabase_20180608.csv,976,Title mismatch,"SS Title: Explorers of the Nucleus: Cyclotron Experiment #190
+Filmdb Title: Explorers Of The Nucleus: Cyclotron Experiment #190"
+30000136708173,AVC_Elements_SendtoDatabase_20180608.csv,981,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136708181,AVC_Elements_SendtoDatabase_20180608.csv,982,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136708306,AVC_Elements_SendtoDatabase_20180608.csv,984,Title mismatch,"SS Title: Fraternity Idea
+Filmdb Title: The fraternity idea"
+30000136709247,AVC_Elements_SendtoDatabase_20180608.csv,989,Title mismatch,"SS Title: A Nickel for the Movies
+Filmdb Title: A nickel for the movies"
+30000136709262,AVC_Elements_SendtoDatabase_20180608.csv,990,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136709270,AVC_Elements_SendtoDatabase_20180608.csv,991,Title mismatch,"SS Title: A Nickel for the Movies
+Filmdb Title: A nickel for the movies"
+30000136752148,AVC_Elements_SendtoDatabase_20180608.csv,1000,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136752155,AVC_Elements_SendtoDatabase_20180608.csv,1001,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136762030,AVC_Elements_SendtoDatabase_20180608.csv,1037,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762048,AVC_Elements_SendtoDatabase_20180608.csv,1038,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762055,AVC_Elements_SendtoDatabase_20180608.csv,1039,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762063,AVC_Elements_SendtoDatabase_20180608.csv,1040,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762071,AVC_Elements_SendtoDatabase_20180608.csv,1041,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762089,AVC_Elements_SendtoDatabase_20180608.csv,1042,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762097,AVC_Elements_SendtoDatabase_20180608.csv,1043,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136762675,AVC_Elements_SendtoDatabase_20180608.csv,1048,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136762683,AVC_Elements_SendtoDatabase_20180608.csv,1049,Title mismatch,"SS Title: Camping and Recreational Facilities for the Handicapped
+Filmdb Title: Camping and recreational facilities for the handicapped"
+30000136763376,AVC_Elements_SendtoDatabase_20180608.csv,1061,Title mismatch,"SS Title: Earth Science: Minerals and Rocks
+Filmdb Title: Earth Science: Minerals And Rocks"
+30000136763384,AVC_Elements_SendtoDatabase_20180608.csv,1062,Title mismatch,"SS Title: Earth Science: Minerals and Rocks
+Filmdb Title: Earth Science: Minerals And Rocks"
+30000136763392,AVC_Elements_SendtoDatabase_20180608.csv,1063,Title mismatch,"SS Title: Earth Science: Minerals and Rocks
+Filmdb Title: Earth Science: Minerals And Rocks"
+30000136763855,AVC_Elements_SendtoDatabase_20180608.csv,1079,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136763863,AVC_Elements_SendtoDatabase_20180608.csv,1080,Title mismatch,"SS Title: The Land Along the Water
+Filmdb Title: Land Along the Water"
+30000136764705,AVC_Elements_SendtoDatabase_20180608.csv,1093,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136764713,AVC_Elements_SendtoDatabase_20180608.csv,1094,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136766270,AVC_Elements_SendtoDatabase_20180608.csv,1118,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136766288,AVC_Elements_SendtoDatabase_20180608.csv,1119,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136816372,AVC_Elements_SendtoDatabase_20180608.csv,1156,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136816380,AVC_Elements_SendtoDatabase_20180608.csv,1157,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136816398,AVC_Elements_SendtoDatabase_20180608.csv,1158,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136816406,AVC_Elements_SendtoDatabase_20180608.csv,1159,Title mismatch,"SS Title: The Fish that Turned Gold
+Filmdb Title: The fish that turned gold"
+30000136819319,AVC_Elements_SendtoDatabase_20180608.csv,1180,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136819327,AVC_Elements_SendtoDatabase_20180608.csv,1181,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136819335,AVC_Elements_SendtoDatabase_20180608.csv,1182,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136819608,AVC_Elements_SendtoDatabase_20180608.csv,1183,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136844069,AVC_Elements_SendtoDatabase_20180608.csv,1196,Title mismatch,"SS Title: Earth Science: Parade of Ancient Life
+Filmdb Title: Earth Science: The Parade Of Ancient Life"
+30000136849175,AVC_Elements_SendtoDatabase_20180608.csv,1200,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849183,AVC_Elements_SendtoDatabase_20180608.csv,1201,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849191,AVC_Elements_SendtoDatabase_20180608.csv,1202,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849209,AVC_Elements_SendtoDatabase_20180608.csv,1203,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849217,AVC_Elements_SendtoDatabase_20180608.csv,1204,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849225,AVC_Elements_SendtoDatabase_20180608.csv,1205,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849233,AVC_Elements_SendtoDatabase_20180608.csv,1206,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849290,AVC_Elements_SendtoDatabase_20180608.csv,1209,Title mismatch,"SS Title: Education Under a Thatched Roof
+Filmdb Title: Education Under A Thatched Roof"
+30000136849308,AVC_Elements_SendtoDatabase_20180608.csv,1210,Title mismatch,"SS Title: Education Under a Thatched Roof
+Filmdb Title: Education Under A Thatched Roof"
+30000136849399,AVC_Elements_SendtoDatabase_20180608.csv,1214,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849407,AVC_Elements_SendtoDatabase_20180608.csv,1215,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849415,AVC_Elements_SendtoDatabase_20180608.csv,1216,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849423,AVC_Elements_SendtoDatabase_20180608.csv,1217,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849431,AVC_Elements_SendtoDatabase_20180608.csv,1218,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849449,AVC_Elements_SendtoDatabase_20180608.csv,1219,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849456,AVC_Elements_SendtoDatabase_20180608.csv,1220,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849464,AVC_Elements_SendtoDatabase_20180608.csv,1221,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849472,AVC_Elements_SendtoDatabase_20180608.csv,1222,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849480,AVC_Elements_SendtoDatabase_20180608.csv,1223,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849506,AVC_Elements_SendtoDatabase_20180608.csv,1224,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849514,AVC_Elements_SendtoDatabase_20180608.csv,1225,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849522,AVC_Elements_SendtoDatabase_20180608.csv,1226,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849530,AVC_Elements_SendtoDatabase_20180608.csv,1227,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136849548,AVC_Elements_SendtoDatabase_20180608.csv,1228,Title mismatch,"SS Title: This is Camping!
+Filmdb Title: This is camping!"
+30000136938705,AVC_Elements_SendtoDatabase_20180608.csv,1336,Title mismatch,"SS Title: A Nickel for the Movies
+Filmdb Title: A nickel for the movies"
+30000136938713,AVC_Elements_SendtoDatabase_20180608.csv,1337,Title mismatch,"SS Title: A Nickel for the Movies
+Filmdb Title: A nickel for the movies"
+30000136940065,AVC_Elements_SendtoDatabase_20180608.csv,1344,Title mismatch,"SS Title: Controlled Experiments
+Filmdb Title: Controlled experiments"
+30000136940073,AVC_Elements_SendtoDatabase_20180608.csv,1345,Title mismatch,"SS Title: Controlled Experiments
+Filmdb Title: Controlled experiments"
+30000136940081,AVC_Elements_SendtoDatabase_20180608.csv,1346,Title mismatch,"SS Title: Controlled Experiments
+Filmdb Title: Controlled experiments"
+30000136940750,AVC_Elements_SendtoDatabase_20180608.csv,1358,Title mismatch,"SS Title: Controlled Experiments
+Filmdb Title: Controlled experiments"
+30000136944026,AVC_Elements_SendtoDatabase_20180608.csv,1397,Title mismatch,"SS Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (HK 9 and 10)
+Filmdb Title: Volvox: Structure, Reproduction, and Differentiation in V. Carteri (Hk 9 and 10)"
+30000136946039,AVC_Elements_SendtoDatabase_20180608.csv,1406,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136946047,AVC_Elements_SendtoDatabase_20180608.csv,1407,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136946054,AVC_Elements_SendtoDatabase_20180608.csv,1408,Title mismatch,"SS Title: Food for Thought
+Filmdb Title: Food For Thought"
+30000136754375,AVC_Elements_SendtoDatabase_20180608.csv,1410,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136754391,AVC_Elements_SendtoDatabase_20180608.csv,1411,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136835786,AVC_Elements_SendtoDatabase_20180608.csv,1423,Title mismatch,"SS Title: IHSAA State Track and Field Meet, 1961
+Filmdb Title: IHSAA State Track And Field Meet, 1961"
+30000136835794,AVC_Elements_SendtoDatabase_20180608.csv,1424,Title mismatch,"SS Title: IHSAA State Track and Field Meet, 1961
+Filmdb Title: IHSAA State Track And Field Meet, 1961"
+30000136943077,AVC_Elements_SendtoDatabase_20180608.csv,1443,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136943085,AVC_Elements_SendtoDatabase_20180608.csv,1444,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136946344,AVC_Elements_SendtoDatabase_20180608.csv,1445,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136946351,AVC_Elements_SendtoDatabase_20180608.csv,1446,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136946427,AVC_Elements_SendtoDatabase_20180608.csv,1447,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136946435,AVC_Elements_SendtoDatabase_20180608.csv,1448,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136946450,AVC_Elements_SendtoDatabase_20180608.csv,1449,Title mismatch,"SS Title: Robert Kennedy: A Eulogy By the Theodore Sorenson
+Filmdb Title: Robert Kennedy: A Eulogy by the Theodore Sorenson"
+30000136612326,AVC_Elements_SendtoDatabase_20180608.csv,1491,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136612334,AVC_Elements_SendtoDatabase_20180608.csv,1492,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136612755,AVC_Elements_SendtoDatabase_20180608.csv,1493,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136612763,AVC_Elements_SendtoDatabase_20180608.csv,1494,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136613266,AVC_Elements_SendtoDatabase_20180608.csv,1495,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136613290,AVC_Elements_SendtoDatabase_20180608.csv,1496,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136615717,AVC_Elements_SendtoDatabase_20180608.csv,1500,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136615725,AVC_Elements_SendtoDatabase_20180608.csv,1501,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136817339,AVC_Elements_SendtoDatabase_20180608.csv,1511,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136817347,AVC_Elements_SendtoDatabase_20180608.csv,1512,Title mismatch,"SS Title: David's Case: An Example
+Filmdb Title: David's case: an example"
+30000136817792,AVC_Elements_SendtoDatabase_20180608.csv,1513,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136817800,AVC_Elements_SendtoDatabase_20180608.csv,1514,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136817818,AVC_Elements_SendtoDatabase_20180608.csv,1515,Title mismatch,"SS Title: Fred's Case: A Stimulus
+Filmdb Title: Fred'S Case: A Stimulus"
+30000136619909,AVC_Elements_SendtoDatabase_20180608.csv,1563,Title mismatch,"SS Title: Talking it Over
+Filmdb Title: Talking It Over"
+30000136619974,AVC_Elements_SendtoDatabase_20180608.csv,1564,Title mismatch,"SS Title: Talking it Over
+Filmdb Title: Talking It Over"
+30000136708579,AVC_Elements_SendtoDatabase_20180608.csv,1711,Title mismatch,"SS Title: Floating in the Air, Followed by the Wind
+Filmdb Title: Floating in the air, followed by the wind : Thaipusam : a Hindu festival"
+30000136708595,AVC_Elements_SendtoDatabase_20180608.csv,1712,Title mismatch,"SS Title: Floating in the Air, Followed by the Wind
+Filmdb Title: Floating in the air, followed by the wind : Thaipusam : a Hindu festival"
+30000136766379,AVC_Elements_SendtoDatabase_20180608.csv,1713,Title mismatch,"SS Title: Floating in the Air, Followed by the Wind
+Filmdb Title: Floating in the air, followed by the wind : Thaipusam : a Hindu festival"
+30000136766387,AVC_Elements_SendtoDatabase_20180608.csv,1714,Title mismatch,"SS Title: Floating in the Air, Followed by the Wind
+Filmdb Title: Floating in the air, followed by the wind : Thaipusam : a Hindu festival"
+30000136755141,AVC_Elements_SendtoDatabase_20180608.csv,1727,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13 #2
+Filmdb Title: Burglar in the Treetops"
+30000136755158,AVC_Elements_SendtoDatabase_20180608.csv,1728,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13 #2
+Filmdb Title: Burglar in the Treetops"
+30000136755604,AVC_Elements_SendtoDatabase_20180608.csv,1729,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13th #2
+Filmdb Title: Wawona"
+30000136755612,AVC_Elements_SendtoDatabase_20180608.csv,1730,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13th #2
+Filmdb Title: Wawona"
+30000136755620,AVC_Elements_SendtoDatabase_20180608.csv,1731,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13th #2 Part 1
+Filmdb Title: Thomas Jefferson"
+30000136755638,AVC_Elements_SendtoDatabase_20180608.csv,1732,Title mismatch,"SS Title: NET IU Project Relate/Reading July 13th #2
+Filmdb Title: Thomas Jefferson"
+30000136702119,AVC_Elements_SendtoDatabase_20180608.csv,1807,Title mismatch,"SS Title: Children are People
+Filmdb Title: Children Are People"
+30000136702127,AVC_Elements_SendtoDatabase_20180608.csv,1808,Title mismatch,"SS Title: Children are People
+Filmdb Title: Children Are People"
+30000136701459,AVC_Elements_SendtoDatabase_20180608.csv,1893,Title mismatch,"SS Title: CP - 187 Track & Field Meet 1969 Events
+Filmdb Title: Life on the Coral Reef"
+30000136818600,AVC_Elements_SendtoDatabase_20180608.csv,1915,Title mismatch,"SS Title: Alumni Film 74 A Visit with Pres. John W. Ryan
+Filmdb Title: Alumni Film 74 A Visit With Pres. John W. Ryan:"
+30000136708462,AVC_Elements_SendtoDatabase_20180608.csv,1932,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136658402,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,399,Title mismatch,"SS Title: Spanish : Introducing the Language
+Filmdb Title: Spanish: Introducing the Language"
+30000136677790,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,599,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136718057,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,709,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136658899,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,755,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068494602,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,782,Title mismatch,"SS Title: Story of Weights and Measures (Second Edition)
+Filmdb Title: The Story of Weights and Measures (2nd Edition)"
+30000136674979,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,792,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136670241,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,814,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077550782,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,874,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068457716,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,883,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077550808,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,892,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136606385,IUCAT_LetterS_Part2_20180112_SendtoDatabase_reviewed_20180206.csv,899,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136718149,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,15,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068462526,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,32,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068460504,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,34,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136659996,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,94,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068478209,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,133,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136659459,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,161,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136678970,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,228,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068475726,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,244,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068475718,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,245,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068475700,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,246,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136690306,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,253,Title mismatch,"SS Title: The behavior of matter
+Filmdb Title: The Behavior of Matter"
+30000136679879,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,290,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068457559,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,339,Title mismatch,"SS Title: The autonomic nervous system
+Filmdb Title: The Autonomic Nervous System"
+30000136912742,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,441,Title mismatch,"SS Title: The Eisenhower Years
+Filmdb Title: The Eisenhower years"
+30000136912726,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,442,Title mismatch,"SS Title: The Eisenhower Years
+Filmdb Title: The Eisenhower years"
+30000136797036,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,459,Title mismatch,"SS Title: The Eisenhower Years
+Filmdb Title: The Eisenhower years"
+30000136676578,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,490,Title mismatch,"SS Title: The Eisenhower Years
+Filmdb Title: The Eisenhower years"
+30000136676560,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,491,Title mismatch,"SS Title: The Eisenhower Years
+Filmdb Title: The Eisenhower years"
+30000136606047,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,627,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000079860114,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,629,Title mismatch,"SS Title: The ancient Africans
+Filmdb Title: The Ancient Africans"
+30000068429707,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,631,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000046598144,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,632,Title mismatch,"SS Title: The ancient Africans
+Filmdb Title: The Ancient Africans"
+30000078513839,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,760,Title mismatch,"SS Title: The force of gravity
+Filmdb Title: The Force Of Gravity"
+30000078513821,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,761,Title mismatch,"SS Title: The force of gravity
+Filmdb Title: The Force Of Gravity"
+30000078513813,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,762,Title mismatch,"SS Title: The force of gravity
+Filmdb Title: The Force Of Gravity"
+30000136917121,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,818,PO has 0 Titles in Filmdb,SS Title: The challenge of management
+30000136917113,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,819,PO has 0 Titles in Filmdb,SS Title: The challenge of management
+30000079834192,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,853,PO has 0 Titles in Filmdb,SS Title: The challenge of management
+30000079834184,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,854,PO has 0 Titles in Filmdb,SS Title: The challenge of management
+30000079834176,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,855,PO has 0 Titles in Filmdb,SS Title: The challenge of management
+30000136608340,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,902,Title mismatch,"SS Title: The Amish:  A People of Preservation (Edited version)
+Filmdb Title: The Amish : a people of preservation (edited version)"
+30000136657941,IUCAT_LetterTpt1_SendtoDatabase_reviewed_20180207.csv,1197,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136804733,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,221,Title mismatch,"SS Title: Shy guy
+Filmdb Title: Shy Guy"
+30000136717752,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,450,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136678798,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,520,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136678525,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,522,Title mismatch,"SS Title: Secrets of the bee world
+Filmdb Title: Secrets of the Bee World"
+30000079863308,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,717,Title mismatch,"SS Title: Skippy and the 3 R's.
+Filmdb Title: Skippy and the 3 R's"
+30000079859090,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,730,Title mismatch,"SS Title: Shy guy
+Filmdb Title: Shy Guy"
+30000077548083,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,903,Title mismatch,"SS Title: Silent night : story of the Christmas carol.
+Filmdb Title: Silent Night: Story of The Christmas Carol"
+30000068475577,IUCAT_LetterSpt1_SendtoDatabase_reviewed_20180206.csv,978,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136834532,FINAL_NET_Elements_SendtoDatabase_20180710.csv,11,PO has 0 Titles in Filmdb,SS Title: The Challenge of Management
+30000136813809,FINAL_NET_Elements_SendtoDatabase_20180710.csv,20,PO has 0 Titles in Filmdb,SS Title: The Challenge of Management
+30000136813817,FINAL_NET_Elements_SendtoDatabase_20180710.csv,21,PO has 0 Titles in Filmdb,SS Title: The Challenge of Management
+30000136834540,FINAL_NET_Elements_SendtoDatabase_20180710.csv,28,PO has 0 Titles in Filmdb,SS Title: The Challenge of Management
+30000136759663,FINAL_NET_Elements_SendtoDatabase_20180710.csv,81,Title mismatch,"SS Title: Beginnings of Conflict
+Filmdb Title: Beginnings Of Conflict"
+30000136759671,FINAL_NET_Elements_SendtoDatabase_20180710.csv,82,Title mismatch,"SS Title: Beginnings of Conflict
+Filmdb Title: Beginnings Of Conflict"
+30000136701350,FINAL_NET_Elements_SendtoDatabase_20180710.csv,95,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136701400,FINAL_NET_Elements_SendtoDatabase_20180710.csv,96,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136810318,FINAL_NET_Elements_SendtoDatabase_20180710.csv,97,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136810326,FINAL_NET_Elements_SendtoDatabase_20180710.csv,98,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136810334,FINAL_NET_Elements_SendtoDatabase_20180710.csv,99,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136810342,FINAL_NET_Elements_SendtoDatabase_20180710.csv,100,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136835182,FINAL_NET_Elements_SendtoDatabase_20180710.csv,109,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136835190,FINAL_NET_Elements_SendtoDatabase_20180710.csv,110,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136835208,FINAL_NET_Elements_SendtoDatabase_20180710.csv,111,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136835216,FINAL_NET_Elements_SendtoDatabase_20180710.csv,112,Title mismatch,"SS Title: Hey, What About Us?
+Filmdb Title: Hey, What about Us?"
+30000136617002,FINAL_NET_Elements_SendtoDatabase_20180710.csv,200,Title mismatch,"SS Title: Caf_ Nica: Portraits from Nicaragua
+Filmdb Title: Cafe Nica: Portraits from Nicaragua"
+30000136617010,FINAL_NET_Elements_SendtoDatabase_20180710.csv,201,Title mismatch,"SS Title: Caf_ Nica: Portraits from Nicaragua
+Filmdb Title: Cafe Nica: Portraits from Nicaragua"
+30000136617036,FINAL_NET_Elements_SendtoDatabase_20180710.csv,202,Title mismatch,"SS Title: Caf_ Nica: Portraits from Nicaragua
+Filmdb Title: Cafe Nica: Portraits from Nicaragua"
+30000136750431,FINAL_NET_Elements_SendtoDatabase_20180710.csv,271,Title mismatch,"SS Title: The Control Revolution
+Filmdb Title: The control revolution"
+30000136750449,FINAL_NET_Elements_SendtoDatabase_20180710.csv,272,Title mismatch,"SS Title: The Control Revolution
+Filmdb Title: The control revolution"
+30000136843681,FINAL_NET_Elements_SendtoDatabase_20180710.csv,277,Title mismatch,"SS Title: The Control Revolution
+Filmdb Title: The control revolution"
+30000136845553,FINAL_NET_Elements_SendtoDatabase_20180710.csv,307,Title mismatch,"SS Title: Crime Under Twnety-One
+Filmdb Title: Crime Under Twenty-One"
+30000136845561,FINAL_NET_Elements_SendtoDatabase_20180710.csv,308,Title mismatch,"SS Title: Crime Under Twnety-One
+Filmdb Title: Crime Under Twenty-One"
+30000136758913,FINAL_NET_Elements_SendtoDatabase_20180710.csv,353,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136758921,FINAL_NET_Elements_SendtoDatabase_20180710.csv,354,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136758939,FINAL_NET_Elements_SendtoDatabase_20180710.csv,355,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136758947,FINAL_NET_Elements_SendtoDatabase_20180710.csv,356,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759424,FINAL_NET_Elements_SendtoDatabase_20180710.csv,357,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759432,FINAL_NET_Elements_SendtoDatabase_20180710.csv,358,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759440,FINAL_NET_Elements_SendtoDatabase_20180710.csv,359,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136769985,FINAL_NET_Elements_SendtoDatabase_20180710.csv,360,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136769993,FINAL_NET_Elements_SendtoDatabase_20180710.csv,361,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136617630,FINAL_NET_Elements_SendtoDatabase_20180710.csv,381,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136617648,FINAL_NET_Elements_SendtoDatabase_20180710.csv,382,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136617655,FINAL_NET_Elements_SendtoDatabase_20180710.csv,383,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136617663,FINAL_NET_Elements_SendtoDatabase_20180710.csv,384,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136840489,FINAL_NET_Elements_SendtoDatabase_20180710.csv,385,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136840497,FINAL_NET_Elements_SendtoDatabase_20180710.csv,386,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136840521,FINAL_NET_Elements_SendtoDatabase_20180710.csv,387,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136840539,FINAL_NET_Elements_SendtoDatabase_20180710.csv,388,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136843665,FINAL_NET_Elements_SendtoDatabase_20180710.csv,389,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136843673,FINAL_NET_Elements_SendtoDatabase_20180710.csv,390,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136941758,FINAL_NET_Elements_SendtoDatabase_20180710.csv,391,Title mismatch,"SS Title: Tomorrow is Maybe
+Filmdb Title: Tomorrow Is Maybe"
+30000136934068,FINAL_NET_Elements_SendtoDatabase_20180710.csv,421,Title mismatch,"SS Title: Fact or Fallacy
+Filmdb Title: Fact Or Fallacy"
+30000136934076,FINAL_NET_Elements_SendtoDatabase_20180710.csv,422,Title mismatch,"SS Title: Fact or Fallacy
+Filmdb Title: Fact Or Fallacy"
+30000136835224,FINAL_NET_Elements_SendtoDatabase_20180710.csv,652,Title mismatch,"SS Title: National Parks #15 NET: DonÍt Feed the Bears
+Filmdb Title: National Parks #15 NET: DonÕt Feed the Bears"
+30000136835232,FINAL_NET_Elements_SendtoDatabase_20180710.csv,653,Title mismatch,"SS Title: National Parks #15 NET: DonÍt Feed the Bears
+Filmdb Title: National Parks #15 NET: DonÕt Feed the Bears"
+30000136756057,FINAL_NET_Elements_SendtoDatabase_20180710.csv,747,Title mismatch,"SS Title: Masters of the Desert
+Filmdb Title: Masters of the Desert "
+30000136756065,FINAL_NET_Elements_SendtoDatabase_20180710.csv,748,Title mismatch,"SS Title: Masters of the Desert
+Filmdb Title: Masters of the Desert "
+30000136756073,FINAL_NET_Elements_SendtoDatabase_20180710.csv,749,Title mismatch,"SS Title: Masters of the Desert
+Filmdb Title: Masters of the Desert "
+30000136756081,FINAL_NET_Elements_SendtoDatabase_20180710.csv,750,Title mismatch,"SS Title: Masters of the Desert
+Filmdb Title: Masters of the Desert "
+30000136751272,FINAL_NET_Elements_SendtoDatabase_20180710.csv,839,Title mismatch,"SS Title: WhatÍs New #254 NET
+Filmdb Title: WhatÕs New #254 NET"
+30000136751280,FINAL_NET_Elements_SendtoDatabase_20180710.csv,840,Title mismatch,"SS Title: WhatÍs New #254 NET
+Filmdb Title: WhatÕs New #254 NET"
+30000136840729,FINAL_NET_Elements_SendtoDatabase_20180710.csv,845,Title mismatch,"SS Title: WhatÍs New #221: Coral Reef: NET
+Filmdb Title: WhatÕs New #221: Coral Reef: NET"
+30000136614330,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1083,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136614314,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1088,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136614322,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1089,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136701764,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1090,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136810847,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1099,PO has 0 Titles in Filmdb,SS Title: The Parents
+30000136810854,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1100,PO has 0 Titles in Filmdb,SS Title: The Parents
+30000136810862,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1101,PO has 0 Titles in Filmdb,SS Title: The Parents
+30000136810870,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1102,PO has 0 Titles in Filmdb,SS Title: The Parents
+30000136816737,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1103,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136816745,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1104,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136816752,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1105,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136816760,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1106,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136832338,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1118,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136836313,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1120,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136836321,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1121,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136836339,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1122,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136836347,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1123,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136840745,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1124,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136840752,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1125,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136841503,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1127,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136841511,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1128,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136830951,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1145,Title mismatch,"SS Title: Fingerprints of the Stars
+Filmdb Title: Fingerprints Of The Stars"
+30000136830969,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1146,Title mismatch,"SS Title: Fingerprints of the Stars
+Filmdb Title: Fingerprints Of The Stars"
+30000136838988,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1190,Title mismatch,"SS Title: What's In A Library?
+Filmdb Title: What's in a Library?"
+30000136838996,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1191,Title mismatch,"SS Title: What's In A Library?
+Filmdb Title: What's in a Library?"
+30000136769480,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1211,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136769498,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1212,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136769506,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1213,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136814922,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1216,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136814930,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1217,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136838590,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1222,Title mismatch,"SS Title: GÙnter Grass
+Filmdb Title: Gnter Grass"
+30000136816810,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1327,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136848367,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1330,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136848375,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1331,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136848524,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1334,Title mismatch,"SS Title: Education in the New Japan
+Filmdb Title: Education In The New Japan"
+30000136848532,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1335,Title mismatch,"SS Title: Education in the New Japan
+Filmdb Title: Education In The New Japan"
+30000136766213,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1337,Title mismatch,"SS Title: What Is Language?
+Filmdb Title: What is Language?"
+30000136766221,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1338,Title mismatch,"SS Title: What Is Language?
+Filmdb Title: What is Language?"
+30000136834912,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1341,Title mismatch,"SS Title: What Is Language?
+Filmdb Title: What is Language?"
+30000136834920,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1342,Title mismatch,"SS Title: What Is Language?
+Filmdb Title: What is Language?"
+30000136751595,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1345,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136751603,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1346,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759044,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1354,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759051,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1355,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136759069,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1356,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136701954,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1408,Title mismatch,"SS Title: Run From Race
+Filmdb Title: Run from Race"
+30000136701962,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1409,Title mismatch,"SS Title: Run From Race
+Filmdb Title: Run from Race"
+30000136840612,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1410,Title mismatch,"SS Title: Run From Race
+Filmdb Title: Run from Race"
+30000136845892,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1413,Title mismatch,"SS Title: Run From Race
+Filmdb Title: Run from Race"
+30000136845900,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1414,Title mismatch,"SS Title: Run From Race
+Filmdb Title: Run from Race"
+30000136700790,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1531,Title mismatch,"SS Title: Voices From the Right
+Filmdb Title: Voices from the Right"
+30000136700808,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1532,Title mismatch,"SS Title: Voices From the Right
+Filmdb Title: Voices from the Right"
+30000136619750,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1540,Title mismatch,"SS Title: Man as He Behaves
+Filmdb Title: Man As He Behaves"
+30000136619768,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1541,Title mismatch,"SS Title: Man as He Behaves
+Filmdb Title: Man As He Behaves"
+30000136751975,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1545,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136751983,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1546,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136752312,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1549,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136752320,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1550,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136753831,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1556,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136757279,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1563,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136757287,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1564,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136701467,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1608,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136701475,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1609,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136756974,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1612,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136756982,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1613,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136815473,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1618,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136815481,FINAL_NET_Elements_SendtoDatabase_20180710.csv,1619,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136754946,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2074,Title mismatch,"SS Title: Visually-Handicapped Child, the Blind
+Filmdb Title: Visually-Handicapped Child, The Blind"
+30000136754953,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2075,Title mismatch,"SS Title: Visually-Handicapped Child, the Blind
+Filmdb Title: Visually-Handicapped Child, The Blind"
+30000136834888,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2091,Title mismatch,"SS Title: Visually-Handicapped Child, the Partially Sighted
+Filmdb Title: Visually-Handicapped Child, The Partially Sighted"
+30000136834896,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2092,Title mismatch,"SS Title: Visually-Handicapped Child, the Partially Sighted
+Filmdb Title: Visually-Handicapped Child, The Partially Sighted"
+30000136845637,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2095,Title mismatch,"SS Title: Visually-Handicapped Child, the Partially Sighted
+Filmdb Title: Visually-Handicapped Child, The Partially Sighted"
+30000136845645,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2096,Title mismatch,"SS Title: Visually-Handicapped Child, the Partially Sighted
+Filmdb Title: Visually-Handicapped Child, The Partially Sighted"
+30000136813882,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2121,Title mismatch,"SS Title: Where Are We Going
+Filmdb Title: Where are We Going"
+30000136813890,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2122,Title mismatch,"SS Title: Where Are We Going
+Filmdb Title: Where are We Going"
+30000136815259,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2130,Title mismatch,"SS Title: To Live and Move According to Your Nature is Called Love
+Filmdb Title: To Live and Move According to Your Nature Is Called Love"
+30000136815267,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2131,Title mismatch,"SS Title: To Live and Move According to Your Nature is Called Love
+Filmdb Title: To Live and Move According to Your Nature Is Called Love"
+30000136751579,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2164,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136751587,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2165,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136763137,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2213,Title mismatch,"SS Title: LSD: Lettvin vs. Leary
+Filmdb Title: LSD: Lettvin Vs. Leary"
+30000136763145,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2214,Title mismatch,"SS Title: LSD: Lettvin vs. Leary
+Filmdb Title: LSD: Lettvin Vs. Leary"
+30000136763152,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2215,Title mismatch,"SS Title: LSD: Lettvin vs. Leary
+Filmdb Title: LSD: Lettvin Vs. Leary"
+30000136763160,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2216,Title mismatch,"SS Title: LSD: Lettvin vs. Leary
+Filmdb Title: LSD: Lettvin Vs. Leary"
+30000136937137,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2260,Title mismatch,"SS Title: Who Is: Victor Vasarely
+Filmdb Title: Who is: Victor Vasarely"
+30000136937145,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2261,Title mismatch,"SS Title: Who Is: Victor Vasarely
+Filmdb Title: Who is: Victor Vasarely"
+30000136942996,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2265,Title mismatch,"SS Title: From Pot to Psychedelics
+Filmdb Title: From Pot To Psychedelics"
+30000136943002,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2266,Title mismatch,"SS Title: From Pot to Psychedelics
+Filmdb Title: From Pot To Psychedelics"
+30000136943200,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2267,Title mismatch,"SS Title: From Pot to Psychedelics
+Filmdb Title: From Pot To Psychedelics"
+30000136943218,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2268,Title mismatch,"SS Title: From Pot to Psychedelics
+Filmdb Title: From Pot To Psychedelics"
+30000136750548,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2278,Title mismatch,"SS Title: Voices Of The String Quartet
+Filmdb Title: Voices of the String Quartet"
+30000136750555,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2279,Title mismatch,"SS Title: Voices Of The String Quartet
+Filmdb Title: Voices of the String Quartet"
+30000136810219,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2334,Title mismatch,"SS Title: The Whole World is Watching
+Filmdb Title: The Whole World Is Watching"
+30000136810227,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2335,Title mismatch,"SS Title: The Whole World is Watching
+Filmdb Title: The Whole World Is Watching"
+30000136810235,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2336,Title mismatch,"SS Title: The Whole World is Watching
+Filmdb Title: The Whole World Is Watching"
+30000136810243,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2337,Title mismatch,"SS Title: The Whole World is Watching
+Filmdb Title: The Whole World Is Watching"
+30000136830712,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2348,Title mismatch,"SS Title: The Whole World is Watching
+Filmdb Title: The Whole World Is Watching"
+30000136835414,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2365,Title mismatch,"SS Title: Anacostia: Museum in the Ghetto
+Filmdb Title: Anacostia:  Museum in the Ghetto"
+30000136835422,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2366,Title mismatch,"SS Title: Anacostia: Museum in the Ghetto
+Filmdb Title: Anacostia:  Museum in the Ghetto"
+30000136750621,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2368,Title mismatch,"SS Title: Edgar Kaiser: Maverick in Grey Flannel
+Filmdb Title: Edgar Kaiser: Maverick In Grey Flannel"
+30000136750662,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2369,Title mismatch,"SS Title: Edgar Kaiser: Maverick in Grey Flannel
+Filmdb Title: Edgar Kaiser: Maverick In Grey Flannel"
+30000136762105,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2427,Title mismatch,"SS Title: Low View From a Dark Shadow
+Filmdb Title: Low View from a Dark Shadow"
+30000136762113,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2428,Title mismatch,"SS Title: Low View From a Dark Shadow
+Filmdb Title: Low View from a Dark Shadow"
+30000136938176,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2438,Title mismatch,"SS Title: No Gun TowersNo Fences
+Filmdb Title: No Gun TowersÉNo Fences"
+30000136938184,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2439,Title mismatch,"SS Title: No Gun TowersNo Fences
+Filmdb Title: No Gun TowersÉNo Fences"
+30000136938192,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2440,Title mismatch,"SS Title: No Gun TowersNo Fences
+Filmdb Title: No Gun TowersÉNo Fences"
+30000136700691,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2470,Title mismatch,"SS Title: Building Blocks of Life
+Filmdb Title: Building Blocks Of Life"
+30000136700709,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2471,Title mismatch,"SS Title: Building Blocks of Life
+Filmdb Title: Building Blocks Of Life"
+30000136769720,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2508,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136769738,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2509,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136769761,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2512,Title mismatch,"SS Title: What Economics Is All About
+Filmdb Title: What Economics is All About"
+30000136769779,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2513,Title mismatch,"SS Title: What Economics Is All About
+Filmdb Title: What Economics is All About"
+30000136769787,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2514,Title mismatch,"SS Title: Fiscal Policy: Taxing, Government Spending, and the National Debt
+Filmdb Title: Fiscal Policy: Taxing, Government Spending, And The National Debt"
+30000136769795,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2515,Title mismatch,"SS Title: Fiscal Policy: Taxing, Government Spending, and the National Debt
+Filmdb Title: Fiscal Policy: Taxing, Government Spending, And The National Debt"
+30000136815069,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2541,Title mismatch,"SS Title: English _ Fact & Fancy #15
+Filmdb Title: English Ð Fact & Fancy #15"
+30000136815077,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2542,Title mismatch,"SS Title: English _ Fact & Fancy #15
+Filmdb Title: English Ð Fact & Fancy #15"
+30000136613811,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2687,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136613829,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2688,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136617598,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2690,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136617606,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2691,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136818170,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2698,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136833815,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2702,Title mismatch,"SS Title: Great Performances in Dance
+Filmdb Title: Great Performance in Dance"
+30000136833823,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2703,Title mismatch,"SS Title: Great Performances in Dance
+Filmdb Title: Great Performance in Dance"
+30000136833831,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2704,Title mismatch,"SS Title: Great Performances in Dance
+Filmdb Title: Great Performance in Dance"
+30000136835679,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2715,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136835687,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2716,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136835695,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2717,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136835877,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2721,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136835885,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2722,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136835893,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2723,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136925082,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2727,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136925090,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2728,Title mismatch,"SS Title: Ethnic Dance--Roundtrip to Trinidad
+Filmdb Title: Ethnic Dance--Roundtrip To Trinidad"
+30000136614280,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2755,Title mismatch,"SS Title: Ad-Land Revisited
+Filmdb Title: AD-Land Revisited"
+30000136614298,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2756,Title mismatch,"SS Title: Ad-Land Revisited
+Filmdb Title: AD-Land Revisited"
+30000136842600,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2798,Title mismatch,"SS Title: Ad-Land Revisited
+Filmdb Title: AD-Land Revisited"
+30000136842618,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2799,Title mismatch,"SS Title: Ad-Land Revisited
+Filmdb Title: AD-Land Revisited"
+30000136939521,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2890,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136939539,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2891,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136939547,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2892,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136939554,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2893,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136939414,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2940,Title mismatch,"SS Title: A Tribute to Malcom X
+Filmdb Title: A Tribute to Malcolm X"
+30000136939422,FINAL_NET_Elements_SendtoDatabase_20180710.csv,2941,Title mismatch,"SS Title: A Tribute to Malcom X
+Filmdb Title: A Tribute to Malcolm X"
+30000136769415,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3256,Title mismatch,"SS Title: Bernini's Rome
+Filmdb Title: Bernini'S Rome"
+30000136769423,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3257,Title mismatch,"SS Title: Bernini's Rome
+Filmdb Title: Bernini'S Rome"
+30000136843418,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3264,Title mismatch,"SS Title: Bernini's Rome
+Filmdb Title: Bernini'S Rome"
+30000136939042,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3268,Title mismatch,"SS Title: Bernini's Rome
+Filmdb Title: Bernini'S Rome"
+30000136939059,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3269,Title mismatch,"SS Title: Bernini's Rome
+Filmdb Title: Bernini'S Rome"
+30000136751132,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3272,Title mismatch,"SS Title: God is Dead
+Filmdb Title: God Is Dead"
+30000136750381,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3350,Title mismatch,"SS Title: Prudhoe Bay--Or Bust!
+Filmdb Title: Prudhoe Bay--or Bust!"
+30000136750399,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3351,Title mismatch,"SS Title: Prudhoe Bay--Or Bust!
+Filmdb Title: Prudhoe Bay--or Bust!"
+30000136754789,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3354,Title mismatch,"SS Title: Chain of Life
+Filmdb Title: The Chain of Life"
+30000136754797,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3355,Title mismatch,"SS Title: Chain of Life
+Filmdb Title: The Chain of Life"
+30000136755588,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3356,Title mismatch,"SS Title: Chain of Life
+Filmdb Title: The Chain of Life"
+30000136755661,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3358,PO has 0 Titles in Filmdb,SS Title: Santa Barbara--Everybody's Mistake
+30000136617481,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3372,Title mismatch,"SS Title: View of America From the 23rd Century
+Filmdb Title: View of America from the 23rd Century"
+30000136618067,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3417,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136618125,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3418,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136618133,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3419,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136618141,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3420,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834144,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3421,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834151,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3422,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834599,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3423,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834607,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3424,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834615,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3425,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834623,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3426,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834631,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3427,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136834649,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3428,Title mismatch,"SS Title: ...And the Meek Shall Inherit the Earth
+Filmdb Title: ...And The Meek Shall Inherit the Earth"
+30000136618224,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3455,Title mismatch,"SS Title: The Suicide Clinic: A Cry For Help
+Filmdb Title: The Suicide Clinic: A Cry for Help"
+30000136618232,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3456,Title mismatch,"SS Title: The Suicide Clinic: A Cry For Help
+Filmdb Title: The Suicide Clinic: A Cry for Help"
+30000136755380,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3469,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136755398,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3470,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136755505,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3471,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136755513,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3472,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136813411,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3495,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136813429,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3496,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136819558,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3497,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136819566,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3498,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136819574,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3499,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136819582,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3500,Title mismatch,"SS Title: Anatomy of Violence
+Filmdb Title: Anatomy of violence"
+30000136936485,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3504,Title mismatch,"SS Title: ESP: Human X Factor
+Filmdb Title: Esp: Human X Factor"
+30000136936493,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3505,Title mismatch,"SS Title: ESP: Human X Factor
+Filmdb Title: Esp: Human X Factor"
+30000136763939,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3526,PO has 0 Titles in Filmdb,SS Title: The Iron Horse
+30000136763947,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3527,PO has 0 Titles in Filmdb,SS Title: The Iron Horse
+30000136833567,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3542,PO has 0 Titles in Filmdb,SS Title: The Iron Horse
+30000136833575,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3543,PO has 0 Titles in Filmdb,SS Title: The Iron Horse
+30000136833583,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3544,PO has 0 Titles in Filmdb,SS Title: The Iron Horse
+30000136920455,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3551,Title mismatch,"SS Title: You Can't Get There From Here
+Filmdb Title: You Can't Get There from Here"
+30000136920463,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3552,Title mismatch,"SS Title: You Can't Get There From Here
+Filmdb Title: You Can't Get There from Here"
+30000136750035,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3678,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136751736,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3684,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136751744,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3685,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136752460,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3687,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136764861,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3691,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136764879,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3692,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136839481,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3706,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136839499,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3707,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136843848,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3716,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136843855,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3717,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136618406,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3736,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136618414,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3737,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136619685,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3769,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136619693,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3770,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136758384,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3772,Title mismatch,"SS Title: Ralph Ellison, On Works in Progress
+Filmdb Title: Ralph Ellison, on Works in Progress"
+30000136758392,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3773,Title mismatch,"SS Title: Ralph Ellison, On Works in Progress
+Filmdb Title: Ralph Ellison, on Works in Progress"
+30000136758400,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3774,Title mismatch,"SS Title: Ralph Ellison, On Works in Progress
+Filmdb Title: Ralph Ellison, on Works in Progress"
+30000136769407,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3777,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136839440,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3783,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136921362,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3790,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136921370,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3791,Title mismatch,"SS Title: Saul Bellow, The World of the Dangling Man
+Filmdb Title: Saul Bellow, the World of the Dangling Man"
+30000136938861,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3794,Title mismatch,"SS Title: Ralph Ellison, On Works in Progress
+Filmdb Title: Ralph Ellison, on Works in Progress"
+30000136938879,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3795,Title mismatch,"SS Title: Ralph Ellison, On Works in Progress
+Filmdb Title: Ralph Ellison, on Works in Progress"
+30000136612060,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3813,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612078,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3814,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612086,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3815,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612094,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3816,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612110,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3817,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612284,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3818,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612292,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3819,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612300,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3820,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136612318,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3821,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136616681,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3822,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136616699,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3823,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136610353,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3834,Title mismatch,"SS Title: Alternative Energy Source
+Filmdb Title: Alternative Energy Sources"
+30000136613795,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3845,Title mismatch,"SS Title: Alternative Energy Source
+Filmdb Title: Alternative Energy Sources"
+30000136613803,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3846,Title mismatch,"SS Title: Alternative Energy Source
+Filmdb Title: Alternative Energy Sources"
+30000136617671,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3864,Title mismatch,"SS Title: Who Is: Oscar Niemeyer
+Filmdb Title: Who is: Oscar Niemeyer"
+30000136617689,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3865,Title mismatch,"SS Title: Who Is: Oscar Niemeyer
+Filmdb Title: Who is: Oscar Niemeyer"
+30000136619099,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3872,Title mismatch,"SS Title: Who Is: Sean Kenny
+Filmdb Title: Who is: Sean Kenny"
+30000136619107,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3873,Title mismatch,"SS Title: Who Is: Sean Kenny
+Filmdb Title: Who is: Sean Kenny"
+30000136764804,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3896,Title mismatch,"SS Title: Face of the World
+Filmdb Title: Face Of The World"
+30000136764812,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3897,Title mismatch,"SS Title: Face of the World
+Filmdb Title: Face Of The World"
+30000136839739,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3966,Title mismatch,"SS Title: Alternative Energy Source
+Filmdb Title: Alternative Energy Sources"
+30000136937400,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3996,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136937418,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3997,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136937681,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3998,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136937699,FINAL_NET_Elements_SendtoDatabase_20180710.csv,3999,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136939786,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4019,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136939794,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4020,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136610361,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4026,Title mismatch,"SS Title: Charles Francis Adams: Minister to Great Britian (1861-1864)
+Filmdb Title: Charles Francis Adams: Minister to Great Britain (1861-1864)"
+30000136610379,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4027,Title mismatch,"SS Title: Charles Francis Adams: Minister to Great Britian (1861-1864)
+Filmdb Title: Charles Francis Adams: Minister to Great Britain (1861-1864)"
+30000136610387,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4028,Title mismatch,"SS Title: Charles Francis Adams: Minister to Great Britian (1861-1864)
+Filmdb Title: Charles Francis Adams: Minister to Great Britain (1861-1864)"
+30000136610395,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4029,Title mismatch,"SS Title: Charles Francis Adams: Minister to Great Britian (1861-1864)
+Filmdb Title: Charles Francis Adams: Minister to Great Britain (1861-1864)"
+30000136761719,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4064,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136761727,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4065,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136761735,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4066,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136761743,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4067,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813452,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4072,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813460,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4073,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813478,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4074,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813486,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4075,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813494,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4076,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136813502,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4077,Title mismatch,"SS Title: Cities and the Poor, Part 2
+Filmdb Title: Cities and the Poor, part 2"
+30000136837402,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4121,Title mismatch,"SS Title: View of America From the 23rd Century
+Filmdb Title: View of America from the 23rd Century"
+30000136818360,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4279,Title mismatch,"SS Title: Art Underfoot
+Filmdb Title: Art underfoot"
+30000136844465,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4293,Title mismatch,"SS Title: Bruce Jay Friedman and Black Humor
+Filmdb Title: Bruce Jay Friedman And Black Humor"
+30000136844473,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4294,Title mismatch,"SS Title: Bruce Jay Friedman and Black Humor
+Filmdb Title: Bruce Jay Friedman And Black Humor"
+30000136834748,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4311,Title mismatch,"SS Title: The Tribe That Hides From Man
+Filmdb Title: The Tribe That Hides from Man"
+30000136834755,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4312,Title mismatch,"SS Title: The Tribe That Hides From Man
+Filmdb Title: The Tribe That Hides from Man"
+30000136941576,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4315,Title mismatch,"SS Title: The Tribe That Hides From Man
+Filmdb Title: The Tribe That Hides from Man"
+30000136751140,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4320,Title mismatch,"SS Title: God is Dead
+Filmdb Title: God Is Dead"
+30000136701871,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4362,Title mismatch,"SS Title: At the Bottom
+Filmdb Title: At The Bottom"
+30000136701889,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4363,Title mismatch,"SS Title: At the Bottom
+Filmdb Title: At The Bottom"
+30000136842667,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4369,Title mismatch,"SS Title: At the Bottom
+Filmdb Title: At The Bottom"
+30000136842675,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4370,Title mismatch,"SS Title: At the Bottom
+Filmdb Title: At The Bottom"
+30000136751009,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4485,Title mismatch,"SS Title: WhatÍs New #309 Balsa
+Filmdb Title: WhatÕs New #309 Balsa"
+30000136751017,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4486,Title mismatch,"SS Title: WhatÍs New #309 Balsa
+Filmdb Title: WhatÕs New #309 Balsa"
+30000136752833,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4487,Title mismatch,"SS Title: WhatÍs New #267 Our Food: Fruits and Vegetables
+Filmdb Title: WhatÕs New #267 Our Food: Fruits and Vegetables"
+30000136752841,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4488,Title mismatch,"SS Title: WhatÍs New #267 Our Food: Fruits and Vegetables
+Filmdb Title: WhatÕs New #267 Our Food: Fruits and Vegetables"
+30000136810177,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4495,Title mismatch,"SS Title: Potpourri _ Many Faces of Marijuana Pt. I
+Filmdb Title: Potpourri Ð Many Faces of Marijuana Pt. I"
+30000136810185,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4496,Title mismatch,"SS Title: Potpourri _ Many Faces of Marijuana Pt. I
+Filmdb Title: Potpourri Ð Many Faces of Marijuana Pt. I"
+30000136810193,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4497,Title mismatch,"SS Title: Potpourri _ Many Faces of Marijuana Pt. II
+Filmdb Title: Potpourri Ð Many Faces of Marijuana Pt. II"
+30000136810201,FINAL_NET_Elements_SendtoDatabase_20180710.csv,4498,Title mismatch,"SS Title: Potpourri _ Many Faces of Marijuana Pt. II
+Filmdb Title: Potpourri Ð Many Faces of Marijuana Pt. II"
+30000136769027,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,35,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136923384,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,114,Title mismatch,"SS Title: Charley Martin, American
+Filmdb Title: Charley Martin American"
+30000136816828,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,162,Title mismatch,"SS Title: Virtuoso Franz Liszt As Composer
+Filmdb Title: Virtuoso Franz Liszt as Composer"
+30000136816836,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,163,Title mismatch,"SS Title: Virtuoso Franz Liszt As Composer
+Filmdb Title: Virtuoso Franz Liszt as Composer"
+30000136847120,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,164,Title mismatch,"SS Title: Virtuoso Franz Liszt As Composer
+Filmdb Title: Virtuoso Franz Liszt as Composer"
+30000136847138,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,165,Title mismatch,"SS Title: Virtuoso Franz Liszt As Composer
+Filmdb Title: Virtuoso Franz Liszt as Composer"
+30000136928359,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,166,Title mismatch,"SS Title: Art Director
+Filmdb Title: The art director"
+30000136926700,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,169,Title mismatch,"SS Title: Education of Smoky
+Filmdb Title: Education Of Smoky"
+30000136926718,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,170,Title mismatch,"SS Title: Education of Smoky
+Filmdb Title: Education Of Smoky"
+30000136944752,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,268,Title mismatch,"SS Title: A Romance to Remember: Nathaniel Hawthorne and Sophia Peabody
+Filmdb Title: Romance to Remember: Nathaniel Hawthorne and Sophia Peabody"
+30000136768474,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,343,PO has 0 Titles in Filmdb,SS Title: The Splendid Dream: William Penn
+30000136922410,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,427,PO has 0 Titles in Filmdb,SS Title: The Splendid Dream: William Penn
+30000136922774,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,431,PO has 0 Titles in Filmdb,SS Title: The Splendid Dream: William Penn
+30000136926833,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,533,PO has 0 Titles in Filmdb,SS Title: The Splendid Dream: William Penn
+30000136929290,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,606,PO has 0 Titles in Filmdb,SS Title: The Splendid Dream: William Penn
+30000136811985,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,666,Title mismatch,"SS Title: The Nature of Language and How It is Learned
+Filmdb Title: The Nature of Language and How It Is Learned"
+30000136937541,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,673,Title mismatch,"SS Title: The Nature of Language and How It is Learned
+Filmdb Title: The Nature of Language and How It Is Learned"
+30000136937558,FINAL_TFC_Elements_SendtoDatabase_20180608.csv,674,Title mismatch,"SS Title: The Nature of Language and How It is Learned
+Filmdb Title: The Nature of Language and How It Is Learned"
+30000136703158,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,24,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136702903,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,51,Title mismatch,"SS Title: The Control Revolution
+Filmdb Title: The control revolution"
+30000136919598,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,139,Title mismatch,"SS Title: Face of Excellence
+Filmdb Title: Face Of Excellence"
+30000136708520,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,201,Title mismatch,"SS Title: From Pot to Psychedelics
+Filmdb Title: From Pot To Psychedelics"
+30000136708884,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,251,Title mismatch,"SS Title: Choreographer at Work
+Filmdb Title: A choreographer at work"
+30000136709106,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,261,Title mismatch,"SS Title: Great Performances in Dance
+Filmdb Title: Great Performance in Dance"
+30000136702317,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,273,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136702325,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,274,Title mismatch,"SS Title: Essay on Watergate
+Filmdb Title: Essay On Watergate"
+30000136708678,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,369,Title mismatch,"SS Title: Prudhoe Bay--Or Bust!
+Filmdb Title: Prudhoe Bay--or Bust!"
+30000136709577,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,373,Title mismatch,"SS Title: Chain of Life
+Filmdb Title: The Chain of Life"
+30000136709585,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,374,PO has 0 Titles in Filmdb,SS Title: Santa Barbara--Everybody's Mistake
+30000136708603,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,414,Title mismatch,"SS Title: The Suicide Clinic: A Cry For Help
+Filmdb Title: The Suicide Clinic: A Cry for Help"
+30000136945106,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,415,Title mismatch,"SS Title: Aphasia--The Road Back
+Filmdb Title: Aphasia : the road back"
+30000136945130,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,416,Title mismatch,"SS Title: Aphasia--The Road Back
+Filmdb Title: Aphasia : the road back"
+30000136945148,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,417,Title mismatch,"SS Title: Aphasia--The Road Back
+Filmdb Title: Aphasia : the road back"
+30000136702556,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,463,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136702564,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,464,Title mismatch,"SS Title: Job Discrimination: Doing Something about It
+Filmdb Title: Job Discrimination: Doing Something About It"
+30000136702572,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,474,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702580,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,475,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702598,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,476,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702606,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,477,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702614,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,478,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702622,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,479,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136702630,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,480,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136708157,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,490,Title mismatch,"SS Title: Face of the World
+Filmdb Title: Face Of The World"
+30000136708165,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,491,Title mismatch,"SS Title: Alternative Energy Source
+Filmdb Title: Alternative Energy Sources"
+30000136709775,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,504,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136709783,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,505,Title mismatch,"SS Title: An Eames Celebration: Several Worlds of Charles and Ray Eames
+Filmdb Title: An Eames Celebration:  Several Worlds of Charles and Ray Eames"
+30000136943952,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,514,Title mismatch,"SS Title: Face of the World
+Filmdb Title: Face Of The World"
+30000136943960,Additional_FINAL_NET_Elements_SendtoDatabase_20180717.csv,515,Title mismatch,"SS Title: Face of the World
+Filmdb Title: Face Of The World"
+30000077531980,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2,PO has 0 Titles in Filmdb,SS Title: The senses of man
+30000136913799,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,3,PO has 0 Titles in Filmdb,SS Title: The senses of man
+30000077538886,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,6,Title mismatch,"SS Title: The seven wives of Bahram Gur
+Filmdb Title: The Seven Wives of Bahram Gur"
+30000077545303,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,7,Title mismatch,"SS Title: The seven wives of Bahram Gur
+Filmdb Title: The Seven Wives of Bahram Gur"
+30000077545329,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,8,Title mismatch,"SS Title: The seven wives of Bahram Gur
+Filmdb Title: The Seven Wives of Bahram Gur"
+30000136829227,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,9,Title mismatch,"SS Title: The seven wives of Bahram Gur
+Filmdb Title: The Seven Wives of Bahram Gur"
+30000136748401,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,35,Title mismatch,"SS Title: The string choir
+Filmdb Title: The String Choir (first edition)"
+30000068432123,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,36,Title mismatch,"SS Title: The woodwind choir
+Filmdb Title: The Woodwind Choir"
+30000136748393,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,37,Title mismatch,"SS Title: The woodwind choir
+Filmdb Title: The Woodwind Choir"
+30000079829770,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,39,Title mismatch,"SS Title: The isle of joy
+Filmdb Title: The Isle of Joy"
+30000068459084,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,43,Title mismatch,"SS Title: The Louisiana Purchase : key to a continent.
+Filmdb Title: The Louisiana Purchase: Key to a Continent"
+30000079835967,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,44,Title mismatch,"SS Title: The quiet one
+Filmdb Title: The Quiet One"
+30000079835975,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,45,Title mismatch,"SS Title: The quiet one
+Filmdb Title: The Quiet One"
+30000079835983,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,46,Title mismatch,"SS Title: The quiet one
+Filmdb Title: The Quiet One"
+30000079835991,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,47,Title mismatch,"SS Title: The quiet one
+Filmdb Title: The Quiet One"
+30000136790239,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,48,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136806498,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,49,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136820010,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,50,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136825126,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,51,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136928953,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,52,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136947599,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,53,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136947615,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,54,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136699950,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,55,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000136699943,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,56,Title mismatch,"SS Title: The social animal
+Filmdb Title: The Social Animal"
+30000078513979,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,80,Title mismatch,"SS Title: The shape of the earth
+Filmdb Title: The Shape of the Earth"
+30000078513987,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,81,Title mismatch,"SS Title: The shape of the earth
+Filmdb Title: The Shape of the Earth"
+30000068488786,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,161,Title mismatch,"SS Title: The micrometer
+Filmdb Title: The Micrometer"
+30000068488794,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,162,Title mismatch,"SS Title: The micrometer
+Filmdb Title: The Micrometer"
+30000079809277,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,239,Title mismatch,"SS Title: Tide pool life
+Filmdb Title: Tide Pool Life"
+30000136742164,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,240,Title mismatch,"SS Title: Tide pool life
+Filmdb Title: Tide Pool Life"
+30000136720798,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,308,Title mismatch,"SS Title: The Pacific : discovery and development.
+Filmdb Title: The Pacific: Discovery and Development"
+30000136720806,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,309,Title mismatch,"SS Title: The Pacific : discovery and development.
+Filmdb Title: The Pacific: Discovery and Development"
+30000136683350,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,601,Title mismatch,"SS Title: The Millikan experiment
+Filmdb Title: The Millikan Experiment"
+30000136658840,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,622,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136699398,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,770,PO has 0 Titles in Filmdb,SS Title: The Organization of Language
+30000136699406,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,771,PO has 0 Titles in Filmdb,SS Title: The Organization of Language
+30000136808064,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,772,PO has 0 Titles in Filmdb,SS Title: The Organization of Language
+30000136912544,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,773,PO has 0 Titles in Filmdb,SS Title: The Organization of Language
+30000077546749,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,897,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136679044,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,936,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136679051,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,937,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136679069,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,938,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136823477,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,939,Title mismatch,"SS Title: The Nervous System in Man
+Filmdb Title: Nervous System in Man"
+30000136679002,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,953,PO has 0 Titles in Filmdb,SS Title: The Senses of Man
+30000136679036,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,954,PO has 0 Titles in Filmdb,SS Title: The Senses of Man
+30000136821521,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,955,PO has 0 Titles in Filmdb,SS Title: The Senses of Man
+30000136726050,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,990,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000079843359,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1150,Title mismatch,"SS Title: The hospital.
+Filmdb Title: The Hospital"
+30000136796061,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1263,Title mismatch,"SS Title: The World of Piri Thomas
+Filmdb Title: Schizophrenia: The Shattered Mirror"
+30000136683640,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1326,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683657,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1327,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683665,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1328,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683673,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1329,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683681,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1330,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683699,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1331,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683707,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1332,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683715,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1333,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683723,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1334,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136683731,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1335,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136804956,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1336,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136804980,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1337,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136805003,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1338,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136805011,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1339,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136805557,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1340,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136922030,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1341,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136922055,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1342,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136926205,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1343,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136926213,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1344,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136926379,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1345,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136929035,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1346,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136929043,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1347,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136946070,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1348,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947482,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1349,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947649,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1350,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947656,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1351,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947664,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1352,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947672,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1353,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136947771,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1354,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000149790622,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1355,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000149791620,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1356,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000149791646,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1357,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000149792347,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1358,PO has 0 Titles in Filmdb,SS Title: The Violent Universe
+30000136680547,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1384,Title mismatch,"SS Title: There's Something about a Story
+Filmdb Title: There's Something About a Story"
+30000046595744,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1403,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136658857,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1419,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136726233,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1458,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068507486,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1509,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068460744,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1581,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136716788,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1594,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136922337,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1707,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136922345,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1708,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136928557,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1709,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946187,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1710,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946195,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1711,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946203,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1712,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946211,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1713,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946229,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1714,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946237,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1715,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136946245,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1716,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947821,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1717,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947839,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1718,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947847,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1719,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947854,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1720,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947862,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1721,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947870,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1722,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947888,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1723,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947896,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1724,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947904,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1725,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947912,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1726,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947920,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1727,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947938,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1728,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947946,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1729,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136947953,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1730,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948894,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1731,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948902,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1732,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948910,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1733,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948928,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1734,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948936,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1735,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136948944,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1736,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949025,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1737,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949033,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1738,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949041,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1739,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949058,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1740,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949066,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1741,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949074,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1742,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949082,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1743,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949207,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1744,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949215,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1745,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136949223,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1746,Title mismatch,"SS Title: To Be Young Gifted and Black
+Filmdb Title: To Be Young, Gifted and Black"
+30000136656547,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1899,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000079824441,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1916,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068496631,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1934,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068476039,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1944,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077540114,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1979,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136736711,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,1983,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077547325,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2143,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077550899,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2205,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068432487,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2212,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077540437,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2226,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136677949,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2262,Title mismatch,"SS Title: The Necklace by Guy de Maupassant
+Filmdb Title: The Necklace, Guy de Maupassant"
+30000136826264,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2335,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136912098,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2336,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000052852278,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2337,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068425887,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2338,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068425895,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2339,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077543803,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2364,Title mismatch,"SS Title: This is Robert : a study of personality growth in a pre-school child
+Filmdb Title: This is Robert: A Study of Personality Growth in Pre-School Child"
+30000077544033,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2365,Title mismatch,"SS Title: This is Robert : a study of personality growth in a pre-school child
+Filmdb Title: This is Robert: A Study of Personality Growth in Pre-School Child"
+30000136686403,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2366,Title mismatch,"SS Title: This is Robert : a study of personality growth in a pre-school child
+Filmdb Title: This is Robert: A Study of Personality Growth in Pre-School Child"
+30000136686411,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2367,Title mismatch,"SS Title: This is Robert : a study of personality growth in a pre-school child
+Filmdb Title: This is Robert: A Study of Personality Growth in Pre-School Child"
+30000136674250,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2370,Title mismatch,"SS Title: The role of coal
+Filmdb Title: The Role of Coal"
+30000136674268,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2371,Title mismatch,"SS Title: The role of coal
+Filmdb Title: The Role of Coal"
+30000136823386,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2372,Title mismatch,"SS Title: The role of coal
+Filmdb Title: The Role of Coal"
+30000136847260,IUCAT_LetterTPart2_SendtoDatabase_reviewed_20180214.csv,2459,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068503097,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,96,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136680141,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,120,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000149791794,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,121,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136683319,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,207,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000149792602,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,208,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068435456,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,285,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136672866,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,436,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136744715,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,498,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136679846,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,622,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068474158,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,624,Title mismatch,"SS Title: Washington in War Time
+Filmdb Title: Washington in war time"
+30000136718412,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,757,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068507569,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,816,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136659053,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,845,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068463516,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,929,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136658907,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,970,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077542961,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,975,Title mismatch,"SS Title: What Do You Do When You See a Blind Person?
+Filmdb Title: What Do You Do When You See A Blind Person?"
+30000136685199,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,976,Title mismatch,"SS Title: What Do You Do When You See a Blind Person?
+Filmdb Title: What Do You Do When You See A Blind Person?"
+30000136681008,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,980,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136801689,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1013,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136698770,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1227,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000068432917,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1316,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136744129,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1504,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136646019,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1536,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136646001,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1537,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000136674862,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1737,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
+30000077543316,IUCAT_ThroughUVWXYZ_SendtoDatabase_reviewed_20180227.csv,1915,"PO Generation Notes and Catalog Key were corrected, but Title was digitized - manually check Subject and Name Authority fields"
