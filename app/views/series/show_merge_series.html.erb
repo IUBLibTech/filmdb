@@ -39,8 +39,9 @@
       $('#series_title_text').autocomplete({
           minLength: 2,
           source: function (request, response) {
+              var url = "<%= autocomplete_series_path %>";
               $.ajax({
-                  url: "<%= autocomplete_series_path %>",
+                  url: url,
                   dataType: "json",
                   data: {
                       term: request.term,
@@ -50,7 +51,12 @@
                       response(data)
                   },
                   error: function (jqXHR, textStatus, errorThrown) {
-                      swal("Error",jqXHR.url + "<br><br>" + textStatus + "<br><br>" + errorThrown);
+                      swal({
+                          title: 'Ajax Error',
+                          text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                      }, function() {
+                          window.location.replace(url)
+                      })
                   }
               });
           },
@@ -68,22 +74,34 @@
       });
   });
   function ajaxSeriesSummary(series_id) {
+      var url = '/series/ajax/show/'+series_id;
       $.ajax({
-          url: '/series/ajax/show/'+series_id,
+          url: url,
           success: function(result) {
               $('#series_summary').html(result).show();
           },
           error: function(jqXHR, textStatus, errorThrown) {
-              swal("Error",jqXHR.url + "<br><br>" + textStatus + "<br><br>" + errorThrown);
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              })
           }
       })
   }
   function addSeries(seriesId) {
+      var url = '/series/merge/series_table_row/'+seriesId;
       $.ajax({
-          url: '/series/merge/series_table_row/'+seriesId,
+          url: url,
           data: {merge_all: merge_all},
           error: function(jqXHR, textStatus, errorThrown) {
-              swal("AJAX Error", jqXHR +"<br><br>"+textStatus+"<br><br>"+errorThrown);
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function() {
+                  window.location.replace(url)
+              });
           },
           success: function(result) {
             $('.series_merge_remove').unbind('click.series_merge_remove_series');

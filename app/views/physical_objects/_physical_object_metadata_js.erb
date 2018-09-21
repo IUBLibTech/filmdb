@@ -146,10 +146,16 @@
       // if the series_id is omitted, it will resolve to /titles/ajax/:id with and id of 'new'
       //UPDATE: series id should always be 0 - use autocomplete on the new title popup to select an existing series
       series_id = 0;
+      var url = window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id;
       $.ajax({
-        url: window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id,
+        url: url,
         error: function(jqXHR, textStatus, errorThrown) {
-          window.location.replace(jqXHR.url)
+            swal({
+                title: 'Ajax Error',
+                text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+            }, function() {
+                window.location.replace(url)
+            })
         },
         success: function(result) {
           el = $('#title_popup_content');
@@ -191,7 +197,12 @@
                 }
               },
               error: function(jqXHR, textStatus, errorThrown) {
-                window.location.replace(jqXHR.url)
+                  swal({
+                      title: 'Ajax Error',
+                      text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                  }, function() {
+                      window.location.replace(create_url)
+                  })
               },
               complete: function() {
                 $('#title_popup').hideTitlePopup();
