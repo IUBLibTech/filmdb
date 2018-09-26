@@ -45,6 +45,10 @@
     <th>Can Add Controlled Vocabulary</th>
     <td><%= @user.can_add_cv? ? 'Yes' : 'No' %></td>
   </tr>
+  <tr>
+    <th>Read Only?</th>
+    <td><%= @user.read_only? ? 'Yes' : 'No' %></td>
+  </tr>
 	<tr>
 		<th>Worksite</th>
 		<td>
