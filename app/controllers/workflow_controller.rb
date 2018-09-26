@@ -179,7 +179,6 @@ class WorkflowController < ApplicationController
 		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
-		debugger
 		# return to storage is not normal workflow - only allow this for physical objects that are either just inventoried,
 		# or are the only physical object in their active component group
 		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || @po.active_component_group.physical_objects.size == 1
@@ -194,7 +193,6 @@ class WorkflowController < ApplicationController
 	end
 
 	def ajax_return_to_storage_lookup
-		raise 'wtf'
 		po = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
 		if po.nil?
 			render text: "Error: Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
