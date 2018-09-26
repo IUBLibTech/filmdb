@@ -84,7 +84,6 @@ class ComponentGroupsController < ApplicationController
           p = PhysicalObject.find(po)
           # must do this before setting workflow status so that the correct CG can be assigned to the workflow status
           p.active_component_group = @component_group
-          debugger
           if @active && p.in_storage?
             p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::QUEUED_FOR_PULL_REQUEST, p)
             flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} has been Queued for Pull Request"
@@ -92,7 +91,6 @@ class ComponentGroupsController < ApplicationController
             p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
             flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 2k/4k staging shelf"
           elsif @active && (p.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS)
-            debugger
             p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::WELLS_TO_ALF_CONTAINER, p)
             flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 'Wells to ALF Container'"
           end

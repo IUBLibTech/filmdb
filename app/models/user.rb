@@ -5,12 +5,18 @@ class User < ActiveRecord::Base
 
 	def self.authenticate(username)
 		return false if username.nil? || username.blank?
+		return false if !active_user?(username)
 		return true if valid_usernames.include? username
 		return false
 	end
 
 	def self.valid_usernames
 		return User.all.map { |user| user.username }
+	end
+
+	def self.active_user?(username)
+		u = User.where(username: username).first
+		return !u.nil? && u.active?
 	end
 
 	def self.current_username=(user)

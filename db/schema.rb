@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180702180714) do
+ActiveRecord::Schema.define(version: 20180925193836) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -554,6 +554,7 @@ ActiveRecord::Schema.define(version: 20180702180714) do
     t.boolean  "can_update_physical_object_location",             default: false
     t.boolean  "can_edit_users",                                  default: false
     t.boolean  "can_add_cv",                                      default: false
+    t.boolean  "read_only"
   end
 
   create_table "value_conditions", force: :cascade do |t|
