@@ -161,7 +161,8 @@ class WorkflowController < ApplicationController
 		elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::BEST_COPY_MDPI_WELLS)
 			flash.now[:warning] = "#{@physical_object.iu_barcode} cannot be received. Its current workflow status is #{@physical_object.current_workflow_status.type_and_location}"
 		else
-			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::BEST_COPY_MDPI_WELLS, @physical_object)
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::BEST_COPY_MDPI_WELLS, @physical_object) if @physical_object.active_component_group.is_mdpi_workflow?
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_WORKFLOW_WELLS, @physical_object) if @physical_object.active_component_group.is_iulmia_workflow?
 			@physical_object.workflow_statuses << ws
 			@physical_object.save
 			others = @physical_object.waiting_active_component_group_members?
@@ -181,7 +182,7 @@ class WorkflowController < ApplicationController
 	def process_return_to_storage
 		# return to storage is not normal workflow - only allow this for physical objects that are either just inventoried,
 		# or are the only physical object in their active component group
-		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || @po.active_component_group.physical_objects.size == 1
+		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || @po.active_component_group.is_iulmia_workflow? || @po.active_component_group.physical_objects.size == 1
 			ws = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
 			@po.workflow_statuses << ws
 			@po.save
