@@ -1,6 +1,6 @@
 <p class="notice">Title merge successful.</p>
 <ul class="notice">
-  <% if @mergees.size > 0 %>
+  <% if @mergees&.size > 0 %>
     <li><%= @mergees.size %> other Titles were merged into this Title record</li>
   <% end %>
   <% unless @component_group.nil? %>

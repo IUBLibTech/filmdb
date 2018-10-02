@@ -177,6 +177,10 @@ class WorkflowStatus < ActiveRecord::Base
 		STATUS_TYPES_TO_STATUSES['Storage'].include?(status_name) && status_name != MISSING && status_name != MOLD_ABATEMENT
 	end
 
+	def just_inventoried?
+		[JUST_INVENTORIED_WELLS, JUST_INVENTORIED_ALF].include?(status_name)
+	end
+
 	def type_and_location
 		"#{status_name}"
 	end

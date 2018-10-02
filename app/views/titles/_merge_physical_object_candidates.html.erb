@@ -81,13 +81,13 @@
       </td>
     <% else %>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check add'} %>
       </td>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check return'} %>
       </td>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][workflow]", "", false,  {class: 'po_check'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][workflow]", "", false,  {class: 'po_check leave'} %>
       </td>
     <% end %>
 

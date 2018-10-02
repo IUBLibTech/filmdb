@@ -22,8 +22,10 @@
       <td><%= cg.generations %></td>
 			<td><%= cg.physical_objects.collect { |p| p.current_location }.uniq.join(', ') %></td>
       <td>
-	      <% if cg.can_be_pulled? %>
+	      <% if cg.can_move_or_be_pulled? %>
 		      <%= link_to 'Queue Pull Request', '#', id: "cg_#{cg.id}", class: 'cg_pull_link' %> <br>
+        <% elsif cg.can_move_into_workflow? %>
+          <%= link_to "Move Into Workflow", '#', id: "cg_#{cg.id}", class: 'cg_move_link' %> <br>
 	      <% end %>
 	      <% if policy(cg).destroy? && !cg.in_active_workflow? %>
 		      <%= link_to "Delete", delete_component_group_path(@title, cg), method: :delete, data: { confirm: 'Are you sure?' }  %>
@@ -129,7 +131,7 @@
         hook_cg_add();
       }
     });
-  }
+  };
   $('.cg_pull_link').click(function(event) {
 		var id = $(this).attr('id').substring(3);
 		event.preventDefault();
@@ -147,12 +149,12 @@
         });
 			},
 			success: function(data, status, xhr) {
-        title = data == 'success' ? 'Success' : "Unable to Queue Pull Request"
-				msg = data == 'success' ? '<p>Component Group queued for pull request</p>': fillBadList(data)
+        var title = data == 'success' ? 'Success' : "Unable to Queue Pull Request";
+				var msg = data == 'success' ? '<p>Component Group queued for pull request</p>': fillBadList(data);
         swal({
 	        title: title,
 	        text: msg,
-	        html: true,
+	        html: true
         },
         function() {
 	        location.reload()
@@ -160,6 +162,39 @@
 			}
 		});
 	});
+
+  $('.cg_move_link').click(function(event) {
+      var id = $(this).attr('id').substring(3);
+      event.preventDefault();
+      event.stopPropagation();
+      var url = '../component_groups/' + id + '/ajax_move_into_active_request';
+      $.ajax({
+          url: url,
+          method: 'POST',
+          error: function (jqXHR, textStatus, error) {
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function () {
+                  window.location.replace(url)
+              });
+          },
+          success: function (data, status, xhr) {
+              var title = data == 'success' ? 'Success' : "Unable to Move Component Group Into Active Workflow";
+              var msg = data == 'success' ?
+                  '<p>Component Group physical objects were successfully moved into active workflow. ' +
+                  'If this was an MDPI Component Group, please make sure to update their actual physical location (2k/4k Shelves or Wells to ALF Container).</p>' : fillBadList(data);
+              swal({
+                      title: title,
+                      text: msg,
+                      html: true
+                  },
+                  function () {
+                      location.reload()
+                  })
+          }
+      });
+  });
 
   var fillBadList = function(data) {
     ul = "<ul>"
