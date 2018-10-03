@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   post '/component_groups/:id/ajax/remove_physical_object/:pid', to:'component_groups#remove_physical_object', as: 'remove_physical_object_from_component_group'
   post '/component_groups/:id/add_to_component_group/', to: 'component_groups#add_physical_objects', as: 'add_physical_objects_to_component_group'
 	post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
+  post '/component_groups/:id/ajax_move_into_active_request', to: 'component_groups#ajax_move_into_active_request', as: 'ajax_move_into_active_request'
 	post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
 
   resources :controlled_vocabularies

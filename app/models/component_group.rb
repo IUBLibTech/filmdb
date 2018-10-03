@@ -43,6 +43,8 @@ class ComponentGroup < ActiveRecord::Base
     gen_set.to_a.sort.join(', ').tr('"', '')
   end
 
+  # this check is to see if ALL physical objects in the CG are in storage (ingested, not ingested, freezer, awaiting freezer)
+  # can be queued for pull request
   def can_be_pulled?
     physical_objects.each do |p|
       unless p.current_workflow_status.can_be_pulled?
@@ -50,6 +52,23 @@ class ComponentGroup < ActiveRecord::Base
       end
     end
     true
+  end
+
+  # this checks to see if ALL physical objects in the CG are at Just Inventoried (Wells or ALF), and as such can move
+  # into their respective next location in workflow (based on their component group type)
+  def can_move_into_workflow?
+    physical_objects.each do |p|
+      return false if (p.current_location != WorkflowStatus::JUST_INVENTORIED_ALF && p.current_location != WorkflowStatus::JUST_INVENTORIED_WELLS)
+    end
+    true
+  end
+
+  # checks to see if at least one physical object satisfies can_be_pulled? and everything else is either in can_be_pulled? state
+  # or is can_move_into_workflow state
+  def can_move_or_be_pulled?
+    one_pullable = physical_objects.select{|p| p.current_workflow_status.can_be_pulled? }.size > 0
+    all = physical_objects.each {|p| p.current_workflow_status.can_be_pulled? || (p.current_location != WorkflowStatus::JUST_INVENTORIED_ALF && p.current_location != WorkflowStatus::JUST_INVENTORIED_WELLS) }.size == physical_objects.size
+    one_pullable && all
   end
 
   def deliver_to_alf?
@@ -70,6 +89,13 @@ class ComponentGroup < ActiveRecord::Base
 
   def whose_workflow
     MDPI_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
+  end
+
+  def is_mdpi_workflow?
+    group_type.include?('MDPI')
+  end
+  def is_iulmia_workflow?
+    !is_mdpi_workflow?
   end
 
 	def in_active_workflow?
