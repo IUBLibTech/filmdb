@@ -2,7 +2,7 @@ class ComponentGroupsController < ApplicationController
   include AlfHelper
 
   before_action :set_component_group, only:
-		[:destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_edit_summary]
+		[:destroy, :ajax_physical_objects_list, :remove_physical_object, :add_physical_objects, :ajax_queue_pull_request, :ajax_move_into_active_request, :ajax_edit_summary]
 
   # GET /component_groups
   # GET /component_groups.json
@@ -183,7 +183,40 @@ class ComponentGroupsController < ApplicationController
           end
         end
         if bad.size > 0
-          raise ManualRollBackError.new()
+          raise ManualRollBackError.new
+        else
+          render text: 'success'
+        end
+      end
+    rescue ManualRollBackError => e
+      render json: bad.to_json
+    end
+  end
+
+  def ajax_move_into_active_request
+    bad = {}
+    begin
+      PhysicalObject.transaction do
+        @component_group.physical_objects.each do |p|
+          status = p.current_workflow_status
+          if !status.just_inventoried?
+            bad[p.id] = "#{p.iu_barcode} in not at <i>Just Inventoried (Wells or ALF)</i> it is: <b>#{status.status_name}</b>".html_safe
+          else
+            # must set active component group BEFORE building the next workflow status, WorkflowStatus needs to set the component group id on it
+            p.active_component_group = @component_group
+            stat = nil
+            if p.active_component_group.is_mdpi_workflow?
+              stat = (p.current_location == WorkflowStatus::JUST_INVENTORIED_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER)
+            else
+              stat = WorkflowStatus::IN_WORKFLOW_WELLS
+            end
+            ws = WorkflowStatus.build_workflow_status(stat, p)
+            p.workflow_statuses << ws
+            p.save!
+          end
+        end
+        if bad.keys.size > 0
+          raise ManualRollBackError.new
         else
           render text: 'success'
         end
