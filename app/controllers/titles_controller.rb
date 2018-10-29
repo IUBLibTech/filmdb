@@ -284,7 +284,7 @@ class TitlesController < ApplicationController
           flash[:merged] ||= {}
           flash[:merged][:all] = true
           keys = params[:component_group][:component_group_physical_objects_attributes].keys
-          # check_box_tag does not work the same way as the helper f.check_box with respect to the params has.
+          # check_box_tag does not work the same way as the helper f.check_box with respect to the params hash.
           # One must manually check the presence of the attribute - HTML forms do no post unchecked checkboxes so if it's present, it was checked
           checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:checked].nil?}
           @return = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:return].nil?}

@@ -32,6 +32,9 @@
           <br>
 	      <% elsif cg.in_active_workflow? %>
 	      <b>Active</b>
+          <% if cg.is_iulmia_workflow? %>
+            <br><%= link_to "Move to MDPI Workflow", move_to_mdpi_workflow_path(t_id:@title.id, id: cg.id) %><br>
+          <% end %>
 	      <% end %>
         <%= link_to "Edit", edit_component_group_path(@title, cg) %>
 			</td>
