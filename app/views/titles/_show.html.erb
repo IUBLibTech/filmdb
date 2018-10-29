@@ -2,6 +2,8 @@
   <%= render partial: 'merge_message' %>
 <% elsif flash[:split] == true %>
   <%= render partial: 'split_message' %>
+<% elsif flash[:inject] == true %>
+  <%= render partial: 'component_groups/move_to_mdpi_workflow_create' %>
 <% end %>
 <div id="whodoneit">
   <div><b>Creator</b></div><div><%= @title.creator&.name %></div>

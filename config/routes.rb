@@ -117,6 +117,8 @@ Rails.application.routes.draw do
   delete '/titles/:t_id/component_groups/delete/:id', to: 'component_groups#destroy', as: 'delete_component_group'
   get '/titles/:t_id/component_groups/:id', to: 'component_groups#edit', as: 'edit_component_group'
   patch '/titles/:t_id/component_groups/:id', to: 'component_groups#update', as: 'update_component_group'
+  get '/titles/:t_id/component_groups/:id/mdpi', to: 'component_groups#move_to_mdpi_workflow', as: 'move_to_mdpi_workflow'
+  post '/titles/:t_id/component_groups/:id/mdpi_create', to: 'component_groups#move_to_mdpi_workflow_create', as: 'move_to_mdpi_workflow_create'
   get '/titles/ajax/:id', to:'titles#ajax_summary', as: 'title_ajax'
   get '/titles/ajax/new/:series_id', to: 'titles#new_ajax', as: 'new_title_ajax'
   post '/titles/ajax/new_title', to: 'titles#create_ajax', as: 'create_title_ajax'
@@ -136,7 +138,7 @@ Rails.application.routes.draw do
   post '/titles/ajax_split_title_cg_table', to: 'titles#split_title_cg_table', as: 'split_title_cg_table'
   post '/titles/:id/update_split_title', to: 'titles#update_split_title', as: 'update_split_title'
   get '/titles/ajax_reel_count/:id', to: 'titles#ajax_reel_count', as: 'ajax_reel_count'
-  get '/titles/merge/in_instorage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
+  get '/titles/merge/in_storage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
   post '/titles/merge/in_storage_update', to: 'titles#merge_in_storage_update', as: 'merge_in_storage_update'
   get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
   resources :units
