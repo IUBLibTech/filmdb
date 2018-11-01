@@ -188,7 +188,8 @@ Rails.application.routes.draw do
   get '/workflow/digitization_staging_list', to: 'workflow#digitization_staging_list', as: 'digitization_staging_list'
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'
   get '/workflow/ajax_show_storage_location/:iu_barcode', to: 'workflow#ajax_return_to_storage_lookup', as: 'ajax_return_to_storage_lookup'
-
+  get '/workflow/correct_freezer_loc', to: 'workflow#correct_freezer_loc_get', as: 'correct_freezer_loc_get'
+  post '/workflow/correct_freezer_loc', to: 'workflow#correct_freezer_loc_post', as: 'correct_freezer_loc_post'
   # workflow_stats routes
   get '/workflow_stats/digitization_staging_stats', to: 'workflow_stats#digitization_staging_stats', as: 'digitization_staging_stats'
   get '/workflow_stats/shipped_so_far', to: 'workflow_stats#shipped_so_far', as: 'shipped_so_far'
