@@ -225,6 +225,37 @@ class WorkflowController < ApplicationController
 		render :send_to_freezer
 	end
 
+
+	def correct_freezer_loc_get
+
+	end
+	def correct_freezer_loc_post
+		po = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
+    if po.nil?
+			flash[:warning] = "Could not find a Physical Object with IU Barcode #{params[:iu_barcode]}"
+		else
+			PhysicalObject.transaction do
+				current = po.current_location
+				active_cg = po.active_component_group
+				ws = WorkflowStatus.build_workflow_status(params[:location], po, true)
+				po.workflow_statuses << ws
+				po.current_workflow_status = ws
+				if !params[:remove].nil?
+					if !active_cg.nil?
+						ComponentGroupPhysicalObject.where(physical_object_id: po.id, component_group_id: active_cg.id).delete_all
+					end
+					po.active_component_group = nil
+				end
+				po.save
+				flash[:notice] = "#{po.iu_barcode} was moved from #{current} to #{ws.status_name}.".html_safe
+				if !active_cg.nil?
+					flash[:notice] = "#{flash[:notice]} Additionally the physical object was <b>#{!params[:remove].nil? ? 'removed' : 'not removed'}</b> from its active component group."
+				end
+			end
+		end
+		render 'correct_freezer_loc_get'
+	end
+
 	def mark_missing
 		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
 	end
