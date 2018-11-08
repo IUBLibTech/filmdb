@@ -25,7 +25,7 @@
 <% end %>
 <div id="main">
   <div class="left_div">
-    <div class="label"><b>Title</b></div><div class="field"><%= @title.title_text %></div>
+    <div class="label"><b>Title</b></div><div class="field"><h2><%= @title.title_text %></h2></div>
     <div class="label"><b>Series Title</b></div><div class="field"><%= link_to @title.series_title_text, series_path(@title.series), target: '_blank' unless @title.series.nil? %></div>
     <div class="label"><b>Series Part</b></div><div class="field"><%= @title.series_part %></div>
     <div class="label"><b>Compilation</b></div><div class="field"><%= @title.compilation %></div>

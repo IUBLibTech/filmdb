@@ -241,7 +241,7 @@
         <b>Can Size</b>
       </div>
       <div class="value">
-        <%= f.select :can_size, options_for_select(@cv[:can_size], @physical_object.can_size), {include_blank: ''}  %>
+        <%= f.select :can_size, options_for_select(@cv[:can_size].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.can_size), {include_blank: ''}  %>
       </div>
       <div class="label">
         <b>Footage (ft)</b>
