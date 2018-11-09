@@ -8,11 +8,11 @@
 	<% end %>
   <%= link_to "Create Component Group", new_title_component_group_path(@title.id) %>
 </div>
-<%= render partial: "show" %>
+<%= render partial: "titles/show" %>
 
-<%= render partial: 'physical_objects' %>
+<%= render partial: 'titles/physical_objects' %>
 <BR>
-<%= render partial: 'component_groups' %>
+<%= render partial: 'titles/component_groups' %>
 
 
 <%#= render partial: 'component_group_form' %>
