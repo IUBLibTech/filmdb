@@ -163,6 +163,49 @@ class ComponentGroupsController < ApplicationController
     redirect_to @title
   end
 
+  def move_to_mdpi_workflow
+    @title = Title.find(params[:t_id])
+    @component_group = ComponentGroup.find(params[:id])
+    if @component_group.is_iulmia_workflow?
+      @new_cg = ComponentGroup.new
+      @component_group_cv = ControlledVocabulary.component_group_cv[:group_type].select{ |t| t[0].include?('MDPI')}
+    end
+  end
+
+  def move_to_mdpi_workflow_create
+    PhysicalObject.transaction do
+      keys = params[:component_group][:component_group_physical_objects_attributes].keys
+      checked = keys.select{|k| !params[:component_group][:component_group_physical_objects_attributes][k][:selected].nil?}
+      @pos = PhysicalObject.where(id: checked)
+      @return = ComponentGroup.find(params[:id]).physical_objects - @pos
+      @cg = ComponentGroup.new(title_id: params[:t_id], group_type: params[:component_group][:group_type], group_summary: params[:component_group][:group_summary])
+      @pos.each do |p|
+        settings = params[:component_group][:component_group_physical_objects_attributes][p.id.to_s]
+        @cg.physical_objects << p
+        @cg.save
+        p.active_component_group = @cg
+        loc = p.in_active_workflow? ? WorkflowStatus::WELLS_TO_ALF_CONTAINER : WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+        ws = WorkflowStatus.build_workflow_status(loc, p)
+        p.workflow_statuses << ws
+        p.current_workflow_status = ws
+        p.save
+        p.active_scan_settings.update_attributes(scan_resolution: settings[:scan_resolution], color_space: settings[:color_space], return_on_reel: settings[:return_on_reel], clean: settings[:clean])
+      end
+      @return.each do |p|
+        p.active_component_group = nil
+        ws = WorkflowStatus.build_workflow_status(p.storage_location, p)
+        p.workflow_statuses << ws
+        p.current_workflow_status = ws
+        p.save
+      end
+    end
+    flash[:inject] = true
+    @title = Title.find(params[:t_id])
+    @physical_objects = @title.physical_objects
+    @component_group_cv = ControlledVocabulary.component_group_cv
+    render 'titles/show'
+  end
+
   def ajax_queue_pull_request
     # result = pull_request([@component_group.id])
     # render text: result, status: (result == "failure" ? 500 : 200)

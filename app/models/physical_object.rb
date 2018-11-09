@@ -440,6 +440,11 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	# this method differs slightly from WOrkflowStatus.in_active_workflow in that it tests against not being In Storage
+	# TODO: WorkflowStatus needs to be updated (and reliant code modified) to
+	def in_active_workflow?
+		!active_component_group.nil? && !current_workflow_status.is_storage_status?
+	end
 
 	# noinspection RubyResolve,RubyResolve
 	def to_xml(options)
