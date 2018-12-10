@@ -298,6 +298,17 @@ li.title_li {
     width: 100%;
 }
 
+div.field > a {
+  position: relative;
+  top: 2.5px;
+  padding-left: 0;
+}
+
+.field {
+  padding-top: 3px;
+}
+
+
 #version_div > div.label {
     float: left;
     width: 12%;

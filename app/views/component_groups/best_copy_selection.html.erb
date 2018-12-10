@@ -84,6 +84,7 @@
 <% end %>
 <script type="text/javascript" charset="utf-8">
   var po_ids = [];
+  var lastChecked = null;
   $(document).ready(function() {
      $('.po_check').click(function() {
          po_ids = [];
@@ -92,5 +93,19 @@
              $('#poids').attr('value', po_ids.join());
          })
      });
+      $('input:checkbox').click(function(e) {
+          if (!lastChecked) {
+              lastChecked = this;
+              setChecked();
+              return;
+          }
+          if (e.shiftKey) {
+              var start = $('input:checkbox').index(this);
+              var end = $('input:checkbox').index(lastChecked);
+              $('input:checkbox').slice(Math.min(start, end), Math.max(start,end) + 1).prop('checked', lastChecked.checked)
+          }
+          setChecked();
+          lastChecked = this;
+      });
   });
 </script>
