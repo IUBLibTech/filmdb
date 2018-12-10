@@ -1,4 +1,7 @@
 class Spreadsheet < ActiveRecord::Base
+  include DateHelper
+  require 'csv'
+
 	has_many :physical_objects
 	has_many :spreadsheet_submissions, dependent: :delete_all
   has_many :titles
@@ -15,6 +18,43 @@ class Spreadsheet < ActiveRecord::Base
 
 	def current_submission
 		spreadsheet_submissions.order(:created_at).last
-	end
+  end
+
+  # Utility that reads a CSV file
+  def self.parse_existing(filepath)
+    begin
+      @csv = CSV.read(filepath, headers: false)
+    rescue
+      opened_file = File.open(filepath, "r:ISO-8859-1:UTF-8")
+      @csv = CSV.parse(opened_file, headers: false)
+    end
+    iubc_i = @csv[0].index('IU Barcode')
+    new_records = []
+    existing_records = []
+    @csv.each_with_index do |row, i|
+      unless i == 0
+        puts "Parsing row #{i} of #{@csv.size - 1}"
+        if (PhysicalObject.where(iu_barcode: row[iubc_i]).empty? && PhysicalObjectOldBarcode.where(iu_barcode: row[iubc_i]).empty?)
+          new_records << row
+        else
+          existing_records << row
+        end
+      end
+    end
+    CSV.open("to ingest.csv") do |csv|
+      csv << @csv[0]
+      new_records.each do |row|
+        csv << row
+      end
+    end
+    CSV.open("already ingested.csv") do |csv|
+      csv << @csv[0]
+      existing_records.each do |row|
+        csv << row
+      end
+    end
+  end
+
+
 
 end

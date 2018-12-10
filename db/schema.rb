@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108155022) do
+ActiveRecord::Schema.define(version: 20181116190715) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -524,6 +524,7 @@ ActiveRecord::Schema.define(version: 20181108155022) do
     t.text     "name_authority",     limit: 65535
     t.text     "compilation",        limit: 65535
     t.text     "country_of_origin",  limit: 65535
+    t.boolean  "fully_cataloged"
   end
 
   create_table "units", force: :cascade do |t|
