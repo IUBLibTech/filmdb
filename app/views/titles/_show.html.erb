@@ -30,6 +30,9 @@
     <div class="label"><b>Series Part</b></div><div class="field"><%= @title.series_part %></div>
     <div class="label"><b>Compilation</b></div><div class="field"><%= @title.compilation %></div>
     <div class="label"><b>Country of Origin</b></div><div class="field"><%= @title.country_of_origin %></div>
+    <% if @title.fully_cataloged %>
+      <div class="label"><b>Fully Cataloged</b></div><div class="field">Yes</div>
+    <% end  %>
   </div>
   <div class="right_div">
     <div class="block_label"><b>Summary</b></div>
