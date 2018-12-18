@@ -80,7 +80,7 @@ div#menu {
     padding: 4px 10px;
     font-size: 1.5em;
     height: 42px;
-    margin-bottom: 25px;
+    margin-bottom: 5px;
 }
 
 div#menu > ul {
@@ -220,6 +220,7 @@ table.version_table > tbody > tr > td > input {
     color: black;
     margin: 0;
     padding: 5px;
+  margin-bottom: 5px;
 }
 .warning, .notice {
     font-weight: bold;
@@ -829,4 +830,14 @@ div#title_summary, div#series_summary {
 input[type=text].bad {
   background: red;
   color: white;
+}
+
+div.cat {
+  float: left;
+  padding-top: 8px;
+}
+
+td > img.cat {
+  top: 5px;
+  position: relative;
 }
