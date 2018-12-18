@@ -41,13 +41,15 @@ class Spreadsheet < ActiveRecord::Base
         end
       end
     end
-    CSV.open("to ingest.csv") do |csv|
+    file = "#{Rails.root}/tmp/to_ingest.csv"
+    CSV.open(file, 'w') do |csv|
       csv << @csv[0]
       new_records.each do |row|
         csv << row
       end
     end
-    CSV.open("already ingested.csv") do |csv|
+    file = "#{Rails.root}/tmp/already_ingested.csv"
+    CSV.open(file, 'w') do |csv|
       csv << @csv[0]
       existing_records.each do |row|
         csv << row
