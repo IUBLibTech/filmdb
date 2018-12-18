@@ -1,6 +1,10 @@
 <%= form_tag update_split_title_path, id: 'split_title_form' do %>
   <%= hidden_field_tag 'title_map' %>
 <h4>Splitting <%= link_to @title.title_text, title_path(@title), class: 'orange' %></h4>
+  <% if @title.fully_cataloged %>
+    <br>
+    <%= image_tag('paw.png') %>
+  <% end %>
 <p>Reassign Physical Objects in this Title by selecting their new titles in the title field below</p>
 <table>
   <tbody>
