@@ -1,5 +1,8 @@
 <tr id="<%= @title.id %>" class="title_row">
 	<td>
+    <% if @title.fully_cataloged %> <%= image_tag('paw.png') %> <% end %>
+  </td>
+  <td>
 		<%= link_to @title.title_text, title_path(@title), target: '_blank' %>
 	</td>
 	<td>
