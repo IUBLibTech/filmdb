@@ -184,7 +184,7 @@ class ComponentGroupsController < ApplicationController
         @cg.physical_objects << p
         @cg.save
         p.active_component_group = @cg
-        loc = p.in_active_workflow? ? WorkflowStatus::WELLS_TO_ALF_CONTAINER : WorkflowStatus::QUEUED_FOR_PULL_REQUEST
+        loc = p.in_active_workflow? ? get_next_loc(p) : WorkflowStatus::QUEUED_FOR_PULL_REQUEST
         ws = WorkflowStatus.build_workflow_status(loc, p)
         p.workflow_statuses << ws
         p.current_workflow_status = ws
@@ -243,13 +243,18 @@ class ComponentGroupsController < ApplicationController
         @component_group.physical_objects.each do |p|
           status = p.current_workflow_status
           if !status.just_inventoried?
-            bad[p.id] = "#{p.iu_barcode} in not at <i>Just Inventoried (Wells or ALF)</i> it is: <b>#{status.status_name}</b>".html_safe
+            bad[p.id] = "#{p.iu_barcode} is not at <i>Just Inventoried (Wells or ALF)</i> it is: <b>#{status.status_name}</b>".html_safe
           else
             # must set active component group BEFORE building the next workflow status, WorkflowStatus needs to set the component group id on it
             p.active_component_group = @component_group
             stat = nil
+            gt = p.active_component_group.group_type
             if p.active_component_group.is_mdpi_workflow?
-              stat = (p.current_location == WorkflowStatus::JUST_INVENTORIED_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER)
+              if gt == ComponentGroup::REFORMATTING_MDPI
+                stat = (p.current_location == WorkflowStatus::JUST_INVENTORIED_ALF ? WorkflowStatus::TWO_K_FOUR_K_SHELVES : WorkflowStatus::WELLS_TO_ALF_CONTAINER)
+              else
+                stat =  (gt == ComponentGroup::BEST_COPY_ALF ? WorkflowStatus::BEST_COPY_ALF : WorkflowStatus::BEST_COPY_MDPI_WELLS)
+              end
             else
               stat = WorkflowStatus::IN_WORKFLOW_WELLS
             end
@@ -319,6 +324,8 @@ class ComponentGroupsController < ApplicationController
     def true?(s)
       s.to_s.downcase == "true"
     end
+
+
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def component_group_params
