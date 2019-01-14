@@ -87,6 +87,11 @@ class ComponentGroup < ActiveRecord::Base
     physical_objects.size == 0 || physical_objects.collect{|p| p.current_location}.uniq.size == 1
   end
 
+  def pos_best_copy_able?
+    locs = physical_objects.collect { |p| p.current_location } - [WorkflowStatus::MISSING]
+    locs == [WorkflowStatus::BEST_COPY_MDPI_WELLS] || locs == [WorkflowStatus::BEST_COPY_ALF]
+  end
+
   def whose_workflow
     MDPI_GROUP_TYPES.include?(group_type) ? WorkflowStatus::MDPI : WorkflowStatus::IULMIA
   end
