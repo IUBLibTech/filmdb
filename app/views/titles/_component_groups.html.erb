@@ -185,8 +185,7 @@
           success: function (data, status, xhr) {
               var title = data == 'success' ? 'Success' : "Unable to Move Component Group Into Active Workflow";
               var msg = data == 'success' ?
-                  '<p>Component Group physical objects were successfully moved into active workflow. ' +
-                  'If this was an MDPI Component Group, please make sure to update their actual physical location (2k/4k Shelves or Wells to ALF Container).</p>' : fillBadList(data);
+                  '<p>Component Group physical objects were successfully moved into active workflow.': fillBadList(data);
               swal({
                       title: title,
                       text: msg,
