@@ -88,7 +88,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def pos_best_copy_able?
-    locs = physical_objects.collect { |p| p.current_location } - [WorkflowStatus::MISSING]
+    locs = physical_objects.collect { |p| p.current_location }.uniq - [WorkflowStatus::MISSING]
     locs == [WorkflowStatus::BEST_COPY_MDPI_WELLS] || locs == [WorkflowStatus::BEST_COPY_ALF]
   end
 
