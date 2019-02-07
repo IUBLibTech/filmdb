@@ -147,6 +147,15 @@ class Title < ActiveRecord::Base
 		}
 	end
 
+	def associated_titles
+		titles = []
+		physical_objects.each do |p|
+			tos = p.titles
+			titles += (tos.to_a - [self])
+		end
+		titles.uniq.sort{|t1,t2| t1.title_text <=> t2.title_text}
+	end
+
 	private
 	def self.title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
 		sql = "FROM titles"

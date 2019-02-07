@@ -266,8 +266,9 @@ class WorkflowController < ApplicationController
 		else
 			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po)
 			@po.workflow_statuses << ws
+			po.active_component_group = nil
 			@po.save
-			flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}"
+			flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}."
 			@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
 		end
 		render :mark_missing

@@ -552,7 +552,7 @@ class TitlesController < ApplicationController
   def title_params
     params.require(:title).permit(
         :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
-        :subject, :name_authority, :compilation, :country_of_origin, :fully_cataloged,
+        :subject, :name_authority, :country_of_origin, :fully_cataloged,
         title_creators_attributes: [:id, :name, :role, :_destroy],
         title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
         title_genres_attributes: [:id, :genre, :_destroy],
