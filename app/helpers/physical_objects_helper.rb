@@ -113,7 +113,7 @@ module PhysicalObjectsHelper
         :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
         :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
         :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count,
+        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count, :compilation,
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
         languages_attributes: [:id, :language, :language_type, :_destroy],

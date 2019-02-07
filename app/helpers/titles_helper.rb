@@ -85,7 +85,7 @@ module TitlesHelper
 	end
 
 	def title_search_to_csv(titles)
-		headers = ["IU Barcode","MDPI Barcode", "All Title(s) on Media", "Matching Title (If more than one title on media)", "Series Title", "Series Part", "Title Compilation", "Title Country of Origin",
+		headers = ["IU Barcode","MDPI Barcode", "All Title(s) on Media", "Matching Title (If more than one title on media)", "Series Title", "Series Part", "Title Country of Origin",
 							 "Title Summary", "Title Original Identifiers", "Title Publishers", "Title Creators",
 							 "Title Genres","Title Forms", "Title Dates",
 							 "Title Locations", "Title Notes", "Title Subject", "Title Name Authority",
@@ -108,7 +108,7 @@ module TitlesHelper
 			titles.each do |t|
 				t.physical_objects.each do |p|
 					csv << [
-							p.iu_barcode, p.mdpi_barcode, p.titles_text, t.title_text, t.series_title_text, t.series_part, t.compilation, t.country_of_origin,
+							p.iu_barcode, p.mdpi_barcode, p.titles_text, t.title_text, t.series_title_text, t.series_part, t.country_of_origin,
 							t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') unless t.title_original_identifiers.size == 0), (t.title_publishers.collect {|p| "#{p.name} [#{p.publisher_type}]"}.join(', ') unless t.title_publishers.size == 0), (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') unless t.title_creators.size == 0),
 							(t.title_genres.collect {|g| g.genre}.join(', ') unless t.title_genres.size == 0), (t.title_forms.collect {|f| f.form}.join(', ') unless t.title_forms.size == 0), (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') unless t.title_dates.size == 0),
 							(t.title_locations.collect {|l| l.location}.join(', ') unless t.title_locations.size == 0), t.notes, t.subject, t.name_authority,
