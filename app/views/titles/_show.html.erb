@@ -35,7 +35,6 @@
     <div class="label"><b>Title</b></div><div class="field"><h2><%= @title.title_text %></h2></div>
     <div class="label"><b>Series Title</b></div><div class="field"><%= link_to @title.series_title_text, series_path(@title.series), target: '_blank' unless @title.series.nil? %></div>
     <div class="label"><b>Series Part</b></div><div class="field"><%= @title.series_part %></div>
-    <div class="label"><b>Compilation</b></div><div class="field"><%= @title.compilation %></div>
     <div class="label"><b>Country of Origin</b></div><div class="field"><%= @title.country_of_origin %></div>
     <% if @title.fully_cataloged %>
       <div class="label"><b>Fully Cataloged</b></div><div class="field">Yes</div>
@@ -52,6 +51,19 @@
       <%= at %>&nbsp;&nbsp;
   <% end %>
 </div>
+
+<% tos = @title.associated_titles %>
+<div>
+  <h4>Associated Titles</h4>
+  <% if tos.size == 0 %>
+    None
+  <% else %>
+    <% tos.each_with_index do |t, i| %>
+      <%= link_to t.title_text, title_path(t), class: 'title_link' %><% if tos.size > i+1 %>|<% end %>
+    <% end %>
+  <% end %>
+</div>
+
 <div class="clear">
   <% unless @title.title_original_identifiers.empty? %>
       <h4>Orginal Identifiers</h4>

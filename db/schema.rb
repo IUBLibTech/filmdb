@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190122160731) do
+ActiveRecord::Schema.define(version: 20190207143153) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -395,6 +395,7 @@ ActiveRecord::Schema.define(version: 20190122160731) do
     t.string   "catalog_key",                           limit: 255
     t.boolean  "digitized"
     t.integer  "current_workflow_status_id",            limit: 8
+    t.string   "compilation",                           limit: 255
   end
 
   add_index "physical_objects", ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
@@ -522,7 +523,6 @@ ActiveRecord::Schema.define(version: 20190122160731) do
     t.text     "notes",              limit: 65535
     t.text     "subject",            limit: 65535
     t.text     "name_authority",     limit: 65535
-    t.text     "compilation",        limit: 65535
     t.text     "country_of_origin",  limit: 65535
     t.boolean  "fully_cataloged"
   end
