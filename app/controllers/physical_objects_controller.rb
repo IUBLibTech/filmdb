@@ -92,7 +92,6 @@ class PhysicalObjectsController < ApplicationController
       flash.now[:warning] = "No such physical object..."
       redirect_to :back
     end
-    debugger
   end
 
   # POST /physical_objects
