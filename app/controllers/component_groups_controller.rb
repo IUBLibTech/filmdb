@@ -325,6 +325,13 @@ class ComponentGroupsController < ApplicationController
       s.to_s.downcase == "true"
     end
 
+    def get_next_loc(physical_object)
+      if physical_object.active_component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS
+        WorkflowStatus::BEST_COPY_MDPI_WELLS
+      else
+        WorkflowStatus::WELLS_TO_ALF_CONTAINER
+      end
+    end
 
 
     # Never trust parameters from the scary internet, only allow the white list through.
