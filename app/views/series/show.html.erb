@@ -1,6 +1,6 @@
 <div class="clear">
   <%= link_to 'Edit', edit_series_path(@series) %> |
-  <%= link_to 'Back', series_index_path %> |
+  <%= link_to 'Back', url_for(:back) %> |
   <%= link_to 'Inventory This Series', series_new_physical_object_path(@series) %>
 </div>
 <div id="whodoneit">
