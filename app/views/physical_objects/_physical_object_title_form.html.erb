@@ -1,7 +1,7 @@
 <div>
   <%= f.hidden_field :title_ids, value: "#{@physical_object.physical_object_titles.collect { |t| t.title_id }.join(',')}", id: 'title_ids' %>
   <ul id="existing_titles">
-    <% @physical_object.physical_object_titles.collect {|t| t.title_id }.each do |t| %>
+    <% @physical_object.actual_title_ids.each do |t| %>
     <li id="title_<%= t %>" class="title_li">
       <div class="title_text">
         <%= Title.find(t).title_text %>

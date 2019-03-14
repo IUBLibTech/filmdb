@@ -1,5 +1,5 @@
 <%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
-<%= link_to 'Back', physical_objects_path %> |
+<%= link_to 'Back', url_for(:back) %> |
 <%#= link_to 'Duplicate Physical Object', duplicate_physical_object_path(@physical_object) %> |
 <%= link_to 'New Physical Object', new_physical_object_path %>
 
@@ -59,7 +59,10 @@
   <div class="left _50">
     <b>Gauge</b> <%= @physical_object.gauge %><br/>
     <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %><br>
-	  <b>Generation Notes</b> <%= @physical_object.generation_notes %>
+	  <h5>Generation Notes</h5>
+    <div class="simple_text">
+      <%= simple_format(@physical_object.generation_notes, {}, wrapper_tag: 'span') %>
+    </div>
   </div>
   <div class="">
     <b>Original Identifiers:&nbsp;</b>
@@ -116,7 +119,10 @@
     <b>Captions/Subtitles&nbsp;</b><%= @physical_object.close_caption%>
   </div>
   <div>
-    <b>Captions/Subtitles Notes&nbsp;</b><%= @physical_object.captions_or_subtitles_notes %>
+    <h5>Captions/Subtitles Notes</h5>
+    <div class="simple_text">
+      <%= simple_format(@physical_object.captions_or_subtitles_notes, {}, wrapper_tag: 'span') %>
+    </div>
   </div>
   <div>
     <b>Format Type&nbsp;</b>
@@ -142,12 +148,14 @@
 </div>
 <div id="format_notes_metadata" class="metadata_section">
   <h4>Format Notes</h4>
-  <p><%= @physical_object.format_notes %></p>
+  <%= simple_format(@physical_object.format_notes, {}, wrapper_tag: 'span') %>
 </div>
 <div id="accompanying_documentation_metadata" class="metadata_section">
   <h4>Accompanying Documentation</h4>
   <div>
-    <%= @physical_object.accompanying_documentation %> <br>
+    <%= simple_format(@physical_object.accompanying_documentation, {}, wrapper_tag: 'span') %>
+  </div>
+  <div>
     <b>Location</b> <%= @physical_object.accompanying_documentation_location %>
   </div>
 </div>
@@ -155,14 +163,17 @@
   <h4>Condition</h4>
   <div class="h_55px">
     <div class="left _45 rp_10px">
-      <b>Overall Condition</b> <%= @physical_object.condition_rating %><br/>
-      <b>Condition Notes</b> <%= @physical_object.condition_notes %>
+      <b>Overall Condition</b> <%= @physical_object.condition_rating %>
+      <h5>Condition Notes</h5>
+      <div class="simple_text">
+        <%= simple_format(@physical_object.condition_notes, {}, wrapper_tag: 'span') %>
+      </div>
     </div>
     <div class="left _50">
       <b>Research Value</b> <%= @physical_object.research_value %><br/>
-      <b class="block">Research Value Notes</b>
-      <div>
-        <%= @physical_object.research_value_notes %>
+      <h5>Research Value Notes</h5>
+      <div class="simple_text">
+        <%= simple_format(@physical_object.research_value_notes, {}, wrapper_tag: 'span') %>
       </div>
     </div>
   </div>
@@ -194,14 +205,20 @@
     <% end %>
   </div>
   <div class="clear">
-    <b class="block">Missing Footage</b>
-    <%= @physical_object.missing_footage %><br/>
-    <b class="block"> Miscellaneous</b>
-    <%= @physical_object.miscellaneous %>
+    <h4>Missing Footage</h4>
+    <div class="simple_text">
+      <%= simple_format(@physical_object.missing_footage, {}, wrapper_tag: 'span') %><br/>
+    </div>
+    <h4> Miscellaneous</h4>
+    <div class="simple_text">
+      <%= simple_format(@physical_object.miscellaneous, {}, wrapper_tag: 'span') %>
+    </div>
   </div>
 </div>
 <div id="conservation_actions_metadata" class="metadata_section">
   <h4>Conservation actions</h4>
-  <%= @physical_object.conservation_actions %>
+  <div class="simple_text">
+    <%= simple_format(@physical_object.conservation_actions, {}, wrapper_tag: 'span') %>
+  </div>
 </div>
 <%= render partial: 'physical_objects/physical_object_old_barcodes' %>
