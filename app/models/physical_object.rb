@@ -440,13 +440,25 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
-	# this method differs slightly from WOrkflowStatus.in_active_workflow in that it tests against not being In Storage
+	# this method differs slightly from WorkflowStatus.in_active_workflow in that it tests against not being In Storage
 	# TODO: WorkflowStatus needs to be updated (and reliant code modified) to
 	def in_active_workflow?
 		!active_component_group.nil? && !current_workflow_status.is_storage_status?
 	end
 
-	# noinspection RubyResolve,RubyResolve
+	# There was a bug that allowed title records to be deleted while there were associated physical objects (leaving bad
+	# entries in physical_object_titles) This method returns an array of EXISTING title ids for the physical object and,
+	# additionally, deletes and physical_object_titles that references non-existent title ids
+	def actual_title_ids
+		physical_object_titles.each do |pt|
+      if pt.title.nil?
+        pt.delete
+      end
+    end
+    physical_object_titles.pluck(:title_id)
+	end
+
+	#
 	def to_xml(options)
 		xml = options[:builder]
 		xml.physicalObject do

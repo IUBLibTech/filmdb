@@ -1,17 +1,16 @@
 # Does not inherit from ApplicationController to avoid requiring sign-in here
 class SessionsController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
   include SessionsHelper
+
   def cas_reg
     "https://cas-reg.uits.iu.edu"
   end
   def cas
     "https://cas.iu.edu"
   end
-
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
-  include SessionsHelper
 
   def new
     redirect_to("#{cas}/cas/login?cassvc=ANY&casurl=#{root_url}sessions/validate_login")
