@@ -61,7 +61,7 @@
     <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %><br>
 	  <h5>Generation Notes</h5>
     <div class="simple_text">
-      <%= simple_format(@physical_object.generation_notes, {}, wrapper_tag: 'span') %>
+      <%= format_newlines(@physical_object.generation_notes) %>
     </div>
   </div>
   <div class="">
@@ -121,7 +121,7 @@
   <div>
     <h5>Captions/Subtitles Notes</h5>
     <div class="simple_text">
-      <%= simple_format(@physical_object.captions_or_subtitles_notes, {}, wrapper_tag: 'span') %>
+      <%= format_newlines(@physical_object.captions_or_subtitles_notes) %>
     </div>
   </div>
   <div>
@@ -148,12 +148,12 @@
 </div>
 <div id="format_notes_metadata" class="metadata_section">
   <h4>Format Notes</h4>
-  <%= simple_format(@physical_object.format_notes, {}, wrapper_tag: 'span') %>
+  <%= format_newlines(@physical_object.format_notes) %>
 </div>
 <div id="accompanying_documentation_metadata" class="metadata_section">
   <h4>Accompanying Documentation</h4>
   <div>
-    <%= simple_format(@physical_object.accompanying_documentation, {}, wrapper_tag: 'span') %>
+    <%= format_newlines(@physical_object.accompanying_documentation) %>
   </div>
   <div>
     <b>Location</b> <%= @physical_object.accompanying_documentation_location %>
@@ -166,14 +166,14 @@
       <b>Overall Condition</b> <%= @physical_object.condition_rating %>
       <h5>Condition Notes</h5>
       <div class="simple_text">
-        <%= simple_format(@physical_object.condition_notes, {}, wrapper_tag: 'span') %>
+        <%= format_newlines(@physical_object.condition_notes) %>
       </div>
     </div>
     <div class="left _50">
       <b>Research Value</b> <%= @physical_object.research_value %><br/>
       <h5>Research Value Notes</h5>
       <div class="simple_text">
-        <%= simple_format(@physical_object.research_value_notes, {}, wrapper_tag: 'span') %>
+        <%= format_newlines(@physical_object.research_value_notes) %>
       </div>
     </div>
   </div>
@@ -207,18 +207,18 @@
   <div class="clear">
     <h4>Missing Footage</h4>
     <div class="simple_text">
-      <%= simple_format(@physical_object.missing_footage, {}, wrapper_tag: 'span') %><br/>
+      <%= format_newlines(@physical_object.missing_footage) %><br/>
     </div>
     <h4> Miscellaneous</h4>
     <div class="simple_text">
-      <%= simple_format(@physical_object.miscellaneous, {}, wrapper_tag: 'span') %>
+      <%= format_newlines(@physical_object.miscellaneous) %>
     </div>
   </div>
 </div>
 <div id="conservation_actions_metadata" class="metadata_section">
   <h4>Conservation actions</h4>
   <div class="simple_text">
-    <%= simple_format(@physical_object.conservation_actions, {}, wrapper_tag: 'span') %>
+    <%= format_newlines(@physical_object.conservation_actions) %>
   </div>
 </div>
 <%= render partial: 'physical_objects/physical_object_old_barcodes' %>
