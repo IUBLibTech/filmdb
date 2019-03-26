@@ -34,6 +34,10 @@ module ApplicationHelper
 		((sum - check_digit) * 9) % 10 == check_digit
 	end
 
+	def format_newlines(text)
+		text.gsub(/\n/, '<br>').html_safe
+	end
+
 	def ApplicationHelper.real_barcode?(barcode)
 		ApplicationHelper.valid_barcode?(barcode) && barcode.to_s != "0"
 	end

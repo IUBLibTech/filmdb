@@ -1,6 +1,6 @@
 <div>
   <%= link_to 'Edit', edit_title_path(@title) %>  |
-  <%= link_to 'Back', titles_path %>  |
+  <%= link_to 'Back', url_for(:back) %>  |
 	<%= link_to 'Split', show_split_title_path(@title) %> |
   <%= link_to 'Inventory This Title', title_new_physical_object_path(@title) %>
 	<% if policy(Title).destroy? %>

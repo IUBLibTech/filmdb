@@ -41,8 +41,10 @@
     <% end  %>
   </div>
   <div class="right_div">
-    <div class="block_label"><b>Summary</b></div>
-    <div class="block_label"><%= @title.summary %></div>
+    <h5>Summary</h5>
+    <div class="simple_text">
+      <%= format_newlines(@title.summary) %>
+    </div>
   </div>
 </div>
 <h4 class="clear">Alternative Titles</h4>
@@ -137,15 +139,16 @@
       <% end %>
   <% end %>
   <h4>Notes</h4>
-	<div class="title_notes">
-    <%= @title.notes %>
+	<div class="simple_text">
+    <%= format_newlines(@title.notes) %>
   </div>
 	<h4>Subject</h4>
-	<div class="title_subject">
-		<%= @title.subject %>
+	<div class="simple_text">
+		<%= format_newlines(@title.subject) %>
 	</div>
 	<h4>Name Authority</h4>
 	<div class="name_authority">
-		<%= @title.name_authority %>
+		<%= format_newlines(@title.name_authority) %>
 	</div>
+</div>
 </div>

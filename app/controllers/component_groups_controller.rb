@@ -91,8 +91,9 @@ class ComponentGroupsController < ApplicationController
             p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::TWO_K_FOUR_K_SHELVES, p)
             flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 2k/4k staging shelf"
           elsif @active && (p.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS)
-            p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::WELLS_TO_ALF_CONTAINER, p)
-            flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to the 'Wells to ALF Container'"
+            loc = @component_group.group_type == ComponentGroup::BEST_COPY_MDPI_WELLS ? WorkflowStatus::BEST_COPY_MDPI_WELLS : WorkflowStatus::WELLS_TO_ALF_CONTAINER
+            p.workflow_statuses << WorkflowStatus.build_workflow_status(loc, p)
+            flash[:notice] = "#{flash[:notice]}<br/>#{p.iu_barcode} should be moved to '#{loc}'"
           end
           p.save
         end
