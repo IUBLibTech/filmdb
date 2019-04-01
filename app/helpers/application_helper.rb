@@ -35,7 +35,7 @@ module ApplicationHelper
 	end
 
 	def format_newlines(text)
-		text.gsub(/\n/, '<br>').html_safe
+		text.gsub(/\n/, '<br>').html_safe unless text.nil?
 	end
 
 	def ApplicationHelper.real_barcode?(barcode)
