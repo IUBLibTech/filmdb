@@ -217,7 +217,7 @@ class ComponentGroupsController < ApplicationController
         @component_group.physical_objects.each do |p|
           status = p.current_workflow_status
           if !status.can_be_pulled?
-            bad[p.id] = "#{p.iu_barcode} in not <i>In Storage</i> it is: <b>#{status.status_name}</b>".html_safe
+            bad[p.id] = "#{p.iu_barcode} is not <i>In Storage</i> it is: <b>#{status.status_name}</b>".html_safe
           else
             # must set active component group BEFORE building the next workflow status, WorkflowStatus needs to set the component group id on it
             p.active_component_group = @component_group
