@@ -20,7 +20,7 @@ Unit.new(abbreviation: 'B-IULMIA', name: "Indiana University, Bloomington. India
 Unit.new(abbreviation: 'B-AAAMC', name: "Indiana University, Bloomington. Archives of African American Music and Culture.", institution: "Indiana University", campus: "Bloomington", menu_index: 2).save
 Unit.new(abbreviation: 'B-ARCHIVES', name: "Indiana University, Bloomington. Office of University Archives and Records Management.", institution: "Indiana University", campus: "Bloomington", menu_index: 3).save
 Unit.new(abbreviation: 'B-ATM', name: "Indiana University, Bloomington. Archives of Traditional Music.", institution: "Indiana University", campus: "Bloomington", menu_index: 4).save
-Unit.new(abbreviation: 'B-BFCA', name: "Indiana University, Bloomington. Black Film Center/Archives.", institution: "Indiana University", campus: "Bloomington", menu_index: 5).save
+Unit.new(abbreviation: 'B-BFCA', name: "Indiana University, Bloomington. Black film Center/Archives.", institution: "Indiana University", campus: "Bloomington", menu_index: 5).save
 Unit.new(abbreviation: 'B-CEDIR', name: "Indiana University, Bloomington. Indiana Institute on Disability and Community. Center for Disability Information & Referral.", institution: "Indiana University", campus: "Bloomington", menu_index: 6).save
 Unit.new(abbreviation: 'B-FINEARTS', name: "Indiana University, Bloomington. Fine Arts Library.", institution: "Indiana University", campus: "Bloomington", menu_index: 7).save
 Unit.new(abbreviation: 'B-GBL', name: "Indiana University, Bloomington. Glenn A. Black Laboratory of Archaeology.", institution: "Indiana University", campus: "Bloomington", menu_index: 8).save

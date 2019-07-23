@@ -80,7 +80,7 @@ module PhysicalObjectsHelper
   private
   def physical_object_params
     params.require(:physical_object).permit(
-        :location, :media_type, :medium, :iu_barcode, :copy_right, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+        :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
         :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
         :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,

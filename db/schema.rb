@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190401144208) do
+ActiveRecord::Schema.define(version: 20190716200713) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -55,52 +55,6 @@ ActiveRecord::Schema.define(version: 20190401144208) do
     t.datetime "updated_at"
     t.boolean  "ready_to_ship",                 default: false
     t.boolean  "shipped",                       default: false
-  end
-
-  create_table "collection_inventory_configurations", force: :cascade do |t|
-    t.integer  "collection_id",              limit: 8
-    t.boolean  "location"
-    t.boolean  "copy_right"
-    t.boolean  "series_production_number"
-    t.boolean  "series_part"
-    t.boolean  "alternative_title"
-    t.boolean  "title_version"
-    t.boolean  "item_original_identifier"
-    t.boolean  "creator"
-    t.boolean  "language"
-    t.boolean  "accompanying_documentation"
-    t.boolean  "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "generation"
-    t.boolean  "base"
-    t.boolean  "stock"
-    t.boolean  "access"
-    t.boolean  "gauge"
-    t.boolean  "can_size"
-    t.boolean  "footage"
-    t.boolean  "duration"
-    t.boolean  "reel_number"
-    t.boolean  "format_notes"
-    t.boolean  "picture_type"
-    t.boolean  "frame_rate"
-    t.boolean  "color_or_bw"
-    t.boolean  "aspect_ratio"
-    t.boolean  "sound_field_language"
-    t.boolean  "captions_or_subtitles"
-    t.boolean  "silent"
-    t.boolean  "sound_format_type"
-    t.boolean  "sound_content_type"
-    t.boolean  "sound_configuration"
-    t.boolean  "ad_strip"
-    t.boolean  "shrinkage"
-    t.boolean  "mold"
-    t.boolean  "condition_type"
-    t.boolean  "condition_rating"
-    t.boolean  "research_value"
-    t.boolean  "conservation_actions"
-    t.boolean  "multiple_items_in_can"
-    t.boolean  "title_control_number"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -156,6 +110,141 @@ ActiveRecord::Schema.define(version: 20190401144208) do
     t.integer  "cage_shelf_id",           limit: 8
   end
 
+  create_table "films", force: :cascade do |t|
+    t.boolean "first_edition"
+    t.boolean "second_edition"
+    t.boolean "third_edition"
+    t.boolean "fourth_edition"
+    t.boolean "abridged"
+    t.boolean "short"
+    t.boolean "long"
+    t.boolean "sample"
+    t.boolean "preview"
+    t.boolean "revised"
+    t.boolean "version_original"
+    t.boolean "captioned"
+    t.boolean "excerpt"
+    t.boolean "catholic"
+    t.boolean "domestic"
+    t.boolean "trailer"
+    t.boolean "english"
+    t.boolean "television"
+    t.boolean "x_rated"
+    t.string  "gauge",                                 limit: 255
+    t.boolean "generation_projection_print"
+    t.boolean "generation_a_roll"
+    t.boolean "generation_b_roll"
+    t.boolean "generation_c_roll"
+    t.boolean "generation_d_roll"
+    t.boolean "generation_answer_print"
+    t.boolean "generation_composite"
+    t.boolean "generation_duplicate"
+    t.boolean "generation_edited"
+    t.boolean "generation_fine_grain_master"
+    t.boolean "generation_intermediate"
+    t.boolean "generation_kinescope"
+    t.boolean "generation_magnetic_track"
+    t.boolean "generation_mezzanine"
+    t.boolean "generation_negative"
+    t.boolean "generation_optical_sound_track"
+    t.boolean "generation_original"
+    t.boolean "generation_outs_and_trims"
+    t.boolean "generation_positive"
+    t.boolean "generation_reversal"
+    t.boolean "generation_separation_master"
+    t.boolean "generation_work_print"
+    t.boolean "generation_mixed"
+    t.string  "reel_number",                           limit: 255
+    t.string  "can_size",                              limit: 255
+    t.integer "footage",                               limit: 4
+    t.boolean "base_acetate"
+    t.boolean "base_polyester"
+    t.boolean "base_nitrate"
+    t.boolean "base_mixed"
+    t.boolean "stock_agfa"
+    t.boolean "stock_ansco"
+    t.boolean "stock_dupont"
+    t.boolean "stock_orwo"
+    t.boolean "stock_fuji"
+    t.boolean "stock_gevaert"
+    t.boolean "stock_kodak"
+    t.boolean "stock_ferrania"
+    t.text    "format_notes",                          limit: 65535
+    t.boolean "picture_not_applicable"
+    t.boolean "picture_silent_picture"
+    t.boolean "picture_mos_picture"
+    t.boolean "picture_composite_picture"
+    t.boolean "picture_intertitles_only"
+    t.boolean "picture_credits_only"
+    t.boolean "picture_picture_effects"
+    t.boolean "picture_picture_outtakes"
+    t.boolean "picture_kinescope"
+    t.string  "frame_rate",                            limit: 255
+    t.boolean "color_bw_bw_toned"
+    t.boolean "color_bw_bw_tinted"
+    t.boolean "color_bw_color_ektachrome"
+    t.boolean "color_bw_color_kodachrome"
+    t.boolean "color_bw_color_technicolor"
+    t.boolean "color_bw_color_anscochrome"
+    t.boolean "color_bw_color_eco"
+    t.boolean "color_bw_color_eastman"
+    t.boolean "aspect_ratio_1_33_1"
+    t.boolean "aspect_ratio_1_37_1"
+    t.boolean "aspect_ratio_1_66_1"
+    t.boolean "aspect_ratio_1_85_1"
+    t.boolean "aspect_ratio_2_35_1"
+    t.boolean "aspect_ratio_2_39_1"
+    t.boolean "aspect_ratio_2_59_1"
+    t.text    "sound",                                 limit: 65535
+    t.boolean "sound_format_optical_variable_area"
+    t.boolean "sound_format_optical_variable_density"
+    t.boolean "sound_format_magnetic"
+    t.boolean "sound_format_digital_sdds"
+    t.boolean "sound_format_digital_dts"
+    t.boolean "sound_format_digital_dolby_digital"
+    t.boolean "sound_format_sound_on_separate_media"
+    t.boolean "sound_content_music_track"
+    t.boolean "sound_content_effects_track"
+    t.boolean "sound_content_dialog"
+    t.boolean "sound_content_composite_track"
+    t.boolean "sound_content_outtakes"
+    t.boolean "sound_configuration_mono"
+    t.boolean "sound_configuration_stereo"
+    t.boolean "sound_configuration_surround"
+    t.boolean "sound_configuration_multi_track"
+    t.boolean "sound_configuration_dual_mono"
+    t.string  "ad_strip",                              limit: 255
+    t.decimal "shrinkage",                                           precision: 10
+    t.string  "mold",                                  limit: 255
+    t.text    "missing_footage",                       limit: 65535
+    t.boolean "multiple_items_in_can"
+    t.boolean "color_bw_color_color"
+    t.boolean "color_bw_bw_black_and_white"
+    t.string  "title_control_number",                  limit: 255
+    t.boolean "color_bw_bw_hand_coloring"
+    t.boolean "color_bw_bw_stencil_coloring"
+    t.text    "captions_or_subtitles_notes",           limit: 65535
+    t.boolean "sound_format_optical"
+    t.string  "anamorphic",                            limit: 255
+    t.integer "track_count",                           limit: 4
+    t.boolean "generation_original_camera"
+    t.boolean "generation_master"
+    t.boolean "sound_format_digital_dolby_digital_sr"
+    t.boolean "sound_format_digital_dolby_digital_a"
+    t.boolean "stock_3_m"
+    t.boolean "stock_agfa_gevaert"
+    t.boolean "stock_pathe"
+    t.boolean "stock_unknown"
+    t.boolean "aspect_ratio_2_66_1"
+    t.boolean "aspect_ratio_1_36"
+    t.boolean "aspect_ratio_1_18"
+    t.boolean "picture_titles"
+    t.boolean "generation_other"
+    t.boolean "sound_content_narration"
+    t.string  "close_caption",                         limit: 255
+    t.text    "generation_notes",                      limit: 65535
+  end
+
   create_table "languages", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
     t.string   "language",           limit: 255
@@ -208,194 +297,60 @@ ActiveRecord::Schema.define(version: 20190401144208) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "date_inventoried"
-    t.integer  "inventoried_by",                        limit: 8
-    t.string   "location",                              limit: 255
-    t.integer  "collection_id",                         limit: 8
-    t.string   "media_type",                            limit: 255
-    t.integer  "iu_barcode",                            limit: 8,                                             null: false
-    t.integer  "copy_right",                            limit: 4
-    t.string   "format",                                limit: 255
-    t.integer  "spreadsheet_id",                        limit: 4
-    t.string   "series_production_number",              limit: 255
-    t.string   "series_part",                           limit: 255
-    t.string   "alternative_title",                     limit: 255
-    t.string   "creator",                               limit: 255
-    t.text     "accompanying_documentation",            limit: 65535
-    t.text     "notes",                                 limit: 65535
-    t.integer  "unit_id",                               limit: 8
-    t.string   "medium",                                limit: 255
-    t.integer  "modified_by",                           limit: 8
-    t.string   "access",                                limit: 255
-    t.boolean  "first_edition"
-    t.boolean  "second_edition"
-    t.boolean  "third_edition"
-    t.boolean  "fourth_edition"
-    t.boolean  "abridged"
-    t.boolean  "short"
-    t.boolean  "long"
-    t.boolean  "sample"
-    t.boolean  "preview"
-    t.boolean  "revised"
-    t.boolean  "version_original"
-    t.boolean  "captioned"
-    t.boolean  "excerpt"
-    t.boolean  "catholic"
-    t.boolean  "domestic"
-    t.boolean  "trailer"
-    t.boolean  "english"
-    t.boolean  "television"
-    t.boolean  "x_rated"
-    t.string   "gauge",                                 limit: 255
-    t.boolean  "generation_projection_print"
-    t.boolean  "generation_a_roll"
-    t.boolean  "generation_b_roll"
-    t.boolean  "generation_c_roll"
-    t.boolean  "generation_d_roll"
-    t.boolean  "generation_answer_print"
-    t.boolean  "generation_composite"
-    t.boolean  "generation_duplicate"
-    t.boolean  "generation_edited"
-    t.boolean  "generation_fine_grain_master"
-    t.boolean  "generation_intermediate"
-    t.boolean  "generation_kinescope"
-    t.boolean  "generation_magnetic_track"
-    t.boolean  "generation_mezzanine"
-    t.boolean  "generation_negative"
-    t.boolean  "generation_optical_sound_track"
-    t.boolean  "generation_original"
-    t.boolean  "generation_outs_and_trims"
-    t.boolean  "generation_positive"
-    t.boolean  "generation_reversal"
-    t.boolean  "generation_separation_master"
-    t.boolean  "generation_work_print"
-    t.boolean  "generation_mixed"
-    t.string   "reel_number",                           limit: 255
-    t.string   "can_size",                              limit: 255
-    t.integer  "footage",                               limit: 4
-    t.integer  "duration",                              limit: 4
-    t.boolean  "base_acetate"
-    t.boolean  "base_polyester"
-    t.boolean  "base_nitrate"
-    t.boolean  "base_mixed"
-    t.boolean  "stock_agfa"
-    t.boolean  "stock_ansco"
-    t.boolean  "stock_dupont"
-    t.boolean  "stock_orwo"
-    t.boolean  "stock_fuji"
-    t.boolean  "stock_gevaert"
-    t.boolean  "stock_kodak"
-    t.boolean  "stock_ferrania"
-    t.text     "format_notes",                          limit: 65535
-    t.boolean  "picture_not_applicable"
-    t.boolean  "picture_silent_picture"
-    t.boolean  "picture_mos_picture"
-    t.boolean  "picture_composite_picture"
-    t.boolean  "picture_intertitles_only"
-    t.boolean  "picture_credits_only"
-    t.boolean  "picture_picture_effects"
-    t.boolean  "picture_picture_outtakes"
-    t.boolean  "picture_kinescope"
-    t.string   "frame_rate",                            limit: 255
-    t.boolean  "color_bw_bw_toned"
-    t.boolean  "color_bw_bw_tinted"
-    t.boolean  "color_bw_color_ektachrome"
-    t.boolean  "color_bw_color_kodachrome"
-    t.boolean  "color_bw_color_technicolor"
-    t.boolean  "color_bw_color_anscochrome"
-    t.boolean  "color_bw_color_eco"
-    t.boolean  "color_bw_color_eastman"
-    t.boolean  "aspect_ratio_1_33_1"
-    t.boolean  "aspect_ratio_1_37_1"
-    t.boolean  "aspect_ratio_1_66_1"
-    t.boolean  "aspect_ratio_1_85_1"
-    t.boolean  "aspect_ratio_2_35_1"
-    t.boolean  "aspect_ratio_2_39_1"
-    t.boolean  "aspect_ratio_2_59_1"
-    t.text     "sound",                                 limit: 65535
-    t.boolean  "sound_format_optical_variable_area"
-    t.boolean  "sound_format_optical_variable_density"
-    t.boolean  "sound_format_magnetic"
-    t.boolean  "sound_format_digital_sdds"
-    t.boolean  "sound_format_digital_dts"
-    t.boolean  "sound_format_digital_dolby_digital"
-    t.boolean  "sound_format_sound_on_separate_media"
-    t.boolean  "sound_content_music_track"
-    t.boolean  "sound_content_effects_track"
-    t.boolean  "sound_content_dialog"
-    t.boolean  "sound_content_composite_track"
-    t.boolean  "sound_content_outtakes"
-    t.boolean  "sound_configuration_mono"
-    t.boolean  "sound_configuration_stereo"
-    t.boolean  "sound_configuration_surround"
-    t.boolean  "sound_configuration_multi_track"
-    t.boolean  "sound_configuration_dual_mono"
-    t.string   "ad_strip",                              limit: 255
-    t.decimal  "shrinkage",                                           precision: 4, scale: 3
-    t.string   "mold",                                  limit: 255
-    t.string   "color_fade",                            limit: 255
-    t.string   "perforation_damage",                    limit: 255
-    t.string   "water_damage",                          limit: 255
-    t.string   "warp",                                  limit: 255
-    t.string   "brittle",                               limit: 255
-    t.string   "splice_damage",                         limit: 255
-    t.string   "dirty",                                 limit: 255
-    t.string   "peeling",                               limit: 255
-    t.string   "tape_residue",                          limit: 255
-    t.string   "broken",                                limit: 255
-    t.string   "tearing",                               limit: 255
+    t.integer  "inventoried_by",                      limit: 8
+    t.string   "location",                            limit: 255
+    t.integer  "collection_id",                       limit: 8
+    t.string   "media_type",                          limit: 255
+    t.integer  "iu_barcode",                          limit: 8,                     null: false
+    t.string   "format",                              limit: 255
+    t.integer  "spreadsheet_id",                      limit: 4
+    t.string   "alternative_title",                   limit: 255
+    t.text     "accompanying_documentation",          limit: 65535
+    t.text     "notes",                               limit: 65535
+    t.integer  "unit_id",                             limit: 8
+    t.string   "medium",                              limit: 255
+    t.integer  "modified_by",                         limit: 8
+    t.string   "access",                              limit: 255
+    t.integer  "duration",                            limit: 4
+    t.string   "color_fade",                          limit: 255
+    t.string   "perforation_damage",                  limit: 255
+    t.string   "water_damage",                        limit: 255
+    t.string   "warp",                                limit: 255
+    t.string   "brittle",                             limit: 255
+    t.string   "splice_damage",                       limit: 255
+    t.string   "dirty",                               limit: 255
+    t.string   "peeling",                             limit: 255
+    t.string   "tape_residue",                        limit: 255
+    t.string   "broken",                              limit: 255
+    t.string   "tearing",                             limit: 255
     t.boolean  "poor_wind"
     t.boolean  "not_on_core_or_reel"
-    t.string   "missing_footage",                       limit: 255
-    t.string   "scratches",                             limit: 255
-    t.string   "condition_rating",                      limit: 255
-    t.text     "condition_notes",                       limit: 65535
-    t.string   "research_value",                        limit: 255
-    t.text     "research_value_notes",                  limit: 65535
-    t.text     "conservation_actions",                  limit: 65535
-    t.boolean  "multiple_items_in_can"
-    t.integer  "mdpi_barcode",                          limit: 8
-    t.boolean  "color_bw_color_color"
-    t.boolean  "color_bw_bw_black_and_white"
-    t.text     "accompanying_documentation_location",   limit: 65535
+    t.string   "scratches",                           limit: 255
+    t.string   "condition_rating",                    limit: 255
+    t.text     "condition_notes",                     limit: 65535
+    t.string   "research_value",                      limit: 255
+    t.text     "research_value_notes",                limit: 65535
+    t.text     "conservation_actions",                limit: 65535
+    t.integer  "mdpi_barcode",                        limit: 8
+    t.text     "accompanying_documentation_location", limit: 65535
     t.boolean  "lacquer_treated"
     t.boolean  "replasticized"
-    t.string   "spoking",                               limit: 255
+    t.string   "spoking",                             limit: 255
     t.boolean  "dusty"
-    t.string   "rusty",                                 limit: 255
-    t.text     "miscellaneous",                         limit: 65535
-    t.string   "title_control_number",                  limit: 255
-    t.string   "channeling",                            limit: 255
-    t.boolean  "color_bw_bw_hand_coloring"
-    t.boolean  "color_bw_bw_stencil_coloring"
-    t.text     "captions_or_subtitles_notes",           limit: 65535
-    t.boolean  "sound_format_optical"
-    t.string   "anamorphic",                            limit: 255
-    t.integer  "track_count",                           limit: 4
-    t.integer  "cage_shelf_id",                         limit: 8
-    t.boolean  "generation_original_camera"
-    t.boolean  "generation_master"
-    t.integer  "component_group_id",                    limit: 8
-    t.boolean  "in_freezer",                                                                  default: false
-    t.boolean  "awaiting_freezer",                                                            default: false
-    t.string   "alf_shelf",                             limit: 255
-    t.boolean  "sound_format_digital_dolby_digital_sr"
-    t.boolean  "sound_format_digital_dolby_digital_a"
-    t.boolean  "stock_3_m"
-    t.boolean  "stock_agfa_gevaert"
-    t.boolean  "stock_pathe"
-    t.boolean  "stock_unknown"
-    t.boolean  "aspect_ratio_2_66_1"
-    t.boolean  "aspect_ratio_1_36"
-    t.boolean  "aspect_ratio_1_18"
-    t.boolean  "picture_titles"
-    t.boolean  "generation_other"
-    t.boolean  "sound_content_narration"
-    t.string   "close_caption",                         limit: 255
-    t.text     "generation_notes",                      limit: 65535
-    t.string   "catalog_key",                           limit: 255
+    t.string   "rusty",                               limit: 255
+    t.text     "miscellaneous",                       limit: 65535
+    t.string   "channeling",                          limit: 255
+    t.integer  "cage_shelf_id",                       limit: 8
+    t.integer  "component_group_id",                  limit: 8
+    t.boolean  "in_freezer",                                        default: false
+    t.boolean  "awaiting_freezer",                                  default: false
+    t.string   "alf_shelf",                           limit: 255
+    t.string   "catalog_key",                         limit: 255
     t.boolean  "digitized"
-    t.integer  "current_workflow_status_id",            limit: 8
-    t.string   "compilation",                           limit: 255
+    t.integer  "current_workflow_status_id",          limit: 8
+    t.string   "compilation",                         limit: 255
+    t.integer  "actable_id",                          limit: 4
+    t.string   "actable_type",                        limit: 255
   end
 
   add_index "physical_objects", ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree

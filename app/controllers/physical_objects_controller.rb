@@ -232,7 +232,7 @@ class PhysicalObjectsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_physical_object
-    @physical_object = PhysicalObject.find(params[:id])
+    @physical_object = PhysicalObject.find(params[:id]).specific
   end
 
   def set_cv

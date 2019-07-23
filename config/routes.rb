@@ -41,10 +41,6 @@ Rails.application.routes.draw do
 
   resources :controlled_vocabularies
 
-  resources :collection_inventory_configurations do
-    #get '/collection_inventory_configurations/:id/new_physical_object'
-	end
-
   get '/inventory/', to: 'inventory#index', as: 'inventory'
 
   resources :physical_objects
