@@ -21,6 +21,9 @@ gem 'jquery-rails'
 # User jquery-ui
 gem 'jquery-ui-rails'
 
+# rails polymorphism for multiple format support
+gem 'active_record-acts_as'
+
 # replaces the rails default javascript alert with a jquery version: https://github.com/mois3x/sweet-alert-rails-confirm - this is BUGGY!!!
 # replacing default railds data-confirm with sweet alerts manually. See: http://thelazylog.com/custom-dialog-for-data-confirm-in-rails/
 # gem 'rails-assets-sweetalert2', source: 'https://rails-assets.org'

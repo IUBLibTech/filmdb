@@ -1,4 +1,6 @@
 class PhysicalObject < ActiveRecord::Base
+	actable
+
 	include ActiveModel::Validations
 	include PhysicalObjectsHelper
 
@@ -88,7 +90,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 	MEDIA_TYPE_MEDIUMS = {
-		'Moving Image' => ['Film', 'Video', 'Digital'],
+		'Moving Image' => ['film', 'Video', 'Digital'],
 		'Recorded Sound' => ['Recorded Sound'],
 		'Still Image' => ['Still Image'],
 		'Text' => ['Text'],
@@ -190,13 +192,15 @@ class PhysicalObject < ActiveRecord::Base
       sound_configuration_multi_track: "Multi-track (ie. Maurer)", sound_configuration_dual_mono: "Dual Mono"
   }
 
-  CONDITION_FIELDS = [
-      :ad_strip, :shrinkage, :mold, :dirty, :channeling, :scratches, :tape_residue, :rusty, :broken, :peeling,
-      :splice_damage, :tearing, :spoking, :perforation_damage, :warp, :water_damage, :color_fade,
-      :lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind, :missing_footage, :miscellaneous
-  ]
-  CONDITION_BOOLEAN_FIELDS = [:lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind]
-  CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
+	# Moved into rated and boolean condition objects
+  # CONDITION_FIELDS = [
+  #     :ad_strip, :shrinkage, :mold, :dirty, :channeling, :scratches, :tape_residue, :rusty, :broken, :peeling,
+  #     :splice_damage, :tearing, :spoking, :perforation_damage, :warp, :water_damage, :color_fade,
+  #     :lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind, :missing_footage, :miscellaneous
+  # ]
+  # CONDITION_BOOLEAN_FIELDS = [:lacquer_treated, :dusty, :replasticized, :not_on_core_or_reel, :poor_wind]
+
+	CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
 
   # Merge all of the humanized field maps together so the search space is singular
   HUMANIZED_SYMBOLS = GENERATION_FIELDS_HUMANIZED.merge(VERSION_FIELDS_HUMANIZED.merge(BASE_FIELDS_HUMANIZED.merge(
@@ -282,13 +286,13 @@ class PhysicalObject < ActiveRecord::Base
 		# If it was last in the freezer, it should be returned to the freezer. Otherwise, the item is returned to its last storage location,
 		# or ingested if it has yet to be put anywhere in storage
 		if stats.size > 0
-			if FREEZER_AD_STRIP_VALS.include?(ad_strip)
+			if self.specific.ad_strip && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
 				(stats.last.status_name == WorkflowStatus::IN_FREEZER ? WorkflowStatus::IN_FREEZER : WorkflowStatus::AWAITING_FREEZER)
 			else
 				stats.last.status_name
 			end
 		else
-			if FREEZER_AD_STRIP_VALS.include?(ad_strip)
+			if self.specific.ad_strip && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
 				WorkflowStatus::AWAITING_FREEZER
 			else
 				WorkflowStatus::IN_STORAGE_INGESTED
@@ -399,7 +403,7 @@ class PhysicalObject < ActiveRecord::Base
   end
 
 	def sound_only?
-		return (medium == 'Film' && (generation_separation_master || generation_optical_sound_track))
+		return (medium == 'film' && (generation_separation_master || generation_optical_sound_track))
 	end
 
 	def current_scan_settings

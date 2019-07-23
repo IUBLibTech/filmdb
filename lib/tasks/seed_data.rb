@@ -32,7 +32,7 @@ Unit.new(abbreviation: 'B-WELLS', name: "Indiana University, Bloomington. Herman
 Unit.new(abbreviation: 'B-AAAI', name: "Indiana University, Bloomington. African American Arts Institute.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ANTH', name: "Indiana University, Bloomington. Department of Anthropology.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ASTR', name: "Indiana University, Bloomington. Department of Astronomy.", institution: "Indiana University", campus: "Bloomington").save
-Unit.new(abbreviation: 'B-BFCA', name: "Indiana University, Bloomington. Black Film Center/Archives.", institution: "Indiana University", campus: "Bloomington").save
+Unit.new(abbreviation: 'B-BFCA', name: "Indiana University, Bloomington. Black film Center/Archives.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-CSHM', name: "Indiana University, Bloomington. Center for the Study of History and Memory.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-CEUS', name: "Indiana University, Bloomington. Department of Central Eurasian Studies.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-SAGE', name: "Indiana University, Bloomington. Elizabeth Sage Historic Costume Collection.", institution: "Indiana University", campus: "Bloomington").save
@@ -84,4 +84,4 @@ Unit.new(abbreviation: 'B-FRANKLIN', name: "Indiana University, Bloomington. Unc
 Unit.new(abbreviation: 'B-UNIVCOMM', name: "Indiana University, Bloomington. Office of Communications and Marketing.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ATHVIDEO', name: "Indiana University, Bloomington. Department of Intercollegiate Athletics. Video Production.", institution: "Indiana University", campus: "Bloomington").save
 Unit.new(abbreviation: 'B-ATHVOLLW', name: "Indiana University, Bloomington. Department of Intercollegiate Athletics. Women's Volleyball.", institution: "Indiana University", campus: "Bloomington").save
-Unit.new(abbreviation: 'B-WEST', name: "Indiana University, Bloomington. West European Studies Film Library.", institution: "Indiana University", campus: "Bloomington").save
+Unit.new(abbreviation: 'B-WEST', name: "Indiana University, Bloomington. West European Studies film Library.", institution: "Indiana University", campus: "Bloomington").save

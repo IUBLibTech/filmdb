@@ -29,7 +29,6 @@ class CollectionsController < ApplicationController
   # POST /collections.json
   def create
     @collection = Collection.new(collection_params)
-    config = @collection.collection_inventory_configuration = CollectionInventoryConfigurationsHelper.default_config
     respond_to do |format|
       if @collection.save
         config.save
@@ -98,7 +97,6 @@ class CollectionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_collection
       @collection = Collection.find(params[:id])
-      @collection_inventory_configuration = @collection.collection_inventory_configuration
     end
 
     def init_create_physical_object

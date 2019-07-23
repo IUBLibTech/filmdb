@@ -15,7 +15,7 @@ class CreateCageShelfPhysicalObjects < ActiveRecord::Migration
     ####################################################################
     # The POD side
     puts "Processing POD batch records"
-    pod_batches = PodBatch.includes(pod_bins: [:pod_physical_objects]).where(format: 'Film').order(:created_at)
+    pod_batches = PodBatch.includes(pod_bins: [:pod_physical_objects]).where(format: 'film').order(:created_at)
     po_count = pod_batches.collect{|b| b.pod_bins.collect{|bin| bin.pod_physical_objects.collect{|p| p.mdpi_barcode}}}.flatten.size
     c = 1
     pod_batches.each_with_index do |b, i|
