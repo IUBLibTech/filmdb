@@ -114,7 +114,6 @@ class DeleteFilmColumnsFromPhysicalObject < ActiveRecord::Migration
     remove_column :physical_objects, :multiple_items_in_can
     remove_column :physical_objects, :color_bw_color_color
     remove_column :physical_objects, :color_bw_bw_black_and_white
-    remove_column :physical_objects, :title_control_number
     remove_column :physical_objects, :color_bw_bw_hand_coloring
     remove_column :physical_objects, :color_bw_bw_stencil_coloring
     remove_column :physical_objects, :captions_or_subtitles_notes

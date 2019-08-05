@@ -20,7 +20,7 @@ class CopyFilmMetadata < ActiveRecord::Migration
       :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track,
       :sound_content_outtakes, :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround,
       :sound_configuration_multi_track, :sound_configuration_dual_mono, :ad_strip, :shrinkage, :mold, :missing_footage,
-      :multiple_items_in_can, :color_bw_color_color, :color_bw_bw_black_and_white, :title_control_number,
+      :multiple_items_in_can, :color_bw_color_color, :color_bw_bw_black_and_white,
       :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :captions_or_subtitles_notes, :sound_format_optical,
       :anamorphic, :track_count, :generation_original_camera, :generation_master, :sound_format_digital_dolby_digital_sr,
       :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe, :stock_unknown, :aspect_ratio_2_66_1,
