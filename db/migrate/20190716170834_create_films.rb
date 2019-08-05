@@ -118,7 +118,6 @@ class CreateFilms < ActiveRecord::Migration
       t.boolean :multiple_items_in_can
       t.boolean :color_bw_color_color
       t.boolean :color_bw_bw_black_and_white
-      t.string :title_control_number
       t.boolean :color_bw_bw_hand_coloring
       t.boolean :color_bw_bw_stencil_coloring
       t.text :captions_or_subtitles_notes
