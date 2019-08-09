@@ -57,6 +57,52 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.boolean  "shipped",                       default: false
   end
 
+  create_table "collection_inventory_configurations", force: :cascade do |t|
+    t.integer  "collection_id",              limit: 8
+    t.boolean  "location"
+    t.boolean  "copy_right"
+    t.boolean  "series_production_number"
+    t.boolean  "series_part"
+    t.boolean  "alternative_title"
+    t.boolean  "title_version"
+    t.boolean  "item_original_identifier"
+    t.boolean  "creator"
+    t.boolean  "language"
+    t.boolean  "accompanying_documentation"
+    t.boolean  "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "generation"
+    t.boolean  "base"
+    t.boolean  "stock"
+    t.boolean  "access"
+    t.boolean  "gauge"
+    t.boolean  "can_size"
+    t.boolean  "footage"
+    t.boolean  "duration"
+    t.boolean  "reel_number"
+    t.boolean  "format_notes"
+    t.boolean  "picture_type"
+    t.boolean  "frame_rate"
+    t.boolean  "color_or_bw"
+    t.boolean  "aspect_ratio"
+    t.boolean  "sound_field_language"
+    t.boolean  "captions_or_subtitles"
+    t.boolean  "silent"
+    t.boolean  "sound_format_type"
+    t.boolean  "sound_content_type"
+    t.boolean  "sound_configuration"
+    t.boolean  "ad_strip"
+    t.boolean  "shrinkage"
+    t.boolean  "mold"
+    t.boolean  "condition_type"
+    t.boolean  "condition_rating"
+    t.boolean  "research_value"
+    t.boolean  "conservation_actions"
+    t.boolean  "multiple_items_in_can"
+    t.boolean  "title_control_number"
+  end
+
   create_table "collections", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at"
@@ -339,6 +385,7 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.boolean  "dusty"
     t.string   "rusty",                               limit: 255
     t.text     "miscellaneous",                       limit: 65535
+    t.string   "title_control_number",                limit: 255
     t.string   "channeling",                          limit: 255
     t.integer  "cage_shelf_id",                       limit: 8
     t.integer  "component_group_id",                  limit: 8

@@ -90,7 +90,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 	MEDIA_TYPE_MEDIUMS = {
-		'Moving Image' => ['film', 'Video', 'Digital'],
+		'Moving Image' => ['Film', 'Video', 'Digital'],
 		'Recorded Sound' => ['Recorded Sound'],
 		'Still Image' => ['Still Image'],
 		'Text' => ['Text'],
@@ -292,7 +292,7 @@ class PhysicalObject < ActiveRecord::Base
 				stats.last.status_name
 			end
 		else
-			if self.specific.ad_strip && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
+			if self.specific.class == Film && self.specific.ad_strip && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
 				WorkflowStatus::AWAITING_FREEZER
 			else
 				WorkflowStatus::IN_STORAGE_INGESTED
