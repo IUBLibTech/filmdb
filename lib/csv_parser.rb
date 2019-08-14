@@ -1,6 +1,7 @@
 # noinspection ALL
 class CsvParser
 	include DateHelper
+  include PhysicalObjectsHelper
   require 'csv'
   require 'manual_roll_back_error'
 

@@ -1,4 +1,4 @@
-<%= link_to 'Edit', edit_physical_object_path(@physical_object) %> |
+<%= link_to 'Edit', edit_physical_object_path(@physical_object.acting_as) %> |
 <%= link_to 'Back', url_for(:back) %> |
 <%#= link_to 'Duplicate Physical Object', duplicate_physical_object_path(@physical_object) %> |
 <%= link_to 'New Physical Object', new_physical_object_path %>
@@ -54,6 +54,5 @@
     <b>Catalog Key</b> <%= @physical_object.catalog_key %><br/>
   </div>
 </div>
-<%= render "physical_objects/#{@physical_object.specific.class.name.downcase}/metadata" %>
-
+<%= render partial: "physical_objects/#{physical_object_specific_path}/show" %>
 <%= render partial: 'physical_objects/physical_object_old_barcodes' %>

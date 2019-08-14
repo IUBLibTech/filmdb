@@ -14,7 +14,7 @@ module PhysicalObjectsHelper
 
   # this should be used by any action that a creates a physical object from form submission
   def create_physical_object
-    @physical_object = PhysicalObject.new(physical_object_params)
+    @physical_object = physical_object_specific
     user = User.current_user_object
     @physical_object.inventoried_by = user.id
     @physical_object.modified_by = user.id
@@ -78,47 +78,59 @@ module PhysicalObjectsHelper
   end
 
   private
+  def physical_object_specific
+    case params[:physical_object][:medium]
+    when 'Film'
+      Film.new(physical_object_params)
+    else
+      raise 'Unsupported Format'
+    end
+  end
   def physical_object_params
-    params.require(:physical_object).permit(
-        :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
-        :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
-        :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
-        :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
-        :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
-        :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
-        :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
-        :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
-        :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
-        :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other,
-        :generation_notes, :reel_number,
-        :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
-        :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
-        :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-        :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :frame_rate,
-        :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
-        :stock_unknown, :aspect_ratio_2_66_1,
+    if params[:physical_object][:medium] == 'Film'
+      params.require(:physical_object).permit(
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
+          :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
+          :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
+          :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
+          :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
+          :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
+          :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
+          :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
+          :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other,
+          :generation_notes, :reel_number,
+          :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
+          :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
+          :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
+          :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :frame_rate,
+          :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
+          :stock_unknown, :aspect_ratio_2_66_1,
 
-        :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
-        :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
-        :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman,
-        :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
+          :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
+          :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
+          :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman,
+          :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
 
-        :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
-        :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :close_caption, :captions_or_subtitles_notes,
-        :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
-        :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
-        :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration,
-        :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
-        :sound_configuration_dual_mono, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
-        :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
-        :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
-        :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-        :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count, :compilation,
-        value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
-        boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
-        languages_attributes: [:id, :language, :language_type, :_destroy],
-        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
-        physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
-    )
+          :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
+          :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :close_caption, :captions_or_subtitles_notes,
+          :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
+          :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
+          :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration,
+          :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
+          :sound_configuration_dual_mono, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
+          :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
+          :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
+          :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
+          :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count, :compilation,
+          value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
+          boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
+          languages_attributes: [:id, :language, :language_type, :_destroy],
+          physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
+          physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
+      )
+    else
+      raise "Unsupported Format #{params[:physical_object][:medium]}"
+    end
   end
 end

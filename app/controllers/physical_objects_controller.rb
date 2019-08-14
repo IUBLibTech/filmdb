@@ -78,20 +78,20 @@ class PhysicalObjectsController < ApplicationController
 
   # GET /physical_objects/new_physical_object
   def new
+    @em = "Creating New Physical Object"
     u = User.current_user_object
-    @physical_object = PhysicalObject.new(inventoried_by: u.id, modified_by: u.id)
+    @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
     render 'new_physical_object'
   end
 
   # GET /physical_objects/1/edit
   def edit
     @em = 'Editing Physical Object'
-    @physical_object = PhysicalObject.find(params[:id])
-    @physical_object.modified_by = User.current_user_object.id
     if @physical_object.nil?
       flash.now[:warning] = "No such physical object..."
       redirect_to :back
     end
+    @physical_object.modified_by = User.current_user_object.id
   end
 
   # POST /physical_objects
@@ -153,11 +153,13 @@ class PhysicalObjectsController < ApplicationController
     @physical_object = PhysicalObject.where(iu_barcode: bc).first
     if @physical_object.nil?
       flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    elsif @physical_object.specific.class != Film
+      flash[:warning] = "#{bc} is a #{@physical_object.specific.class}, not a Film"
     else
-      nitrate = @physical_object.base_nitrate
-      @physical_object.update_attributes(ad_strip: adv)
+      nitrate = @physical_object.specific.base_nitrate
+      @physical_object.specific.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
-      if @physical_object.base_nitrate && !nitrate
+      if @physical_object.specific.base_nitrate && !nitrate
         notify_nitrate(@physical_object)
       end
     end
@@ -229,6 +231,16 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
+  def ajax_specific_metadata_form
+    medium = params[:medium]
+    case medium
+    when 'Film'
+      render partial: ''
+    else
+      render ''
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_physical_object
@@ -244,6 +256,9 @@ class PhysicalObjectsController < ApplicationController
   def page_link_path(page)
 	  physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
   end
+  def physical_object_specific_path
+    @physical_object.medium.downcase.parameterize.underscore
+  end
   helper_method :page_link_path
-
+  helper_method :physical_object_specific_path
 end
