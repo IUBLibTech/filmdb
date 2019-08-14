@@ -229,7 +229,6 @@ table.version_table > tbody > tr > td > input {
 
 .metadata_section {
     margin-bottom: 5px;
-    overflow: hidden;
 }
 h2 {
   padding: 0;
@@ -266,11 +265,11 @@ div.simple_text {
 }
 
 ._50 > div.label {
-    width:35%;
+    width:25%;
     float: left;
 }
 ._50 > div.field {
-    width: 60%;
+    width: 70%;
     float: left;
 }
 ._50 > div.field > input {
