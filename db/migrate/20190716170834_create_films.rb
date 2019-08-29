@@ -67,7 +67,6 @@ class CreateFilms < ActiveRecord::Migration
       t.boolean :stock_gevaert
       t.boolean :stock_kodak
       t.boolean :stock_ferrania
-      t.text :format_notes
       t.boolean :picture_not_applicable
       t.boolean :picture_silent_picture
       t.boolean :picture_mos_picture

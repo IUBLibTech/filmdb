@@ -1,4 +1,3 @@
-<h4>Film Metadata Fields</h4>
 <div>
   <div id="version_div" class="clear">
     <b class="block">Version</b>
@@ -42,10 +41,10 @@
           <%= f.check_box :generation_reversal %>
           <div>Reversal</div>
         </div>
-        <div class="check_box">
-          <%= f.check_box :generation_other %>
-          <div>Other</div>
-        </div>
+	      <div class="check_box">
+		      <%= f.check_box :generation_other %>
+		      <div>Other</div>
+	      </div>
       </div>
       <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
@@ -64,10 +63,10 @@
           <%= f.check_box :generation_composite %>
           <div>Composite</div>
         </div>
-        <div class="check_box">
-          <%= f.check_box :generation_master %>
-          <div>Master</div>
-        </div>
+				<div class="check_box">
+					<%= f.check_box :generation_master %>
+					<div>Master</div>
+				</div>
         <div class="check_box">
           <%= f.check_box :generation_intermediate %>
           <div>Intermediate</div>
@@ -144,10 +143,10 @@
       </div>
       <div class="value">
         <%= f.fields_for :physical_object_original_identifiers do |id| %>
-          <div class="left condition">
-            Original Identifier: <%= id.text_field :identifier %>
-            <%= id.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-          </div>
+            <div class="left condition">
+              Original Identifier: <%= id.text_field :identifier %>
+              <%= id.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+            </div>
         <% end %>
         <%= f.link_to_add 'New Original Identifier', :physical_object_original_identifiers %>
       </div>
@@ -183,11 +182,11 @@
       </div>
       <div class="value">
         <%= f.fields_for :physical_object_dates do |pods| %>
-          <div class="left condition">
-            Date: <%= pods.text_field :date %><br/>
-            Type: <%= pods.select :controlled_vocabulary_id, options_for_select(@pod_cv[:type], pods.object.controlled_vocabulary_id) %>
-            <%= pods.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-          </div>
+            <div class="left condition">
+              Date: <%= pods.text_field :date %><br/>
+              Type: <%= pods.select :controlled_vocabulary_id, options_for_select(@pod_cv[:type], pods.object.controlled_vocabulary_id) %>
+              <%= pods.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+            </div>
         <% end %>
         <%= f.link_to_add 'New Date', :physical_object_dates %>
       </div>
@@ -221,16 +220,16 @@
       <div class="check_box"><%= f.check_box :stock_gevaert %><div>Gevaert</div></div>
       <div class="check_box"><%= f.check_box :stock_kodak %><div>Kodak</div></div>
       <div class="check_box"><%= f.check_box :stock_ferrania %><div>Ferrania</div></div>
-      <div class="check_box"><%= f.check_box :stock_agfa_gevaert %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_agfa_gevaert] %></div>
-      <div class="check_box"><%= f.check_box :stock_3_m %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_3_m] %></div>
-      <div class="check_box"><%= f.check_box :stock_pathe %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_pathe] %></div>
-      <div class="check_box"><%= f.check_box :stock_unknown %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div>
+	    <div class="check_box"><%= f.check_box :stock_agfa_gevaert %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_agfa_gevaert] %></div>
+	    <div class="check_box"><%= f.check_box :stock_3_m %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_3_m] %></div>
+	    <div class="check_box"><%= f.check_box :stock_pathe %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_pathe] %></div>
+	    <div class="check_box"><%= f.check_box :stock_unknown %><%= PhysicalObject::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div>
     </div>
   </div>
-  <div class="clear">
-    <b>Generation Notes</b>
-    <%= f.text_area :generation_notes %>
-  </div>
+	<div class="clear">
+		<b>Generation Notes</b>
+		<%= f.text_area :generation_notes %>
+	</div>
 </div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4>Image</h4>
@@ -249,7 +248,7 @@
         <%= f.check_box :picture_picture_effects %>Picture Effects<br/>
         <%= f.check_box :picture_picture_outtakes %>Picture Outtakes<br/>
         <%= f.check_box :picture_kinescope %>Kinescope<br/>
-        <%= f.check_box :picture_titles %>Titles
+	      <%= f.check_box :picture_titles %>Titles
       </div>
     </div>
     <div class="clear">
@@ -288,9 +287,9 @@
         <%= f.check_box :aspect_ratio_2_35_1 %>2.35:1
         <%= f.check_box :aspect_ratio_2_39_1 %>2.39:1
         <%= f.check_box :aspect_ratio_2_59_1 %>2.59:1
-        <%= f.check_box :aspect_ratio_2_66_1%><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %><br>
-        <%= f.check_box :aspect_ratio_1_36 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_36] %>
-        <%= f.check_box :aspect_ratio_1_18 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_18] %>
+	      <%= f.check_box :aspect_ratio_2_66_1%><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %><br>
+	      <%= f.check_box :aspect_ratio_1_36 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_36] %>
+	      <%= f.check_box :aspect_ratio_1_18 %><%= PhysicalObject::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_18] %>
       </div>
     </div>
     <div>
@@ -302,8 +301,8 @@
   <h4>Sound</h4>
   <div>
     <b>Sound</b><%= f.select :sound, options_for_select(@cv[:sound], @physical_object.sound), {include_blank: ''}  %>
-    <br>
-    <b>Captions/Subtitles</b><%= f.select :close_caption, [['Yes'], ['No']], {include_blank: ''} %>
+	  <br>
+	  <b>Captions/Subtitles</b><%= f.select :close_caption, [['Yes'], ['No']], {include_blank: ''} %>
   </div>
   <div>
     <b>Captions/Subtitles Notes</b><br/>
@@ -316,14 +315,14 @@
       <%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area<br/>
       <%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density<br/>
       <%= f.check_box :sound_format_magnetic %>Magnetic<br/>
-      <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
+	    <%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media Type
     </div>
     <div class="left">
       <%= f.check_box :sound_format_digital_sdds %>Digital: SDDS<br/>
       <%= f.check_box :sound_format_digital_dts %>Digital: DTS<br/>
       <%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital<br/>
-      <%= f.check_box :sound_format_digital_dolby_digital_sr %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %><br/>
-      <%= f.check_box :sound_format_digital_dolby_digital_a %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %>
+	    <%= f.check_box :sound_format_digital_dolby_digital_sr %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %><br/>
+	    <%= f.check_box :sound_format_digital_dolby_digital_a %><%= PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %>
     </div>
   </div>
   <div>
@@ -336,7 +335,7 @@
     <div class="left _50">
       <%= f.check_box :sound_content_composite_track %>Composite Track<br/>
       <%= f.check_box :sound_content_outtakes %>Outtakes<br>
-      <%= f.check_box :sound_content_narration %>Narration
+	    <%= f.check_box :sound_content_narration %>Narration
     </div>
   </div>
   <div>
@@ -357,13 +356,24 @@
   <div>
     <b class="block">Languages</b>
     <%= f.fields_for :languages do |l| %>
-      <div class="left condition">
-        <b>Language </b><%= l.select :language, options_for_select(@l_cv[:language], l.object.language) %><br/>
-        <b>Type </b><%= l.select :language_type, options_for_select(@l_cv[:language_type], l.object.language_type) %>
-        <%= l.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-      </div>
+        <div class="left condition">
+          <b>Language </b><%= l.select :language, options_for_select(@l_cv[:language], l.object.language) %><br/>
+          <b>Type </b><%= l.select :language_type, options_for_select(@l_cv[:language_type], l.object.language_type) %>
+					<%= l.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+        </div>
     <% end %>
     <%= f.link_to_add 'New Language', :languages %>
+  </div>
+</div>
+<div id="format_notes_metadata" class="metadata_section">
+  <h4>Format Notes</h4>
+  <%= f.text_area :format_notes, class: "_100" %>
+</div>
+<div id="accompanying_documentation_metadata" class="metadata_section">
+  <h4>Accompanying Documentation</h4>
+  <div>
+    <%= f.text_area :accompanying_documentation %> <br>
+    <b>Location</b><%= f.text_field :accompanying_documentation_location, size: 75 %>
   </div>
 </div>
 <div id="condition_metadata" class="metadata_section">
@@ -401,15 +411,15 @@
     <div class="">
       <h4>Rated Conditions</h4>
       <%= f.fields_for :value_conditions do |vc| %>
-        <div class="left condition">
-          <%= vc.select :condition_type, options_for_select(@cv[:value_condition], vc.object.condition_type) %>
-          <%= vc.select :value, options_for_select(@cv[:rated_condition_rating], vc.object.value) %>
-          <div class="clear">
-            <b>Comment</b>
-            <%= vc.text_area :comment %>
+          <div class="left condition">
+            <%= vc.select :condition_type, options_for_select(@cv[:value_condition], vc.object.condition_type) %>
+            <%= vc.select :value, options_for_select(@cv[:rated_condition_rating], vc.object.value) %>
+            <div class="clear">
+              <b>Comment</b>
+              <%= vc.text_area :comment %>
+            </div>
+            <%= vc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
           </div>
-          <%= vc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-        </div>
       <% end %>
       <%= f.link_to_add 'New Rated Condition', :value_conditions %>
     </div>
@@ -417,14 +427,14 @@
   <div id="condition_types_check_box_div" class="condition_types">
     <h4>Boolean Conditions</h4>
     <%= f.fields_for :boolean_conditions do |bc| %>
-      <div class="left condition">
-        <%= bc.select :condition_type, options_for_select(@cv[:boolean_condition], bc.object.condition_type) %>
-        <div class="clear">
-          <b>Comment</b>
-          <%= bc.text_area :comment %>
-        </div>
-        <%= bc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+    <div class="left condition">
+      <%= bc.select :condition_type, options_for_select(@cv[:boolean_condition], bc.object.condition_type) %>
+      <div class="clear">
+        <b>Comment</b>
+        <%= bc.text_area :comment %>
       </div>
+			<%= bc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+    </div>
     <% end %>
     <%= f.link_to_add 'New Boolean Condition', :boolean_conditions %>
   </div>
@@ -449,3 +459,5 @@
   </div>
   <div id="title_popup_content" class="clear"></div>
 </div>
+
+<%= render partial: "physical_objects/physical_object_metadata_js" %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190716200713) do
+ActiveRecord::Schema.define(version: 20190827182243) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -55,52 +55,6 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.datetime "updated_at"
     t.boolean  "ready_to_ship",                 default: false
     t.boolean  "shipped",                       default: false
-  end
-
-  create_table "collection_inventory_configurations", force: :cascade do |t|
-    t.integer  "collection_id",              limit: 8
-    t.boolean  "location"
-    t.boolean  "copy_right"
-    t.boolean  "series_production_number"
-    t.boolean  "series_part"
-    t.boolean  "alternative_title"
-    t.boolean  "title_version"
-    t.boolean  "item_original_identifier"
-    t.boolean  "creator"
-    t.boolean  "language"
-    t.boolean  "accompanying_documentation"
-    t.boolean  "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "generation"
-    t.boolean  "base"
-    t.boolean  "stock"
-    t.boolean  "access"
-    t.boolean  "gauge"
-    t.boolean  "can_size"
-    t.boolean  "footage"
-    t.boolean  "duration"
-    t.boolean  "reel_number"
-    t.boolean  "format_notes"
-    t.boolean  "picture_type"
-    t.boolean  "frame_rate"
-    t.boolean  "color_or_bw"
-    t.boolean  "aspect_ratio"
-    t.boolean  "sound_field_language"
-    t.boolean  "captions_or_subtitles"
-    t.boolean  "silent"
-    t.boolean  "sound_format_type"
-    t.boolean  "sound_content_type"
-    t.boolean  "sound_configuration"
-    t.boolean  "ad_strip"
-    t.boolean  "shrinkage"
-    t.boolean  "mold"
-    t.boolean  "condition_type"
-    t.boolean  "condition_rating"
-    t.boolean  "research_value"
-    t.boolean  "conservation_actions"
-    t.boolean  "multiple_items_in_can"
-    t.boolean  "title_control_number"
   end
 
   create_table "collections", force: :cascade do |t|
@@ -215,7 +169,6 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.boolean "stock_gevaert"
     t.boolean "stock_kodak"
     t.boolean "stock_ferrania"
-    t.text    "format_notes",                          limit: 65535
     t.boolean "picture_not_applicable"
     t.boolean "picture_silent_picture"
     t.boolean "picture_mos_picture"
@@ -266,7 +219,6 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.boolean "multiple_items_in_can"
     t.boolean "color_bw_color_color"
     t.boolean "color_bw_bw_black_and_white"
-    t.string  "title_control_number",                  limit: 255
     t.boolean "color_bw_bw_hand_coloring"
     t.boolean "color_bw_bw_stencil_coloring"
     t.text    "captions_or_subtitles_notes",           limit: 65535
@@ -348,7 +300,6 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.integer  "collection_id",                       limit: 8
     t.string   "media_type",                          limit: 255
     t.integer  "iu_barcode",                          limit: 8,                     null: false
-    t.string   "format",                              limit: 255
     t.integer  "spreadsheet_id",                      limit: 4
     t.string   "alternative_title",                   limit: 255
     t.text     "accompanying_documentation",          limit: 65535
@@ -358,20 +309,7 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.integer  "modified_by",                         limit: 8
     t.string   "access",                              limit: 255
     t.integer  "duration",                            limit: 4
-    t.string   "color_fade",                          limit: 255
-    t.string   "perforation_damage",                  limit: 255
-    t.string   "water_damage",                        limit: 255
-    t.string   "warp",                                limit: 255
-    t.string   "brittle",                             limit: 255
-    t.string   "splice_damage",                       limit: 255
-    t.string   "dirty",                               limit: 255
-    t.string   "peeling",                             limit: 255
-    t.string   "tape_residue",                        limit: 255
-    t.string   "broken",                              limit: 255
-    t.string   "tearing",                             limit: 255
-    t.boolean  "poor_wind"
-    t.boolean  "not_on_core_or_reel"
-    t.string   "scratches",                           limit: 255
+    t.text     "format_notes",                        limit: 65535
     t.string   "condition_rating",                    limit: 255
     t.text     "condition_notes",                     limit: 65535
     t.string   "research_value",                      limit: 255
@@ -379,14 +317,8 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.text     "conservation_actions",                limit: 65535
     t.integer  "mdpi_barcode",                        limit: 8
     t.text     "accompanying_documentation_location", limit: 65535
-    t.boolean  "lacquer_treated"
-    t.boolean  "replasticized"
-    t.string   "spoking",                             limit: 255
-    t.boolean  "dusty"
-    t.string   "rusty",                               limit: 255
     t.text     "miscellaneous",                       limit: 65535
     t.string   "title_control_number",                limit: 255
-    t.string   "channeling",                          limit: 255
     t.integer  "cage_shelf_id",                       limit: 8
     t.integer  "component_group_id",                  limit: 8
     t.boolean  "in_freezer",                                        default: false
@@ -570,6 +502,12 @@ ActiveRecord::Schema.define(version: 20190716200713) do
     t.boolean  "active",                           default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "videos", force: :cascade do |t|
+    t.string   "gauge",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "workflow_statuses", force: :cascade do |t|

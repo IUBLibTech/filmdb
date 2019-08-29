@@ -5,6 +5,7 @@
   information relevant to what action you are actually taking: creating a physical object with specific title, series,
   collection, or making a generic object from scratch.
 %>
+
 <div id="controller_info">
   <% cm = controller_name == 'collections' ? "For Collection: <i>#{@collection.name}</i>".html_safe :
       controller_name == 'series' ? "For Series: <i>#{@series.title}</i>".html_safe :
@@ -12,17 +13,21 @@
   <h2><%= @em %> <%= cm %></h2>
 </div>
 <% url =
-       controller_name == 'physical_objects' && action_name == 'new' ? physical_objects_path :
-       controller_name == 'physical_objects' && action_name == 'edit' ? physical_object_path :
-       controller_name == 'physical_objects' && action_name == 'duplicate' ? create_duplicate_physical_object_path :
-       controller_name == 'collections' ?  collection_create_physical_object_path  :
-       controller_name == 'titles' ? titles_create_physical_object_path :
-       controller_name == 'series' ? series_create_physical_object_path : ''
+       if %w(new create).include?(action_name)
+         physical_objects_path
+       elsif action_name == 'edit'
+         physical_object_path(@physical_object.acting_as.id)
+       elsif action_name == 'duplicate'
+         create_duplicate_physical_object_path
+       else
+         new_physical_object_path
+       end
 %>
 <%= nested_form_for @physical_object, url: url, html: {id: 'physical_object_form'} do |f| %>
+  <%= hidden_field_tag "original_action", (action_name == 'ajax_rebuild_form' ? params[:original_action] : action_name) %>
   <% if @physical_object.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
+      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this Physical Object from being saved:</h2>
       <ul>
       <% @physical_object.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -35,12 +40,6 @@
         <%= flash[:other_message].html_safe %>
       </div>
   <% end %>
-
-
-
-
-
-
   <div id="core_metadata" class="metadata_section">
     <h4>Core Metadata</h4>
     <div class="left _50">
@@ -51,7 +50,7 @@
       <div class="label"><b>Compilation</b></div>
       <div class="field"><%= f.text_field :compilation %></div>
       <div class="label"><b>* Medium</b></div>
-      <div class="field"><%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'].collect{|m| [m,m]},{}, {id: 'medium', include_blank: "Select an object type"} %></div>
+      <div class="field"><%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %></div>
       <div class="label">
         <b>* Unit</b>
       </div>
@@ -79,7 +78,6 @@
       </div>
     </div>
     <div class="left _50">
-
       <div class="label">
         <b>* IU Barcode</b>
       </div>
@@ -117,7 +115,10 @@
         <%= f.text_field :alf_shelf %>
       </div>
     </div>
-
+  </div>
+  <div id="format_notes_metadata" class="metadata_section">
+    <h4>Format Notes</h4>
+    <%= f.text_area :format_notes, class: "_100" %>
   </div>
   <div id="accompanying_documentation_metadata" class="metadata_section">
     <h4>Accompanying Documentation</h4>
@@ -126,59 +127,11 @@
       <b>Location</b><%= f.text_field :accompanying_documentation_location, size: 75 %>
     </div>
   </div>
-
-
-  <div id="conservation_actions_metadata" class="metadata_section">
-    <h4>
-      Conservation actions
-    </h4>
-    <%= f.text_area :conservation_actions, class: '_100' %>
-  </div>
-  <div id="overlay"></div>
-  <div id="title_popup" title='Create New Title'>
-    <div id="title_popup_header">
-      <h4>Create New Title</h4><%= link_to "X", "#", remote: true, button: true, id: 'title_popup_cancel_button' %>
-    </div>
-    <div id="title_popup_content" class="clear"></div>
-  </div>
-  <div>
-    <div class="label">
-      <b>Original Identifier</b>
-    </div>
-    <div class="value">
-      <%= fields_for :physical_object_original_identifiers do |id| %>
-        <div class="left condition">
-          Original Identifier: <%= id.text_field :identifier %>
-          <%= id.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-        </div>
-      <% end %>
-      <%= f.link_to_add 'New Original Identifier', :physical_object_original_identifiers %>
-    </div>
-  </div>
-  <div>
-    <div class="label">
-      <b>Dates</b>
-    </div>
-    <div class="value">
-      <%= f.fields_for :physical_object_dates do |pods| %>
-        <div class="left condition">
-          Date: <%= pods.text_field :date %><br/>
-          Type: <%= pods.select :controlled_vocabulary_id, options_for_select(@pod_cv[:type], pods.object.controlled_vocabulary_id) %>
-          <%= pods.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
-        </div>
-      <% end %>
-      <%= f.link_to_add 'New Date', :physical_object_dates %>
-    </div>
-  </div>
-
-
-  <%#= render partial: 'physical_objects/physical_object_metadata_editable', locals: {f: f} %>
-
-
-
-
+  <%= render partial: "physical_objects/#{physical_object_specific_medium}/metadata_editable", locals: {f: f} %>
 
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+<%= render partial: "physical_objects/#{physical_object_specific_medium}/metadata_editable_js" %>
+<%= render partial: "physical_objects/physical_object_metadata_editable_js" %>

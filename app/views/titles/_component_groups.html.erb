@@ -18,7 +18,7 @@
 			<td class="edit_icon">
 				<%= link_to image_tag('edit2.png'), '#', class: 'edit_summary_link', id: "edit_summary_#{cg.id}", title: 'Click to edit the Component Group Summary' %>
 			</td>
-      <td><%= cg.physical_objects.collect {|p| p.gauge }.uniq.sort.join(', ') %></td>
+      <td><%= cg.physical_objects.collect {|p| p.has_attribute?(:gauage) ? p.gauge : '' }.uniq.sort.join(', ') %></td>
       <td><%= cg.generations %></td>
 			<td><%= cg.physical_objects.collect { |p| p.current_location }.uniq.join(', ') %></td>
       <td>

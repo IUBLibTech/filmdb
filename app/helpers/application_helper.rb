@@ -72,4 +72,14 @@ module ApplicationHelper
 		end
 	end
 
+	def medium_symbol_from_params(params)
+		if params[:film]
+			:film
+		elsif params[:video]
+			:video
+		else
+			raise "Unsupported Physical Object Medium #{params.keys}"
+		end
+	end
+
 end

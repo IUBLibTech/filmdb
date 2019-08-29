@@ -2,7 +2,7 @@ class AddActiveStatusToControlledVocabulary < ActiveRecord::Migration
   def change
     # flag for disabling controlled vocabulary
     add_column :controlled_vocabularies, :active_status, :boolean, default: true
-    # remove the unused PhysicalObject :access attribute
+    # remove the a_unused PhysicalObject :access attribute
     ControlledVocabulary.where(model_type: 'PhysicalObject', model_attribute: ':access').delete_all
 
     # deactivate these component group types - they are not currently in use

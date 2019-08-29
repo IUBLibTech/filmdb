@@ -4,6 +4,7 @@
 class WorkflowController < ApplicationController
 	include AlfHelper
 	include WorkflowHelper
+	include ApplicationHelper
 
 	before_action :set_physical_object, only: [:process_receive_from_storage, :process_return_to_storage ]
 	before_action :set_onsite_pos, only: [:send_for_mold_abatement,
@@ -103,22 +104,23 @@ class WorkflowController < ApplicationController
 	end
 	# this action handles the beginning of ALF workflow
 	def process_receive_from_storage
+		medium = medium_symbol_from_params(params)
 		if @physical_object.nil?
-			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[:physical_object][:iu_barcode]}"
+			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[medium][:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? && @physical_object.current_workflow_status.status_name != WorkflowStatus::MOLD_ABATEMENT && @physical_object.current_workflow_status.status_name != WorkflowStatus::WELLS_TO_ALF_CONTAINER
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
-		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow]) && @physical_object.active_component_group.deliver_to_wells?
+		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[medium][:workflow]) && @physical_object.active_component_group.deliver_to_wells?
 			flash[:warning] = "#{@physical_object.iu_barcode} should have been delivered to Wells 052, Component Group type: #{@physical_object.active_component_group.group_type}"
-		elsif @physical_object.footage.blank? && params[:physical_object][:footage].blank? && @physical_object.active_component_group.group_type != ComponentGroup::BEST_COPY_ALF
+		elsif @physical_object.footage.blank? && params[medium][:footage].blank? && @physical_object.active_component_group.group_type != ComponentGroup::BEST_COPY_ALF
 			flash[:warning] = "You must specify footage for #{@physical_object.iu_barcode}"
-		elsif !@physical_object.current_workflow_status.valid_next_workflow?(params[:physical_object][:workflow])
-			flash[:warning] = "#{@physical_object.iu_barcode} cannot be moved to status: #{params[:physical_object][:workflow]}. "+
+		elsif !@physical_object.current_workflow_status.valid_next_workflow?(params[medium][:workflow])
+			flash[:warning] = "#{@physical_object.iu_barcode} cannot be moved to status: #{params[medium][:workflow]}. "+
 				"It's current status [#{@physical_object.current_workflow_status.type_and_location}] does not allow that."
 		else
-			ws = WorkflowStatus.build_workflow_status(params[:physical_object][:workflow], @physical_object)
+			ws = WorkflowStatus.build_workflow_status(params[medium][:workflow], @physical_object)
 			@physical_object.workflow_statuses << ws
-			@physical_object.footage = params[:physical_object][:footage] unless params[:physical_object][:footage].blank?
-			@physical_object.can_size = params[:physical_object][:can_size] unless params[:physical_object][:can_size].blank?
+			@physical_object.specific.footage = params[medium][:footage] unless params[medium][:footage].blank?
+			@physical_object.specific.can_size = params[medium][:can_size] unless params[medium][:can_size].blank?
 			@physical_object.save
 			flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"
 		end
@@ -126,7 +128,7 @@ class WorkflowController < ApplicationController
 	end
 
 	def ajax_alf_receive_iu_barcode
-		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
+		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first.specific
 		@cv = ControlledVocabulary.physical_object_cv
 		if @physical_object.nil?
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
@@ -536,7 +538,15 @@ class WorkflowController < ApplicationController
 
 	private
 	def set_physical_object
-		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
+		medium = nil
+		if params[:film]
+			medium = :film
+		elsif params[:video]
+			medium = :video
+		else
+			raise "Unsupported Physical Object medium #{params.keys}"
+		end
+		@physical_object = PhysicalObject.where(iu_barcode: params[medium][:iu_barcode]).first.specific
 	end
 
 	def set_onsite_pos

@@ -38,11 +38,11 @@ module PhysicalObjectsHelper
             elsif controller_name == 'titles'
               @url = title_new_physical_object_path
             end
-            if @physical_object.base_nitrate
+            if @physical_object.is_a?(Film) && @physical_object.medium.base_nitrate
               notify_nitrate(@physical_object)
             end
             session[:physical_object_create_action] = @url
-            format.html { redirect_to physical_object_path(@physical_object.id, notice: 'Physical Object successfully created')}
+            format.html { redirect_to physical_object_path(@physical_object.acting_as.id, notice: 'Physical Object successfully created')}
           else
             format.html { render 'physical_objects/new_physical_object' }
           end
@@ -71,66 +71,104 @@ module PhysicalObjectsHelper
   def process_titles
     # easiest to just delete all physical object/title associations then rebuild them based on what was passed
     @physical_object.physical_object_titles.delete_all
-    titles = Title.where(id: params[:physical_object][:title_ids].split(',').collect { |n| n.to_i} )
+    titles = Title.where(id: params[@physical_object.medium.downcase.parameterize.underscore.to_sym][:title_ids].split(',').collect { |n| n.to_i} )
     titles.each do |t|
       @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
     end
   end
 
+  def new_format_specific_physical_object(medium)
+    if medium == :film
+      Film.new(physical_object_params)
+    elsif medium == :video
+      p = physical_object_params
+      Video.new(p)
+    else
+      raise "Unsupported Physical Object Medium #{medium}"
+    end
+  end
+
   private
   def physical_object_specific
-    case params[:physical_object][:medium]
-    when 'Film'
+    if params[:film]
       Film.new(physical_object_params)
+    elsif params[:video]
+      Video.new(physical_object_params)
     else
       raise 'Unsupported Format'
     end
   end
+
   def physical_object_params
-    if params[:physical_object][:medium] == 'Film'
-      params.require(:physical_object).permit(
+    if params[:film]
+      params.require(:film).permit(
+          # physical object specific attributes
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
-          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id,
-          :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :alf_shelf,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes,
+
+          # film specific attributes
+          :gauge, :reel_number, :can_size, :footage, :frame_rate, :ad_strip, :shrinkage, :mold,
+          :missing_footage, :condition_rating, :condition_notes, :research_value, :research_value_notes, :multiple_items_in_can,
+          # version attributes
+          :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
           :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer,:english, :television,
-          :x_rated, :gauge, :generation_projection_print, :generation_a_roll, :generation_b_roll,
+          :x_rated,
+          # generation
+          :generation_projection_print, :generation_a_roll, :generation_b_roll,
           :generation_c_roll, :generation_d_roll, :generation_answer_print, :generation_composite, :generation_duplicate,
           :generation_edited, :generation_original_camera, :generation_fine_grain_master, :generation_intermediate,
           :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
           :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
           :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other,
-          :generation_notes, :reel_number,
-          :can_size, :footage, :duration, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
-          :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
+          :generation_notes,
+          # base, stock
+          :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
+          :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania,
+          # picture attributes
           :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-          :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :frame_rate,
-          :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
-          :stock_unknown, :aspect_ratio_2_66_1,
+          :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles,
 
+          # color attributes
           :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
           :color_bw_color_ektachrome, :color_bw_color_kodachrome, :color_bw_color_technicolor,
           :color_bw_color_anscochrome, :color_bw_color_eco, :color_bw_color_eastman,
-          :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring,
+          :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_color, :color_bw_bw,
+          #aspect ratios
+          :aspect_ratio_2_66_1, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
+          :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18,
+          :anamorphic,
+          # sound attributes
+          :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
+          :stock_unknown, :close_caption, :captions_or_subtitles_notes, :sound, :sound_format_optical, :sound_format_optical_variable_area,
+          :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_digital_sdds, :sound_format_digital_dts,
+          :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media, :sound_content_music_track,
+          :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
+          :sound_content_narration, :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround,
+          :sound_configuration_multi_track, :sound_configuration_dual_mono, :sound_configuration_single,
+          :track_count,
 
-          :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
-          :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :close_caption, :captions_or_subtitles_notes,
-          :sound, :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
-          :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media,
-          :sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration,
-          :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track,
-          :sound_configuration_dual_mono, :sound_configuration_single, :ad_strip, :shrinkage, :mold, :color_fade, :perforation_damage, :water_damage,
-          :warp, :brittle, :splice_damage, :dirty, :channeling, :peeling, :tape_residue, :broken, :tearing, :poor_wind, :not_on_core_or_reel, :missing_footage,
-          :scratches, :condition_rating, :condition_notes, :research_value, :research_value_notes, :conservation_actions, :multiple_items_in_can,
-          :mdpi_barcode, :color_bw_color, :color_bw_bw, :accompanying_documentation_location, :lacquer_treated, :replasticized,
-          :spoking, :dusty, :rusty, :miscellaneous, :title_control_number, :catalog_key, :anamorphic, :track_count, :compilation,
           value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
           boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
           languages_attributes: [:id, :language, :language_type, :_destroy],
           physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
           physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
       )
+    elsif params[:video]
+      params.require(:video).permit(
+          # physical object specific attributes
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes,
+
+          # video specific attributes
+          :gauge
+      )
     else
       raise "Unsupported Format #{params[:physical_object][:medium]}"
     end
   end
+
 end

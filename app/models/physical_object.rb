@@ -30,9 +30,9 @@ class PhysicalObject < ActiveRecord::Base
   validates :iu_barcode, iu_barcode: true
 	validates :mdpi_barcode, mdpi_barcode: true
   validates :unit, presence: true
-  validates :media_type, presence: true
+  #validates :media_type, presence: true
   validates :medium, presence: true
-	validates :gauge, presence: true
+	# validates :gauge, presence: true
 
   has_many :boolean_conditions, autosave: true
   has_many :value_conditions, autosave: true
@@ -98,6 +98,8 @@ class PhysicalObject < ActiveRecord::Base
 		'Software' => ['Software'],
 		'Mixed Media' => ['Mixed Media']
 	}
+
+	NEW_MEDIUMS = ['Film', 'Video']
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
       :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
@@ -397,7 +399,7 @@ class PhysicalObject < ActiveRecord::Base
   def humanize_boolean_fields(field_names)
     str = ""
     field_names.each do |f|
-      str << (self[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
+      str << (self.specific[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
     end
     str
   end
@@ -460,7 +462,17 @@ class PhysicalObject < ActiveRecord::Base
       end
     end
     physical_object_titles.pluck(:title_id)
-	end
+  end
+
+  # a helper for concatenating MEDIUM with additional medium specific info. For instance, a 35mm Film would be
+  # displayed as 'Film 35mm'
+  def format
+    if [Film, Video].include?(self.specific.class)
+      "#{self.medium} (#{self.specific.gauge})"
+    else
+      raise "Unsupported Medium... #{self.specific}"
+    end
+  end
 
 	#
 	def to_xml(options)
