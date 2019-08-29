@@ -7,44 +7,34 @@
   * accordion hidden fields for collection specific physical object creation (when metadata fields can be omitted)
 %>
 <script type="text/javascript">
+  var medium = "<%= physical_object_specific_medium %>";
   function hookListeners() {
       // hook in validator for the IU barcode field
-      $("#physical_object_iu_barcode").bind("input", function () {
+      $("#"+medium+"_iu_barcode").bind("input", function () {
           validateIUBarcode($(this));
       });
-      $("#physical_object_mdpi_barcode").bind("input", function () {
+      $("#"+medium+"_mdpi_barcode").bind("input", function () {
           validateMdpiBarcode($(this));
       });
-      $("#physical_object_shrinkage").bind('input', function() {
+      $("#"+medium+"_shrinkage").bind('input', function () {
           var decimal = /^[0-9]+$|^[0-9]+.[0-9]+$/
-          if ($(this).val() == "" || decimal.test($(this).val())) {
+          if ($(this).val() === "" || decimal.test($(this).val())) {
               $(this).removeClass('bad_barcode')
           } else {
               $(this).addClass('bad_barcode')
           }
       });
 
-      // hook in handles for the event change on media type
-      var media_type_mediums = <%= PhysicalObject::MEDIA_TYPE_MEDIUMS.to_json.html_safe %>;
-      $('#media_type').change(function() {
-          media = $("#media_type option:selected").val();
-          mediums = media_type_mediums[media];
-          $("#medium_types").empty();
-          $.each(mediums, function(index, value) {
-              $("#medium_types").append($("<option></option>").attr("value", value).text(value));
-          });
-      });
-
       // if the collection metadata configuration is in effect
-      $( function() {
-          $( "#accordion" ).accordion({
+      $(function () {
+          $("#accordion").accordion({
               collapsible: true,
               active: false
           });
       });
 
       // autocomplete for titles
-      $('#physical_object_title_text').focus(function() {
+      $("#"+medium+"_title_text").focus(function () {
           if ($(this).data('autocomplete')) {
               $(this).autocomplete("destroy");
               $(this).removeData("autocomplete");
@@ -54,7 +44,7 @@
           if (typeof series_val === 'undefined' || series_val == '') {
               source = '../../../autocomplete_title';
           } else {
-              source = '../../../autocomplete_title_for_series/'+series_val+"/";
+              source = '../../../autocomplete_title_for_series/' + series_val + "/";
           }
           $(this).autocomplete({
               minLength: 2,
@@ -64,21 +54,7 @@
                   return false;
               },
               select: function (event, ui) {
-                  // need to check if a title is selected that has a series
-                  /*series_id = ui.item.series_id
-                  series_title = ui.item.series_title
-                  if (series_id != null) {
-                    $("#physical_object_series_title_text").val(series_title);
-                    $('#physical_object_series_id').val(series_id);
-                    // whenever a title is selected we need to disable the series_title_text field
-                    $("#physical_object_series_title_text").prop('disabled', true);
-                  }
-                  $('#physical_object_title_text').removeClass('bad_barcode');
-                  $("#physical_object_title_text").val(ui.item.label);
-                  $('#physical_object_title_id').val(ui.item.value);
-                  */
-                  $('#physical_object_title_text').removeClass('bad_barcode');
-                  $("#physical_object_title_text").val('');
+                  $("#"+medium+"_title_text").removeClass('bad_barcode').val('');
                   addTitle(ui.item.label, ui.item.value);
                   return false;
               }
@@ -88,33 +64,30 @@
       // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from
       // the autocomplete list. Additionally we need to unlock series title text incase it was locked from a previous title
       // selection
-      $('#physical_object_title_text').keydown(function() {
-          $('#physical_object_title_text').addClass('bad_barcode');
-          $('#physical_object_title_id').removeAttr('value');
-          $('#physical_object_series_title_text').val('');
-          $('#physical_object_series_id').removeAttr('value');
+      $("#"+medium+"_title_text").keydown(function () {
+          $("#"+medium+"_title_text").addClass('bad_barcode');
+          $("#"+medium+"title_id").removeAttr('value');
+          $("#"+medium+"_series_title_text").val('');
+          $("#"+medium+"_series_id").removeAttr('value');
       });
 
 
-      $('#physical_object_collection_text').keypress(function() {
-          $('#physical_object_collection_id').removeAttr('value');
+      $("#"+medium+"_collection_text").keypress(function () {
+          $("#"+medium+"_collection_id").removeAttr('value');
           <% unless controller.class == CollectionsController %>
           // collection controller should never enable the unit text field as this and collection are fixed
-          el = $('#physical_object_unit_id');
-//    if (el.attr('disabled') == 'disabled') {
-//      el.attr('disabled', false);
-//    }
+          var el = $("#"+medium+"_unit_id");
           <% end %>
-      })
+      });
 
-      //autcomplete for collections
-      $('#physical_object_collection_text').focus(function() {
+      //autocomplete for collections
+      $("#"+medium+"_collection_text").focus(function () {
           if ($(this).data('autocomplete')) {
               $(this).autocomplete("destroy");
               $(this).removeData("autocomplete");
           }
-          var unit_val = $('#physical_object_unit_id option:selected').attr('value');
-          var source = '../../../autocomplete_collection_for_unit/'+unit_val+"/";
+          var unit_val = $("#"+medium+"_unit_id option:selected").attr('value');
+          var source = '../../../autocomplete_collection_for_unit/' + unit_val + "/";
           $(this).autocomplete({
               minLength: 2,
               source: source,
@@ -127,42 +100,40 @@
                   unit_id = ui.item.unit_id
                   unit_title = ui.item.abbreviation
                   if (unit_id != null) {
-                      $("#physical_object_unit_text").val(unit_title);
-                      $('#physical_object_unit_id').val(unit_id);
-                      // whenever a collection is selected we need to disable the Unit select element
-                      //$("#physical_object_unit_id").prop('disabled', true)
+                      $("#"+medium+"_unit_text").val(unit_title);
+                      $("#"+medium+"_unit_id").val(unit_id);
                   }
-                  $("#physical_object_collection_text").val(ui.item.label);
-                  $('#physical_object_collection_id').val(ui.item.value);
+                  $("#"+medium+"_collection_text").val(ui.item.label);
+                  $("#"+medium+"_collection_id").val(ui.item.value);
                   return false;
               }
           });
       });
-      $('#title_popup_cancel_button').click(function() {
+      $('#title_popup_cancel_button').click(function () {
           $('#title_popup').hideTitlePopup();
       });
-      $('#title_button').click(function() {
+      $('#title_button').click(function () {
           if ($('#title_popup').is(':visible') == false) {
               // the url for creating a new title through ajax requires a series id: /titles/ajax/new/:series_id
               // if the series_id is omitted, it will resolve to /titles/ajax/:id with and id of 'new'
               //UPDATE: series id should always be 0 - use autocomplete on the new title popup to select an existing series
               series_id = 0;
-              var url = window.location.protocol + '//' + window.location.host + '/titles/ajax/new/'+series_id;
+              var url = window.location.protocol + '//' + window.location.host + '/titles/ajax/new/' + series_id;
               $.ajax({
                   url: url,
-                  error: function(jqXHR, textStatus, errorThrown) {
+                  error: function (jqXHR, textStatus, errorThrown) {
                       swal({
                           title: 'Ajax Error',
                           text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
-                      }, function() {
+                      }, function () {
                           window.location.replace(url)
                       })
                   },
-                  success: function(result) {
+                  success: function (result) {
                       el = $('#title_popup_content');
                       el.html(result);
                       // grab any partially typed text user was inputing when the title failed to match
-                      pt = $('#physical_object_title_text').val();
+                      pt = $("#"+medium+"_title_text").val();
                       $('#title_title_text').val(pt);
                       $("#title_popup").showTitlePopup();
                       // autocomplete for series
@@ -177,12 +148,12 @@
                               $('#title_series_id').val(ui.item.value);
                               return false;
                           },
-                          create: function(event, ui) {
+                          create: function (event, ui) {
                               this.element.css('z-index', '5000')
                           }
                       });
                       create_url = window.location.protocol + '//' + window.location.host + '/titles/ajax/new_title';
-                      $('#new_title').submit(function(event) {
+                      $('#new_title').submit(function (event) {
                           event.preventDefault();
                           $.ajax({
                               data: $(this).serialize(),
@@ -192,20 +163,20 @@
                               success: function (response) {
                                   if (response['error'] == null) {
                                       addTitle(response['title_text'], response['title_id'])
-                                      $('#physical_object_title_text').removeClass('bad_barcode');
+                                      $("#"+medium+"_title_text").removeClass('bad_barcode');
                                   } else {
                                       alert(result['error']);
                                   }
                               },
-                              error: function(jqXHR, textStatus, errorThrown) {
+                              error: function (jqXHR, textStatus, errorThrown) {
                                   swal({
                                       title: 'Ajax Error',
                                       text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
-                                  }, function() {
+                                  }, function () {
                                       window.location.replace(create_url)
                                   })
                               },
-                              complete: function() {
+                              complete: function () {
                                   $('#title_popup').hideTitlePopup();
                               }
                           });
@@ -214,19 +185,23 @@
               })
           }
       });
+      $("#"+medium+"_base_nitrate").change(function () {
+          if ($(this).prop('checked')) {
+              swal("Notify Collection Manager Immediately! Nitrate cannot be stored in the ALF.");
+          }
+      });
 
-      $('#physical_object_form').submit(function(event) {
-          if ((!$('#physical_object_collection_id').val() || $('#physical_object_collection_id').val() == "") && !$('#physical_object_no_collection').is(':checked') ) {
+      $("#"+medium+"_form").submit(function (event) {
+          if ((!$("#"+medium+"_collection_id").val() || $("#"+medium+"_collection_id").val() == "") && !$("#"+medium+"_no_collection").is(':checked')) {
               event.preventDefault();
               swal('Cannot Submit Physical Object', "You must either specify a collection or check the 'No Collect?' checkbox.")
           }
       });
-      $("#medium").change(function() {
-
-      })
   }
 
-  hookListeners();
+  $(document).ready(function() {
+      hookListeners();
+  });
 
   jQuery.fn.showTitlePopup = function() {
     $('#overlay').css("display", "block");
@@ -234,25 +209,21 @@
     this.css("display", "block");
     this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
     this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
-  };
+  }
 
   jQuery.fn.hideTitlePopup = function() {
     $('#overlay').css("display", "none");
     this.css("display", "none");
-  };
+  }
 
   function series_value() {
-    return $('#physical_object_series_id').first().attr('value');
-  }
+    return $("#"+medium+"_series_id").first().attr('value');
+  };
 
   function series_id_blank() {
-    return (typeof $('#physical_object_series_id').first().attr('value') === 'undefined' || $('#physical_object_series_id').first().attr('value') == '');
+    return (typeof $("#"+medium+"_series_id").first().attr('value') === 'undefined' || $("#"+medium+"_series_id").first().attr('value') == '');
   }
-  $('#physical_object_base_nitrate').change(function() {
-    if ($(this).prop('checked')) {
-      alert("Notify Collection Manager Immediately! Nitrate cannot be stored in the ALF.");
-    }
-  });
+
 
   function addTitle(title_text, title_id) {
     if (title_id_already_added(title_id)) {
@@ -270,8 +241,8 @@
       remove_div.appendTo(li);
       li.appendTo($('#existing_titles'));
 			// clear title text
-			$('#physical_object_title_text').removeClass('bad_barcode');
-			$("#physical_object_title_text").val('');
+			$("#"+medium+"_title_text").removeClass('bad_barcode');
+			$("#"+medium+"_title_text").val('');
     }
   }
 

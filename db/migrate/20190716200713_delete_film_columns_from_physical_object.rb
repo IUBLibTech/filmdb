@@ -1,6 +1,6 @@
 class DeleteFilmColumnsFromPhysicalObject < ActiveRecord::Migration
   def change
-    # remove old, unused columns - these attributes have been moved into film objects
+    # remove old, a_unused columns - these attributes have been moved into film objects
     remove_column :physical_objects, :copy_right
     remove_column :physical_objects, :series_production_number
     remove_column :physical_objects, :series_part
@@ -63,7 +63,6 @@ class DeleteFilmColumnsFromPhysicalObject < ActiveRecord::Migration
     remove_column :physical_objects, :stock_gevaert
     remove_column :physical_objects, :stock_kodak
     remove_column :physical_objects, :stock_ferrania
-    remove_column :physical_objects, :format_notes
     remove_column :physical_objects, :picture_not_applicable
     remove_column :physical_objects, :picture_silent_picture
     remove_column :physical_objects, :picture_mos_picture

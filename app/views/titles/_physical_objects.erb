@@ -15,9 +15,10 @@
     <th>Digitized</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
+    <% p = p.specific %>
   <tr class=<%= "digitized_tr" if p.digitized? %>>
-    <td><%= link_to "#{p.iu_barcode}", physical_object_path(p) %></td>
-    <td><%= p.gauge %></td>
+    <td><%= link_to "#{p.iu_barcode}", physical_object_path(p.acting_as) %></td>
+    <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
     <td><%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %></td>
     <% if p.current_location == WorkflowStatus::DEACCESSIONED %>
       <td class="warning">
@@ -28,11 +29,11 @@
     </td>
 
     <td><%= p.condition_rating %></td>
-    <td><%= p.reel_number %></td>
-    <td><%= p.can_size %></td>
+    <td><%= p.has_attribute?(:reel) ? p.reel_number : '' %></td>
+    <td><%= p.has_attribute?(:can_size) ? p.can_size : ''%></td>
 	  <td><%= p.collection&.name %></td>
     <% if p.digitized? %>
-      <td><%= link_to "Yes", digiprovs_path(p)%></td>
+      <td><%= link_to "Yes", digiprovs_path(p.acting_as)%></td>
     <% else %>
       <td><%= p.digitized.nil? ? "N/A" : p.digitized %></td>
     <% end %>

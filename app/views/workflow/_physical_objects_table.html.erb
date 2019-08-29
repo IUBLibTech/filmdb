@@ -25,8 +25,8 @@
     <td><%=  p.current_workflow_status.type_and_location %></td>
 		<td><%= p.active_component_group&.group_type %></td>
     <% if action_name == 'pull_request' %>
-      <td><%= check_box_tag "po_#{p.id}", ''%></td>
-			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
+      <td><%= check_box_tag "po_#{p.acting_as.id}", ''%></td>
+			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.acting_as.id}", class: 'remove_from_queue' %></td>
     <% end %>
 		<% if action_name == 'best_copy_selection' || action_name == 'best_copy_selection' %>
 			<% cg = p.active_component_group %>

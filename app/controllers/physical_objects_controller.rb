@@ -23,8 +23,8 @@ class PhysicalObjectsController < ApplicationController
         @page = (params[:page].nil? ? 1 : params[:page].to_i)
         #@physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:digitized], params[:status])
         @physical_objects = PhysicalObject.joins(:current_workflow_status).includes([:current_workflow_status, :titles, :active_component_group]).where("workflow_statuses.status_name = '#{params[:status]}'")
-        if params[:digited]
-          @physical_objects = @physical_object.where('physlca_objects.digitized = true')
+        if params[:digitized]
+          @physical_objects = @physical_object.where('physical_objects.digitized = true')
         end
         @physical_objects = @physical_objects.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
       else
@@ -83,6 +83,22 @@ class PhysicalObjectsController < ApplicationController
     @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
     render 'new_physical_object'
   end
+  # POST /physical_objects
+  # POST /physical_objects.json
+  def create
+    if params[:medium_changed]
+      set_cv
+      original = find_original_physical_object_type(params)
+      medium = find_medium(params)
+      params[medium] = params[original]
+      params.delete(original)
+      @physical_object = new_format_specific_physical_object(medium)
+      @action = '/physical_objects'
+      render 'physical_objects/new_physical_object'
+    else
+      create_physical_object
+    end
+  end
 
   # GET /physical_objects/1/edit
   def edit
@@ -94,16 +110,11 @@ class PhysicalObjectsController < ApplicationController
     @physical_object.modified_by = User.current_user_object.id
   end
 
-  # POST /physical_objects
-  # POST /physical_objects.json
-  def create
-    create_physical_object
-  end
 
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
-    nitrate = @physical_object.base_nitrate
+    nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
     respond_to do |format|
       begin
         PhysicalObject.transaction do
@@ -116,10 +127,10 @@ class PhysicalObjectsController < ApplicationController
         logger.debug $!
       end
       if @success
-        if @physical_object.base_nitrate and !nitrate
+        if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !nitrate)
           notify_nitrate(@physical_object)
         end
-        format.html { redirect_to @physical_object, notice: 'Physical object was successfully updated.' }
+        format.html { redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.' }
         format.json { render :show, status: :ok, location: @physical_object }
       else
         format.html { render :edit }
@@ -231,16 +242,6 @@ class PhysicalObjectsController < ApplicationController
     end
   end
 
-  def ajax_specific_metadata_form
-    medium = params[:medium]
-    case medium
-    when 'Film'
-      render partial: ''
-    else
-      render ''
-    end
-  end
-
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_physical_object
@@ -253,12 +254,42 @@ class PhysicalObjectsController < ApplicationController
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
 
+  # this finds what the user has selected from the MEDIUM attribute drop down and converts it to a symbol. See
+  # find_original_physical_object_type below for more details
+  def find_medium(params)
+    type = find_original_physical_object_type(params)
+    params[type][:medium].downcase.parameterize.underscore.to_sym
+  end
+
+  # This method extracts the Physical Object base class has key (:film, :video, etc) from the params hash.
+  #
+  # This is needed because when rails builds the form for a PhysicalObject, all attributes are named based on BASE
+  # class and the the key to these is the base class: for instance, iu_barcode would be params[:film][:iu_barcode] if
+  # the form was build around a Film object, params[:video][:iu_barcode] if the form was build around a Video object.
+  # This results in a params hash with the key to the physical object attributes being the original form BASE
+  # class: params[:film], params[:video], etc. This is mainly used when a user edits the Medium attribute for a
+  # Physical Object. If a user creates a new Physical Object, the base class defaults to Film but when the user changes
+  # that to video, a new form must be generated based on Video attributes. However, any physical object super class
+  # attributes (barcodes, titles, etc) may have already been entered and these should be retained and copied into the
+  # new physical object type
+  def find_original_physical_object_type(params)
+    type = nil
+    type = :film if params[:film]
+    type = :video if params[:video]
+    raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
+    type
+  end
+
   def page_link_path(page)
 	  physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
   end
   def physical_object_specific_path
     @physical_object.medium.downcase.parameterize.underscore
   end
+  def physical_object_specific_medium
+    @physical_object.medium.downcase.parameterize.underscore
+  end
   helper_method :page_link_path
+  helper_method :physical_object_specific_medium
   helper_method :physical_object_specific_path
 end

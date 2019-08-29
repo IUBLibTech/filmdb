@@ -144,7 +144,7 @@
 					<b>Generations</b>: <%= t.physical_objects.collect{ |p| p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) }.flatten.sort.uniq.join(', ') %>
 				</li>
 				<li>
-					<b>Gauges</b>: <%= t.physical_objects.collect{ |p| p.gauge }.uniq.join(', ') %>
+					<b>Gauges</b>: <%= t.physical_objects.collect{ |p| p.specific.has_attribute?(:gauge) ? p.specific.gauge : '' }.uniq.join(', ') %>
 				</li>
 				<li>
 					<b>Physical Objects Selected for Digitization</b>: <%= c %>

@@ -45,19 +45,20 @@
 	</tr>
 	<% end %>
 	<% @ingested.each do |p| %>
+    <% p = p.specific %>
 	<tr>
-		<td><%= check_box_tag "po_#{p.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
+		<td><%= check_box_tag "po_#{p.acting_as.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
 		<td>
 			<% p.titles.each do |t| %>
 				<%= link_to "#{t.title_text}", title_path(t) %> <br>
 			<% end %>
 		</td>
 		<td><%=  p.iu_barcode %></td>
-		<td><%= p.can_size %></td>
-		<td><%= p.gauge %></td>
+		<td><%= p.has_attribute?(:can_size) ? p.can_size : ''%></td>
+		<td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
 		<td><%=  p.storage_location %></td>
 		<td><%= p.active_component_group&.group_type %></td>
-		<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
+		<td><%= link_to "Remove from Queue", '#', id: "po_#{p.acting_as.id}", class: 'remove_from_queue' %></td>
 	</tr>
 	<% end %>
 	<% if @not_ingested.size > 0 %>
@@ -66,19 +67,20 @@
 	</tr>
 	<% end %>
 	<% @not_ingested.each do |p| %>
+    <% p = p.specific %>
 		<tr>
-			<td><%= check_box_tag "po_#{p.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
+			<td><%= check_box_tag "po_#{p.acting_as.id}", '', false, {class: "cg_#{p.active_component_group.group_type.tr('()','').tr(' ','_').downcase}"}%></td>
 			<td>
 				<% p.titles.each do |t| %>
 					<%= link_to "#{t.title_text}", title_path(t) %> <br>
 				<% end %>
 			</td>
 			<td><%=  p.iu_barcode %></td>
-			<td><%= p.can_size %></td>
-			<td><%= p.gauge %></td>
+			<td><%= p.has_attribute?(:can_size) ? p.can_size : '' %></td>
+			<td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
 			<td><%=  p.current_location %></td>
 			<td><%= p.active_component_group&.group_type %></td>
-			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.id}", class: 'remove_from_queue' %></td>
+			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.acting_as.id}", class: 'remove_from_queue' %></td>
 		</tr>
 	<% end %>
 	<tr>

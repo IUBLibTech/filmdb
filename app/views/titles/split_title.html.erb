@@ -14,10 +14,11 @@
     <th>Location</th>
   </tr>
   <% @title.physical_objects.each do |p| %>
-  <tr id="<%= "po_#{p.id}" %>">
+  <% p = p.specific %>
+  <tr id="<%= "po_#{p.acting_as.id}" %>">
     <td><%= link_to "#{p.iu_barcode}", physical_object_path(p), target: '_blank' %></td>
     <% if p.current_location == WorkflowStatus::BEST_COPY_MDPI_WELLS || p.current_location == WorkflowStatus::BEST_COPY_ALF %>
-      <td id="po_<%= p.id %>"><%= text_field_tag "retitled[physical_objects[#{p.id}]]", nil, class: 'title_text', size: 50 %></td>
+      <td id="po_<%= p.acting_as.id %>"><%= text_field_tag "retitled[physical_objects[#{p.acting_as.id}]]", nil, class: 'title_text', size: 50 %></td>
     <% else %>
       <td class="warning">Not at Best Copy</td>
     <% end %>
