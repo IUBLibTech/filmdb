@@ -24,8 +24,8 @@ Rails.application.routes.draw do
   get '/cage_shelf/memnon_digiprov/:id', to: 'cage_shelves#get_digiprov', as: 'get_digiprov'
 
   resources :collections
-  get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
-  post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+  #get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
+  #post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
   get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
 
@@ -41,11 +41,7 @@ Rails.application.routes.draw do
 
   resources :controlled_vocabularies
 
-  resources :collection_inventory_configurations do
-    #get '/collection_inventory_configurations/:id/new_physical_object'
-	end
-
-  get '/inventory/', to: 'inventory#index', as: 'inventory'
+  #get '/inventory/', to: 'physical_objects#new', as: 'inventory'
 
   resources :physical_objects
 	get '/physical_objects_filter', to: 'physical_objects#index', as: 'physical_objects_filter_default'
@@ -63,6 +59,8 @@ Rails.application.routes.draw do
   get '/physical_objects/digiprov/:id', to: 'physical_objects#digiprovs', as: 'digiprovs'
   get '/physical_objects/ajax_belongs_to_title/:iu_barcode/:title_id', to: 'physical_objects#ajax_belongs_to_title?', as: 'ajax_physical_object_belongs_to_title'
   get '/physical_objects/:id/ajax_lookup_barcode', to: 'physical_objects#ajax_lookup_barcode', as: 'ajax_lookup_barcode'
+  post '/physical_objects/ajax/rebuild_form', to: 'physical_objects#ajax_rebuild_form', as: 'physical_objects_ajax_rebuild_form'
+
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
   get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'
