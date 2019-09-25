@@ -1,7 +1,127 @@
 class Video < ActiveRecord::Base
   acts_as :physical_object
-
   validates :gauge, presence: true
+
   GAUGE_VALUES = ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge').pluck(:value)
+  VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
+                    :revised, :version_original, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
+  VERSION_FIELDS_HUMANIZED = {first_edition: "1st Edition", second_edition: "2nd Edition", third_edition: "3rd Edition", fourth_edition: "4th Edition", x_rated: "X-rated", version_original: 'Original'}
+  GENERATION_FIELDS = [
+      :generation_b_roll, :generation_commercial_release, :generation_copy_access, :generation_dub, :generation_duplicate,
+      :generation_edited, :generation_fine_cut, :generation_intermediate, :generation_line_cut, :generation_master,
+      :generation_master_production, :generation_master_distribution, :generation_off_air_recording, :generation_original,
+      :generation_picture_lock, :generation_rough_cut, :generation_stock_footage, :generation_submaster, :generation_work_tapes,
+      :generation_work_track, :generation_other
+  ]
+  GENERATION_FIELDS_HUMANIZED = {
+      :generation_b_roll => "B Roll", :generation_commercial_release => "Commercial Release", :generation_copy_access => "Copy: Access",
+      :generation_dub => "Dub", :generation_duplicate => "Duplicate", :generation_edited => "Edited", :generation_fine_cut => "Fine Cur",
+      :generation_intermediate => "Intermediate", :generation_line_cut => "Line Cut", :generation_master => "Master",
+      :generation_master_production => "Master: Production", :generation_master_distribution => "Master: Distribution",
+      :generation_off_air_recording => "Off Air Recording", :generation_original => "Original",
+      :generation_picture_lock => "Picture Lock", :generation_rough_cut => "Rough Cut", :generation_stock_footage => "Stock Footage",
+      :generation_submaster => "Submaster", :generation_work_tapes => "Work Tapes", :generation_work_track => "Work Track",
+      :generation_other => "Other"
+  }
+
+  BASE_FIELDS =[:base_acetate, :base_polyester, :base_mixed, :base_other]
+  BASE_FIELDS_HUMANIZED = {
+      base_acetate: "Acetate", base_polyester: "Polyester", base_mixed: "Mixed", base_other: "Other"
+  }
+
+  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_3_m,:stock_agfa_gevaert, :stock_pathe, :stock_unknown]
+  STOCK_FIELDS_HUMANIZED = {
+      stock_agfa: 'Agfa', stock_ansco: "Ansco", stock_dupont: 'Dupont', stock_orwo: "Orwo", stock_fuji: "Fuji", stock_gevaert: "Gevaert",
+      stock_kodak: "Kodak", stock_ferrania: "Ferrania", stock_3_m: '3M', stock_agfa_gevaert: 'Agfa-Gevaert', stock_pathe: 'Pathe', stock_unknown: "Unknown"
+  }
+
+  PICTURE_TYPE_FIELDS = [
+      :picture_type_not_applicable, :picture_type_silent_picture, :picture_type_mos_picture, :picture_type_composite_picture,
+      :picture_type_credits_only, :picture_type_picture_effects, :picture_type_picture_outtakes, :picture_type_other
+  ]
+  PICTURE_TYPE_FIELDS_HUMANIZED = {
+      :picture_type_not_applicable => "Not Applicable", :picture_type_silent_picture => "Silent", :picture_type_mos_picture => "MOS", :picture_type_composite_picture => "Composite",
+      :picture_type_credits_only => "Credits Only", :picture_type_picture_effects => "Picture Effects", :picture_type_picture_outtakes => "Picture Outtakes", :picture_type_other => "Other"
+  }
+
+  COLOR_FIELDS = [
+      :image_color_bw, :image_color_color, :image_color_mixed, :image_color_other
+  ]
+
+  COLOR_FIELDS_HUMANIZED = {
+      :image_color_bw => "Black and White", :image_color_color => "Color", :image_color_mixed => "Mixed", :image_color_other => "Other"
+  }
+
+  ASPECT_RATIO_FIELDS = [
+      :image_aspect_ratio_4_3, :image_aspect_ratio_16_9, :image_aspect_ratio_other
+  ]
+  ASPECT_RATIO_FIELDS_HUMANIZED = {
+      image_aspect_ratio_4_3: '4:3', image_aspect_ratio_16_9: '16:9', image_aspect_ratio_other: 'Other'
+  }
+
+  SOUND_FORMAT_FIELDS = [
+      :sound_format_type_magnetic, :sound_format_type_digital, :sound_format_type_sound_on_separate_media, :sound_format_type_other,
+  ]
+  SOUND_FORMAT_FIELDS_HUMANIZED = {
+      :sound_format_type_magnetic => "Magnetic", :sound_format_type_digital => "Digital", :sound_format_type_sound_on_separate_media => "Sound on Separate Media",
+      :sound_format_type_other => "Other",
+  }
+
+  SOUND_CONTENT_FIELDS = [
+      :sound_content_type_music_track, :sound_content_type_effects_track, :sound_content_type_dialog, :sound_content_type_composite_track,
+      :sound_content_type_outtakes
+  ]
+  SOUND_CONTENT_FIELDS_HUMANIZED = {
+      :sound_content_type_music_track => "Music Track", :sound_content_type_effects_track => "Effects Track",
+      :sound_content_type_dialog => "Dialog", :sound_content_type_composite_track => "Composite", :sound_content_type_outtakes => "Outtakes",
+  }
+
+  SOUND_CONFIGURATION_FIELDS = [
+      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround,
+      :sound_configuration_other
+  ]
+  SOUND_CONFIRGURATION_FIELDS_HUMANIZED = {
+      :sound_configuration_mono => "Mono", :sound_configuration_stereo => "Strereo", :sound_configuration_surround => "Surround",
+      :sound_configuration_other => "Other"
+  }
+  SOUND_REDUCTION_FIELDS = [
+      :sound_noise_redux_dolby_a, :sound_noise_redux_dolby_b, :sound_noise_redux_dolby_c, :sound_noise_redux_dolby_s,
+      :sound_noise_redux_dolby_sr, :sound_noise_redux_dolby_nr, :sound_noise_redux_dolby_hx, :sound_noise_redux_dolby_hx_pro,
+      :sound_noise_redux_dbx, :sound_noise_redux_dbx_type_1, :sound_noise_redux_dbx_type_2, :sound_noise_redux_high_com,
+      :sound_noise_redux_high_com_2, :sound_noise_redux_adres, :sound_noise_redux_anrs, :sound_noise_redux_dnl,
+      :sound_noise_redux_dnr, :sound_noise_redux_cedar, :sound_noise_redux_none
+  ]
+
+  SOUND_REDUCTION_FIELDS_HUMANIZED = {
+      :sound_noise_redux_dolby_a => "Dolby A", :sound_noise_redux_dolby_b => "Dolby B",
+      :sound_noise_redux_dolby_c => "Dolby C", :sound_noise_redux_dolby_s => "Dolby S", :sound_noise_redux_dolby_sr => "Dolby SR",
+      :sound_noise_redux_dolby_nr => "Dolby NR", :sound_noise_redux_dolby_hx => "Dolby HX", :sound_noise_redux_dolby_hx_pro => "Dolby HX Pro",
+      :sound_noise_redux_dbx => "DBX", :sound_noise_redux_dbx_type_1 => "DBX Type I", :sound_noise_redux_dbx_type_2 => "DBX Type II",
+      :sound_noise_redux_high_com => "High Com", :sound_noise_redux_high_com_2 => "High Com II", :sound_noise_redux_adres => "andres",
+      :sound_noise_redux_anrs => "ANRS", :sound_noise_redux_dnl => "DNL", :sound_noise_redux_dnr => "DNR", :sound_noise_redux_cedar => "CEDAR",
+      :sound_noise_redux_none => "None"
+  }
+
+
+  CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
+
+  HUMANIZED_SYMBOLS = GENERATION_FIELDS_HUMANIZED.merge(VERSION_FIELDS_HUMANIZED.merge(BASE_FIELDS_HUMANIZED.merge(
+      STOCK_FIELDS_HUMANIZED.merge(PICTURE_TYPE_FIELDS_HUMANIZED.merge(COLOR_FIELDS_HUMANIZED.merge(
+          ASPECT_RATIO_FIELDS_HUMANIZED.merge(SOUND_FORMAT_FIELDS_HUMANIZED.merge(SOUND_CONTENT_FIELDS_HUMANIZED.merge(
+              SOUND_CONFIRGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
+          )))))))))
+
+  # overridden to provide for more human readable attribute names for things like :sample_rate_32k
+  def self.human_attribute_name(attribute, options = {})
+    self.const_get(:HUMANIZED_SYMBOLS)[attribute.to_sym] || super
+  end
+
+  def humanize_boolean_fields(field_names)
+    str = ""
+    field_names.each do |f|
+      str << (self.specific[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
+    end
+    str
+  end
 
 end

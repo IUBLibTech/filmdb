@@ -5,8 +5,9 @@ class ControlledVocabulary < ActiveRecord::Base
       title_creator_role_type: 'Creator Role', title_publisher_role_type: 'Publisher Role',
       title_original_identifier_type: 'Original Identifier', date_type: 'Date' }
 
-  scope :physical_object_cv, -> {
-    cv = ControlledVocabulary.where(model_type: 'PhysicalObject').select(:model_attribute, :value).order(:model_attribute, :value, :menu_index)
+  scope :physical_object_cv, ->(medium) {
+
+    cv = ControlledVocabulary.where(model_type: medium).select(:model_attribute, :value).order(:model_attribute, :value, :menu_index)
     cv_map(cv)
   }
 

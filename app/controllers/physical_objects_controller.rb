@@ -5,9 +5,6 @@ class PhysicalObjectsController < ApplicationController
   include MailHelper
 
   before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy, :mark_missing]
-  before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
-                                :edit_location, :update_location, :duplicate
-  ]
 
   # GET /physical_objects
   # GET /physical_objects.json
@@ -80,7 +77,9 @@ class PhysicalObjectsController < ApplicationController
   def new
     @em = "Creating New Physical Object"
     u = User.current_user_object
-    @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+    #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+    @physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
+    set_cv
     render 'new_physical_object'
   end
   # POST /physical_objects
@@ -107,6 +106,7 @@ class PhysicalObjectsController < ApplicationController
       flash.now[:warning] = "No such physical object..."
       redirect_to :back
     end
+    set_cv
     @physical_object.modified_by = User.current_user_object.id
   end
 
@@ -114,6 +114,7 @@ class PhysicalObjectsController < ApplicationController
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
+    set_cv
     nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
     respond_to do |format|
       begin
@@ -167,6 +168,7 @@ class PhysicalObjectsController < ApplicationController
     elsif @physical_object.specific.class != Film
       flash[:warning] = "#{bc} is a #{@physical_object.specific.class}, not a Film"
     else
+      set_cv
       nitrate = @physical_object.specific.base_nitrate
       @physical_object.specific.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
@@ -249,47 +251,10 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def set_cv
-    @cv = ControlledVocabulary.physical_object_cv
+    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
     @l_cv = ControlledVocabulary.language_cv
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
 
-  # this finds what the user has selected from the MEDIUM attribute drop down and converts it to a symbol. See
-  # find_original_physical_object_type below for more details
-  def find_medium(params)
-    type = find_original_physical_object_type(params)
-    params[type][:medium].downcase.parameterize.underscore.to_sym
-  end
 
-  # This method extracts the Physical Object base class has key (:film, :video, etc) from the params hash.
-  #
-  # This is needed because when rails builds the form for a PhysicalObject, all attributes are named based on BASE
-  # class and the the key to these is the base class: for instance, iu_barcode would be params[:film][:iu_barcode] if
-  # the form was build around a Film object, params[:video][:iu_barcode] if the form was build around a Video object.
-  # This results in a params hash with the key to the physical object attributes being the original form BASE
-  # class: params[:film], params[:video], etc. This is mainly used when a user edits the Medium attribute for a
-  # Physical Object. If a user creates a new Physical Object, the base class defaults to Film but when the user changes
-  # that to video, a new form must be generated based on Video attributes. However, any physical object super class
-  # attributes (barcodes, titles, etc) may have already been entered and these should be retained and copied into the
-  # new physical object type
-  def find_original_physical_object_type(params)
-    type = nil
-    type = :film if params[:film]
-    type = :video if params[:video]
-    raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
-    type
-  end
-
-  def page_link_path(page)
-	  physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
-  end
-  def physical_object_specific_path
-    @physical_object.medium.downcase.parameterize.underscore
-  end
-  def physical_object_specific_medium
-    @physical_object.medium.downcase.parameterize.underscore
-  end
-  helper_method :page_link_path
-  helper_method :physical_object_specific_medium
-  helper_method :physical_object_specific_path
 end

@@ -44,6 +44,8 @@ module PhysicalObjectsHelper
             session[:physical_object_create_action] = @url
             format.html { redirect_to physical_object_path(@physical_object.acting_as.id, notice: 'Physical Object successfully created')}
           else
+            associate_titles
+            set_cv
             format.html { render 'physical_objects/new_physical_object' }
           end
         end
@@ -71,10 +73,7 @@ module PhysicalObjectsHelper
   def process_titles
     # easiest to just delete all physical object/title associations then rebuild them based on what was passed
     @physical_object.physical_object_titles.delete_all
-    titles = Title.where(id: params[@physical_object.medium.downcase.parameterize.underscore.to_sym][:title_ids].split(',').collect { |n| n.to_i} )
-    titles.each do |t|
-      @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
-    end
+    associate_titles
   end
 
   def new_format_specific_physical_object(medium)
@@ -89,6 +88,12 @@ module PhysicalObjectsHelper
   end
 
   private
+  def associate_titles
+    titles = Title.where(id: params[:physical_object][:title_ids].split(',').collect { |n| n.to_i} )
+    titles.each do |t|
+      @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
+    end
+  end
   def physical_object_specific
     if params[:film]
       Film.new(physical_object_params)
@@ -164,7 +169,31 @@ module PhysicalObjectsHelper
           :catalog_key, :compilation, :format_notes,
 
           # video specific attributes
-          :gauge
+          :gauge, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :revised,
+          :original, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated, :generation_b_roll,
+          :generation_commercial_release, :generation_copy_access, :generation_dub, :generation_duplicate, :generation_edited,
+          :generation_fine_cut, :generation_intermediate, :generation_line_cut, :generation_master, :generation_master_production,
+          :generation_master_distribution, :generation_off_air_recording, :generation_original, :generation_picture_lock,
+          :generation_rough_cut, :generation_stock_footage, :generation_submaster, :generation_work_tapes, :generation_work_track,
+          :reel_number, :size, :recording_standard, :maximum_runtime, :duration, :base, :stock,
+          :playback_speed, :picture_type_not_applicablem, :picture_type_silent_picture, :picture_type_mos_picture, :picture_type_composite_picture,
+          :picture_type_credits_only, :picture_type_picture_effects, :picture_type_picture_outtakes, :picture_type_other,
+          :image_color_bw, :image_color_color, :image_color_mixed, :image_color_other, :image_aspect_ratio_4_3, :image_aspect_ratio_16_9,
+          :image_aspect_ratio_other, :caption_or_subtitles, :silent, :sound_format_type_magnetic, :sound_format_type_digital,
+          :sound_format_type_sound_on_separate_media, :sound_format_type_other, :sound_content_type_music_track, :sound_content_type_effects_track,
+          :sound_content_type_dialog, :sound_content_type_composite_track, :sound_content_type_outtakes, :sound_configuration_mono,
+          :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_other, :sound_noise_redux_dolby_a,
+          :sound_noise_redux_dolby_b, :sound_noise_redux_dolby_c, :sound_noise_redux_dolby_s, :sound_noise_redux_dolby_sr,
+          :sound_noise_redux_dolby_nr, :sound_noise_redux_dolby_hx, :sound_noise_redux_dolby_hx_pro, :sound_noise_redux_dbx,
+          :sound_noise_redux_dbx_type_1, :sound_noise_redux_dbx_type_2, :sound_noise_redux_high_com, :sound_noise_redux_high_com_2,
+          :sound_noise_redux_adres, :sound_noise_redux_anrs, :sound_noise_redux_dnl, :sound_noise_redux_dnr, :sound_noise_redux_cedar,
+          :sound_noise_redux_none, :notes, :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold,
+
+          value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
+          boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
+          languages_attributes: [:id, :language, :language_type, :_destroy],
+          physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
+          physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
       )
     else
       raise "Unsupported Format #{params[:physical_object][:medium]}"
