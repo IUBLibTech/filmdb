@@ -1,8 +1,16 @@
+<div>
+  <h4>Film Metadata Fields</h4>
+</div>
 <div id="" class="metadata_section">
+  <h4>Version</h4>
+  <% if @physical_object.is_a?(Film) %>
+    <b class="block">Version</b>
+    <%= @physical_object.humanize_boolean_fields(Film::VERSION_FIELDS) %>
+  <% end %>
   <h4>Format</h4>
   <div class="left _50">
     <b>Gauge</b> <%= @physical_object.gauge %><br/>
-    <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %><br>
+    <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(Film::GENERATION_FIELDS) %><br>
     <h5>Generation Notes</h5>
     <div class="simple_text">
       <%= format_newlines(@physical_object.generation_notes) %>
@@ -23,11 +31,11 @@
   </div>
   <div>
     <b class="block">Base</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::BASE_FIELDS) %>
+    <%= @physical_object.humanize_boolean_fields(Film::BASE_FIELDS) %>
   </div>
   <div>
     <b class="block">Stock</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::STOCK_FIELDS) %>
+    <%= @physical_object.humanize_boolean_fields(Film::STOCK_FIELDS) %>
   </div>
   <div class="clear"></div>
 </div>
@@ -36,18 +44,18 @@
   <div id="image_metadata_content_div">
     <div class="">
       <b>Picture Type&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(PhysicalObject::PICTURE_TYPE_FIELDS) %>
+      <%= @physical_object.humanize_boolean_fields(Film::PICTURE_TYPE_FIELDS) %>
     </div>
     <div class="clear">
       <b >Frame Rate&nbsp;</b><%= @physical_object.frame_rate %>
     </div>
     <div id="" class="">
       <b class="block">Color&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(PhysicalObject::COLOR_FIELDS) %>
+      <%= @physical_object.humanize_boolean_fields(Film::COLOR_FIELDS) %>
     </div>
     <div>
       <b class="block">Aspect Ratio&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(PhysicalObject::ASPECT_RATIO_FIELDS) %>
+      <%= @physical_object.humanize_boolean_fields(Film::ASPECT_RATIO_FIELDS) %>
     </div>
     <div>
       <b>Anamorphic</b>&nbsp;<%= @physical_object.anamorphic %>
@@ -70,15 +78,15 @@
   </div>
   <div>
     <b>Format Type&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_FORMAT_FIELDS) %>
+    <%= @physical_object.humanize_boolean_fields(Film::SOUND_FORMAT_FIELDS) %>
   </div>
   <div>
     <b >Content Type&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONTENT_FIELDS) %>
+    <%= @physical_object.humanize_boolean_fields(Film::SOUND_CONTENT_FIELDS) %>
   </div>
   <div>
     <b >Sound Field&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(PhysicalObject::SOUND_CONFIGURATION_FIELDS) %>
+    <%= @physical_object.humanize_boolean_fields(Film::SOUND_CONFIGURATION_FIELDS) %>
   </div>
   <div>
     <b>Track Count</b>&nbsp;<%= @physical_object.track_count %>
@@ -90,7 +98,7 @@
     <% end %>
   </div>
 </div>
-<div id="" class="metadata_section">
+<div>
   <h4>Condition</h4>
   <div class="h_55px">
     <div class="left _45 rp_10px">

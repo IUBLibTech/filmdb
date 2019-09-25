@@ -39,10 +39,6 @@
     <b>Medium</b> <%= @physical_object.format %><br/>
     <b>Unit</b> <%= @physical_object.unit.abbreviation %><br/>
     <b>Collection</b> <%= @physical_object.collection&.name %><br/>
-    <% if @physical_object.is_a?(Film) %>
-      <b class="block">Version</b>
-      <%= @physical_object.humanize_boolean_fields(PhysicalObject::VERSION_FIELDS) %>
-    <% end %>
   </div>
   <div class="left _50">
 		<b>Workflow Status</b> <%= link_to @physical_object.current_workflow_status.type_and_location, physical_object_workflow_history_path(@physical_object.acting_as) %><br/>
@@ -54,18 +50,22 @@
     <b>Catalog Key</b> <%= @physical_object.catalog_key %><br/>
   </div>
 </div>
-<div id="format_notes_metadata" class="metadata_section">
-  <h4>Format Notes</h4>
-  <%= format_newlines(@physical_object.format_notes) %>
-</div>
-<div id="accompanying_documentation_metadata" class="metadata_section">
-  <h4>Accompanying Documentation</h4>
-  <div>
-    <%= format_newlines(@physical_object.accompanying_documentation) %>
+<% unless @physical_object.format_notes.blank? %>
+  <div id="format_notes_metadata" class="metadata_section m_top_10px">
+    <h4>Format Notes</h4>
+    <%= format_newlines(@physical_object.format_notes) %>
   </div>
-  <div>
-    <b>Location</b> <%= @physical_object.accompanying_documentation_location %>
+<% end %>
+<% unless @physical_object.accompanying_documentation.blank? && @physical_object.accompanying_documentation_location.blank? %>
+  <div id="accompanying_documentation_metadata" class="metadata_section">
+    <h4>Accompanying Documentation</h4>
+    <div>
+      <%= format_newlines(@physical_object.accompanying_documentation) %>
+    </div>
+    <div>
+      <b>Location</b> <%= @physical_object.accompanying_documentation_location %>
+    </div>
   </div>
-</div>
+<% end %>
 <%= render partial: "physical_objects/#{physical_object_specific_medium}/show" %>
 <%= render partial: 'physical_objects/physical_object_old_barcodes' %>

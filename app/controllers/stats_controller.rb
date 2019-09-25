@@ -92,7 +92,7 @@ class StatsController < ApplicationController
 
 	def generations
 		gens = Hash.new
-		PhysicalObject::GENERATION_FIELDS.each do |gf|
+		PhysicalObject::GENERATION_FIELDS[:FILM].each do |gf|
 			count =  PhysicalObject.where(gf => true).where(po_sql_where).size
 			gens[PhysicalObject::GENERATION_FIELDS_HUMANIZED[gf]] = count unless count == 0
 		end
