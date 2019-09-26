@@ -21,7 +21,7 @@
 	        <% if policy(Collection).destroy?  %>
 		        <%= link_to 'Destroy', collection, method: :delete, data: { confirm: 'Are you sure?' } %><br/>
 	        <% end %>
-          <%= link_to 'Inventory', collection_new_physical_object_path(collection) %>
+          <%#= link_to 'Inventory', collection_new_physical_object_path(collection) %>
         </td>
       </tr>
     <% end %>
