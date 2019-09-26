@@ -59,7 +59,7 @@
           <%= @collection.unit.abbreviation %>
           <%= f.hidden_field :unit_id %>
         <% else %>
-          <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation, {}, {name: 'physical_object[unit_id]', id: 'physical_object_unit_id'} %>
+          <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
         <% end %>
       </div>
       <div class="label">
@@ -69,7 +69,7 @@
         <% if @collection %>
           <%= @collection.name%>
         <% else %>
-          <%= f.text_field :collection_text, name: "physical_object[collection_text]", id: "physical_object_collection_text"%>
+          <%= f.text_field :collection_text%>
           <div>
             No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection" <%= (action_name == 'edit' && @collection.nil?) ? 'checked' : '' %>>
           </div>
