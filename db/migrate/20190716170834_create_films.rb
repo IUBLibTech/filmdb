@@ -8,6 +8,10 @@ class CreateFilms < ActiveRecord::Migration
       t.actable
     end
 
+    if table_exists? :films
+      drop_table :films
+    end
+
     create_table :films do |t|
       t.boolean :first_edition
       t.boolean :second_edition
