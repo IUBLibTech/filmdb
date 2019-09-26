@@ -25,7 +25,6 @@ module PhysicalObjectsHelper
         ws = WorkflowStatus.build_workflow_status(status_name, @physical_object)
 				@physical_object.workflow_statuses << ws
         respond_to do |format|
-          debugger
           if @physical_object.save
             @url = nil
             if controller_name == 'physical_objects'
