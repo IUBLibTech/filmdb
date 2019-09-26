@@ -122,7 +122,6 @@ class PhysicalObjectsController < ApplicationController
           # check to see if titles have changed in the update
           process_titles
           @physical_object.modifier = User.current_user_object
-          debugger
           @success = @physical_object.update_attributes!(physical_object_params)
         end
       rescue Exception => error
