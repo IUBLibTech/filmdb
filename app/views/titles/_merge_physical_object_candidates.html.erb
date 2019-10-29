@@ -61,7 +61,7 @@
 			<%= p.has_attribute?(:gauge) ? p.gauge : '' %>
 		</td>
 		<td>
-			<%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %>
+			<%= p.humanize_boolean_generation_fields %>
 		</td>
     <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.scan_resolution) %></td>
     <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.color_space) %></td>

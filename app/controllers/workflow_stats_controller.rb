@@ -16,18 +16,23 @@ class WorkflowStatsController < ApplicationController
 		@can_sizes = {ns => 0}
 		@scan_resolutions = {"nil" => 0}
 		@physical_objects.each do |p|
-			if @gauges[p.gauge].nil?
-				@gauges[p.gauge] = 0
-			end
-			@gauges[p.gauge] += 1
-
-			if p.can_size.blank?
-				@can_sizes[ns] += 1
-			else
-				if @can_sizes[p.can_size].nil?
-					@can_sizes[p.can_size] = 0
+			p = p.specific
+			if p.has_attribute?(:guage)
+				if @gauges[p.gauge].nil?
+					@gauges[p.gauge] = 0
 				end
-				@can_sizes[p.can_size] += 1
+				@gauges[p.gauge] += 1
+			end
+
+			if (p.has_attribute?(:can_size))
+				if p.can_size.blank?
+					@can_sizes[ns] += 1
+				else
+					if @can_sizes[p.can_size].nil?
+						@can_sizes[p.can_size] = 0
+					end
+					@can_sizes[p.can_size] += 1
+				end
 			end
 
 			cg = p.active_scan_settings

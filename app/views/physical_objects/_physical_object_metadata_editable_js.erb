@@ -10,15 +10,7 @@
      * Attach event listeners to all the Form fields that require validation or some javascript related functionality
      */
     function hookListeners() {
-        // validator for the IU barcode field
-        $("#"+medium+"_iu_barcode").bind("input", function () {
-            validateIUBarcode($(this));
-        });
-        // validator for MDPI barcode field
-        $("#"+medium+"_mdpi_barcode").bind("input", function () {
-            validateMdpiBarcode($(this));
-        });
-
+        hookBarcodeValidators();
         // autocomplete for titles
         // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from
         // the autocomplete list. Additionally we need to unlock series title text in case it was locked from a previous title
@@ -194,6 +186,10 @@
                 name: 'medium_changed',
                 value: true
             }).appendTo('#physical_object_form');
+            <% if action_name == 'edit' %>
+            // redirect to the edit with format change action
+            $('#physical_object_form').attr('action', '<%= edit_physical_object_medium_path(@physical_object&.acting_as.id) %>')
+            <% end %>
             $('#physical_object_form').submit();
         });
 

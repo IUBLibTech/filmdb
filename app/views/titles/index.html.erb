@@ -141,7 +141,7 @@
 					<b>Physical Object Count</b>: <%= t.physical_objects.size %>
 				</li>
 				<li>
-					<b>Generations</b>: <%= t.physical_objects.collect{ |p| p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) }.flatten.sort.uniq.join(', ') %>
+					<b>Generations</b>: <%= t.physical_objects.collect{ |p| p.humanize_boolean_generation_fields }.flatten.sort.uniq.join(', ') %>
 				</li>
 				<li>
 					<b>Gauges</b>: <%= t.physical_objects.collect{ |p| p.specific.has_attribute?(:gauge) ? p.specific.gauge : '' }.uniq.join(', ') %>

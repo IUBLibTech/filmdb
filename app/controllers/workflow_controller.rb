@@ -6,7 +6,7 @@ class WorkflowController < ApplicationController
 	include WorkflowHelper
 	include ApplicationHelper
 
-	before_action :set_physical_object, only: [:process_receive_from_storage, :process_return_to_storage ]
+	before_action :set_physical_object, only: [:process_receive_from_storage ]
 	before_action :set_onsite_pos, only: [:send_for_mold_abatement,
 																				:process_send_for_mold_abatement, :receive_from_storage, :process_receive_from_storage,
 																				:send_to_freezer, :process_send_to_freezer]
@@ -129,7 +129,7 @@ class WorkflowController < ApplicationController
 
 	def ajax_alf_receive_iu_barcode
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first.specific
-		@cv = ControlledVocabulary.physical_object_cv
+		@cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
 		if @physical_object.nil?
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT && !@physical_object.current_workflow_status.status_name == WorkflowStatus::WELLS_TO_ALF_CONTAINER
@@ -182,6 +182,7 @@ class WorkflowController < ApplicationController
 		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::JUST_INVENTORIED_WELLS, WorkflowStatus::QUEUED_FOR_PULL_REQUEST, WorkflowStatus::PULL_REQUESTED)
 	end
 	def process_return_to_storage
+		@po = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
 		# return to storage is not normal workflow - only allow this for physical objects that are either just inventoried,
 		# or are the only physical object in their active component group
 		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || @po.active_component_group.is_iulmia_workflow? || @po.active_component_group.physical_objects.size == 1
@@ -268,7 +269,7 @@ class WorkflowController < ApplicationController
 		else
 			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po)
 			@po.workflow_statuses << ws
-			po.active_component_group = nil
+			@po.active_component_group = nil
 			@po.save
 			flash.now[:notice] = "#{@po.iu_barcode} has been marked #{WorkflowStatus::MISSING}."
 			@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
@@ -480,16 +481,21 @@ class WorkflowController < ApplicationController
 	end
 
 	def ajax_mold_abatement_barcode
-		@physical_object = PhysicalObject.where(iu_barcode: params[:bc].to_i).first
+		@physical_object = PhysicalObject.where(iu_barcode: params[:bc].to_i).first.specific
 		render partial: 'workflow/ajax_mold_abatement_barcode'
 	end
 
 	def update_return_from_mold_abatement
 		@physical_object = PhysicalObject.find(params[:id])
+
+		# FIXME: Need to find a better way to handle form submission from generic Physical Objects and Specific Video/Film/Etc...
+		params[:physical_object] = params.delete(:video) if @physical_object.medium == 'Video'
+		params[:physical_object] = params.delete(:film) if @physical_object.medium == 'Film'
+
 		s = WorkflowStatus.build_workflow_status(params[:physical_object][:current_workflow_status], @physical_object)
 		@physical_object.workflow_statuses << s
-		@physical_object.update_attributes(mold: params[:physical_object][:mold])
-		flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_workflow_status.status_name}, with Mold attribute set to: #{@physical_object.mold}"
+		@physical_object.specific.update_attributes(mold: params[:physical_object][:mold])
+		flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_workflow_status.status_name}, with Mold attribute set to: #{@physical_object.specific.mold}"
 		redirect_to :return_from_mold_abatement
 	end
 
@@ -553,7 +559,7 @@ class WorkflowController < ApplicationController
 		@physical_objects = []
 	end
 	def set_po
-		@po = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
+		@po = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first.specific
 	end
 
 	def po_missing?(po)

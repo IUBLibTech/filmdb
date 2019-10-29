@@ -177,7 +177,7 @@ class PhysicalObject < ActiveRecord::Base
 		# If it was last in the freezer, it should be returned to the freezer. Otherwise, the item is returned to its last storage location,
 		# or ingested if it has yet to be put anywhere in storage
 		if stats.size > 0
-			if self.specific.ad_strip && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
+			if self.specific.has_attribute?(:ad_strip) && FREEZER_AD_STRIP_VALS.include?(self.specific.ad_strip)
 				(stats.last.status_name == WorkflowStatus::IN_FREEZER ? WorkflowStatus::IN_FREEZER : WorkflowStatus::AWAITING_FREEZER)
 			else
 				stats.last.status_name
@@ -225,7 +225,13 @@ class PhysicalObject < ActiveRecord::Base
   end
 
   def generations_text
-		self.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS)
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::GENERATION_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::GENERATION_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
   end
 
   def belongs_to_title?(title_id)
@@ -322,6 +328,10 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	def specific_matches_medium?(medium)
+		self.specific.class.to_s.downcase == medium.downcase
+	end
+
 	# this method differs slightly from WorkflowStatus.in_active_workflow in that it tests against not being In Storage
 	# TODO: WorkflowStatus needs to be updated (and reliant code modified) to
 	def in_active_workflow?
@@ -348,223 +358,10 @@ class PhysicalObject < ActiveRecord::Base
     else
       raise "Unsupported Medium... #{self.specific}"
     end
-  end
+	end
 
-	#
-	def to_xml(options)
-		xml = options[:builder]
-		xml.physicalObject do
-			xml.filmdbId id
-			xml.titleId active_component_group.title.id
-			xml.mdpiBarcode mdpi_barcode
-			xml.iucatBarcode iu_barcode
-			xml.redigitize (digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
-			xml.iucatTitleControlNumber title_control_number
-			xml.catalogKey catalog_key
-			xml.format medium
-			xml.unit unit.abbreviation
-			xml.title titles.collect{ |t| t.title_text }.join(', ')
-			xml.alternativeTitle alternative_title unless alternative_title.nil?
-			xml.collectionName collection&.name
-			xml.accompanyingDocumentation accompanying_documentation
-			xml.accompanyingDocumentationLocation accompanying_documentation_location
-			xml.gauge gauge
-			xml.reelNumber reel_number
-			xml.canSize can_size
-			xml.footage footage
-			xml.duration duration
-			xml.formatNotes format_notes
-			xml.frameRate frame_rate
-			xml.closeCaption close_caption
-			xml.sound sound
-			xml.missingFootage missing_footage
-			xml.conditionRating condition_rating
-			xml.conditionNotes condition_notes
-			xml.researchValue research_value
-			xml.researchValueNotes research_value_notes
-			xml.conservationActions conservation_actions
-			xml.multipleItemsInCan multiple_items_in_can
-			xml.miscellaneous miscellaneous
-			xml.captionedOrSubtitled captioned
-			xml.captionedOrSubtitleNotes captions_or_subtitles_notes
-			xml.anamorphic anamorphic
-			xml.trackCount track_count
-			xml.returnTo storage_location
-			xml.notifyAlf notify_alf
-
-			xml.resolution (sound_only? ? 'Audio only' : active_scan_settings.scan_resolution)
-			xml.colorSpace active_scan_settings.color_space
-			xml.clean active_scan_settings.clean
-			xml.returnOnOriginalReel active_scan_settings.return_on_reel
-
-			xml.originalIdentifiers do
-				physical_object_original_identifiers.each do |oi|
-					xml.identifier oi.identifier
-				end
-			end
-			xml.editions do
-				xml.firstEdition first_edition
-				xml.secondEdition second_edition
-				xml.thirdEdition third_edition
-				xml.fourthEdition fourth_edition
-				xml.abridged abridged
-				xml.short short
-				xml.long long
-				xml.sample sample
-				xml.preview preview
-				xml.revised revised
-				xml.original version_original
-				xml.captioned captioned
-				xml.excerpt excerpt
-				xml.catholic catholic
-				xml.domestic domestic
-				xml.english english
-				xml.television television
-				xml.xRated x_rated
-			end
-			xml.generations do
-				xml.projectionPrint generation_projection_print
-				xml.aRoll generation_a_roll
-				xml.bRoll generation_b_roll
-				xml.cRoll generation_c_roll
-				xml.dRoll generation_d_roll
-				xml.answerPrint generation_answer_print
-				xml.composite generation_composite
-				xml.duplicate generation_duplicate
-				xml.edited generation_edited
-				xml.fineGrainMaster generation_fine_grain_master
-				xml.intermediate generation_intermediate
-				xml.kinescope generation_kinescope
-				xml.magneticTrack generation_magnetic_track
-				xml.mezzanine generation_mezzanine
-				xml.negative generation_negative
-				xml.opticalSoundTrack generation_optical_sound_track
-				xml.original generation_original
-				xml.outsAndTrims generation_outs_and_trims
-				xml.positive generation_positive
-				xml.reversal generation_reversal
-				xml.separationMaster generation_separation_master
-				xml.workPrint generation_work_print
-				xml.mixed generation_mixed
-				xml.originalCamera generation_original_camera
-				xml.master generation_master
-				xml.other generation_other
-			end
-			xml.bases do
-				xml.acetate base_acetate
-				xml.polyester base_polyester
-				xml.nitrate base_nitrate
-			end
-			xml.stocks do
-				xml.agfa stock_agfa
-				xml.ansco stock_ansco
-				xml.dupont stock_dupont
-				xml.orwo stock_orwo
-				xml.fuji stock_fuji
-				xml.gevaert stock_gevaert
-				xml.kodak stock_kodak
-				xml.ferrania stock_ferrania
-				xml.agfa_gevaert stock_agfa_gevaert
-				xml.three_m stock_3_m
-				xml.pathe stock_pathe
-				xml.unknown stock_unknown
-			end
-			xml.pictureTypes do
-				xml.notApplicable picture_not_applicable
-				xml.silentPicture picture_silent_picture
-				xml.mosPicture picture_mos_picture
-				xml.compositePicture picture_composite_picture
-				xml.intertitlesOnly picture_intertitles_only
-				xml.creditsOnly picture_credits_only
-				xml.pictureEffects picture_picture_effects
-				xml.pictureOuttakes picture_picture_outtakes
-				xml.kinescope picture_kinescope
-				xml.titles picture_titles
-			end
-			xml.dates do
-				physical_object_dates.each do |pod|
-					xml.date do
-						xml.value pod.date
-						xml.type pod.controlled_vocabulary.value
-					end
-				end
-			end
-			xml.color do
-				xml.blackAndWhiteToned color_bw_bw_toned
-				xml.blackAndWhiteTinted color_bw_bw_tinted
-				xml.ektachrome color_bw_color_ektachrome
-				xml.kodachrome color_bw_color_kodachrome
-				xml.technicolor color_bw_color_technicolor
-				xml.anscochrome color_bw_color_anscochrome
-				xml.eco color_bw_color_eco
-				xml.eastman color_bw_color_eastman
-				xml.color color_bw_color_color
-				xml.blackAndWhite color_bw_bw_black_and_white
-				xml.handColoring color_bw_bw_hand_coloring
-				xml.stencilColoring  color_bw_bw_stencil_coloring
-			end
-			xml.aspectRatios do
-				xml.ratio_1_33_1 aspect_ratio_1_33_1
-				xml.ratio_1_37_1 aspect_ratio_1_37_1
-				xml.ratio_1_66_1 aspect_ratio_1_66_1
-				xml.ratio_1_85_1 aspect_ratio_1_85_1
-				xml.ratio_2_35_1 aspect_ratio_2_35_1
-				xml.ratio_2_39_1 aspect_ratio_2_39_1
-				xml.ratio_2_59_1 aspect_ratio_2_59_1
-				xml.ratio_1_36_1 aspect_ratio_1_36
-				xml.ratio_1_18_1 aspect_ratio_1_18
-			end
-			xml.soundFormats do
-				xml.optical sound_format_optical
-				xml.opticalVariableArea sound_format_optical_variable_area
-				xml.opticalVariableDensity sound_format_optical_variable_density
-				xml.magnetic sound_format_magnetic
-				xml.digitalSdds sound_format_digital_sdds
-				xml.digitalDts sound_format_digital_dts
-				xml.dolbyDigital sound_format_digital_dolby_digital
-				xml.soundOnSeparateMedia sound_format_sound_on_separate_media
-				xml.digitalDolbySR sound_format_digital_dolby_digital_sr
-				xml.digitalDolbyA sound_format_digital_dolby_digital_a
-			end
-			xml.soundContent do
-				xml.musicTrack sound_content_music_track
-				xml.effectsTrack sound_content_effects_track
-				xml.dialog sound_content_dialog
-				xml.compositeTrack sound_content_composite_track
-				xml.outtakes sound_content_outtakes
-				xml.narration sound_content_narration
-			end
-			xml.soundConfigurations do
-				xml.mono sound_configuration_mono
-				xml.stereo sound_configuration_stereo
-				xml.surround sound_configuration_surround
-				xml.multiTrack sound_configuration_multi_track
-				xml.dual sound_configuration_dual_mono
-			end
-
-			xml.languages do
-				languages.each do |l|
-					xml.language(l.language, type: l.language_type)
-				end
-			end
-			xml.conditions do
-				xml.mold mold
-				xml.adStrip ad_strip
-				value_conditions.each do |vc|
-					xml.condition do
-						xml.type vc.condition_type
-						xml.value vc.value
-						xml.comment vc.comment
-					end
-				end
-				boolean_conditions.each do |bc|
-					xml.condition do
-						xml.type bc.condition_type
-						xml.comment bc.comment
-					end
-				end
-			end
-		end
+	def humanize_boolean_generation_fields
+		self.specific.humanize_boolean_fields(self.specific.class.const_get(:GENERATION_FIELDS))
 	end
 
 end
