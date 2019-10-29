@@ -5,7 +5,7 @@ class PhysicalObjectsController < ApplicationController
   include MailHelper
 
   before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy, :mark_missing]
-
+  before_action :acting_as_params, only: [:update_ad_strip]
   # GET /physical_objects
   # GET /physical_objects.json
   def index
@@ -86,12 +86,12 @@ class PhysicalObjectsController < ApplicationController
   # POST /physical_objects.json
   def create
     if params[:medium_changed]
-      set_cv
-      original = find_original_physical_object_type(params)
+      original = class_symbol_from_params
       medium = find_medium(params)
       params[medium] = params[original]
       params.delete(original)
       @physical_object = new_format_specific_physical_object(medium)
+      set_cv
       @action = '/physical_objects'
       render 'physical_objects/new_physical_object'
     else
@@ -102,41 +102,63 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/1/edit
   def edit
     @em = 'Editing Physical Object'
-    if @physical_object.nil?
-      flash.now[:warning] = "No such physical object..."
-      redirect_to :back
+    if params[:medium_changed]
+      class_sym = class_symbol_from_params
+      medium = medium_from_params
+      new_po = blank_specific_po(medium)
+      params[class_sym].keys.each do |p|
+        if PO_ONLY_ATTRIBTUES.include?(p.parameterize.to_sym)
+          @physical_object.send(p+"=", params[class_sym][p])
+        end
+      end
+      @physical_object.medium = medium
+      @physical_object.actable = new_po
+      flash.now[:warning] = "You have changed the Medium of this Physical Object from #{@physical_object.class.to_s} to "+
+          "#{new_po.class.to_s}. Updating the object will delete all #{@physical_object.class.to_s} meteadata!".html_safe
+      @physical_object = new_po
+    else
+      if @physical_object.nil?
+        flash.now[:warning] = "No such physical object..."
+        redirect_to :back
+      end
     end
     set_cv
     @physical_object.modified_by = User.current_user_object.id
   end
 
-
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
-    set_cv
-    nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
-    respond_to do |format|
-      begin
-        PhysicalObject.transaction do
-          # check to see if titles have changed in the update
-          process_titles
-          @physical_object.modifier = User.current_user_object
-          @success = @physical_object.update_attributes!(physical_object_params)
+    begin
+      PhysicalObject.transaction do
+        # need to cleanup the old specific class that was changed to something else
+        if params[:medium_changed]
+          specific_to_delete = @physical_object.actable
+          new = blank_specific_po(medium_from_params)
+          @physical_object.specific.actable = new
+          @physical_object.specific.actable_type = new.class.to_s
+          new.save
+          specific_to_delete.delete
+          @physical_object = new
         end
-      rescue Exception => error
-        logger.debug $!
+        @nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
+        # check to see if titles have changed in the update
+        process_titles
+        @physical_object.modifier = User.current_user_object
+        @success = @physical_object.update_attributes!(physical_object_params)
       end
-      if @success
-        if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !nitrate)
-          notify_nitrate(@physical_object)
-        end
-        format.html { redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.' }
-        format.json { render :show, status: :ok, location: @physical_object }
-      else
-        format.html { render :edit }
-        format.json { render json: @physical_object.errors, status: :unprocessable_entity }
+    rescue Exception => error
+      logger.debug $!
+    end
+
+    if @success
+      if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
+        notify_nitrate(@physical_object)
       end
+      redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.'
+    else
+      set_cv
+      render :edit
     end
   end
 
@@ -156,7 +178,8 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def edit_ad_strip
-    @physical_object = PhysicalObject.new
+    @physical_object = Film.new(medium: 'Film')
+    set_cv
   end
 
   def update_ad_strip

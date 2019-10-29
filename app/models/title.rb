@@ -19,7 +19,9 @@ class Title < ActiveRecord::Base
 	belongs_to :spreadsheet, autosave: true
   belongs_to :creator, class_name: "User", foreign_key: "created_by_id", autosave: true
   belongs_to :modifier, class_name: "User", foreign_key: "modified_by_id", autosave: true
-	has_one :pod_group_key, class_name: "PodGroupKey", foreign_key: "filmdb_title_id"
+
+	# mysql bad handshake causing the direct DB lookup to no longer work - MySQL 5.5 vs 5.1 coupled with Mysql2 gem being compiled against 5.5
+	#has_one :pod_group_key, class_name: "PodGroupKey", foreign_key: "filmdb_title_id"
 
   accepts_nested_attributes_for :title_creators, allow_destroy: true
   accepts_nested_attributes_for :title_dates, allow_destroy: true
@@ -154,6 +156,29 @@ class Title < ActiveRecord::Base
 			titles += (tos.to_a - [self])
 		end
 		titles.uniq.sort{|t1,t2| t1.title_text <=> t2.title_text}
+	end
+
+	def avalon_url
+		po = self.physical_objects.where(digitized: true).first
+		if po.nil?
+			''
+		else
+			mdpi_barcode = po.mdpi_barcode
+			u = Rails.application.secrets[:pod_service_grouping_url].dup.gsub!(':mdpi_barcode', mdpi_barcode)
+			uri = URI.parse(u)
+			http = Net::HTTP.new(uri.host, uri.port)
+			http.use_ssl = true
+			request = Net::HTTP::Get.new(uri.request_uri)
+			request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
+			result = http.request(request).body
+			raise "Could not find an Avalon URL" if result.match(/<avalon_url>([.]+)<\/avalon_url>/)[1].nil?
+
+			result.match(/<unit>([-\w]+)<\/unit>/)[1]
+		end
+	end
+	def pod_group_key
+
+
 	end
 
 	private

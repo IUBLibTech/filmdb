@@ -44,12 +44,15 @@ Rails.application.routes.draw do
   #get '/inventory/', to: 'physical_objects#new', as: 'inventory'
 
   resources :physical_objects
-	get '/physical_objects_filter', to: 'physical_objects#index', as: 'physical_objects_filter_default'
+  post '/physical_objects', to: 'physical_objects#create', as: 'create_physical_object'
+  get '/physical_objects_filter', to: 'physical_objects#index', as: 'physical_objects_filter_default'
   get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
   post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  patch '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'edit_physical_object_medium'
+
   #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
 	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'

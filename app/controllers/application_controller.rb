@@ -14,31 +14,7 @@ class ApplicationController < ActionController::Base
 
   end
 
-  # this finds what the user has selected from the MEDIUM attribute drop down and converts it to a symbol. See
-  # find_original_physical_object_type below for more details
-  def find_medium(params)
-    type = find_original_physical_object_type(params)
-    params[type][:medium].downcase.parameterize.underscore.to_sym
-  end
 
-  # This method extracts the Physical Object base class has key (:film, :video, etc) from the params hash.
-  #
-  # This is needed because when rails builds the form for a PhysicalObject, all attributes are named based on BASE
-  # class and the the key to these is the base class: for instance, iu_barcode would be params[:film][:iu_barcode] if
-  # the form was build around a Film object, params[:video][:iu_barcode] if the form was build around a Video object.
-  # This results in a params hash with the key to the physical object attributes being the original form BASE
-  # class: params[:film], params[:video], etc. This is mainly used when a user edits the Medium attribute for a
-  # Physical Object. If a user creates a new Physical Object, the base class defaults to Film but when the user changes
-  # that to video, a new form must be generated based on Video attributes. However, any physical object super class
-  # attributes (barcodes, titles, etc) may have already been entered and these should be retained and copied into the
-  # new physical object type
-  def find_original_physical_object_type(params)
-    type = nil
-    type = :film if params[:film]
-    type = :video if params[:video]
-    raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
-    type
-  end
 
   def page_link_path(page)
     physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
@@ -47,11 +23,22 @@ class ApplicationController < ActionController::Base
     @physical_object.medium.downcase.parameterize.underscore
   end
   def physical_object_specific_medium
-    @physical_object.medium.downcase.parameterize.underscore
+    @physical_object.nil? ? '' : @physical_object.medium.downcase.parameterize.underscore
   end
   helper_method :page_link_path
   helper_method :physical_object_specific_medium
   helper_method :physical_object_specific_path
+
+  # This method simplifies a Physical Object params hash passed in through form submission, replacing the format specific
+  # hash keys with a :physical_object key so that existing code does not need to be modified, only a call to this method
+  # invoked prior to processing the hash. This is necessary because when a form is build around a specific subclass of
+  # PhysicalObject, the form builds the has based on the subclass: @physical_object = Film.new and form_for(@physical_object)
+  # results in params with key :film. Most of the existing code (when multiple format support was implemented) generalizes to
+  # PhysicalObject.
+  def acting_as_params
+    params[:physical_object] = params.delete(:video) if params[:video]
+    params[:physical_object] = params.delete(:film) if params[:film]
+  end
 
   private
   def scope_current_username
@@ -69,6 +56,8 @@ class ApplicationController < ActionController::Base
   def meaningful_action_name(name)
     name == 'index' ? 'View' : (name == 'destroy' ? 'Delete' : name)
   end
+
+
 
   # def update_user_loc
   #   if session[:username]

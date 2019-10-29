@@ -1,6 +1,12 @@
 module PhysicalObjectsHelper
   include MailHelper
 
+  # attributes that belong to the base PhysicalObject model
+  PO_ONLY_ATTRIBTUES = [:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+                        :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+                        :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+                        :catalog_key, :compilation, :format_notes]
+
   GAUGES_TO_FRAMES_PER_FOOT = {
 	  '8mm' => 72, 'Super 8mm' => 72, '9.5mm' => 40.5, '16mm' => 40, 'Super 16mm' => 40, '28mm' => 20.5, '35mm' => 16, '35/32mm' => 40, '70mm' => 12.8
   }
@@ -61,6 +67,7 @@ module PhysicalObjectsHelper
   def calc_estimated_duration(pos)
     d = 0
     pos.each do |p|
+      p = p.specific
       fpf = PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge].nil? ? 0 : PhysicalObjectsHelper::GAUGES_TO_FRAMES_PER_FOOT[p.gauge]
       d += (fpf * (p.footage.blank? ? 0 : p.footage)) / 24
     end
@@ -74,6 +81,47 @@ module PhysicalObjectsHelper
     # easiest to just delete all physical object/title associations then rebuild them based on what was passed
     @physical_object.physical_object_titles.delete_all
     associate_titles
+  end
+
+  # searches the params hash to find out what value is set in the medium attribute, params[:video][:medium], or params[:film][:medium]
+  def medium_from_params
+    key = class_symbol_from_params
+    params[key][:medium]
+  end
+
+
+  # this finds what the user has selected from the MEDIUM attribute drop down and converts it to a symbol. See
+  # find_original_physical_object_type below for more details
+  def find_medium(params)
+    type = class_symbol_from_params
+    params[type][:medium].downcase.parameterize.underscore.to_sym
+  end
+
+  # This method extracts the Physical Object base class has key (:film, :video, etc) from the params hash.
+  #
+  # This is needed because when rails builds the form for a PhysicalObject, all attributes are named based on BASE
+  # class and the the key to these is the base class: for instance, iu_barcode would be params[:film][:iu_barcode] if
+  # the form was build around a Film object, params[:video][:iu_barcode] if the form was build around a Video object.
+  # This results in a params hash with the key to the physical object attributes being the original form BASE
+  # class: params[:film], params[:video], etc. This is mainly used when a user edits the Medium attribute for a
+  # Physical Object. If a user creates a new Physical Object, the base class defaults to Film but when the user changes
+  # that to video, a new form must be generated based on Video attributes. However, any physical object super class
+  # attributes (barcodes, titles, etc) may have already been entered and these should be retained and copied into the
+  # new physical object type
+  def class_symbol_from_params
+    type = nil
+    type = :film if params[:film]
+    type = :video if params[:video]
+    raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
+    type
+  end
+
+  def blank_specific_po(medium)
+    if medium == "Film" || medium == :film
+      Film.new
+    elsif medium == "Video" || medium == :video
+      Video.new
+    end
   end
 
   def new_format_specific_physical_object(medium)
@@ -102,6 +150,23 @@ module PhysicalObjectsHelper
     else
       raise 'Unsupported Format'
     end
+  end
+
+  # returns a hash containing only the generic physical objects attributes hash
+  def po_only_params
+    hash = params.clone
+    c = class_symbol_from_params
+    debugger
+    hash.permit
+    hash.require(c).permit(:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+                :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+                :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+                :catalog_key, :compilation, :format_notes)
+    hash.keys.each do |k|
+      hash.delete k unless PO_ONLY_ATTRIBTUES.include?(k)
+    end
+    debugger
+    hash
   end
 
   def physical_object_params

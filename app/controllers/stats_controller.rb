@@ -39,7 +39,6 @@ class StatsController < ApplicationController
 			@physical_object_count = PhysicalObject.all.size
 		end
 
-		@media_type_count = PhysicalObject.where(po_sql_where).group(:media_type).count
 		@medium_count = PhysicalObject.where(po_sql_where).group(:medium).count
 		@generations = generations
 		@gauges = PhysicalObject.where(po_sql_where).where("gauge is not null AND gauge != ''").group(:gauge).count
@@ -92,36 +91,36 @@ class StatsController < ApplicationController
 
 	def generations
 		gens = Hash.new
-		PhysicalObject::GENERATION_FIELDS[:FILM].each do |gf|
-			count =  PhysicalObject.where(gf => true).where(po_sql_where).size
-			gens[PhysicalObject::GENERATION_FIELDS_HUMANIZED[gf]] = count unless count == 0
+		Film::GENERATION_FIELDS[:FILM].each do |gf|
+			count =  Film.where(gf => true).where(po_sql_where).size
+			gens[Film::GENERATION_FIELDS_HUMANIZED[gf]] = count unless count == 0
 		end
 		gens
 	end
 
 	def bases
 		b = Hash.new
-		PhysicalObject::BASE_FIELDS.each do |bf|
-			count = PhysicalObject.where(bf => true).where(po_sql_where).size
-			b[PhysicalObject::BASE_FIELDS_HUMANIZED[bf]] = count unless count == 0
+		Film::BASE_FIELDS.each do |bf|
+			count = Film.where(bf => true).where(po_sql_where).size
+			b[Film::BASE_FIELDS_HUMANIZED[bf]] = count unless count == 0
 		end
 		b
 	end
 
 	def sounds
 		sounds = Hash.new
-		PhysicalObject::SOUND_FORMAT_FIELDS.each do |sf|
-			count = PhysicalObject.where(sf => true).where(po_sql_where).size
-			sounds[PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[sf]] = count unless count == 0
+		Film::SOUND_FORMAT_FIELDS.each do |sf|
+			count = Film.where(sf => true).where(po_sql_where).size
+			sounds[Film::SOUND_FORMAT_FIELDS_HUMANIZED[sf]] = count unless count == 0
 		end
 		sounds
 	end
 
 	def colors
 		colors = Hash.new
-		PhysicalObject::COLOR_FIELDS.each do |cf|
-			count = PhysicalObject.where(cf => true).where(po_sql_where).size
-			colors[PhysicalObject::COLOR_FIELDS_HUMANIZED[cf]] = count unless count == 0
+		Film::COLOR_FIELDS.each do |cf|
+			count = Film.where(cf => true).where(po_sql_where).size
+			colors[Film::COLOR_FIELDS_HUMANIZED[cf]] = count unless count == 0
 		end
 		colors
 	end

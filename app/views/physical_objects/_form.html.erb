@@ -12,19 +12,22 @@
           controller_name == "titles" ? "For Title: <i>#{@title.title_text}</i>".html_safe : "" %>
   <h2><%= @em %> <%= cm %></h2>
 </div>
-<% url =
+<%
        if %w(new create).include?(action_name)
-         physical_objects_path
+         @url = physical_objects_path
+         @method = 'post'
        elsif action_name == 'edit'
-         physical_object_path(@physical_object.acting_as.id)
-       elsif action_name == 'duplicate'
-         create_duplicate_physical_object_path
+         @url = physical_object_path(@physical_object.acting_as.id)
+         @method = 'patch'
        else
-         new_physical_object_path
+         raise "unsupported action: #{action_name}"
        end
 %>
-<%= nested_form_for @physical_object, url: url, html: {id: 'physical_object_form'} do |f| %>
+<%= nested_form_for @physical_object, url: @url, method: @method,  html: {id: 'physical_object_form'} do |f| %>
   <%= hidden_field_tag "original_action", (action_name == 'ajax_rebuild_form' ? params[:original_action] : action_name) %>
+  <% if params[:medium_changed] %>
+    <%= hidden_field_tag "medium_changed", true %>
+  <% end %>
   <% if @physical_object.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this Physical Object from being saved:</h2>

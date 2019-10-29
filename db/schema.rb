@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.bigint   "cage_shelf_id"
   end
 
-  create_table "films", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "films", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.boolean "first_edition"
     t.boolean "second_edition"
     t.boolean "third_edition"
@@ -167,7 +167,6 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.boolean "stock_gevaert"
     t.boolean "stock_kodak"
     t.boolean "stock_ferrania"
-    t.text    "format_notes",                          limit: 65535
     t.boolean "picture_not_applicable"
     t.boolean "picture_silent_picture"
     t.boolean "picture_mos_picture"
@@ -218,7 +217,6 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.boolean "multiple_items_in_can"
     t.boolean "color_bw_color_color"
     t.boolean "color_bw_bw_black_and_white"
-    t.string  "title_control_number"
     t.boolean "color_bw_bw_hand_coloring"
     t.boolean "color_bw_bw_stencil_coloring"
     t.text    "captions_or_subtitles_notes",           limit: 65535
@@ -326,8 +324,8 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.boolean  "digitized"
     t.bigint   "current_workflow_status_id"
     t.string   "compilation"
-    t.integer  "actable_id"
     t.string   "actable_type"
+    t.integer  "actable_id"
     t.index ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
     t.index ["iu_barcode", "mdpi_barcode"], name: "index_physical_objects_on_iu_barcode_and_mdpi_barcode", unique: true, using: :btree
   end
@@ -499,7 +497,7 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.datetime "updated_at"
   end
 
-  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "gauge"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
@@ -619,6 +617,13 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.bigint   "created_by"
     t.index ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
     t.index ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
+  end
+
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
   end
 
 end

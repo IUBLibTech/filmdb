@@ -136,10 +136,9 @@ class CagesController < ApplicationController
 						p.workflow_statuses << WorkflowStatus.build_workflow_status(WorkflowStatus::SHIPPED_EXTERNALLY, p)
 						p.save!
 					end
-
 				end
 			rescue ManualRollBackError => e
-				flash.now[:warning] = "An error occurred while trying to push the cage to POD."
+				flash[:warning] = "An error occurred while trying to push the cage to POD."
 			ensure
 				PodPush.new(cage_id: @cage.id, response: @result&.body).save
 			end
@@ -231,6 +230,7 @@ class CagesController < ApplicationController
 			fourK = 0
 			durationSec = 0
 			pos.each do |p|
+				p = p.specific
 				if !p.current_scan_settings.nil?
 					if p.current_scan_settings.scan_resolution == '2k'
 						twoK += 1
@@ -302,7 +302,7 @@ class CagesController < ApplicationController
 			elsif !@physical_object.current_workflow_status.valid_next_workflow?(WorkflowStatus::IN_CAGE)
 				@physical_object.errors.add(:current_workflow_status, "prevents packing this Physical Object: #{@physical_object.current_workflow_status.type_and_location}")
 			else
-				if NONPACKABLE_GAUGES.include?(@physical_object.gauge)
+				if @physical_object.specific.has_attribute?(:gauge) && NONPACKABLE_GAUGES.include?(@physical_object.specific.gauge)
 					@physical_object.errors.add(:gauge, "#{@physical_object.gauge} cannot be sent to Memnon. #{@physical_object.iu_barcode} was not added to cage shelf")
 				end
 			end
