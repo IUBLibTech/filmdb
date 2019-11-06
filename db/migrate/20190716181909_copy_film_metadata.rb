@@ -8,7 +8,7 @@ class CopyFilmMetadata < ActiveRecord::Migration
       :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive,
       :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :reel_number,
       :can_size, :footage, :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
-      :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :format_notes,
+      :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania,
       :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture,
       :picture_intertitles_only, :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes,
       :picture_kinescope, :frame_rate, :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_color_ektachrome,
@@ -27,16 +27,25 @@ class CopyFilmMetadata < ActiveRecord::Migration
       :aspect_ratio_1_36, :aspect_ratio_1_18, :picture_titles, :generation_other, :sound_content_narration, :close_caption,
       :generation_notes]
   def change
-    PhysicalObject.transaction do
-      pos = PhysicalObject.all
-      pos.each_with_index do |po, i|
-        puts "Processing #{i+1} of #{pos.size}"
-        film = Film.new
-        ATTRS.each do |attr|
-          film[attr] = po[attr]
+    # the migration is tricky in that when the acts_as relation is setup between Film/Video and PhysicalObejct, you cannot create the
+    # actable for existing PhysicalObjects without also modifying the created_at attribute of PhysicalObject (which is VERY problematic).
+    # So this check ensures that the acting_as relationship is DISABLED (commented out in the Film model)
+    if Film.is_a? PhysicalObject || PhysicalObject.method_defined?(:actable)
+      raise "Cannot migrate PhysicalObjects into Films while the acts_as relation is active - it overwrites created_at timestamps. Comment out Film acts_as and PhysicalObject actable lines"
+    else
+      PhysicalObject.transaction do
+        pos = PhysicalObject.all
+        pos.each_with_index do |po, i|
+          puts "Processing #{i+1} of #{pos.size}"
+          film = Film.new
+          ATTRS.each do |attr|
+            film[attr] = po[attr]
+          end
+          film.save!
+          po.actable_id = film.id
+          po.actable_type = 'Film'
+          po.save!
         end
-        po.actable = film
-        po.save
       end
     end
   end

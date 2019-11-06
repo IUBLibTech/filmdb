@@ -203,7 +203,7 @@ class WorkflowController < ApplicationController
 		elsif po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || po.active_component_group.physical_objects.size == 1
 			render text: "#{params[:iu_barcode]} Should Be Returned to: <b>#{(po.storage_location.blank? ? "<b><i>Object Just inventoried...</i><b>" : po.storage_location)}</b>".html_safe
 		else
-			render text: "Error: Cannot return #{po.iu_barcode} to storage, its active component group has more than one item. Talk to Carmel!"
+			render text: "Error: Cannot return #{po.iu_barcode} to storage, it's active component group has more than one item. Talk to Carmel!"
 		end
 	end
 

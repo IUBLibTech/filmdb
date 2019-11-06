@@ -16,11 +16,9 @@
        if %w(new create).include?(action_name)
          @url = physical_objects_path
          @method = 'post'
-       elsif action_name == 'edit'
+       else action_name == 'edit'
          @url = physical_object_path(@physical_object.acting_as.id)
          @method = 'patch'
-       else
-         raise "unsupported action: #{action_name}"
        end
 %>
 <%= nested_form_for @physical_object, url: @url, method: @method,  html: {id: 'physical_object_form'} do |f| %>

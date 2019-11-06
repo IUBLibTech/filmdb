@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190911162814) do
+ActiveRecord::Schema.define(version: 20191104202149) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -324,8 +324,9 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.boolean  "digitized"
     t.bigint   "current_workflow_status_id"
     t.string   "compilation"
-    t.string   "actable_type"
     t.integer  "actable_id"
+    t.string   "actable_type"
+    t.index ["actable_id", "actable_type"], name: "index_physical_objects_on_actable_id_and_actable_type", unique: true, using: :btree
     t.index ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
     t.index ["iu_barcode", "mdpi_barcode"], name: "index_physical_objects_on_iu_barcode_and_mdpi_barcode", unique: true, using: :btree
   end
@@ -498,110 +499,108 @@ ActiveRecord::Schema.define(version: 20190911162814) do
   end
 
   create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "gauge"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
-    t.boolean  "first_edition"
-    t.boolean  "second_edition"
-    t.boolean  "third_edition"
-    t.boolean  "fourth_edition"
-    t.boolean  "abridged"
-    t.boolean  "short"
-    t.boolean  "long"
-    t.boolean  "sample"
-    t.boolean  "revised"
-    t.boolean  "original"
-    t.boolean  "excerpt"
-    t.boolean  "catholic"
-    t.boolean  "domestic"
-    t.boolean  "trailer"
-    t.boolean  "english"
-    t.boolean  "non_english"
-    t.boolean  "television"
-    t.boolean  "x_rated"
-    t.boolean  "generation_b_roll"
-    t.boolean  "generation_commercial_release"
-    t.boolean  "generation_copy_access"
-    t.boolean  "generation_dub"
-    t.boolean  "generation_duplicate"
-    t.boolean  "generation_edited"
-    t.boolean  "generation_fine_cut"
-    t.boolean  "generation_intermediate"
-    t.boolean  "generation_line_cut"
-    t.boolean  "generation_master"
-    t.boolean  "generation_master_production"
-    t.boolean  "generation_master_distribution"
-    t.boolean  "generation_off_air_recording"
-    t.boolean  "generation_original"
-    t.boolean  "generation_picture_lock"
-    t.boolean  "generation_rough_cut"
-    t.boolean  "generation_stock_footage"
-    t.boolean  "generation_submaster"
-    t.boolean  "generation_work_tapes"
-    t.boolean  "generation_work_track"
-    t.boolean  "generation_other"
-    t.string   "reel_number"
-    t.string   "size"
-    t.string   "recording_standard"
-    t.string   "maximum_runtime"
-    t.integer  "duration"
-    t.string   "base"
-    t.string   "stock"
-    t.boolean  "picture_type_not_applicable"
-    t.boolean  "picture_type_silent_picture"
-    t.boolean  "picture_type_mos_picture"
-    t.boolean  "picture_type_composite_picture"
-    t.boolean  "picture_type_credits_only"
-    t.boolean  "picture_type_picture_effects"
-    t.boolean  "picture_type_picture_outtakes"
-    t.boolean  "picture_type_other"
-    t.string   "playback_speed"
-    t.boolean  "image_color_bw"
-    t.boolean  "image_color_color"
-    t.boolean  "image_color_mixed"
-    t.boolean  "image_color_other"
-    t.boolean  "image_aspect_ratio_4_3"
-    t.boolean  "image_aspect_ratio_16_9"
-    t.boolean  "image_aspect_ratio_other"
-    t.boolean  "caption_or_subtitles"
-    t.text     "notes",                                     limit: 65535
-    t.boolean  "silent"
-    t.boolean  "sound_format_type_magnetic"
-    t.boolean  "sound_format_type_digital"
-    t.boolean  "sound_format_type_sound_on_separate_media"
-    t.boolean  "sound_format_type_other"
-    t.boolean  "sound_content_type_music_track"
-    t.boolean  "sound_content_type_effects_track"
-    t.boolean  "sound_content_type_dialog"
-    t.boolean  "sound_content_type_composite_track"
-    t.boolean  "sound_content_type_outtakes"
-    t.boolean  "sound_configuration_mono"
-    t.boolean  "sound_configuration_stereo"
-    t.boolean  "sound_configuration_surround"
-    t.boolean  "sound_configuration_other"
-    t.boolean  "sound_noise_redux_dolby_a"
-    t.boolean  "sound_noise_redux_dolby_b"
-    t.boolean  "sound_noise_redux_dolby_c"
-    t.boolean  "sound_noise_redux_dolby_s"
-    t.boolean  "sound_noise_redux_dolby_sr"
-    t.boolean  "sound_noise_redux_dolby_nr"
-    t.boolean  "sound_noise_redux_dolby_hx"
-    t.boolean  "sound_noise_redux_dolby_hx_pro"
-    t.boolean  "sound_noise_redux_dbx"
-    t.boolean  "sound_noise_redux_dbx_type_1"
-    t.boolean  "sound_noise_redux_dbx_type_2"
-    t.boolean  "sound_noise_redux_high_com"
-    t.boolean  "sound_noise_redux_high_com_2"
-    t.boolean  "sound_noise_redux_adres"
-    t.boolean  "sound_noise_redux_anrs"
-    t.boolean  "sound_noise_redux_dnl"
-    t.boolean  "sound_noise_redux_dnr"
-    t.boolean  "sound_noise_redux_cedar"
-    t.boolean  "sound_noise_redux_none"
-    t.string   "mold"
-    t.text     "playback_issues_video_artifacts",           limit: 65535
-    t.text     "playback_issues_audio_artifacts",           limit: 65535
-    t.text     "missing_footage",                           limit: 65535
+    t.string  "gauge"
+    t.boolean "first_edition"
+    t.boolean "second_edition"
+    t.boolean "third_edition"
+    t.boolean "fourth_edition"
+    t.boolean "abridged"
+    t.boolean "short"
+    t.boolean "long"
+    t.boolean "sample"
+    t.boolean "revised"
+    t.boolean "original"
+    t.boolean "excerpt"
+    t.boolean "catholic"
+    t.boolean "domestic"
+    t.boolean "trailer"
+    t.boolean "english"
+    t.boolean "non_english"
+    t.boolean "television"
+    t.boolean "x_rated"
+    t.boolean "generation_b_roll"
+    t.boolean "generation_commercial_release"
+    t.boolean "generation_copy_access"
+    t.boolean "generation_dub"
+    t.boolean "generation_duplicate"
+    t.boolean "generation_edited"
+    t.boolean "generation_fine_cut"
+    t.boolean "generation_intermediate"
+    t.boolean "generation_line_cut"
+    t.boolean "generation_master"
+    t.boolean "generation_master_production"
+    t.boolean "generation_master_distribution"
+    t.boolean "generation_off_air_recording"
+    t.boolean "generation_original"
+    t.boolean "generation_picture_lock"
+    t.boolean "generation_rough_cut"
+    t.boolean "generation_stock_footage"
+    t.boolean "generation_submaster"
+    t.boolean "generation_work_tapes"
+    t.boolean "generation_work_track"
+    t.boolean "generation_other"
+    t.string  "reel_number"
+    t.string  "size"
+    t.string  "recording_standard"
+    t.string  "maximum_runtime"
+    t.integer "duration"
+    t.string  "base"
+    t.string  "stock"
+    t.boolean "picture_type_not_applicable"
+    t.boolean "picture_type_silent_picture"
+    t.boolean "picture_type_mos_picture"
+    t.boolean "picture_type_composite_picture"
+    t.boolean "picture_type_credits_only"
+    t.boolean "picture_type_picture_effects"
+    t.boolean "picture_type_picture_outtakes"
+    t.boolean "picture_type_other"
+    t.string  "playback_speed"
+    t.boolean "image_color_bw"
+    t.boolean "image_color_color"
+    t.boolean "image_color_mixed"
+    t.boolean "image_color_other"
+    t.boolean "image_aspect_ratio_4_3"
+    t.boolean "image_aspect_ratio_16_9"
+    t.boolean "image_aspect_ratio_other"
+    t.boolean "caption_or_subtitles"
+    t.text    "notes",                                     limit: 65535
+    t.boolean "silent"
+    t.boolean "sound_format_type_magnetic"
+    t.boolean "sound_format_type_digital"
+    t.boolean "sound_format_type_sound_on_separate_media"
+    t.boolean "sound_format_type_other"
+    t.boolean "sound_content_type_music_track"
+    t.boolean "sound_content_type_effects_track"
+    t.boolean "sound_content_type_dialog"
+    t.boolean "sound_content_type_composite_track"
+    t.boolean "sound_content_type_outtakes"
+    t.boolean "sound_configuration_mono"
+    t.boolean "sound_configuration_stereo"
+    t.boolean "sound_configuration_surround"
+    t.boolean "sound_configuration_other"
+    t.boolean "sound_noise_redux_dolby_a"
+    t.boolean "sound_noise_redux_dolby_b"
+    t.boolean "sound_noise_redux_dolby_c"
+    t.boolean "sound_noise_redux_dolby_s"
+    t.boolean "sound_noise_redux_dolby_sr"
+    t.boolean "sound_noise_redux_dolby_nr"
+    t.boolean "sound_noise_redux_dolby_hx"
+    t.boolean "sound_noise_redux_dolby_hx_pro"
+    t.boolean "sound_noise_redux_dbx"
+    t.boolean "sound_noise_redux_dbx_type_1"
+    t.boolean "sound_noise_redux_dbx_type_2"
+    t.boolean "sound_noise_redux_high_com"
+    t.boolean "sound_noise_redux_high_com_2"
+    t.boolean "sound_noise_redux_adres"
+    t.boolean "sound_noise_redux_anrs"
+    t.boolean "sound_noise_redux_dnl"
+    t.boolean "sound_noise_redux_dnr"
+    t.boolean "sound_noise_redux_cedar"
+    t.boolean "sound_noise_redux_none"
+    t.string  "mold"
+    t.text    "playback_issues_video_artifacts",           limit: 65535
+    t.text    "playback_issues_audio_artifacts",           limit: 65535
+    t.text    "missing_footage",                           limit: 65535
   end
 
   create_table "workflow_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -619,11 +618,16 @@ ActiveRecord::Schema.define(version: 20190911162814) do
     t.index ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
   end
 
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
+  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
+  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
+  execute(<<-SQL)
+CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
+FOR EACH ROW
+BEGIN
+    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
+        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
+    END IF;
+END
+  SQL
 
 end
