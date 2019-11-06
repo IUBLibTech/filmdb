@@ -100,6 +100,7 @@ Rails.application.routes.draw do
 	post '/stats/', to: 'stats#filter_index', as: 'stats_filter_index'
 	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
+  get '/stats/ajax/medium_stats', to: 'stats#ajax_medium_stats', as: 'ajax_medium_stats'
 
   resources :titles, except: [:index] do
     resources :component_groups, only: [] do

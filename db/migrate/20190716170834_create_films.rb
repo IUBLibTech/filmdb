@@ -5,7 +5,8 @@ class CreateFilms < ActiveRecord::Migration
     remove_column :physical_objects, :actable_id if column_exists?(:physical_objects, :actable_id)
     remove_column :physical_objects, :actable_type if column_exists?(:physical_objects, :actable_type)
     change_table :physical_objects do |t|
-      t.actable
+      t.integer :actable_id
+      t.string :actable_type
     end
 
     if table_exists? :films
