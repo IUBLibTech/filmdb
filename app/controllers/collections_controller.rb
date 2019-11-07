@@ -99,14 +99,6 @@ class CollectionsController < ApplicationController
       @collection = Collection.find(params[:id])
     end
 
-    # def init_create_physical_object
-    #   @user = User.where(username: current_user).first
-    #   @physical_object = PhysicalObject.new(collection_id: @collection.id, unit_id: @collection.unit.id, inventoried_by: @user.id, modified_by: @user.id )
-    #   @cv = ControlledVocabulary.physical_object_cv
-    #   @l_cv = ControlledVocabulary.language_cv
-    #   @pod_cv = ControlledVocabulary.physical_object_date_cv
-    # end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_params
       params.require(:collection).permit(:name, :unit_id, :summary)

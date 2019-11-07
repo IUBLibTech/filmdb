@@ -1,6 +1,6 @@
 class SeriesController < ApplicationController
   include PhysicalObjectsHelper
-  before_action :set_series, only: [:show, :edit, :update, :destroy, :new_physical_object, :ajax_summary]
+  before_action :set_series, only: [:show, :edit, :update, :destroy, :ajax_summary]
 
   # GET /series
   # GET /series.json
@@ -136,7 +136,7 @@ class SeriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_series
       @series = Series.find(params[:id])
-      @cv = ControlledVocabulary.physical_object_cv
+      @cv = ControlledVocabulary.physical_object_cv('Film')
       @l_cv = ControlledVocabulary.language_cv
     end
 

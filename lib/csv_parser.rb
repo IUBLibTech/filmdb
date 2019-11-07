@@ -71,7 +71,7 @@ class CsvParser
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
-      @cv = ControlledVocabulary.physical_object_cv
+      @cv = ControlledVocabulary.physical_object_cv('Film')
       @l_cv = ControlledVocabulary.language_cv
       # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
       error_msg = ""
@@ -697,7 +697,7 @@ class CsvParser
 
     # condition type fields with value ranges or booleans
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
-    cv = ControlledVocabulary.physical_object_cv
+    cv = ControlledVocabulary.physical_object_cv('Film')
     val_conditions = cv[:value_condition].collect { |x| x[0].downcase }
     bool_conditions = cv[:boolean_condition].collect { |x| x[0].downcase }
     condition_fields.each do |cf|
