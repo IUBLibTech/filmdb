@@ -182,7 +182,8 @@ class WorkflowController < ApplicationController
 	def process_return_to_storage
 		# return to storage is not normal workflow - only allow this for physical objects that are either just inventoried,
 		# or are the only physical object in their active component group
-		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || @po.active_component_group.is_iulmia_workflow? || @po.active_component_group.physical_objects.size == 1
+		if @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF ||
+				@po.active_component_group.is_iulmia_workflow? || @po.active_component_group.physical_objects.size == 1
 			ws = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
 			@po.workflow_statuses << ws
 			@po.save
@@ -197,7 +198,8 @@ class WorkflowController < ApplicationController
 		po = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
 		if po.nil?
 			render text: "Error: Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
-		elsif po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF || po.active_component_group.physical_objects.size == 1
+		elsif po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF ||
+				po.active_component_group.is_iulmia_workflow? ||po.active_component_group.physical_objects.size == 1
 			render text: "#{params[:iu_barcode]} Should Be Returned to: <b>#{(po.storage_location.blank? ? "<b><i>Object Just inventoried...</i><b>" : po.storage_location)}</b>".html_safe
 		else
 			render text: "Error: Cannot return #{po.iu_barcode} to storage, its active component group has more than one item. Talk to Carmel!"
