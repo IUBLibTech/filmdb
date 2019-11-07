@@ -142,7 +142,6 @@ class WorkflowController < ApplicationController
 
 	def ajax_wells_receive_iu_barcode
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
-		@cv = ControlledVocabulary.physical_object_cv
 		if @physical_object.nil?
 			@msg = "Could not find physical object with IU barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? || !@physical_object.current_location == WorkflowStatus::MOLD_ABATEMENT

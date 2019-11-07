@@ -531,7 +531,7 @@ class TitlesController < ApplicationController
     set_title_cv
   end
   def set_physical_object_cv
-    @cv = ControlledVocabulary.physical_object_cv
+    @cv = ControlledVocabulary.physical_object_cv('Film')
     @l_cv = ControlledVocabulary.language_cv
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
