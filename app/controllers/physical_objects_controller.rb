@@ -89,8 +89,12 @@ class PhysicalObjectsController < ApplicationController
       original = class_symbol_from_params
       medium = find_medium(params)
       params[medium] = params[original]
-      params.delete(original)
+      # delete the part of the params hash that refers to the original form - it was based on a medium that was changed to something else
+      params.except!(original)
+      # delete the medium changed flag from the params hash or it will be regenerated in the new form
+      params.except!(:medium_changed)
       @physical_object = new_format_specific_physical_object(medium)
+      associate_titles
       set_cv
       @action = '/physical_objects'
       render 'physical_objects/new_physical_object'
@@ -134,12 +138,12 @@ class PhysicalObjectsController < ApplicationController
         # need to cleanup the old specific class that was changed to something else
         if params[:medium_changed]
           specific_to_delete = @physical_object.actable
-          new = blank_specific_po(medium_from_params)
-          @physical_object.specific.actable = new
-          @physical_object.specific.actable_type = new.class.to_s
-          new.save
+          new_one = blank_specific_po(medium_from_params)
+          @physical_object.specific.actable = new_one
+          @physical_object.specific.actable_type = new_one.class.to_s
+          new_one.save
           specific_to_delete.delete
-          @physical_object = new
+          @physical_object = new_one
         end
         @nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
         # check to see if titles have changed in the update

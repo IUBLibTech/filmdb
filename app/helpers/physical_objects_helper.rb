@@ -44,7 +44,7 @@ module PhysicalObjectsHelper
             elsif controller_name == 'titles'
               @url = title_new_physical_object_path
             end
-            if @physical_object.is_a?(Film) && @physical_object.medium.base_nitrate
+            if @physical_object.is_a?(Film) && @physical_object.base_nitrate
               notify_nitrate(@physical_object)
             end
             session[:physical_object_create_action] = @url
@@ -156,7 +156,6 @@ module PhysicalObjectsHelper
   def po_only_params
     hash = params.clone
     c = class_symbol_from_params
-    debugger
     hash.permit
     hash.require(c).permit(:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
                 :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
@@ -165,7 +164,6 @@ module PhysicalObjectsHelper
     hash.keys.each do |k|
       hash.delete k unless PO_ONLY_ATTRIBTUES.include?(k)
     end
-    debugger
     hash
   end
 
