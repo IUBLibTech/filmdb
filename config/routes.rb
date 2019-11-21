@@ -90,7 +90,7 @@ Rails.application.routes.draw do
 	get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
-  post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
+  post '/spreadsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
   get '/spreadsheets/:id/title/:title', to: 'spreadsheets#merge_title_candidates', as: 'merge_title_candidates'
   post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_spreadsheet_titles'
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'

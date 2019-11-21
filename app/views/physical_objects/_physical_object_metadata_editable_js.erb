@@ -186,11 +186,12 @@
                 name: 'medium_changed',
                 value: true
             }).appendTo('#physical_object_form');
-            <% if action_name == 'edit' %>
+            <%# if action_name == 'edit' %>
             // redirect to the edit with format change action
-            $('#physical_object_form').attr('action', '<%= edit_physical_object_medium_path(@physical_object&.acting_as.id) %>')
-            <% end %>
+            //$('#physical_object_form').attr('action', '<%#= edit_physical_object_medium_path(@physical_object&.acting_as.id) %>')
+            <%# end %>
             $('#physical_object_form').submit();
+            document.getElementById("physical_object_form").submit();
         });
 
         // this registers format specific (Film, Video, etc) event listeners. hookMetadataListeners() must be defined in the format specific
