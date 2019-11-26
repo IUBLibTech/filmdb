@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191104202149) do
+ActiveRecord::Schema.define(version: 20191126152659) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint   "physical_object_id"
@@ -562,7 +562,7 @@ ActiveRecord::Schema.define(version: 20191104202149) do
     t.boolean "image_aspect_ratio_4_3"
     t.boolean "image_aspect_ratio_16_9"
     t.boolean "image_aspect_ratio_other"
-    t.boolean "caption_or_subtitles"
+    t.boolean "captions_or_subtitles"
     t.text    "notes",                                     limit: 65535
     t.boolean "silent"
     t.boolean "sound_format_type_magnetic"
@@ -601,6 +601,9 @@ ActiveRecord::Schema.define(version: 20191104202149) do
     t.text    "playback_issues_video_artifacts",           limit: 65535
     t.text    "playback_issues_audio_artifacts",           limit: 65535
     t.text    "missing_footage",                           limit: 65535
+    t.text    "captions_or_subtitles_notes",               limit: 65535
+    t.text    "generation_notes",                          limit: 65535
+    t.string  "sound"
   end
 
   create_table "workflow_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

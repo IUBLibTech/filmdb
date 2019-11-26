@@ -1,7 +1,6 @@
 class FilmParser < CsvParser
   include DateHelper
   include PhysicalObjectsHelper
-  #include ParserHelper
   require 'csv'
   require 'manual_roll_back_error'
 
@@ -9,13 +8,12 @@ class FilmParser < CsvParser
   # the column headers that spreadsheets should contain for Films - only the 5 metadata fields required to create a physical object
   # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
   COLUMN_HEADERS = PO_HEADERS + [
-      'Title', 'Duration', 'Series Name', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number',
-      'Multiple Items in Can', 'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate',
-      'Color', 'Aspect Ratio', 'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type',
-      'Sound Content Type', 'Sound Field', 'Dialog Language', 'Captions or Subtitles Language', 'AD Strip', 'Shrinkage',
-      'Mold', 'Missing Footage', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title',
-      'Series Production Number', 'Series Part', 'Date', 'Location', 'Title Summary', 'Title Notes', 'Name Authority',
-      'Generation Notes'
+      'Title', 'Duration', 'Series Name', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can',
+      'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio',
+      'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type', 'Sound Field',
+      'Dialog Language', 'Captions or Subtitles Language', 'AD Strip', 'Shrinkage', 'Mold', 'Missing Footage', 'Creator',
+      'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part',
+      'Date', 'Location', 'Title Summary', 'Title Notes', 'Name Authority', 'Generation Notes'
   ]
 
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
@@ -36,13 +34,6 @@ class FilmParser < CsvParser
       COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
       COLUMN_HEADERS[ALF_SHELF_LOCATION] => :alf_shelf=, COLUMN_HEADERS[GENERATION_NOTES] => :generation_notes=
   }
-
-  # regexes for parsing
-  CONDITION_PATTERN = /([a-zA-z]+) \(([\d])\)/
-  NAME_ROLE_PATTERN = /^([a-zA-Z ]+) \(([a-zA-z ]+)\)$/
-
-  # Delimiter used in columns with multiple values present
-  DELIMITER = ' ; '
 
   # special logger for parsing spreadsheets
   def self.logger
@@ -137,31 +128,31 @@ class FilmParser < CsvParser
         @headers[header.strip] = i
       end
     }
-    # examine the headers to make sure that title, media type, medium, unit and iu_barcode are nt (minimum to create physical object)
-    [COLUMN_HEADERS[TITLE], COLUMN_HEADERS[MEDIUM], COLUMN_HEADERS[MEDIA_TYPE], COLUMN_HEADERS[UNIT], COLUMN_HEADERS[IU_BARCODE]].each do |h|
-      unless @headers.include?(h)
-        @parse_headers_msg << parsed_header_message(h)
-      end
-    end
+    # # examine the headers to make sure that title, media type, medium, unit and iu_barcode are nt (minimum to create physical object)
+    # [COLUMN_HEADERS[TITLE], COLUMN_HEADERS[MEDIUM], COLUMN_HEADERS[MEDIA_TYPE], COLUMN_HEADERS[UNIT], COLUMN_HEADERS[IU_BARCODE]].each do |h|
+    #   unless @headers.include?(h)
+    #     @parse_headers_msg << parsed_header_message(h)
+    #   end
+    # end
 
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
-        @parse_headers_msg << parsed_header_message(ch)
+        @parse_headers_msg << "#{ch} is not a valid column header"
       end
     end
     # make sure that every header is present in the spreadsheet
     COLUMN_HEADERS.each do |h|
       unless @headers.keys.include?(h)
-        @parse_headers_msg <<  parsed_header_message(h)
+        @parse_headers_msg <<  "The column <b>#{h}</b> is missing from the spreadsheet".html_safe
       end
     end
   end
-
+  ControlledVocabulary.physical_object_cv('Video')[:stock].collect{|r| r[0]}
   # utility for formatting a string message about a bad column header
-  def parsed_header_message(ch)
-    "Missing or malformed <i>#{ch}</i> header<br/>"
-  end
+  # def parsed_header_message(ch)
+  #   "Missing or malformed <i>#{ch}</i> header<br/>"
+  # end
 
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
   def parse_physical_object(row, i)

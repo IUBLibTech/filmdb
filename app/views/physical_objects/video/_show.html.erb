@@ -20,55 +20,60 @@
   <b>Base</b> <%= @physical_object.base %> <br>
   <b>Stock</b> <%= @physical_object.stock %>
 </div>
-<div id="image_metadata" class="metadata_section left _50">
-  <h4>Image</h4>
-  <div id="image_metadata_content_div">
-    <div class="clear">
-      <b >Playback Speed&nbsp;</b><%= @physical_object.playback_speed %>
+<div>
+  <div id="image_metadata" class="metadata_section left _50">
+    <h4>Image</h4>
+    <div id="image_metadata_content_div">
+      <div class="clear">
+        <b >Playback Speed&nbsp;</b><%= @physical_object.playback_speed %>
+      </div>
+      <div class="">
+        <b>Picture Type&nbsp;</b>
+        <%= @physical_object.humanize_boolean_fields(Video::PICTURE_TYPE_FIELDS) %>
+      </div>
+      <div id="" class="">
+        <b class="block">Color&nbsp;</b>
+        <%= @physical_object.humanize_boolean_fields(Video::COLOR_FIELDS) %>
+      </div>
+      <div>
+        <b class="block">Aspect Ratio&nbsp;</b>
+        <%= @physical_object.humanize_boolean_fields(Video::ASPECT_RATIO_FIELDS) %>
+      </div>
     </div>
-    <div class="">
-      <b>Picture Type&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(Video::PICTURE_TYPE_FIELDS) %>
-    </div>
-    <div id="" class="">
-      <b class="block">Color&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(Video::COLOR_FIELDS) %>
+  </div>
+  <div id="sound_metadata" class="metadata_section left _50">
+    <h4>Sound</h4>
+    <div>
+      <b class="block">Sound</b><%= @physical_object.sound %>
     </div>
     <div>
-      <b class="block">Aspect Ratio&nbsp;</b>
-      <%= @physical_object.humanize_boolean_fields(Video::ASPECT_RATIO_FIELDS) %>
+      <b>Captions/Subtitles&nbsp;</b><%= @physical_object.captions_or_subtitles? ? 'Yes' : 'No'%>
     </div>
-  </div>
-</div>
-<div id="sound_metadata" class="metadata_section left _50">
-  <h4>Sound</h4>
-  <div>
-    <b>Captions/Subtitles&nbsp;</b><%= @physical_object.caption_or_subtitles%>
-  </div>
-  <div>
-    <b>Silent</b> <%= @physical_object.silent %>
-  </div>
-  <div>
-    <b>Format Type&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(Video::SOUND_FORMAT_FIELDS) %>
-  </div>
-  <div>
-    <b >Content Type&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(Video::SOUND_CONTENT_FIELDS) %>
-  </div>
-  <div>
-    <b >Sound Field&nbsp;</b>
-    <%= @physical_object.humanize_boolean_fields(Video::SOUND_CONFIGURATION_FIELDS) %>
-  </div>
-  <div>
-    <b> Sound Deduction </b>
-    <%= @physical_object.humanize_boolean_fields(Video::SOUND_REDUCTION_FIELDS) %>
-  </div>
-  <div>
-    <b class="">Languages&nbsp;</b>
-    <% @physical_object.languages.each_with_index do |l, i| %>
-      <b><%= l.language %></b> - <%= l.language_type %>&nbsp;&nbsp;
-    <% end %>
+    <div>
+      <b>Silent</b> <%= @physical_object.silent %>
+    </div>
+    <div>
+      <b>Format Type&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(Video::SOUND_FORMAT_FIELDS) %>
+    </div>
+    <div>
+      <b >Content Type&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(Video::SOUND_CONTENT_FIELDS) %>
+    </div>
+    <div>
+      <b >Sound Field&nbsp;</b>
+      <%= @physical_object.humanize_boolean_fields(Video::SOUND_CONFIGURATION_FIELDS) %>
+    </div>
+    <div>
+      <b> Sound Deduction </b>
+      <%= @physical_object.humanize_boolean_fields(Video::SOUND_REDUCTION_FIELDS) %>
+    </div>
+    <div>
+      <b class="">Languages&nbsp;</b>
+      <% @physical_object.languages.each_with_index do |l, i| %>
+        <b><%= l.language %></b> - <%= l.language_type %>&nbsp;&nbsp;
+      <% end %>
+    </div>
   </div>
 </div>
 <div>
