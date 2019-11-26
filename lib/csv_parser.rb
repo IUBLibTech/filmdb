@@ -5,10 +5,8 @@ class CsvParser
   include ParserHelper
   require 'csv'
   require 'film_parser'
+  require 'video_parser'
   require 'manual_roll_back_error'
-
-
-
 
   # special logger for parsing spreadsheets
   def self.logger
@@ -40,6 +38,10 @@ class CsvParser
     medium = parse_spreadsheet_medium
     if medium.downcase == Film.to_s.downcase
       FilmParser.new(@csv, @spreadsheet, @spreadsheet_submission).parse_csv
+    elsif medium.downcase == Video.to_s.downcase
+      VideoParser.new(@csv, @spreadsheet, @spreadsheet_submission).parse_csv
+    else
+      raise "Cannot ingest spreadsheet. Unsupported Medium: #{medium}"
     end
   end
 

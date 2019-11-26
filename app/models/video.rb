@@ -3,9 +3,20 @@ class Video < ActiveRecord::Base
   validates :gauge, presence: true
 
   GAUGE_VALUES = ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge').pluck(:value)
+  MAXIMUM_RUNTIME_VALUES = ControlledVocabulary.physical_object_cv('Video')[:maximum_runtime].collect{|r| r[0]}
+  SIZE_VALUES = ControlledVocabulary.physical_object_cv('Video')[:size].collect{|r| r[0]}
+  # SOUND VALUES are the same as Film
+  SOUND_VALUES = ControlledVocabulary.physical_object_cv('Video')[:sound].collect{|r| r[0]}
+  STOCK_VALUES = ControlledVocabulary.physical_object_cv('Video')[:stock].collect{|r| r[0]}
+  RECORDING_STANDARDS_VALUES = ControlledVocabulary.physical_object_cv('Video')[:recording_standard].collect{|r| r[0]}
+  SOUND_CONFIGURATION_FIELDS = ['Mono', 'Stereo', 'Surround', 'Other']
+
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :revised, :version_original, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
-  VERSION_FIELDS_HUMANIZED = {first_edition: "1st Edition", second_edition: "2nd Edition", third_edition: "3rd Edition", fourth_edition: "4th Edition", x_rated: "X-rated", version_original: 'Original'}
+  VERSION_FIELDS_HUMANIZED = {
+      first_edition: "1st Edition", second_edition: "2nd Edition", third_edition: "3rd Edition",
+      fourth_edition: "4th Edition", x_rated: "X-rated", version_original: 'Original'
+  }
   GENERATION_FIELDS = [
       :generation_b_roll, :generation_commercial_release, :generation_copy_access, :generation_dub, :generation_duplicate,
       :generation_edited, :generation_fine_cut, :generation_intermediate, :generation_line_cut, :generation_master,
@@ -27,12 +38,6 @@ class Video < ActiveRecord::Base
   BASE_FIELDS =[:base_acetate, :base_polyester, :base_mixed, :base_other]
   BASE_FIELDS_HUMANIZED = {
       base_acetate: "Acetate", base_polyester: "Polyester", base_mixed: "Mixed", base_other: "Other"
-  }
-
-  STOCK_FIELDS = [:stock_agfa, :stock_ansco, :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania, :stock_3_m,:stock_agfa_gevaert, :stock_pathe, :stock_unknown]
-  STOCK_FIELDS_HUMANIZED = {
-      stock_agfa: 'Agfa', stock_ansco: "Ansco", stock_dupont: 'Dupont', stock_orwo: "Orwo", stock_fuji: "Fuji", stock_gevaert: "Gevaert",
-      stock_kodak: "Kodak", stock_ferrania: "Ferrania", stock_3_m: '3M', stock_agfa_gevaert: 'Agfa-Gevaert', stock_pathe: 'Pathe', stock_unknown: "Unknown"
   }
 
   PICTURE_TYPE_FIELDS = [
@@ -103,13 +108,14 @@ class Video < ActiveRecord::Base
   }
 
 
-  CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
-
   HUMANIZED_SYMBOLS = GENERATION_FIELDS_HUMANIZED.merge(VERSION_FIELDS_HUMANIZED.merge(BASE_FIELDS_HUMANIZED.merge(
-      STOCK_FIELDS_HUMANIZED.merge(PICTURE_TYPE_FIELDS_HUMANIZED.merge(COLOR_FIELDS_HUMANIZED.merge(
+      PICTURE_TYPE_FIELDS_HUMANIZED.merge(COLOR_FIELDS_HUMANIZED.merge(
           ASPECT_RATIO_FIELDS_HUMANIZED.merge(SOUND_FORMAT_FIELDS_HUMANIZED.merge(SOUND_CONTENT_FIELDS_HUMANIZED.merge(
-              SOUND_CONFIRGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
-          )))))))))
+              SOUND_CONFIRGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED)
+          ))))))))
+
+
+
 
   # overridden to provide for more human readable attribute names for things like :sample_rate_32k
   def self.human_attribute_name(attribute, options = {})
