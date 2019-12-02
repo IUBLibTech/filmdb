@@ -1,26 +1,43 @@
 <h4>Video Metadata Fields</h4>
 <b>Version</b><%= @physical_object.humanize_boolean_fields(Video::VERSION_FIELDS) %>
 <h4>Format</h4>
-<div class="left _50">
-  <b>Gauge</b> <%= @physical_object.gauge %><br/>
-  <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(Video::GENERATION_FIELDS) %><br>
-</div>
 <div class="">
-  <b>Original Identifiers:&nbsp;</b>
-  <% @physical_object.physical_object_original_identifiers.each_with_index do |id, i| %>
-    <%= (i == @physical_object.physical_object_original_identifiers.size - 1 ? "#{id.identifier}" : "#{id.identifier}, ")%>
-  <% end %>
-  <br/>
-  <b>Reel Number&nbsp;</b><%= @physical_object.reel_number %><br/>
-  <b>Size&nbsp;</b><%= @physical_object.size%><br/>
-  <b>Recording Standard&nbsp;</b><%= @physical_object.recording_standard %><br/>
-  <b>Maximum Runtime</b><%= @physical_object.maximum_runtime %><br/>
-  <b>Dates</b> <%= @physical_object.dates_text %> <br>
-  <b>Duration</b> <%= @physical_object.duration %> <br>
-  <b>Base</b> <%= @physical_object.base %> <br>
-  <b>Stock</b> <%= @physical_object.stock %>
+  <div class="left _50">
+    <b>Gauge</b> <%= @physical_object.gauge %><br/>
+    <b class="">Generation</b> <%= @physical_object.humanize_boolean_fields(Video::GENERATION_FIELDS) %><br>
+  </div>
+  <div class="left _50">
+    <b>Original Identifiers:&nbsp;</b>
+    <% @physical_object.physical_object_original_identifiers.each_with_index do |id, i| %>
+      <%= (i == @physical_object.physical_object_original_identifiers.size - 1 ? "#{id.identifier}" : "#{id.identifier}, ")%>
+    <% end %>
+  </div>
+  <div class="left _50">
+    <b>Reel Number&nbsp;</b><%= @physical_object.reel_number %>
+  </div>
+  <div class="left _50">
+    <b>Size&nbsp;</b><%= @physical_object.size%>
+  </div>
+  <div class="left _50">
+    <b>Recording Standard&nbsp;</b><%= @physical_object.recording_standard %>
+  </div>
+  <div class="left _50">
+    <b>Maximum Runtime</b><%= @physical_object.maximum_runtime %>
+  </div>
+  <div class="left _50">
+    <b>Dates</b> <%= @physical_object.dates_text %>
+  </div>
+  <div class="left _50">
+    <b>Duration</b> <%= @physical_object.duration %>
+  </div>
+  <div class="left _50">
+    <b>Base</b> <%= @physical_object.base %> <br>
+  </div>
+  <div class="left _50">
+    <b>Stock</b> <%= @physical_object.stock %>
+  </div>
 </div>
-<div>
+<div class="clear">
   <div id="image_metadata" class="metadata_section left _50">
     <h4>Image</h4>
     <div id="image_metadata_content_div">

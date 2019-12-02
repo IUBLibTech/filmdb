@@ -26,7 +26,7 @@ class Video < ActiveRecord::Base
   ]
   GENERATION_FIELDS_HUMANIZED = {
       :generation_b_roll => "B Roll", :generation_commercial_release => "Commercial Release", :generation_copy_access => "Copy: Access",
-      :generation_dub => "Dub", :generation_duplicate => "Duplicate", :generation_edited => "Edited", :generation_fine_cut => "Fine Cur",
+      :generation_dub => "Dub", :generation_duplicate => "Duplicate", :generation_edited => "Edited", :generation_fine_cut => "Fine Cut",
       :generation_intermediate => "Intermediate", :generation_line_cut => "Line Cut", :generation_master => "Master",
       :generation_master_production => "Master: Production", :generation_master_distribution => "Master: Distribution",
       :generation_off_air_recording => "Off Air Recording", :generation_original => "Original",

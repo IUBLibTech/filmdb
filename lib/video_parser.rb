@@ -8,20 +8,22 @@ class VideoParser < CsvParser
   # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
   COLUMN_HEADERS = PO_HEADERS + [
       'Title', 'Duration', 'Series Name', 'Version', 'Format', 'Generation', 'Original Identifier', 'Base', 'Stock',
-      'Picture Type', 'Format Duration', 'Playback Speed', 'Alternative Title', 'Title Summary', 'Title Notes',
+      'Picture Type', 'Tape Capacity', 'Playback Speed', 'Alternative Title', 'Title Summary', 'Title Notes',
       'Name Authority', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Series Part', 'Date', 'Location',
       'Generation Notes', 'Stock', 'Size', 'Aspect Ratio', 'Sound', 'Color', 'Sound Content Type', 'Dialog Language',
       'Captions or Subtitles', 'Captions or Subtitles Notes', 'Captions or Subtitles Language',
       # missing fields from sample spreadsheet but I'm adding anyway
-      'Sound Format Type', 'Series Production Number', 'Sound Field', 'Noise Reduction', 'Recording Standard'
+      'Sound Format Type', 'Series Production Number', 'Sound Field', 'Noise Reduction', 'Recording Standard',
+      'OCLC Number', 'Tape Capacity', 'Reel Number'
   ]
 
   TITLE, DURATION, SERIES_NAME, VERSION, FORMAT, GENERATION, ORIGINAL_IDENTIFIER, BASE, STOCK = 23,24,25,26,27,28,29,30,31
-  PICTURE_TYPE, FORMAT_DURATION, PLAYBACK_SPEED, ALTERNATIVE_TITLE, TITLE_SUMMARY, TITLE_NOTES = 32,33,34,35,36,37
+  PICTURE_TYPE, TAPE_CAPACITY, PLAYBACK_SPEED, ALTERNATIVE_TITLE, TITLE_SUMMARY, TITLE_NOTES = 32,33,34,35,36,37
   NAME_AUTHORITY, CREATOR, PUBLISHER, GENRE, FORM, SUBJECT, SERIES_PART, DATE, LOCATION = 38,39,40,41,42,43,44,45,46
   GENERATION_NOTES, STOCK, SIZE, ASPECT_RATIO, SOUND, COLOR, SOUND_CONTENT_TYPE, DIALOG_LANGUAGE = 47,48,49,50,51,52,53,54
   CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, CAPTIONS_OR_SUBTITLES_LANGUAGE = 55,56,57
   SOUND_FORMAT_TYPE, SERIES_PRODUCTION_NUMBER, SOUND_CONFIGURATION, NOISE_REDUCTION, RECORDING_STANDARD = 58,59,60,61,62
+  OCLC_NUMBER, REEL_NUMBER = 63,64
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -170,14 +172,9 @@ class VideoParser < CsvParser
       end
     end
 
-    format_duration = row[column_index FORMAT_DURATION]
-    unless format_duration.blank?
-      if Video::MAXIMUM_RUNTIME_VALUES.include?(format_duration)
-        # FIXME: this value is currently in minutes in the spreadsheet so convert to seconds
-        po.send(:format_duration=, format_duration)
-      else
-        po.errors.add(:format_duration, "#{format_duration} is not a valid valued for Video Format Duration")
-      end
+    tc = row[column_index TAPE_CAPACITY]
+    unless tc.blank?
+      po.send(:tape_capacity=, tc)
     end
 
     # metadata fields common to all PO's
@@ -203,7 +200,10 @@ class VideoParser < CsvParser
       po.errors.add(:gauge, "#{gauge} is not a valid Video Gauge value")
     end
 
-
+    reel_number = row[column_index REEL_NUMBER]
+    unless reel_number.blank?
+      po.send(:reel_number=, reel_number)
+    end
 
     size = row[column_index SIZE]
     unless size.blank?
@@ -213,7 +213,6 @@ class VideoParser < CsvParser
         po.errors.add(:size, "#{size} is not a valid Video Size value")
       end
     end
-
 
     sound = row[column_index SOUND]
     unless sound.blank?
@@ -225,7 +224,7 @@ class VideoParser < CsvParser
     end
 
     captioned = row[column_index CAPTIONS_OR_SUBTITLES]
-    po.caption_or_subtitles = true unless captioned.blank?
+    po.captions_or_subtitles = true unless captioned.blank?
 
     # version
     version_fields = row[column_index VERSION].blank? ? [] : row[column_index VERSION].split(DELIMITER)
@@ -245,7 +244,7 @@ class VideoParser < CsvParser
         when "4th_edition"
           po.send(:fourth_edition=, true)
         when "original"
-          po.send(:version_original=, true)
+          po.send(:original=, true)
         else
           po.errors.add(:version, "Undefined version: #{vf}")
         end
@@ -275,14 +274,11 @@ class VideoParser < CsvParser
     end
 
     # base
-    base_fields = row[column_index BASE].blank? ? [] : row[column_index BASE].split(DELIMITER)
-    base_fields.each do |bf|
-      field = "base #{bf}".parameterize.underscore
-      if Video::BASE_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
-      else
-        po.errors.add(:base, "Undefined base: #{bf}")
-      end
+    base = row[column_index BASE]
+    if Video::BASE_FIELDS_HUMANIZED.values.include?(base)
+      po.send(:base=, base)
+    else
+      po.errors.add(:base, "Undefined base: #{base}")
     end
 
     # stock
@@ -308,9 +304,8 @@ class VideoParser < CsvParser
     #picture type
     picture_fields = row[column_index PICTURE_TYPE].blank? ? [] : row[column_index PICTURE_TYPE].split(DELIMITER)
     picture_fields.each do |pf|
-      field = "picture #{pf}".parameterize.underscore
-      if (Video::PICTURE_TYPE_FIELDS.include?(field.to_sym))
-        po.send((field << "=").to_sym, true)
+      if (Video::PICTURE_TYPE_FIELDS_HUMANIZED.values.include?(pf))
+        po.send((Video::PICTURE_TYPE_FIELDS_HUMANIZED.key(pf).to_s << "=").to_sym, true)
       else
         po.errors.add(:picture_type, "Undefined picture type: #{pf}")
       end
@@ -610,6 +605,13 @@ class VideoParser < CsvParser
       title_locs.split(DELIMITER).each do |tl|
         title.title_locations << TitleLocation.new(location: tl)
       end
+    end
+
+    # OCLC - new for Video
+    oclc = row[column_index OCLC_NUMBER]
+    unless oclc.blank?
+      toi = TitleOriginalIdentifier.new(title_id: title.id, identifier: oclc, identifier_type: 'OCLC Number')
+      title.title_original_identifiers << toi
     end
 
     # series data

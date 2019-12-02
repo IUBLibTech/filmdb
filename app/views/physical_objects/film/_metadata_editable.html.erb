@@ -23,7 +23,7 @@
     <div class="check_box"><%= f.check_box :x_rated %><div>X-rated</div></div>
   </div>
 </div>
-<div id="format_metadata" class="metadata_section">
+<div id="format_metadata" class="metadata_section clear">
   <h4>Format</h4>
   <div class="left _45">
     <b>Gauge</b><%= f.select :gauge, options_for_select(@cv[:gauge], @physical_object.gauge), {include_blank: ''} %>
