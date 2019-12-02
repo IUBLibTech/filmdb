@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191126152659) do
+ActiveRecord::Schema.define(version: 20191202171255) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint   "physical_object_id"
@@ -543,7 +543,6 @@ ActiveRecord::Schema.define(version: 20191126152659) do
     t.string  "size"
     t.string  "recording_standard"
     t.string  "maximum_runtime"
-    t.integer "duration"
     t.string  "base"
     t.string  "stock"
     t.boolean "picture_type_not_applicable"
@@ -604,6 +603,7 @@ ActiveRecord::Schema.define(version: 20191126152659) do
     t.text    "captions_or_subtitles_notes",               limit: 65535
     t.text    "generation_notes",                          limit: 65535
     t.string  "sound"
+    t.string  "tape_capacity"
   end
 
   create_table "workflow_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
