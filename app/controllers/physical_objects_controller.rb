@@ -75,55 +75,80 @@ class PhysicalObjectsController < ApplicationController
 
   # GET /physical_objects/new_physical_object
   def new
-    @em = "Creating New Physical Object"
-    u = User.current_user_object
-    #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
-    @physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
-    set_cv
+    if request.get?
+      @em = "Creating New Physical Object"
+      u = User.current_user_object
+      #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      @physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
+      set_cv
+    elsif request.post?
+      new_one = blank_specific_po(medium_value_from_params)
+
+      # copy all PhysicalObject only attributes that have been posted
+      class_sym = class_symbol_from_params
+      params[class_sym].keys.each do |p|
+        if PO_ONLY_ATTRIBUTES.include?(p.parameterize.to_sym)
+          new_one.send(p+"=", params[class_sym][p])
+        end
+      end
+
+      # copy any title associations created before the switch
+      params[:physical_object][:title_ids].split(',').each do |t_id|
+        new_one.titles << Title.find(t_id.to_i)
+      end
+      @physical_object = new_one.specific
+      set_cv
+    else
+      raise "How did we get a #{request.method} request here???"
+    end
     render 'new_physical_object'
   end
   # POST /physical_objects
   # POST /physical_objects.json
   def create
-    if params[:medium_changed]
-      original = class_symbol_from_params
-      medium = find_medium(params)
-      params[medium] = params[original]
-      # delete the part of the params hash that refers to the original form - it was based on a medium that was changed to something else
-      params.except!(original)
-      # delete the medium changed flag from the params hash or it will be regenerated in the new form
-      params.except!(:medium_changed)
-      @physical_object = new_format_specific_physical_object(medium)
-      associate_titles
-      set_cv
-      @action = '/physical_objects'
-      render 'physical_objects/new_physical_object'
-    else
-      create_physical_object
-    end
+    create_physical_object
   end
 
   # GET /physical_objects/1/edit
   def edit
-    @em = 'Editing Physical Object'
-    if params[:medium_changed]
-      class_sym = class_symbol_from_params
-      medium = medium_from_params
-      new_po = blank_specific_po(medium)
-      params[class_sym].keys.each do |p|
-        if PO_ONLY_ATTRIBTUES.include?(p.parameterize.to_sym)
-          @physical_object.send(p+"=", params[class_sym][p])
-        end
-      end
-      @physical_object.medium = medium
-      @physical_object.actable = new_po
-      flash.now[:warning] = "You have changed the Medium of this Physical Object from #{@physical_object.class.to_s} to "+
-          "#{new_po.class.to_s}. Updating the object will delete all #{@physical_object.class.to_s} meteadata!".html_safe
-      @physical_object = new_po
-    else
+    if request.get?
       if @physical_object.nil?
         flash.now[:warning] = "No such physical object..."
         redirect_to :back
+      end
+    else
+      # so this part is complicated... a POST/PATCH on the #edit action means that the input:select Medium value was
+      # changed and we need to rebuild the form based on the Medium value. Because of the shared-by-all-formats attributes
+      # and associations that are maintained on the PhysicalObject portion of the original (titles for instance), we need
+      # to look at the submit, as some of those values may have been edited. But we need to build a new edit form based
+      # on a different Medium than the original object.
+
+      # Now the wonky part: if a user changes from an existing Medium (say Film to Video), then changes BACK to the
+      # original Medium, there is no physical workflow where this is correct behavior. It is always user error. In this
+      # particular instance, we need to restart the edit process with the original PhysicalObject metadata, ignoring all
+      # submits up to this point.
+      o_medium = @physical_object.medium
+      s_medium = medium_value_from_params
+
+      # only create a new, different Medium, PO if the original and submitted Mediums are different
+      if o_medium == s_medium
+        flash.now[:warning] = "You have changed this Physical Object back to it's original Medium. Any edits you have made up to this point have been discarded."
+      else
+        flash.now[:warning] = "You have changed this Physical Object from #{o_medium} to #{s_medium}. Any #{o_medium} metadata will be permanently lost if you update the record."
+        # save the original id so that the form can build the route correctly
+        @original_po_id = @physical_object.acting_as.id
+        new_one = nil
+        if s_medium == 'Film'
+          new_one = Film.new(po_only_params)
+        elsif s_medium == 'Video'
+          new_one = Video.new(po_only_params)
+        end
+        # copy any title associations based on the state of the form when the medium switch occurred
+        params[:physical_object][:title_ids].split(',').each do |t_id|
+          t = Title.find(t_id.to_i)
+          new_one.titles << t unless new_one.titles.include? t
+        end
+        @physical_object = new_one.specific
       end
     end
     set_cv
@@ -133,17 +158,29 @@ class PhysicalObjectsController < ApplicationController
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
+    # if the medium has been changed we need to delete the old, medium specific, object
+    o_medium = @physical_object.medium
+    s_medium = medium_value_from_params
+    # active_record-acts_as stomps on creation dates for some reason...
+    c = @physical_object.created_at
     begin
       PhysicalObject.transaction do
         # need to cleanup the old specific class that was changed to something else
-        if params[:medium_changed]
-          specific_to_delete = @physical_object.actable
-          new_one = blank_specific_po(medium_from_params)
+        if o_medium == s_medium
+          @physical_object.modifier = User.current_user_object
+          @success = @physical_object.update_attributes!(physical_object_params)
+          @physical_object.acting_as.created_at = c
+        else
+          specific_to_delete = @physical_object.specific
+          debugger
+          new_one = blank_specific_po(medium_value_from_params)
+          new_one.acting_as = @physical_object.acting_as
           @physical_object.specific.actable = new_one
           @physical_object.specific.actable_type = new_one.class.to_s
           new_one.save
           specific_to_delete.delete
           @physical_object = new_one
+          @physical_object.acting_as.created_at = c
         end
         @nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
         # check to see if titles have changed in the update
@@ -152,20 +189,21 @@ class PhysicalObjectsController < ApplicationController
         @success = @physical_object.update_attributes!(physical_object_params)
       end
     rescue Exception => error
+      puts error.message
+      puts error.backtrace.join("\n")
       logger.debug $!
     end
-
     if @success
       if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
         notify_nitrate(@physical_object)
       end
       redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.'
     else
+      @original_po_id = @physical_object.acting_as.id
       set_cv
       render :edit
     end
   end
-
 
   def duplicate
     @em = 'Duplicating Physical Object'

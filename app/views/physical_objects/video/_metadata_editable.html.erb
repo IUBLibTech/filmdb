@@ -180,6 +180,10 @@
     </div>
   </div>
 </div>
+<div class="clear">
+  <b>Generation Notes</b>
+  <%= f.text_area :generation_notes %>
+</div>
 
 <div class="clear m_bottom_10px"></div>
 <div id="image_metadata" class="metadata_section left _50">
@@ -459,7 +463,7 @@
 </div>
 
 <div id="overlay"></div>
-<div id="title_popup" title='Create New Title'>
+<div id="title_popup">
   <div id="title_popup_header">
     <h4>Create New Title</h4><%= link_to "X", "#", remote: true, button: true, id: 'title_popup_cancel_button' %>
   </div>

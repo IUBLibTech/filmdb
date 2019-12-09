@@ -37,25 +37,37 @@
 		<th>Physical Object Count</th>
 		<td><%= @physical_object_count %></td>
 	</tr>
+  <tr>
+    <th>Digitized Physical Object Count</th>
+    <td><%= @digitized_count %></td>
+  </tr>
 	<tr>
 		<th>Title Count</th>
 		<td><%= @title_count %></td>
 	</tr>
+  <tr>
+    <th>Fully Cataloged Titles</th>
+    <td><%= @title_cat_count %></td>
+  </tr>
 	<tr>
 		<th>Series Count</th>
 		<td><%= @series_count %></td>
 	</tr>
 </table>
-
 <h4>Physical Object Breakdown</h4>
-<% @medium_count.keys.sort.each do |m| %>
-  <div class="medium_metadata_link" data-medium_type="<%= m %>">
-    <div class="h">
-      <%= "#{m.pluralize}: #{@medium_count[m]}" %>
+<div class="flex_wrap">
+  <% @medium_count.keys.sort.each do |m| %>
+    <div class="medium_metadata_link" data-medium_type="<%= m %>">
+      <div class="flex_wrap">
+        <div class="h">
+          <%= m.pluralize %>
+        </div>
+        <div class="v"><%= @medium_count[m] %></div>
+      </div>
+      <div class="stats"></div>
     </div>
-    <div class="stats"></div>
-  </div>
-<% end  %>
+  <% end  %>
+</div>
 
 <script type="text/javascript" charset="utf-8">
   var unit = '<%= params[:unit] %>';

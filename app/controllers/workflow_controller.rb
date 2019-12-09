@@ -107,6 +107,11 @@ class WorkflowController < ApplicationController
 		medium = medium_symbol_from_params(params)
 		if @physical_object.nil?
 			flash[:warning] = "Could not find Physical Object with IU Barcode: #{params[medium][:iu_barcode]}"
+		elsif @physical_object.active_component_group.is_iulmia_workflow?
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_WORKFLOW_ALF, @physical_object)
+			@physical_object.workflow_statuses << ws
+			@physical_object.save
+			flash[:notice] = "#{@physical_object.iu_barcode} has been marked: #{ws.type_and_location}"
 		elsif !@physical_object.in_transit_from_storage? && @physical_object.current_workflow_status.status_name != WorkflowStatus::MOLD_ABATEMENT && @physical_object.current_workflow_status.status_name != WorkflowStatus::WELLS_TO_ALF_CONTAINER
 			flash[:warning] = "#{@physical_object.iu_barcode} has not been Requested From Storage. It is currently: #{@po.current_workflow_status.type_and_location}"
 		elsif @physical_object.current_workflow_status.valid_next_workflow?(params[medium][:workflow]) && @physical_object.active_component_group.deliver_to_wells?
@@ -127,6 +132,10 @@ class WorkflowController < ApplicationController
 		redirect_to :receive_from_storage
 	end
 
+	def process_receive_non_mdpi_alf_from_storage
+
+	end
+
 	def ajax_alf_receive_iu_barcode
 		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first.specific
 		@cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
@@ -134,10 +143,11 @@ class WorkflowController < ApplicationController
 			@msg = "Could not find a record with barcode: #{params[:iu_barcode]}"
 		elsif !@physical_object.in_transit_from_storage? && !@physical_object.current_workflow_status.status_name == WorkflowStatus::MOLD_ABATEMENT && !@physical_object.current_workflow_status.status_name == WorkflowStatus::WELLS_TO_ALF_CONTAINER
 			@msg = "Error: #{@physical_object.iu_barcode} has not been Requested From Storage. Current Workflow status/location: #{@physical_object.current_workflow_status.type_and_location}"
-		elsif @physical_object.active_component_group.deliver_to_wells?
-			@msg = "Error: #{@physical_object.iu_barcode} should have been delivered to Wells. Please contact Amber/Andrew immediately"
+		elsif @physical_object.active_component_group.is_iulmia_workflow?
+			render partial: 'ajax_alf_receive_non_mdpi_iu_barcode'
+		else
+			render partial: 'ajax_alf_receive_iu_barcode'
 		end
-		render partial: 'ajax_alf_receive_iu_barcode'
 	end
 
 	def ajax_wells_receive_iu_barcode
@@ -152,7 +162,7 @@ class WorkflowController < ApplicationController
 		render partial: 'ajax_wells_receive_iu_barcode'
 	end
 
-	# this action processes recieved from storage at Wells
+	# this action processes received from storage at Wells
 	def process_receive_from_storage_wells
 		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
 		if @physical_object.nil?
@@ -220,10 +230,14 @@ class WorkflowController < ApplicationController
 	def send_to_freezer
 	end
 	def process_send_to_freezer
-		ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_FREEZER, @po)
-		@po.workflow_statuses << ws
-		@po.save
-		flash.now[:notice] = "#{@po.iu_barcode}'s location has been updated to' #{WorkflowStatus::IN_FREEZER}"
+		if @po.medium == 'Film'
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_FREEZER, @po)
+			@po.workflow_statuses << ws
+			@po.save
+			flash.now[:notice] = "#{@po.iu_barcode}'s location has been updated to' #{WorkflowStatus::IN_FREEZER}"
+		else
+			flash.now[:warning] = "Only Film can be sent to the Freezer. #{@po.iu_barcode} is a #{@po.medium_name}"
+		end
 		render :send_to_freezer
 	end
 
@@ -239,6 +253,10 @@ class WorkflowController < ApplicationController
 			PhysicalObject.transaction do
 				current = po.current_location
 				active_cg = po.active_component_group
+				if po.medium != 'Film' && (params[:location] == WorkflowStatus::IN_FREEZER || params[:location] == WorkflowStatus::AWAITING_FREEZER)
+					flash.now[:warning] = "Only Films can be moved to the Freezer. #{po.iu_barcode} is a #{po.medium_name}"
+					break
+				end
 				ws = WorkflowStatus.build_workflow_status(params[:location], po, true)
 				po.workflow_statuses << ws
 				po.current_workflow_status = ws

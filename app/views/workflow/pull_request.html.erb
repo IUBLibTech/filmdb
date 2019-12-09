@@ -55,7 +55,7 @@
 		</td>
 		<td><%=  p.iu_barcode %></td>
 		<td><%= p.has_attribute?(:can_size) ? p.can_size : ''%></td>
-		<td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+		<td><%= p.medium_name %></td>
 		<td><%=  p.storage_location %></td>
 		<td><%= p.active_component_group&.group_type %></td>
 		<td><%= link_to "Remove from Queue", '#', id: "po_#{p.acting_as.id}", class: 'remove_from_queue' %></td>
@@ -77,7 +77,7 @@
 			</td>
 			<td><%=  p.iu_barcode %></td>
 			<td><%= p.has_attribute?(:can_size) ? p.can_size : '' %></td>
-			<td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+			<td><%= p.medium_name %></td>
 			<td><%=  p.current_location %></td>
 			<td><%= p.active_component_group&.group_type %></td>
 			<td><%= link_to "Remove from Queue", '#', id: "po_#{p.acting_as.id}", class: 'remove_from_queue' %></td>

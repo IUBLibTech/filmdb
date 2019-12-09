@@ -13,16 +13,16 @@
   <h2><%= @em %> <%= cm %></h2>
 </div>
 <%
-       if %w(new create).include?(action_name)
-         @url = physical_objects_path
-         @method = 'post'
-       else action_name == 'edit'
-         @url = physical_object_path(@physical_object.acting_as.id)
-         @method = 'patch'
+       if action_name == "new"
+         @url = create_physical_object_url
+       else action_name == 'edit' || action_name == 'update'
+        # update can fail because of a validation error
+         @url = physical_object_url(@original_po_id ? @original_po_id : @physical_object.acting_as.id)
        end
 %>
-<%= nested_form_for @physical_object, url: @url, method: @method,  html: {id: 'physical_object_form'} do |f| %>
+<%= nested_form_for @physical_object, url: @url, html: {id: 'physical_object_form'} do |f| %>
   <%= hidden_field_tag "original_action", (action_name == 'ajax_rebuild_form' ? params[:original_action] : action_name) %>
+  <%= hidden_field_tag "original_po_id", @original_po_id if @original_po_id %>
   <% if params[:medium_changed] %>
     <%= hidden_field_tag "medium_changed", true %>
   <% end %>

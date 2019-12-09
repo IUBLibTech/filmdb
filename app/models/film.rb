@@ -1,6 +1,8 @@
 class Film < ActiveRecord::Base
   acts_as :physical_object
   validates :gauge, presence: true
+  validates :iu_barcode, iu_barcode: true
+  validates :mdpi_barcode, mdpi_barcode: true
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
@@ -103,6 +105,20 @@ class Film < ActiveRecord::Base
               SOUND_CONTENT_FIELDS_HUMANIZED.merge(SOUND_CONFIGURATION_FIELDS_HUMANIZED.merge(CONDITION_FIELDS_HUMANIZED))
           ))))))))
 
+  def initialize(args = {})
+    super
+    if args.is_a? ActionController::Parameters
+      args.each do |a|
+        acting_as.send(a.dup << "=", args[a])
+      end
+    elsif args.is_a? Hash
+      args.keys.each do |k|
+        acting_as.send((k.to_s << "=").to_sym, args[k])
+      end
+    else
+      raise "What is args?!?!?"
+    end
+  end
   # overridden to provide for more human readable attribute names for things like :sample_rate_32k
   def self.human_attribute_name(attribute, options = {})
     self.const_get(:HUMANIZED_SYMBOLS)[attribute.to_sym] || super
@@ -114,6 +130,10 @@ class Film < ActiveRecord::Base
       str << (self.specific[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
     end
     str
+  end
+
+  def medium_name
+    "#{gauge} #{medium}"
   end
 
   def to_xml(options)
