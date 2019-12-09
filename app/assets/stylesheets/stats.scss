@@ -2,14 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .medium_metadata_link {
-  float: left;
   cursor: pointer;
-  width: 240px;
-  margin-right: 10px;
+  width: 20%;
 }
 
-.medium_metadata_link > .h {
+.h {
   background: #e69a37;
   font-weight: bold;
+  padding: 3px 3px 3px 1px;
+  width: 75%;
+  line-height: 1.5em;
+}
+.v {
+  width: 20%;
+  background: white;
+  line-height: 1.5em;
   padding: 3px 3px 3px 1px;
 }

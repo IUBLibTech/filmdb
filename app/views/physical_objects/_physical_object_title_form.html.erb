@@ -7,7 +7,7 @@
         <%= Title.find(t).title_text %>
       </div>
       <div  class="remove_title_button">
-        <%= link_to "-", '#', remote: true, class: 'remove_button', id: "remove_title_button_#{t}", title: 'Click to remove this Physical Object/Title association' %>
+        <%= link_to "-", '#', remote: true, class: 'remove_button', id: "remove_title_button_#{t}", title: 'Click to remove this Title' %>
       </div>
     </li>
     <% end %>
@@ -16,7 +16,7 @@
 <div>
   <b class='title_label'>Add Title</b>
 	<%= f.text_field :title_text, class: 'ajax_complete' %>
-	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to remove this Physical Object/Title association' %>
+	<%= link_to "+", '#', remote: true, class: 'button', id: 'title_button', title: 'Click to add existing, or create a new Title' %>
 </div>
 <script type="text/javascript">
   $('.remove_button').click(function() { removeTitle($(this)); })

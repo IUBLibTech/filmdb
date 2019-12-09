@@ -54,7 +54,7 @@ module ApplicationHelper
 
 	def ApplicationHelper.iu_barcode_assigned?(barcode)
 		b = false
-		if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
+		if (po = PhysicalObject.where(iu_barcode: barcode)).size == 1
 			b = po[0]
 		end
 		return b

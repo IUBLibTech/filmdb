@@ -27,8 +27,6 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :digiprovs
 
   validates :physical_object_titles, physical_object_titles: true
-  validates :iu_barcode, iu_barcode: true
-	validates :mdpi_barcode, mdpi_barcode: true
   validates :unit, presence: true
   #validates :media_type, presence: true
   validates :medium, presence: true
@@ -286,6 +284,10 @@ class PhysicalObject < ActiveRecord::Base
     end
 	end
 
+	def medium_name
+		medium
+	end
+
 	def sound_only?
 		return (medium == 'film' && (generation_separation_master || generation_optical_sound_track))
 	end
@@ -308,16 +310,25 @@ class PhysicalObject < ActiveRecord::Base
 
   def test_before_save
     puts "\n\nBefore Save: #{self.created_at}\n\n"
+		debugger
   end
 
   def test_after_save
     puts "\n\nAfter Save: #{self.created_at}\n\n"
+		debugger
 	end
 
 	def active_scan_settings
 		if !active_component_group.nil?
 			active_component_group.component_group_physical_objects.where(physical_object_id: self.id).first
 		end
+	end
+
+	def created_at
+		date_inventoried
+	end
+	def date_inventoried=(val)
+		# do nothing
 	end
 
 	def estimated_duration_in_sec

@@ -10,7 +10,7 @@
         <% p = p.specific %>
         <tr>
           <td><%= p.iu_barcode %></td>
-          <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+          <td><%= p.medium_name %></td>
         </tr>
       <% end %>
     </table>

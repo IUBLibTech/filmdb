@@ -2,7 +2,7 @@ module PhysicalObjectsHelper
   include MailHelper
 
   # attributes that belong to the base PhysicalObject model
-  PO_ONLY_ATTRIBTUES = [:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+  PO_ONLY_ATTRIBUTES = [:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
                         :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
                         :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
                         :catalog_key, :compilation, :format_notes]
@@ -32,22 +32,6 @@ module PhysicalObjectsHelper
 				@physical_object.workflow_statuses << ws
         respond_to do |format|
           if @physical_object.save
-            @url = nil
-            if controller_name == 'physical_objects'
-              action_name == 'new_physical_object' ?
-                  @url = new_physical_object_path :
-                  @url = duplicate_physical_object_path(@physical_object.id)
-            elsif controller_name == 'collections'
-              @url = collection_new_physical_object_path
-            elsif controller_name == 'series'
-              @url = series_new_physical_object_path
-            elsif controller_name == 'titles'
-              @url = title_new_physical_object_path
-            end
-            if @physical_object.is_a?(Film) && @physical_object.base_nitrate
-              notify_nitrate(@physical_object)
-            end
-            session[:physical_object_create_action] = @url
             format.html { redirect_to physical_object_path(@physical_object.acting_as.id, notice: 'Physical Object successfully created')}
           else
             associate_titles
@@ -83,8 +67,9 @@ module PhysicalObjectsHelper
     associate_titles
   end
 
-  # searches the params hash to find out what value is set in the medium attribute, params[:video][:medium], or params[:film][:medium]
-  def medium_from_params
+  # searches the params hash to find out what value is set for the PhysicalObject.medium attribute: params[:video][:medium],
+  # params[:film][:medium], etc
+  def medium_value_from_params
     key = class_symbol_from_params
     params[key][:medium]
   end
@@ -154,17 +139,23 @@ module PhysicalObjectsHelper
 
   # returns a hash containing only the generic physical objects attributes hash
   def po_only_params
-    hash = params.clone
-    c = class_symbol_from_params
-    hash.permit
-    hash.require(c).permit(:location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
-                :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
-                :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-                :catalog_key, :compilation, :format_notes)
-    hash.keys.each do |k|
-      hash.delete k unless PO_ONLY_ATTRIBTUES.include?(k)
+    if params[:film]
+      params.require(:film).permit(
+          # physical object specific attributes
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes)
+    elsif params[:video]
+      params.require(:video).permit(
+          # physical object specific attributes
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes)
+    else
+      raise "Unsupported Medium: #{params.keys}"
     end
-    hash
   end
 
   def physical_object_params
@@ -238,7 +229,7 @@ module PhysicalObjectsHelper
           :generation_fine_cut, :generation_intermediate, :generation_line_cut, :generation_master, :generation_master_production,
           :generation_master_distribution, :generation_off_air_recording, :generation_original, :generation_picture_lock,
           :generation_rough_cut, :generation_stock_footage, :generation_submaster, :generation_work_tapes, :generation_work_track,
-          :generation_other,
+          :generation_other, :generation_notes,
           :reel_number, :size, :recording_standard, :maximum_runtime, :base, :stock,
           :playback_speed, :picture_type_not_applicablem, :picture_type_silent_picture, :picture_type_mos_picture, :picture_type_composite_picture,
           :picture_type_credits_only, :picture_type_picture_effects, :picture_type_picture_outtakes, :picture_type_other,

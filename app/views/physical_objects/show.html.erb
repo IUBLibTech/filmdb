@@ -18,12 +18,12 @@
   <% end %>
   <div style="height: 20px">
     <div class="right _35">
-      <b>Inventoried By: </b><%= @physical_object.inventorier.name %>&nbsp;(<%= @physical_object.created_at.strftime('%Y-%m-%d') %>)
+      <b>Inventoried By: </b><%= @physical_object.inventorier.name %>&nbsp;(<%= @physical_object.acting_as.created_at.strftime('%Y-%m-%d %H:%M:%S') %>)
     </div>
   </div>
   <div style="heigh: 20px">
     <div class="right _35">
-      <b>Modified By: </b><%= @physical_object.modifier.name %>&nbsp;(<%= @physical_object.updated_at.strftime('%Y-%m-%d') %>)
+      <b>Modified By: </b><%= @physical_object.modifier.name %>&nbsp;(<%= @physical_object.updated_at.strftime('%Y-%m-%d %H:%M:%S') %>)
     </div>
   </div>
 </div>

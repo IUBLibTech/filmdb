@@ -34,10 +34,13 @@
           <td class="warning"><%= p.iu_barcode %></td>
         <% else %>
           <td class="<%= @active && @component_group.physical_objects.include?(p) ? 'dont_uncheck' : ''%>">
-            <%= check_box_tag "component_group[component_group_physical_objects][#{p.acting_as.id}][selected]", '', @component_group.physical_objects.include?(p) %> [<%= p.iu_barcode %>]
+            <%= check_box_tag "component_group[component_group_physical_objects][#{p.acting_as.id}][selected]", '',
+                              @component_group.physical_objects.include?(p), data: {"medium": p.medium}, class: 'po_select',
+                              disabled: p.medium != 'Film', title: (p.medium == 'Film' ? '' : 'Only Films can be added to MDPI Component Groups')
+            %> [<%= p.iu_barcode %>]
           </td>
         <% end %>
-        <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+        <td><%= p.medium_name %></td>
         <td><%= p.humanize_boolean_generation_fields %></td>
         <td><%= p.current_location %></td>
         <% if p.digitized? %>
@@ -77,14 +80,29 @@
                 return;
             }
             if (e.shiftKey) {
-                var start = $('input:checkbox').index(this);
-                var end = $('input:checkbox').index(lastChecked);
+                let start = $('input:checkbox').index(this);
+                let end = $('input:checkbox').index(lastChecked);
                 $('input:checkbox').slice(Math.min(start, end), Math.max(start,end) + 1).prop('checked', lastChecked.checked)
             }
             lastChecked = this;
             dontUncheck();
         });
+
+        $('#component_group_group_type').change(function() {
+            let sel = $('#component_group_group_type option:selected')
+            if (sel.val().includes('MDPI')) {
+                disableNonFilm();
+            } else {
+                enableNonFilm();
+            }
+        });
     })
+    function disableNonFilm() {
+        $('.po_select[data-medium!="Film"]').prop("checked", false).prop('disabled', true).attr("title", "Only Films can be added to MDPI Component Groups")
+    }
+    function enableNonFilm() {
+        $('.po_select[data-medium!="Film"]').prop('disabled', false).attr("title", '');
+    }
     function dontUncheck() {
         $('.dont_uncheck input:checkbox').prop('checked', true)
     }

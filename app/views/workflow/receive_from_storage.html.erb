@@ -65,9 +65,11 @@
 							var footage = $.isNumeric($('#physical_object_footage').val());
 							var can_size = $('#physical_object_can_size').val() != "";
 							var checked = !($('#physical_object_workflow').val() == 'Issues Shelf (ALF)' && !$('#physical_object_updated').prop("checked"));
-							if (footage && can_size && checked) {
+
+							// the second condition is for non-mdpi workflow. in that case the HTML that is rendered for receiving that
+              // workflow doesn't contain the footage, can_size, and checked inputs
+							if ((footage && can_size && checked) || ($('#physical_object_footage').length === 0)) {
 								document.getElementById('receive_physical_object_form').submit();
-								return;
 							} else {
 								msg = "";
 								if (footage && can_size) {

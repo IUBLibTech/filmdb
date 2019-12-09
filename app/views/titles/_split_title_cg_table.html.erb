@@ -33,7 +33,7 @@
         <tr class="<%= p.digitized? ? (locked ? 'digitized_tr' : 'digitized_tr po_row') : (locked ? '' : 'po_row') %>">
           <td><%= p.iu_barcode %></td>
           <td><%= p.current_location %></td>
-          <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+          <td><%= p.medium_name %></td>
           <td><%= p.humanize_boolean_generation_fields %></td>
           <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, (ss.scan_resolution if ss)) %></td>
           <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, (ss.color_space if ss)) %></td>
@@ -75,7 +75,7 @@
         <tr class="<%= p.digitized? ? (locked ? 'digitized_tr' : 'digitized_tr po_row') : (locked ? '' : 'po_row') %>">
             <td><%= p.iu_barcode %></td>
             <td><%= p.current_location %></td>
-            <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+            <td><%= p.medium_name %></td>
             <td><%= p.humanize_boolean_generation_fields %></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, (ss.scan_resolution if ss)) %></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, (ss.color_space if ss)) %></td>
@@ -116,7 +116,7 @@
         <tr class="<%= p.digitized? ? (locked ? 'digitized_tr' : 'digitized_tr po_row') : (locked ? '' : 'po_row') %>">
             <td><%= p.iu_barcode %></td>
             <td><%= p.current_location %></td>
-            <td><%= p.has_attribute?(:gauge) ? p.gauge : '' %></td>
+            <td><%= p.medium_name %></td>
             <td><%= p.humanize_boolean_generation_fields %></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, (ss.scan_resolution if ss)) %></td>
             <td><%= select_tag "titles[#{t_id}]component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, (ss.color_space if ss)) %></td>

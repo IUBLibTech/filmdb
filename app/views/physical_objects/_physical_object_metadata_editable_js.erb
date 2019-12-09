@@ -179,6 +179,12 @@
             }
         });
 
+        /**
+         *  Whenever the Medium input:select changes values we need to recreate the form based on the selected medium
+         *  (film, video, etc). However, metadata may have been added/changed in other fields so we must POST the form
+         *  to the original action (new or edit). A GET won't work as the form data is appended to the URL as parameters
+         *  and this will exceed the max limit of around 2000 characters (for IE) that browsers support.
+         */
         $('#medium_types').change(function() {
             // add hidden attribute to form denoting a medium change and submit the form
             $('<input>').attr({
@@ -186,10 +192,7 @@
                 name: 'medium_changed',
                 value: true
             }).appendTo('#physical_object_form');
-            <%# if action_name == 'edit' %>
-            // redirect to the edit with format change action
-            //$('#physical_object_form').attr('action', '<%#= edit_physical_object_medium_path(@physical_object&.acting_as.id) %>')
-            <%# end %>
+            $('#physical_object_form').attr('action', '<%= action_name == 'new' ? physical_objects_new_post_path : physical_objects_edit_post_path %>');
             $('#physical_object_form').submit();
             document.getElementById("physical_object_form").submit();
         });

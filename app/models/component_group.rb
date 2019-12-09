@@ -97,7 +97,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def is_mdpi_workflow?
-    group_type.include?('MDPI')
+    MDPI_GROUP_TYPES.include?(group_type)
   end
   def is_iulmia_workflow?
     !is_mdpi_workflow?

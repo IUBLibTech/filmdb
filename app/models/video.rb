@@ -1,6 +1,8 @@
 class Video < ActiveRecord::Base
   acts_as :physical_object
   validates :gauge, presence: true
+  validates :iu_barcode, iu_barcode: true
+  validates :mdpi_barcode, mdpi_barcode: true
 
   GAUGE_VALUES = ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge').pluck(:value)
   MAXIMUM_RUNTIME_VALUES = ControlledVocabulary.physical_object_cv('Video')[:maximum_runtime].collect{|r| r[0]}
@@ -9,7 +11,6 @@ class Video < ActiveRecord::Base
   SOUND_VALUES = ControlledVocabulary.physical_object_cv('Video')[:sound].collect{|r| r[0]}
   STOCK_VALUES = ControlledVocabulary.physical_object_cv('Video')[:stock].collect{|r| r[0]}
   RECORDING_STANDARDS_VALUES = ControlledVocabulary.physical_object_cv('Video')[:recording_standard].collect{|r| r[0]}
-  SOUND_CONFIGURATION_FIELDS = ['Mono', 'Stereo', 'Surround', 'Other']
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :revised, :version_original, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
@@ -114,7 +115,25 @@ class Video < ActiveRecord::Base
               SOUND_CONFIRGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED)
           ))))))))
 
+  def initialize(args = {})
+    super
+    acting_as.media_type = 'Moving Image'
+    if args.is_a? ActionController::Parameters
+      args.each do |a|
+        acting_as.send(a.dup << "=", args[a])
+      end
+    elsif args.is_a? Hash
+      args.keys.each do |k|
+        acting_as.send((k.to_s << "=").to_sym, args[k])
+      end
+    else
+      raise "What is args?!?!?"
+    end
+  end
 
+  def medium_name
+    "#{gauge} #{medium}"
+  end
 
 
   # overridden to provide for more human readable attribute names for things like :sample_rate_32k

@@ -64,6 +64,12 @@ Rails.application.routes.draw do
   get '/physical_objects/:id/ajax_lookup_barcode', to: 'physical_objects#ajax_lookup_barcode', as: 'ajax_lookup_barcode'
   post '/physical_objects/ajax/rebuild_form', to: 'physical_objects#ajax_rebuild_form', as: 'physical_objects_ajax_rebuild_form'
 
+  # physical objects have to render the form based on a Medium (film, video, etc). When a users enters data THEN changes
+  # the Medium, we need to POST the already entered data to the original action (#new or #edit).
+  post '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'physical_objects_edit_post'
+  post '/physical_objects/new', to: 'physical_objects#new', as: 'physical_objects_new_post'
+  post '/physical_objects/:id', to: 'physical_objects#update', as: 'physical_object_update'
+
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
   get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'

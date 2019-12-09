@@ -48,14 +48,18 @@ class StatsController < ApplicationController
 	def set_counts
 		if any_filters?
 			#if unit or collection are specified we have to go from physical object to title/series since
-			# the associtions to unit/collect are through physical object and not title.
+			# the associations to unit/collect are through physical object and not title.
 			@title_count = Title.find_by_sql(title_count_sql).size
+			@digitized_count = PhysicalObject.find_by_sql(po_digit_count).size
+			@title_cat_count = Title.find_by_sql(title_cat_count_sql).size
 			@physical_object_count = PhysicalObject.where(po_sql_where).size
 			#@empty_title_count = "N/A"
 			#@empty_series_count = "N/A"
 			@series_count = Series.find_by_sql(series_count_sql).size
 		else
 			@title_count = Title.all.size
+			@digitized_count = PhysicalObject.where(digitized: true).size
+			@title_cat_count = Title.where(fully_cataloged: true).size
 			#@empty_title_count = Title.count_titles_without_physical_objects
 			@series_count = Series.all.size
 			#@empty_series_count = Series.series_without_titles_count
@@ -98,7 +102,17 @@ class StatsController < ApplicationController
 
 	def title_count_sql
 		"select distinct(titles.id) from physical_objects, titles, physical_object_titles "+
-			"where #{po_sql_where} and physical_objects.id = physical_object_titles.physical_object_id and physical_object_titles.title_id = titles.id"
+				"where #{po_sql_where} and physical_objects.id = physical_object_titles.physical_object_id and physical_object_titles.title_id = titles.id"
+	end
+
+	def po_digit_count
+		"select count(*) from physical_objects where #{po_sql_where} AND digitized = true"
+	end
+
+	def title_cat_count_sql
+		"select distinct(titles.id) from physical_objects, titles, physical_object_titles "+
+				"where #{po_sql_where} AND physical_objects.id = physical_object_titles.physical_object_id AND "+
+				"physical_object_titles.title_id = titles.id AND titles.fully_cataloged = true"
 	end
 
 	def series_count_sql

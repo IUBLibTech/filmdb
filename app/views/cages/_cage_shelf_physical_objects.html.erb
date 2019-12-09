@@ -14,7 +14,7 @@
 				MDPI: <%= p.mdpi_barcode %>
 			</td>
 			<td><%= p.titles_text %></td>
-			<td><%= p.gauge %></td>
+			<td><%= p.medium_name %></td>
 			<td>
 				<% unless @cage_shelf.cage.ready_to_ship?  %>
 					<a class='cage_shelf_po_delete_link' href="#" id='po_<%= p.acting_as.id %>'>Remove</a> <br>
