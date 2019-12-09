@@ -7,11 +7,11 @@ Rails.application.routes.draw do
   get '/ajax/title_publisher/role', to: 'ajax#title_publisher_role', as: 'ajax_publisher_role'
   get '/ajax/title_original_identifier/type', to: 'ajax#title_original_identifier', as: 'ajax_title_original_identifier'
   resources :cages
-	get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
-	post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
-	patch '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_patch'
-	delete '/cages/cage_shelf/:id/ajax_remove_physical_object_from_shelf/:po_id', to: 'cages#remove_physical_object', as: 'remove_physical_object_from_shelf'
-	get '/cages/:id/show_xml', to: 'cages#show_xml', as: 'show_cage_xml'
+  get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
+  post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
+  patch '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_patch'
+  delete '/cages/cage_shelf/:id/ajax_remove_physical_object_from_shelf/:po_id', to: 'cages#remove_physical_object', as: 'remove_physical_object_from_shelf'
+  get '/cages/:id/show_xml', to: 'cages#show_xml', as: 'show_cage_xml'
   post '/cages/mark_ready_to_ship/:id', to: 'cages#mark_ready_to_ship', as: 'mark_ready_to_ship'
   post '/cages/unmark_ready_to_ship/:id', to: 'cages#unmark_ready_to_ship', as: 'unmark_ready_to_ship'
   post '/cages/mark_shipped/:id', to: 'cages#mark_shipped', as: 'mark_shipped'
@@ -35,12 +35,11 @@ Rails.application.routes.draw do
   get '/component_groups/ajax/:id', to: 'component_groups#ajax_physical_objects_list', as: 'ajax_physical_objects_list'
   post '/component_groups/:id/ajax/remove_physical_object/:pid', to:'component_groups#remove_physical_object', as: 'remove_physical_object_from_component_group'
   post '/component_groups/:id/add_to_component_group/', to: 'component_groups#add_physical_objects', as: 'add_physical_objects_to_component_group'
-	post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
+  post '/component_groups/:id/ajax_queue_pull_request', to: 'component_groups#ajax_queue_pull_request', as: 'ajax_queue_pull_request'
   post '/component_groups/:id/ajax_move_into_active_request', to: 'component_groups#ajax_move_into_active_request', as: 'ajax_move_into_active_request'
-	post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
+  post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
 
   resources :controlled_vocabularies
-
   #get '/inventory/', to: 'physical_objects#new', as: 'inventory'
 
   resources :physical_objects
@@ -55,7 +54,7 @@ Rails.application.routes.draw do
 
   #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
-	get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
+  get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
   get '/physical_objects/ajax_show_storage/:iu_barcode', to: 'physical_objects#ajax_show_storage', as: 'ajax_show_storage'
   get '/physical_objects/workflow_history/:id', to: 'physical_objects#workflow_history', as: 'physical_object_workflow_history'
   post '/physical_objects/mark_missing/:id', to: 'physical_objects#mark_missing', as: 'physical_object_mark_missing'
@@ -89,11 +88,11 @@ Rails.application.routes.draw do
   post '/series/merge/merge_selected_series', to: 'series#series_auto_complete_selection_merge', as: 'series_autocomplete_selection_merge'
   get '/series/merge/series_table_row/:id', to: 'series#ajax_series_merge_table_row', as: 'ajax_series_merge_table_row'
 
-	# services URLs
-	post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
-	get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
-	post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
-	get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
+  # services URLs
+  post '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch'
+  get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
+  post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
+  get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
   post '/spreadsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
@@ -151,28 +150,28 @@ Rails.application.routes.draw do
   get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
   resources :units
 
-	resources :users
+  resources :users
   get '/users/worksite_location/:id', to: 'users#show_update_location', as: 'show_worksite_location'
   patch '/users/worksite_location/:id', to: 'users#update_location', as: 'update_worksite_location'
 
-	# routes for workflow
-	get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
-	post '/workflow/process_pull_request', to: 'workflow#process_pull_requested', as: 'process_pull_requested'
-	get '/workflow/receive_from_storage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
-	patch '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
+  # routes for workflow
+  get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'
+  post '/workflow/process_pull_request', to: 'workflow#process_pull_requested', as: 'process_pull_requested'
+  get '/workflow/receive_from_storage', to: 'workflow#receive_from_storage', as: 'receive_from_storage'
+  patch '/workflow/receive_from_storage/', to: 'workflow#process_receive_from_storage', as: 'process_received_from_storage'
   post '/workflow/receive_from_storage_wells/', to: 'workflow#process_receive_from_storage_wells', as: 'process_received_from_storage_wells'
   get '/workflow/ajax_alf_barcode/:iu_barcode', to: 'workflow#ajax_alf_receive_iu_barcode', as: 'ajax_alf_receive_iu_barcode'
   get '/workflow/ajax_wells_barcode/:iu_barcode', to: 'workflow#ajax_wells_receive_iu_barcode', as: 'ajax_wells_receive_iu_barcode'
-	get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
-	get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
-	get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
-	post '/workflow/return_to_storage', to: 'workflow#process_return_to_storage', as: 'process_return_to_storage'
-	get '/workflow/send_for_mold_abatement', to: 'workflow#send_for_mold_abatement', as: 'send_for_mold_abatement'
-	post '/workflow/process_send_for_mold_abatement', to: 'workflow#process_send_for_mold_abatement', as: 'process_send_for_mold_abatement'
-	get '/workflow/send_to_freezer', to: 'workflow#send_to_freezer', as: 'send_to_freezer'
-	post '/workflow/process_send_to_freezer', to: 'workflow#process_send_to_freezer', as: 'process_send_to_freezer'
-	get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
-	post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
+  get '/workflow/ship_external', to: 'workflow#ship_external', as: 'ship_external'
+  get '/workflow/receive_external', to: 'workflow#receive_from_external', as: 'receive_external'
+  get '/workflow/return_to_storage', to: 'workflow#return_to_storage', as: 'return_to_storage'
+  post '/workflow/return_to_storage', to: 'workflow#process_return_to_storage', as: 'process_return_to_storage'
+  get '/workflow/send_for_mold_abatement', to: 'workflow#send_for_mold_abatement', as: 'send_for_mold_abatement'
+  post '/workflow/process_send_for_mold_abatement', to: 'workflow#process_send_for_mold_abatement', as: 'process_send_for_mold_abatement'
+  get '/workflow/send_to_freezer', to: 'workflow#send_to_freezer', as: 'send_to_freezer'
+  post '/workflow/process_send_to_freezer', to: 'workflow#process_send_to_freezer', as: 'process_send_to_freezer'
+  get '/workflow/mark_missing', to: 'workflow#mark_missing', as: 'mark_missing'
+  post '/workflow/process_mark_missing', to: 'workflow#process_mark_missing', as: 'process_mark_missing'
   post '/workflow/ajax_cancel_queued_pull_request/:id', to: 'workflow#ajax_cancel_queued_pull_request', as: 'cancel_queued_pull_request'
   get '/workflow/best_copy_selection', to: 'workflow#best_copy_selection', as: 'workflow_best_copy_selection'
   post '/workflow/ajax_best_copy_selection_barcode/:iu_barcode', to: 'workflow#ajax_best_copy_selection_barcode', as: 'ajax_best_copy_selection_barcode'
@@ -212,59 +211,4 @@ Rails.application.routes.draw do
 
 
   root "titles#index"
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

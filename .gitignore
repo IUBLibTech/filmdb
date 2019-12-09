@@ -18,8 +18,11 @@ tmp
 config/database.yml
 config/pod_db.yml
 
+.byebug_history
+
 # files for rubymine
 .idea/*
+.idea/filmdb.iml
 
 # files from Passenger
 passenger.*
