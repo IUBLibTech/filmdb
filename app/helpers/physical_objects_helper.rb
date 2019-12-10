@@ -24,6 +24,7 @@ module PhysicalObjectsHelper
     user = User.current_user_object
     @physical_object.inventoried_by = user.id
     @physical_object.modified_by = user.id
+    @physical_object.date_inventoried = DateTime.now
     begin
       PhysicalObject.transaction do
         process_titles

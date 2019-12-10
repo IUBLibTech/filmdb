@@ -1,8 +1,8 @@
 class Film < ActiveRecord::Base
   acts_as :physical_object
-  validates :gauge, presence: true
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
+  validates :gauge, presence: true
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
@@ -109,11 +109,11 @@ class Film < ActiveRecord::Base
     super
     if args.is_a? ActionController::Parameters
       args.each do |a|
-        acting_as.send(a.dup << "=", args[a])
+        self.send(a.dup << "=", args[a])
       end
     elsif args.is_a? Hash
       args.keys.each do |k|
-        acting_as.send((k.to_s << "=").to_sym, args[k])
+        self.send((k.to_s << "=").to_sym, args[k])
       end
     else
       raise "What is args?!?!?"

@@ -120,11 +120,11 @@ class Video < ActiveRecord::Base
     acting_as.media_type = 'Moving Image'
     if args.is_a? ActionController::Parameters
       args.each do |a|
-        acting_as.send(a.dup << "=", args[a])
+        self.send(a.dup << "=", args[a])
       end
     elsif args.is_a? Hash
       args.keys.each do |k|
-        acting_as.send((k.to_s << "=").to_sym, args[k])
+        self.send((k.to_s << "=").to_sym, args[k])
       end
     else
       raise "What is args?!?!?"

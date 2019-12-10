@@ -1,5 +1,8 @@
 class DeleteFilmColumnsFromPhysicalObject < ActiveRecord::Migration
   def change
+    if !Film.is_a? PhysicalObject || !PhysicalObject.method_defined?(:actable)
+      raise "Re-enable acts_as: uncomment 'actable' in PhysicalObject and 'acts_as' in Film "
+    end
     # remove old, a_unused columns - these attributes have been moved into film objects
     remove_column :physical_objects, :copy_right
     remove_column :physical_objects, :series_production_number

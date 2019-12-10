@@ -310,12 +310,10 @@ class PhysicalObject < ActiveRecord::Base
 
   def test_before_save
     puts "\n\nBefore Save: #{self.created_at}\n\n"
-		debugger
   end
 
   def test_after_save
     puts "\n\nAfter Save: #{self.created_at}\n\n"
-		debugger
 	end
 
 	def active_scan_settings
@@ -327,8 +325,8 @@ class PhysicalObject < ActiveRecord::Base
 	def created_at
 		date_inventoried
 	end
-	def date_inventoried=(val)
-		# do nothing
+	def created_at=(val)
+		super
 	end
 
 	def estimated_duration_in_sec
