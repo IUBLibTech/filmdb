@@ -13,7 +13,7 @@
   <h2><%= @em %> <%= cm %></h2>
 </div>
 <%
-       if action_name == "new"
+       if action_name == "new" || action_name == 'create'
          @url = create_physical_object_url
        else action_name == 'edit' || action_name == 'update'
         # update can fail because of a validation error

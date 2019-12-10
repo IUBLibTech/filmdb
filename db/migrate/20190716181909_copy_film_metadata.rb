@@ -31,7 +31,8 @@ class CopyFilmMetadata < ActiveRecord::Migration
     # actable for existing PhysicalObjects without also modifying the created_at attribute of PhysicalObject (which is VERY problematic).
     # So this check ensures that the acting_as relationship is DISABLED (commented out in the Film model)
     if Film.is_a? PhysicalObject || PhysicalObject.method_defined?(:actable)
-      raise "Cannot migrate PhysicalObjects into Films while the acts_as relation is active - it overwrites created_at timestamps. Comment out Film acts_as and PhysicalObject actable lines"
+      raise "Cannot migrate PhysicalObjects into Films while the acts_as relation is active - comment out 'actable' in PhysicalObject and 'acts_as' in Film. "+
+                "Also comment out iu and MDPI barcode validation in Film"
     else
       PhysicalObject.transaction do
         pos = PhysicalObject.all

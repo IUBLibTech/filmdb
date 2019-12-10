@@ -156,7 +156,7 @@ class VideoParser < CsvParser
     # date created
     begin
       d = Date.strptime(row[column_index DATE_CREATED], '%Y/%m/%d')
-      po.created_at = d
+      po.date_inventoried = d
     rescue
       po.errors.add(:date, "Unable to parse date created")
     end

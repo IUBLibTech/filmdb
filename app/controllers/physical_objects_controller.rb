@@ -75,15 +75,17 @@ class PhysicalObjectsController < ApplicationController
 
   # GET /physical_objects/new_physical_object
   def new
+    u = User.current_user_object
     if request.get?
       @em = "Creating New Physical Object"
-      u = User.current_user_object
       #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
       @physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
-
+      new_one.inventoried_by = u.id
+      new_one.modified_by = u.id
+      new_one.date_inventoried = DateTime.now
       # copy all PhysicalObject only attributes that have been posted
       class_sym = class_symbol_from_params
       params[class_sym].keys.each do |p|
@@ -91,7 +93,6 @@ class PhysicalObjectsController < ApplicationController
           new_one.send(p+"=", params[class_sym][p])
         end
       end
-
       # copy any title associations created before the switch
       params[:physical_object][:title_ids].split(',').each do |t_id|
         new_one.titles << Title.find(t_id.to_i)
@@ -169,10 +170,9 @@ class PhysicalObjectsController < ApplicationController
         if o_medium == s_medium
           @physical_object.modifier = User.current_user_object
           @success = @physical_object.update_attributes!(physical_object_params)
-          @physical_object.acting_as.created_at = c
+          @physical_object.acting_as.date_inventoried = c
         else
           specific_to_delete = @physical_object.specific
-          debugger
           new_one = blank_specific_po(medium_value_from_params)
           new_one.acting_as = @physical_object.acting_as
           @physical_object.specific.actable = new_one
@@ -180,7 +180,7 @@ class PhysicalObjectsController < ApplicationController
           new_one.save
           specific_to_delete.delete
           @physical_object = new_one
-          @physical_object.acting_as.created_at = c
+          @physical_object.acting_as.date_inventoried = c
         end
         @nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
         # check to see if titles have changed in the update

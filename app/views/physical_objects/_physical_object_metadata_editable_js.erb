@@ -192,7 +192,7 @@
                 name: 'medium_changed',
                 value: true
             }).appendTo('#physical_object_form');
-            $('#physical_object_form').attr('action', '<%= action_name == 'new' ? physical_objects_new_post_path : physical_objects_edit_post_path %>');
+            $('#physical_object_form').attr('action', '<%= (action_name == 'new' || action_name == 'create') ? physical_objects_new_post_path : physical_objects_edit_post_path %>');
             $('#physical_object_form').submit();
             document.getElementById("physical_object_form").submit();
         });
