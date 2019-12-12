@@ -209,7 +209,7 @@ class ServicesController < ActionController::Base
 			end
 		rescue => error
 			puts error.message
-			puts error.backtrace.join('\n')
+			puts error.backtrace
 			msg = "An unexpected error occurred requesting MODS for #{@bc}: #{error.message}. If this problem persists, please contact the Filmdb developer(s)."
 			@builder = Nokogiri::XML::Builder.new do |xml|
 				xml.error do
