@@ -357,7 +357,14 @@ class PhysicalObject < ActiveRecord::Base
     #   end
     # end
     physical_object_titles.pluck(:title_id)
-  end
+	end
+
+	def film?
+		medium == 'Film'
+	end
+	def video?
+		medium == 'Video'
+	end
 
   # a helper for concatenating MEDIUM with additional medium specific info. For instance, a 35mm Film would be
   # displayed as 'Film 35mm'
