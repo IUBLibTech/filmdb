@@ -66,6 +66,25 @@ class ServicesController < ActionController::Base
 		end
 	end
 
+	# /services/mods/:mdpi_barcode
+	# this action responds to requests for mods records based on a PhysicalObject MDPI barcode
+	def mods_from_barcode
+		bc = params[:mdpi_barcode]
+		po = PhysicalObject.where(mdpi_barcode: bc).first
+		if po.nil?
+			@msg = "Could not find an record with MDPI Barcode: #{bc}"
+		elsif !po.digitized
+			@msg = "The MDPI Barcode #{bc} does not belong to a -digitized- record"
+		else
+			# it's possible, although highly unlikely, that a physical object would have more than 1 title association AND
+			# have been pulled for digitization more than once through multiple titles. In this case, there is no way to know
+			# which title record we need to generate MODS for... Carmel understands this and is okay with this service
+			# returning the -first- title's MODS data, of all that were selected for digitization.
+			mods_title = po.component_groups.where(group_type: ComponentGroup::REFORMATTING_MDPI).first
+
+		end
+	end
+
 	def test_basic_auth
 		uri = URI.parse("https://pod-dev.mdpi.iu.edu/responses/objects/40000000334609/metadata/full")
 		http = Net::HTTP.new(uri.host, uri.port)

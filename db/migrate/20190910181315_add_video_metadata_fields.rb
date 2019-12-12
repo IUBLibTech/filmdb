@@ -1,24 +1,24 @@
 class AddVideoMetadataFields < ActiveRecord::Migration
   def change
     # version fields
-    add_column :videos, :first_edition, :boolean
-    add_column :videos, :second_edition, :boolean
-    add_column :videos, :third_edition, :boolean
-    add_column :videos, :fourth_edition, :boolean
-    add_column :videos, :abridged, :boolean
-    add_column :videos, :short, :boolean
-    add_column :videos, :long, :boolean
-    add_column :videos, :sample, :boolean
-    add_column :videos, :revised, :boolean
-    add_column :videos, :original, :boolean
-    add_column :videos, :excerpt, :boolean
-    add_column :videos, :catholic, :boolean
-    add_column :videos, :domestic, :boolean
-    add_column :videos, :trailer, :boolean
-    add_column :videos, :english, :boolean
-    add_column :videos, :non_english, :boolean
-    add_column :videos, :television, :boolean
-    add_column :videos, :x_rated, :boolean
+    add_column :videos, :first_edition, :boolean unless column_exists? :videos, :first_edition
+    add_column :videos, :second_edition, :boolean unless column_exists? :videos, :second_edition
+    add_column :videos, :third_edition, :boolean unless column_exists? :videos, :third_edition
+    add_column :videos, :fourth_edition, :boolean unless column_exists? :videos, :fourth_edition
+    add_column :videos, :abridged, :boolean unless column_exists? :videos, :abridged
+    add_column :videos, :short, :boolean unless column_exists? :videos, :short
+    add_column :videos, :long, :boolean unless column_exists? :videos, :long
+    add_column :videos, :sample, :boolean unless column_exists? :videos, :sample
+    add_column :videos, :revised, :boolean unless column_exists? :videos, :revised
+    add_column :videos, :original, :boolean unless column_exists? :videos, :original
+    add_column :videos, :excerpt, :boolean unless column_exists? :videos, :excerpt
+    add_column :videos, :catholic, :boolean unless column_exists? :videos, :catholic
+    add_column :videos, :domestic, :boolean unless column_exists? :videos, :domestic
+    add_column :videos, :trailer, :boolean unless column_exists? :videos, :trailer
+    add_column :videos, :english, :boolean unless column_exists? :videos, :english
+    add_column :videos, :non_english, :boolean unless column_exists? :videos, :non_english
+    add_column :videos, :television, :boolean unless column_exists? :videos, :television
+    add_column :videos, :x_rated, :boolean unless column_exists? :videos, :x_rated
 
     # do not add gauge, it was created in the original Videos migration file
     

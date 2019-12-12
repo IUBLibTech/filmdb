@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
   post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
   get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
+  get '/services/mods/:mdpi_barcode', to: 'services#mods_from_barcode', as: 'mods_service'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
   post '/spreadsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
