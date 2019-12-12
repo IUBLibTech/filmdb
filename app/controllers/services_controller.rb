@@ -8,7 +8,7 @@ class ServicesController < ActionController::Base
 	include CagesHelper
 	include BasicAuthenticationHelper
 
-	before_action :authenticate, only: [:receive]
+	before_action :authenticate, only: [:receive, :mods_from_barcode]
 
 	def receive
 		logger.info "Someone has successfully authenticate with Filmdb services#receive: #{request.domain(2)}"
@@ -82,12 +82,11 @@ class ServicesController < ActionController::Base
 				# returning the -first- title's MODS data, of all that were selected for digitization.
 				@mods_title_id = po.component_groups.where(group_type: ComponentGroup::REFORMATTING_MDPI).first.title_id
 			end
-
 			if @msg
 				@builder = Nokogiri::XML::Builder.new do |xml|
 					xml.error @msg
-					render xml: @builder.to_xml, status: 404
 				end
+				render xml: @builder.to_xml, status: 404
 			else
 				@title = Title.find(@mods_title_id)
 				@builder = Nokogiri::XML::Builder.new do |xml|
@@ -189,7 +188,13 @@ class ServicesController < ActionController::Base
 								end
 							}
 							xml.physicalDescription {
-								xml.extent_ "#{@title.physical_objects.size} #{@title.physical_objects.first.medium.pluralize(@title.physical_objects.size)} (#{ @title.total_duration }); #{ @title.physical_objects.collect{|p| p.gauge }.uniq.join(", ")}"
+								mediums = @title.physical_objects.group(:medium).count
+								@msg = ''
+								mediums.each do |m|
+									@msg << "#{@title.physical_objects.where(medium: m[0]).size} #{m[0].pluralize(@title.physical_objects.where(medium: m[0]).size)} (#{ @title.medium_duration(m[0]) }); "+
+											"#{ @title.physical_objects.where(medium: m[0]).collect{|p| p.specific.has_attribute?('gauge') ? p.specific.gauge : ''}.uniq.join(", ")}"
+								end
+								xml.extent_ @msg
 							}
 							xml.identier_("type":"local") { xml.text "filmdb:#{@title.id}"}
 						}

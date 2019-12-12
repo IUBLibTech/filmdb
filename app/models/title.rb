@@ -1,5 +1,6 @@
 class Title < ActiveRecord::Base
 	include DateHelper
+	include PhysicalObjectsHelper
 	include SessionsHelper
 
 	has_many :title_creators, dependent: :delete_all, autosave: true
@@ -160,6 +161,9 @@ class Title < ActiveRecord::Base
 
 	def total_duration
 		hh_mm_sec physical_objects.inject(0){|sum, p| p[:duration].to_i + sum }
+	end
+	def medium_duration(med)
+		hh_mm_sec physical_objects.where(medium: med).inject(0){|sum, p| p[:duration] ? p[:duration].to_i + sum : 0 + sum }
 	end
 
 	def avalon_url
