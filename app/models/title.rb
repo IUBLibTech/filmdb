@@ -158,6 +158,10 @@ class Title < ActiveRecord::Base
 		titles.uniq.sort{|t1,t2| t1.title_text <=> t2.title_text}
 	end
 
+	def total_duration
+		hh_mm_sec physical_objects.inject(0){|sum, p| p[:duration].to_i + sum }
+	end
+
 	def avalon_url
 		po = self.physical_objects.where(digitized: true).first
 		if po.nil?
