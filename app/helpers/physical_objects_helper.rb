@@ -231,7 +231,7 @@ module PhysicalObjectsHelper
           :generation_master_distribution, :generation_off_air_recording, :generation_original, :generation_picture_lock,
           :generation_rough_cut, :generation_stock_footage, :generation_submaster, :generation_work_tapes, :generation_work_track,
           :generation_other, :generation_notes,
-          :reel_number, :size, :recording_standard, :maximum_runtime, :base, :stock,
+          :reel_number, :size, :recording_standard, :maximum_runtime, :base, :stock, :detailed_stock_information,
           :playback_speed, :picture_type_not_applicablem, :picture_type_silent_picture, :picture_type_mos_picture, :picture_type_composite_picture,
           :picture_type_credits_only, :picture_type_picture_effects, :picture_type_picture_outtakes, :picture_type_other,
           :picture_type_not_applicable,

@@ -44,8 +44,6 @@
           <%= f.check_box :generation_dub %>
           <div>Dub</div>
         </div>
-      </div>
-      <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
           <%= f.check_box :generation_duplicate %>
           <div>Duplicate</div>
@@ -58,6 +56,8 @@
           <%= f.check_box :generation_fine_cut %>
           <div>Fine Cut</div>
         </div>
+      </div>
+      <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
           <%= f.check_box :generation_intermediate %>
           <div>Intermediatee</div>
@@ -86,12 +86,16 @@
           <%= f.check_box :generation_original %>
           <div>Original</div>
         </div>
+      </div>
+      <div class="generation_box generation_box_ml_5px">
+        <div class="check_box">
+          <%= f.check_box :generation_other %>
+          <div>Other</div>
+        </div>
         <div class="check_box">
           <%= f.check_box :generation_picture_lock %>
           <div>Picture Lock</div>
         </div>
-      </div>
-      <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
           <%= f.check_box :generation_rough_cut %>
           <div>Rough Cut</div>
@@ -112,17 +116,11 @@
           <%= f.check_box :generation_work_track %>
           <div>Work Track</div>
         </div>
-        <div class="check_box">
-          <%= f.check_box :generation_other %>
-          <div>Other</div>
-        </div>
       </div>
     </div>
   </div>
 </div>
-
-
-<div id="format_right_div">
+<div id="format_right_div _45">
   <div id="format_right_div_fields">
     <div class="label">
       <b>Original Identifier</b>
@@ -178,6 +176,12 @@
     <div class="value">
       <%= f.select :stock, options_for_select(@cv[:stock].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.stock), {include_blank: ''}  %>
     </div>
+    <div class="label">
+      <b>Detailed Stock Information</b>
+    </div>
+    <div class="value">
+      <%= f.text_area :detailed_stock_information %>
+    </div>
   </div>
 </div>
 <div class="clear">
@@ -189,39 +193,39 @@
 <div id="image_metadata" class="metadata_section left _50">
   <h4 class="m_bottom_5px">Image</h4>
   <b>Playback Speed</b><%= f.select :playback_speed, options_for_select(@cv[:playback_speed].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.playback_speed), {include_blank: ''} %>
-  <div class="em_95">
+  <div class="">
     <b class='block'>Picture Type</b>
-    <div class="left mr_10">
-      <div class="stagger_40">
-        <%= f.check_box :picture_type_not_applicable %>Not Applicable
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :picture_type_silent_picture %>Silent Picture
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :picture_type_mos_picture %>MOS Picture
-      </div>
-      <div class="stagger_40">
+    <div class="left flex_wrap flex_col">
+      <div class="_40">
         <%= f.check_box :picture_type_composite_picture %>Composite Picture
       </div>
-      <div class="stagger_40">
+      <div class="_40">
         <%= f.check_box :picture_type_credits_only %>Credits Only<br/>
       </div>
-      <div class="stagger_40">
-        <%= f.check_box :picture_type_picture_effects %>Picture Effects<br/>
+      <div class="_40">
+        <%= f.check_box :picture_type_mos_picture %>MOS Picture
       </div>
-      <div class="stagger_40">
+      <div class="_40">
+        <%= f.check_box :picture_type_not_applicable %>Not Applicable
+      </div>
+      <div class="_40">
         <%= f.check_box :picture_type_picture_outtakes %>Picture Outtakes<br/>
       </div>
-      <div class="stagger_40">
+      <div class="_40">
+        <%= f.check_box :picture_type_picture_effects %>Picture Effects<br/>
+      </div>
+      <div class="_40">
+        <%= f.check_box :picture_type_silent_picture %>Silent Picture
+      </div>
+      <div class="_40">
         <%= f.check_box :picture_type_other %>Other<br/>
       </div>
     </div>
   </div>
-  <div class="clear em_95">
+  <div class="clear ">
     <b class='block'>Color</b>
     <div class="stagger_20">
-      <%= f.check_box :image_color_bw %>BW
+      <%= f.check_box :image_color_bw %>Black and White
     </div>
     <div class="stagger_20">
       <%= f.check_box :image_color_color %>Color
@@ -233,7 +237,7 @@
       <%= f.check_box :image_color_other %>Other
     </div>
   </div>
-  <div class="clear em_95">
+  <div class="clear ">
     <b class='block'>Aspect Ratio</b>
     <div class="stagger_20">
       <%= f.check_box :image_aspect_ratio_4_3 %>4:3
@@ -260,12 +264,12 @@
     <b>Format Type</b>
     <div>
       <div class="check_box">
-        <%= f.check_box :sound_format_type_magnetic %>
-        <div>Magnetic</div>
-      </div>
-      <div class="check_box">
         <%= f.check_box :sound_format_type_digital %>
         <div>Digital</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :sound_format_type_magnetic %>
+        <div>Magnetic</div>
       </div>
       <div class="check_box">
         <%= f.check_box :sound_format_type_sound_on_separate_media %>
@@ -281,20 +285,20 @@
     <b>Content Type</b>
     <div>
       <div class="check_box">
-        <%= f.check_box :sound_content_type_music_track %>
-        <div>Music Track</div>
-      </div>
-      <div class="check_box">
-        <%= f.check_box :sound_content_type_effects_track %>
-        <div>Effects Track</div>
+        <%= f.check_box :sound_content_type_composite_track %>
+        <div>Composite Track</div>
       </div>
       <div class="check_box">
         <%= f.check_box :sound_content_type_dialog %>
         <div>Dialog</div>
       </div>
       <div class="check_box">
-        <%= f.check_box :sound_content_type_composite_track %>
-        <div>Composite Track</div>
+        <%= f.check_box :sound_content_type_effects_track %>
+        <div>Effects Track</div>
+      </div>
+      <div class="check_box">
+        <%= f.check_box :sound_content_type_music_track %>
+        <div>Music Track</div>
       </div>
       <div class="check_box">
         <%= f.check_box :sound_content_type_outtakes %>
@@ -324,63 +328,63 @@
     </div>
   </div>
   <div>
-    <b>Noise Reduction</b>
-    <div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_a %>Dolby A
+    <div><b>Noise Reduction</b></div>
+    <div class="flex_wrap flex_col_wrap h_150px">
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_adres %>ADRES
       </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_b %>Dolby B
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_c %>Dolby C
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_s %>Dolby S
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_sr %>Dolby SR
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_nr %>Dolby NR
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_hx %>Dolby HX
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dolby_hx_pro %>Dolby HX Pro
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dbx %>DBX
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dbx_type_1 %>DBX Type I
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dbx_type_2 %>DBX Type II
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_high_com %>High Com
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_high_com_2 %>High Com II
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_adres %>adres
-      </div>
-      <div class="stagger_40">
+      <div class="_25">
         <%= f.check_box :sound_noise_redux_anrs %>ANRS
       </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dnl %>DNL
-      </div>
-      <div class="stagger_40">
-        <%= f.check_box :sound_noise_redux_dnr %>DNR
-      </div>
-      <div class="stagger_40">
+      <div class="_25">
         <%= f.check_box :sound_noise_redux_cedar %>CEDAR
       </div>
-      <div class="stagger_40">
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dbx %>DBX
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dbx_type_1 %>DBX Type I
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dbx_type_2 %>DBX Type II
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dnl %>DNL
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dnr %>DNR
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_a %>Dolby A
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_b %>Dolby B
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_c %>Dolby C
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_hx %>Dolby HX
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_hx_pro %>Dolby HX Pro
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_nr %>Dolby NR
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_s %>Dolby S
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_dolby_sr %>Dolby SR
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_high_com %>High Com
+      </div>
+      <div class="_25">
+        <%= f.check_box :sound_noise_redux_high_com_2 %>High Com II
+      </div>
+      <div class="_25">
         <%= f.check_box :sound_noise_redux_none %>None
       </div>
     </div>

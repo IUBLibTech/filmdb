@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191202171255) do
+ActiveRecord::Schema.define(version: 20191216181516) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -604,6 +604,7 @@ ActiveRecord::Schema.define(version: 20191202171255) do
     t.text    "generation_notes",                          limit: 65535
     t.string  "sound"
     t.string  "tape_capacity"
+    t.text    "detailed_stock_information",                limit: 65535
   end
 
   create_table "workflow_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
