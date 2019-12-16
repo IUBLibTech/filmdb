@@ -78,8 +78,8 @@ class PhysicalObjectsController < ApplicationController
     u = User.current_user_object
     if request.get?
       @em = "Creating New Physical Object"
-      #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
-      @physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
+      @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      #@physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
@@ -169,7 +169,7 @@ class PhysicalObjectsController < ApplicationController
         # need to cleanup the old specific class that was changed to something else
         if o_medium == s_medium
           @physical_object.modifier = User.current_user_object
-          @success = @physical_object.update_attributes!(physical_object_params)
+          #@success = @physical_object.update_attributes!(physical_object_params)
           @physical_object.acting_as.date_inventoried = c
         else
           specific_to_delete = @physical_object.specific
@@ -187,6 +187,7 @@ class PhysicalObjectsController < ApplicationController
         process_titles
         @physical_object.modifier = User.current_user_object
         @success = @physical_object.update_attributes!(physical_object_params)
+        debugger
       end
     rescue Exception => error
       puts error.message

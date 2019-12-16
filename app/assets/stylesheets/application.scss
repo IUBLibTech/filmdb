@@ -401,6 +401,9 @@ td#color {
 .h_55px {
     height: 55px;
 }
+.h_60px {
+  height: 60px;
+}
 .h_75px {
     height: 75px;
 }
@@ -863,4 +866,7 @@ a.title_link {
 .flex_wrap {
   display: flex;
   flex-wrap: wrap;
+}
+.flex_col_wrap {
+  flex-flow: column wrap;
 }
