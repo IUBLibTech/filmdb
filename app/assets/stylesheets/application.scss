@@ -162,6 +162,9 @@ a.orange:visited {
 .red {
     color: #8F2609;
 }
+.red_bg {
+  background: red;
+}
 
 .green {
     color: #23c417;
@@ -687,6 +690,11 @@ div#title_popup_header > h4 {
 }
 .m_top_10px {
     margin-top: 10px;
+}
+.return_warn {
+  padding: 5px;
+  font-weight: bold;
+  background: red;
 }
 
 .title_label {

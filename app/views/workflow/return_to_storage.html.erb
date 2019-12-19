@@ -23,6 +23,8 @@
 	$(document).ready(function() {
 		$('.ajax_barcode_lookup').bind('input', function () {
 			$('#ajax_show_storage_message').html('');
+			$('p.warning').remove();
+      $('p.notice').remove();
 			valid = validateIUBarcode($(this));
 			if (valid) {
           var url = '../workflow/ajax_show_storage_location/' + $(this).val();
