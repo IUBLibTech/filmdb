@@ -169,6 +169,10 @@ class WorkflowStatus < ActiveRecord::Base
 		WorkflowStatus.is_storage_status?(self.status_name)
   end
 
+	def missing?
+		status_name == MISSING
+	end
+
   def self.in_workflow?(status_name)
     workflow_type_from_status(status_name) == 'In Workflow'
   end
