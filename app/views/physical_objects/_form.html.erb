@@ -51,7 +51,7 @@
       <div class="label"><b>Compilation</b></div>
       <div class="field"><%= f.text_field :compilation %></div>
       <div class="label"><b>* Medium</b></div>
-      <div class="field"><%= f.select :medium, PhysicalObject::MEDIA_TYPE_MEDIUMS['Moving Image'], {}, {id: 'medium_types'} %></div>
+      <div class="field"><%= f.select :medium, PhysicalObject::NEW_MEDIUMS, {}, {id: 'medium_types'} %></div>
       <div class="label">
         <b>* Unit</b>
       </div>

@@ -5,7 +5,7 @@ class SpreadsheetsController < ApplicationController
   # GET /spreadsheets
   # GET /spreadsheets.json
   def index
-    @spreadsheets = Spreadsheet.all
+    @spreadsheets = Spreadsheet.all.order("id DESC")
     @file = ""
   end
 

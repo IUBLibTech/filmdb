@@ -17,12 +17,12 @@ class FilmParser < CsvParser
   ]
 
   # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
-  TITLE, DURATION, SERIES_NAME, VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN = 23,24,25,26,27,28,29,30,31
-  CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE, STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO = 32,33,34,35,36,37,38,39,40
-  SOUND, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE, SOUND_CONFIGURATION = 41,42,43,44,45,46
-  DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, AD_STRIP, SHRINKAGE, MOLD, MISSING_FOOTAGE, CREATOR = 47,48,49,50,51,52,53
-  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART = 54,55,56,57,58,59,60
-  DATE, LOCATION, TITLE_SUMMARY, TITLE_NOTES, NAME_AUTHORITY, GENERATION_NOTES = 61,62,63,64,65,66
+  TITLE, DURATION, SERIES_NAME, VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN = 22,23,24,25,26,27,28,29,30
+  CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE, STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO = 31,32,33,34,35,36,37,38,39
+  SOUND, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE, SOUND_CONFIGURATION = 40,41,42,43,44,45
+  DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, AD_STRIP, SHRINKAGE, MOLD, MISSING_FOOTAGE, CREATOR = 46,47,48,49,50,51,52
+  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART = 53,54,55,56,57,58,59
+  DATE, LOCATION, TITLE_SUMMARY, TITLE_NOTES, NAME_AUTHORITY, GENERATION_NOTES = 60,61,62,63,64,65
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -128,12 +128,7 @@ class FilmParser < CsvParser
         @headers[header.strip] = i
       end
     }
-    # # examine the headers to make sure that title, media type, medium, unit and iu_barcode are nt (minimum to create physical object)
-    # [COLUMN_HEADERS[TITLE], COLUMN_HEADERS[MEDIUM], COLUMN_HEADERS[MEDIA_TYPE], COLUMN_HEADERS[UNIT], COLUMN_HEADERS[IU_BARCODE]].each do |h|
-    #   unless @headers.include?(h)
-    #     @parse_headers_msg << parsed_header_message(h)
-    #   end
-    # end
+
 
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
@@ -509,18 +504,18 @@ class FilmParser < CsvParser
     end
   end
   def parse_media_type(po, row)
-    media_type = row[column_index MEDIA_TYPE]
-    if media_type.blank? || !po.media_types.include?(media_type)
-      po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
+    #media_type = row[column_index MEDIA_TYPE]
+    #if media_type.blank? || !po.media_types.include?(media_type)
+    #  po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
+    #else
+    #  po.send(:media_type=, media_type)
+    medium = row[column_index MEDIUM]
+    if medium.blank? || ! po.media_type_mediums.include?(medium)
+      po.errors.add(:medium, "Medium: '#{medium}' is malformed or unsupported.")
     else
-      po.send(:media_type=, media_type)
-      medium = row[column_index MEDIUM]
-      if medium.blank? || ! po.media_type_mediums[media_type].include?(medium)
-        po.errors.add(:medium, "Medium: '#{medium}' is malformed for Media Type: '#{media_type}'")
-      else
-        po.send(:medium=, medium)
-      end
+      po.send(:medium=, medium)
     end
+    #end
   end
   def parse_po_location(po, row)
     location = row[column_index CURRENT_LOCATION]

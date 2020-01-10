@@ -4,26 +4,26 @@ class VideoParser < CsvParser
   require 'csv'
   require 'manual_roll_back_error'
 
-  # the column headers that spreadsheets should contain for Videos - only the 5 metadata fields required to create a physical object
-  # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
-  COLUMN_HEADERS = PO_HEADERS + [
+  VIDEO_HEADERS = [
       'Title', 'Duration', 'Series Name', 'Version', 'Format', 'Generation', 'Original Identifier', 'Base', 'Stock',
-      'Picture Type', 'Tape Capacity', 'Playback Speed', 'Alternative Title', 'Title Summary', 'Title Notes',
+      'Picture Type', 'Capacity', 'Playback Speed', 'Alternative Title', 'Title Summary', 'Title Notes',
       'Name Authority', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Series Part', 'Date', 'Location',
-      'Generation Notes', 'Stock', 'Size', 'Aspect Ratio', 'Sound', 'Color', 'Sound Content Type', 'Dialog Language',
+      'Generation Notes', 'Size', 'Aspect Ratio', 'Sound', 'Color', 'Sound Content Type', 'Dialog Language',
       'Captions or Subtitles', 'Captions or Subtitles Notes', 'Captions or Subtitles Language',
       # missing fields from sample spreadsheet but I'm adding anyway
       'Sound Format Type', 'Series Production Number', 'Sound Field', 'Noise Reduction', 'Recording Standard',
-      'OCLC Number', 'Tape Capacity', 'Reel Number'
+      'OCLC Number', 'Reel Number', 'Detailed Stock Information'
   ]
+  # the column headers that spreadsheets should contain for Videos - they must conform to this vocabulary
+  COLUMN_HEADERS = PO_HEADERS + VIDEO_HEADERS
 
-  TITLE, DURATION, SERIES_NAME, VERSION, FORMAT, GENERATION, ORIGINAL_IDENTIFIER, BASE, STOCK = 23,24,25,26,27,28,29,30,31
-  PICTURE_TYPE, TAPE_CAPACITY, PLAYBACK_SPEED, ALTERNATIVE_TITLE, TITLE_SUMMARY, TITLE_NOTES = 32,33,34,35,36,37
-  NAME_AUTHORITY, CREATOR, PUBLISHER, GENRE, FORM, SUBJECT, SERIES_PART, DATE, LOCATION = 38,39,40,41,42,43,44,45,46
-  GENERATION_NOTES, STOCK, SIZE, ASPECT_RATIO, SOUND, COLOR, SOUND_CONTENT_TYPE, DIALOG_LANGUAGE = 47,48,49,50,51,52,53,54
-  CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, CAPTIONS_OR_SUBTITLES_LANGUAGE = 55,56,57
-  SOUND_FORMAT_TYPE, SERIES_PRODUCTION_NUMBER, SOUND_CONFIGURATION, NOISE_REDUCTION, RECORDING_STANDARD = 58,59,60,61,62
-  OCLC_NUMBER, REEL_NUMBER = 63,64
+  TITLE, DURATION, SERIES_NAME, VERSION, FORMAT, GENERATION, ORIGINAL_IDENTIFIER, BASE, STOCK = 22,23,24,25,26,27,28,29,30
+  PICTURE_TYPE, CAPACITY, PLAYBACK_SPEED, ALTERNATIVE_TITLE, TITLE_SUMMARY, TITLE_NOTES = 31,32,33,34,35,36
+  NAME_AUTHORITY, CREATOR, PUBLISHER, GENRE, FORM, SUBJECT, SERIES_PART, DATE, LOCATION = 37,38,39,40,41,42,43,44,45
+  GENERATION_NOTES, SIZE, ASPECT_RATIO, SOUND, COLOR, SOUND_CONTENT_TYPE, DIALOG_LANGUAGE = 46,47,48,49,50,51,52
+  CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, CAPTIONS_OR_SUBTITLES_LANGUAGE = 53,54,55
+  SOUND_FORMAT_TYPE, SERIES_PRODUCTION_NUMBER, SOUND_CONFIGURATION, NOISE_REDUCTION, RECORDING_STANDARD = 56,57,58,59,60
+  OCLC_NUMBER, REEL_NUMBER, DETAILED_STOCK_INFORMATION = 56,62,63
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
@@ -168,13 +168,17 @@ class VideoParser < CsvParser
       if po.valid_duration?(dur)
         po.send(:duration=, dur)
       else
-        po.errors.add(:duration, "Improperly formated duration value (h:mm:ss): #{dur}")
+        po.errors.add(:duration, "Improperly formatted duration value (h:mm:ss): #{dur}")
       end
     end
 
-    tc = row[column_index TAPE_CAPACITY]
+    tc = row[column_index CAPACITY]
     unless tc.blank?
-      po.send(:tape_capacity=, tc)
+      if po.valid_duration?(tc)
+        po.send(:tape_capacity=, tc)
+      else
+        po.errors.add(:tape_capacity, "Improperly formatted Capacity value (h:mm:ss): #{tc}")
+      end
     end
 
     # metadata fields common to all PO's
@@ -205,12 +209,26 @@ class VideoParser < CsvParser
       po.send(:reel_number=, reel_number)
     end
 
+    detailed_stock_info = row[column_index DETAILED_STOCK_INFORMATION]
+    unless detailed_stock_info.blank?
+      po.send(:detailed_stock_information=, detailed_stock_info)
+    end
+
     size = row[column_index SIZE]
     unless size.blank?
       if Video::SIZE_VALUES.include?(size)
         set_value(:size, size, po)
       else
         po.errors.add(:size, "#{size} is not a valid Video Size value")
+      end
+    end
+
+    playback_speed = row[column_index PLAYBACK_SPEED]
+    unless playback_speed.blank?
+      if Video::PLAYBACK_SPEEDS.include?(playback_speed)
+        set_value(:playback_speed, playback_speed, po)
+      else
+        po.errors.add(:playback_speed, "#{playback_speed} is not a valid Video Playback Speed")
       end
     end
 
@@ -433,20 +451,23 @@ class VideoParser < CsvParser
       po.errors.add(:catalog_key, "Malformed Catalog Key: #{ck}")
     end
   end
+
   def parse_media_type(po, row)
-    media_type = row[column_index MEDIA_TYPE]
-    if media_type.blank? || !po.media_types.include?(media_type)
-      po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
+    # media type is no longer used for PhysicalObjects
+    #media_type = row[column_index MEDIA_TYPE]
+    #if media_type.blank? || !po.media_types.include?(media_type)
+    #  po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
+    #else
+    #  po.send(:media_type=, media_type)
+    medium = row[column_index MEDIUM]
+    if medium.blank? || ! po.media_type_mediums.include?(medium)
+      po.errors.add(:medium, "Medium: '#{medium}' is malformed or unsupported")
     else
-      po.send(:media_type=, media_type)
-      medium = row[column_index MEDIUM]
-      if medium.blank? || ! po.media_type_mediums[media_type].include?(medium)
-        po.errors.add(:medium, "Medium: '#{medium}' is malformed for Media Type: '#{media_type}'")
-      else
-        po.send(:medium=, medium)
-      end
+      po.send(:medium=, medium)
     end
+    #end
   end
+
   def parse_po_location(po, row)
     location = row[column_index CURRENT_LOCATION]
     # for now we are just storing the value in a text field, later this will be parsed
