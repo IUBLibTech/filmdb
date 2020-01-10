@@ -153,6 +153,12 @@
       <%= f.select :recording_standard, options_for_select(@cv[:recording_standard].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.recording_standard), {include_blank: ''}  %>
     </div>
     <div class="label">
+      <b>Playback Speed</b>
+    </div>
+    <div class="value">
+      <%= f.select :playback_speed, options_for_select(@cv[:playback_speed].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.playback_speed), {include_blank: ''} %>
+    </div>
+    <div class="label">
       <b>Capacity</b>
     </div>
     <div class="value">
@@ -192,7 +198,6 @@
 <div class="clear m_bottom_10px"></div>
 <div id="image_metadata" class="metadata_section left _50">
   <h4 class="m_bottom_5px">Image</h4>
-  <b>Playback Speed</b><%= f.select :playback_speed, options_for_select(@cv[:playback_speed].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.playback_speed), {include_blank: ''} %>
   <div class="">
     <b class='block'>Picture Type</b>
     <div class="left flex_wrap flex_col">
