@@ -26,6 +26,9 @@
     <b>Recording Standard</b> <%= @physical_object.recording_standard %>
   </div>
   <div class="left _50">
+    <b >Playback Speed&nbsp;</b><%= @physical_object.playback_speed %>
+  </div>
+  <div class="left _50">
     <b>Dates</b> <%= @physical_object.dates_text %>
   </div>
   <div class="left _50">
@@ -49,9 +52,7 @@
   <div id="image_metadata" class="metadata_section left _50">
     <h4>Image</h4>
     <div id="image_metadata_content_div">
-      <div class="clear">
-        <b >Playback Speed&nbsp;</b><%= @physical_object.playback_speed %>
-      </div>
+
       <div class="">
         <b>Picture Type&nbsp;</b>
         <%= @physical_object.humanize_boolean_fields(Video::PICTURE_TYPE_FIELDS) %>
