@@ -5,7 +5,7 @@ class MdpiBarcodeValidator < ActiveModel::EachValidator
 			assigned = ApplicationHelper.mdpi_barcode_assigned?(value)
 			if !ApplicationHelper.valid_barcode?(value, true)
 				record.errors.add(attribute, options[:message] || "is not valid.")
-			elsif (assigned and assigned != record)
+			elsif assigned && assigned != record.acting_as
 				record.errors.add(attribute, options[:message] || error_message_link(assigned))
 			end
 		end

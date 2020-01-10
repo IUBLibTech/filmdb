@@ -11,6 +11,7 @@ class Video < ActiveRecord::Base
   SOUND_VALUES = ControlledVocabulary.physical_object_cv('Video')[:sound].collect{|r| r[0]}
   STOCK_VALUES = ControlledVocabulary.physical_object_cv('Video')[:stock].collect{|r| r[0]}
   RECORDING_STANDARDS_VALUES = ControlledVocabulary.physical_object_cv('Video')[:recording_standard].collect{|r| r[0]}
+  PLAYBACK_SPEEDS = ControlledVocabulary.physical_object_cv('Video')[:playback_speed].collect { |r| r[0] }
 
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :revised, :version_original, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
@@ -133,6 +134,22 @@ class Video < ActiveRecord::Base
 
   def medium_name
     "#{gauge} #{medium}"
+  end
+
+  # duration is input as hh:mm:ss but stored as seconds
+  def tape_capacity=(time)
+    if time.blank?
+      super(nil)
+    else
+      super(time.split(':').map { |a| a.to_i }.inject(0) { |a, b| a * 60 + b})
+    end
+  end
+
+  # duration is viewed as hh:mm:ss
+  def tape_capacity
+    unless super.nil?
+      hh_mm_sec(super)
+    end
   end
 
 

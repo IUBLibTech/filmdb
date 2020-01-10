@@ -187,7 +187,6 @@ class PhysicalObjectsController < ApplicationController
         process_titles
         @physical_object.modifier = User.current_user_object
         @success = @physical_object.update_attributes!(physical_object_params)
-        debugger
       end
     rescue Exception => error
       puts error.message

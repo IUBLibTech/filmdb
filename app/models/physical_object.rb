@@ -87,15 +87,7 @@ class PhysicalObject < ActiveRecord::Base
 	FREEZER_AD_STRIP_VALS = ControlledVocabulary.where(model_attribute: ':ad_strip').order('value DESC').limit(3).collect{ |cv| cv.value }
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
-	MEDIA_TYPE_MEDIUMS = {
-		'Moving Image' => ['Film', 'Video', 'Digital'],
-		'Recorded Sound' => ['Recorded Sound'],
-		'Still Image' => ['Still Image'],
-		'Text' => ['Text'],
-		'Three Dimensional Object' => ['Three Dimensional Object'],
-		'Software' => ['Software'],
-		'Mixed Media' => ['Mixed Media']
-	}
+
 	NEW_MEDIUMS = ['Film', 'Video']
 
 	def self.per_page
@@ -107,7 +99,7 @@ class PhysicalObject < ActiveRecord::Base
 	end
 
 	def media_type_mediums
-		MEDIA_TYPE_MEDIUMS
+		NEW_MEDIUMS
 	end
 
 	# def current_workflow_status
@@ -267,6 +259,13 @@ class PhysicalObject < ActiveRecord::Base
     end
   end
 
+	# duration is viewed as hh:mm:ss
+  def duration
+    unless super.nil?
+      hh_mm_sec(super)
+    end
+	end
+
   # returns true if the specified text is formated as h:mm:ss where h, mm, and ss are integer values
   def valid_duration?(text)
     ! /^[0-9]+:[0-9]{2,}:[0-9]{2,}$/.match(text).nil?
@@ -277,12 +276,6 @@ class PhysicalObject < ActiveRecord::Base
     ! /^[0-9\?]+ of [0-9\?]$/.match(text).nil?
   end
 
-  # duration is viewed as hh:mm:ss
-  def duration
-    unless super.nil?
-      hh_mm_sec(super)
-    end
-	end
 
 	def medium_name
 		medium

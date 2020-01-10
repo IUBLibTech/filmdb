@@ -153,10 +153,10 @@
       <%= f.select :recording_standard, options_for_select(@cv[:recording_standard].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.recording_standard), {include_blank: ''}  %>
     </div>
     <div class="label">
-      <b>Maximum Runtime</b>
+      <b>Capacity</b>
     </div>
     <div class="value">
-      <%= f.select :maximum_runtime, options_for_select(@cv[:maximum_runtime].sort_by!{|s| s[0][/\d+/].nil? ? 3001 : s[0][/\d+/].to_i}, @physical_object.maximum_runtime), {include_blank: ''}  %>
+      <%= f.text_field :tape_capacity %>
     </div>
     <div class="label">
       <b>Duration (hh:mm:ss)</b>
