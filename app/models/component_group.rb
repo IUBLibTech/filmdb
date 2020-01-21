@@ -36,7 +36,7 @@ class ComponentGroup < ActiveRecord::Base
   def generations
     gen_set = Set.new
     physical_objects.each do |p|
-      p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS).split(',').each do |g|
+      p.humanize_boolean_generation_fields().split(',').each do |g|
         gen_set << g.strip
       end
     end
@@ -97,7 +97,7 @@ class ComponentGroup < ActiveRecord::Base
   end
 
   def is_mdpi_workflow?
-    group_type.include?('MDPI')
+    MDPI_GROUP_TYPES.include?(group_type)
   end
   def is_iulmia_workflow?
     !is_mdpi_workflow?

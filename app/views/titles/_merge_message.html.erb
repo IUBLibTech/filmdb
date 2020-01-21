@@ -15,9 +15,10 @@
           <th>Scan Settings</th>
         </tr>
         <% @component_group.physical_objects.each do |p|%>
+        <% p = p.specific %>
           <tr>
             <td><%= p.iu_barcode %></td>
-            <td><%= p.gauge %></td>
+            <td><%= p.medium_name %></td>
             <td><%= p.generations_text %></td>
             <td><%= p.current_location %></td>
             <td>

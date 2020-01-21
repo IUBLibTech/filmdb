@@ -13,7 +13,7 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		$('#iu_barcode').bind('input', function(){
-			valid = validateIUBarcode($(this));
+			var valid = validateIUBarcode($(this));
 			if (valid) {
 			    var url = './ajax_best_copy_selection_barcode/' + $(this).val();
 				$.ajax({
@@ -22,7 +22,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {
               swal({
                   title: 'Ajax Error',
-                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                  text: 'An error occurred while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
               }, function() {
                   window.location.replace(url)
               });
@@ -37,16 +37,16 @@
 							$('#pos').attr('value', pos.join(','));
 						});
 						$('.mutually_exclusive').click(function() {
-							checked_state = $(this).is(':checked');
+							var checked_state = $(this).is(':checked');
 							$(this).parent('td').children('.mutually_exclusive').each(function() {
 								$(this).prop('checked', false);
-							})
+							});
 							$(this).prop('checked', checked_state);
 						});
 						$('#best_copy_update_form').submit(function(event) {
 							event.preventDefault();
-							resolution_selected = $('.mutually_exclusive:checked').length == 1
-							if ($('.best_copy_check:checked').length == 0) {
+							resolution_selected = $('.mutually_exclusive:checked').length === 1;
+							if ($('.best_copy_check:checked').length === 0) {
 								swal({
 									title: 'Return All Physical Objects without creating a Component Group?',
 									text: 'If you select continue, all Physical Objects will be marked as returned to their storage locations without creating a Reformating (MDPI) Component Group.',

@@ -23,6 +23,8 @@
 	$(document).ready(function() {
 		$('.ajax_barcode_lookup').bind('input', function () {
 			$('#ajax_show_storage_message').html('');
+			$('p.warning').remove();
+      $('p.notice').remove();
 			valid = validateIUBarcode($(this));
 			if (valid) {
           var url = '../workflow/ajax_show_storage_location/' + $(this).val();
@@ -51,4 +53,3 @@
 </script>
 <h4 class="m_bottom_10px">Physical Objects <i>On Site</i></h4>
 <%= render partial: 'physical_objects_table' %>
-<%= render partial: 'physical_objects/physical_object_metadata_js' %>

@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
+# need to add the passenger gem for Sycamore because of upgrading ruby/rails/bundler
+gem 'passenger'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.3'
+gem 'rails', '~> 5.0'
 # Use mysql as the database for Active Record
 # hold back mysql2 gem as newer ones are actually broken with newer activerecord
 gem 'mysql2', '~> 0.4'
@@ -20,6 +22,9 @@ gem 'nested_form'
 gem 'jquery-rails'
 # User jquery-ui
 gem 'jquery-ui-rails'
+
+# rails polymorphism for multiple format support
+gem 'active_record-acts_as'
 
 # replaces the rails default javascript alert with a jquery version: https://github.com/mois3x/sweet-alert-rails-confirm - this is BUGGY!!!
 # replacing default railds data-confirm with sweet alerts manually. See: http://thelazylog.com/custom-dialog-for-data-confirm-in-rails/
