@@ -12,12 +12,13 @@
     </thead>
     <tbody>
     <% @component_group.physical_objects.each do |p| %>
+    <% p = p.specific %>
         <tr>
           <td><%= p.iu_barcode %></td>
           <td><%= p.medium %></td>
-          <td><%= p.gauge %></td>
-          <td><%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %></td>
-          <td><%= p.reel_number %></td>
+          <td><%= p.medium_name %></td>
+          <td><%= p.humanize_boolean_generation_fields %></td>
+          <td><%= p.has_attribute?(:reel_number) ? p.reel_number : ''%></td>
 					<td><%= p.current_location %></td>
           <td>
             <ul class="dig_params">
@@ -29,7 +30,7 @@
           </td>
           <td>
             <%= link_to "Show", physical_object_path(p), target: "_blank" %>
-	          <% unless @component_group == p.active_component_group %> | <%= link_to "Remove", remove_physical_object_from_component_group_path(id: @component_group.id, pid: p.id), data: { confirm: 'Are you sure you want to remove this Physica Object from the Component Group?' }, method: :post %>
+	          <% unless @component_group == p.active_component_group %> | <%= link_to "Remove", remove_physical_object_from_component_group_path(id: @component_group.id, pid: p.acting_as.id), data: { confirm: 'Are you sure you want to remove this Physical Object from the Component Group?' }, method: :post %>
 	          <% end %>
           </td>
         </tr>

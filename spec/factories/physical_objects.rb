@@ -5,7 +5,7 @@ FactoryGirl.define do
 		modified_by { User.first.id }
 		unit_id { Unit.first.id }
 		media_type 'Moving Image'
-		medium 'Film'
+		medium 'film'
 		created_at { Time.now }
 		updated_at { Time.now }
 	end

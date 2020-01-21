@@ -17,10 +17,7 @@ module ServicesHelper
 		request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
 		result = http.request(request)
 		render text: result.to_yaml
-	end
-
-
-
+  end
 
 	private
 	def post_multipart(file_path)

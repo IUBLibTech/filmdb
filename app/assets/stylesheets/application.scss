@@ -17,7 +17,7 @@
  */
 
 body {
-    margin: 0 auto;
+    margin: 0 auto 30px;
     font-family: sans-serif;
     height: 100%;
     width: 1000px;
@@ -162,6 +162,9 @@ a.orange:visited {
 .red {
     color: #8F2609;
 }
+.red_bg {
+  background: red;
+}
 
 .green {
     color: #23c417;
@@ -228,8 +231,9 @@ table.version_table > tbody > tr > td > input {
 }
 
 .metadata_section {
-    margin-bottom: 5px;
-    overflow: hidden;
+  margin-bottom: 5px;
+  overflow: hidden;
+  clear: both;
 }
 h2 {
   padding: 0;
@@ -266,11 +270,11 @@ div.simple_text {
 }
 
 ._50 > div.label {
-    width:35%;
+    width:25%;
     float: left;
 }
 ._50 > div.field {
-    width: 60%;
+    width: 70%;
     float: left;
 }
 ._50 > div.field > input {
@@ -389,7 +393,7 @@ td#color {
 }
 
 ._100 {
-    width: 100%;
+    width: 99%;
 }
 .line_300 {
     line-height: 300%;
@@ -399,6 +403,9 @@ td#color {
 }
 .h_55px {
     height: 55px;
+}
+.h_60px {
+  height: 60px;
 }
 .h_75px {
     height: 75px;
@@ -684,6 +691,11 @@ div#title_popup_header > h4 {
 .m_top_10px {
     margin-top: 10px;
 }
+.return_warn {
+  padding: 5px;
+  font-weight: bold;
+  background: red;
+}
 
 .title_label {
     margin-right: 18px;
@@ -857,4 +869,12 @@ td.widest {
 
 a.title_link {
   padding-right: 10px;
+}
+
+.flex_wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex_col_wrap {
+  flex-flow: column wrap;
 }

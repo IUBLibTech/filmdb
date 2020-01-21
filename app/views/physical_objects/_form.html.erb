@@ -12,18 +12,23 @@
           controller_name == "titles" ? "For Title: <i>#{@title.title_text}</i>".html_safe : "" %>
   <h2><%= @em %> <%= cm %></h2>
 </div>
-<% url =
-       controller_name == 'physical_objects' && action_name == 'new' ? physical_objects_path :
-       controller_name == 'physical_objects' && action_name == 'edit' ? physical_object_path :
-       controller_name == 'physical_objects' && action_name == 'duplicate' ? create_duplicate_physical_object_path :
-       controller_name == 'collections' ?  collection_create_physical_object_path  :
-       controller_name == 'titles' ? titles_create_physical_object_path :
-       controller_name == 'series' ? series_create_physical_object_path : ''
+<%
+       if action_name == "new" || action_name == 'create'
+         @url = create_physical_object_url
+       else action_name == 'edit' || action_name == 'update'
+        # update can fail because of a validation error
+         @url = physical_object_url(@original_po_id ? @original_po_id : @physical_object.acting_as.id)
+       end
 %>
-<%= nested_form_for @physical_object, url: url, html: {id: 'physical_object_form'} do |f| %>
+<%= nested_form_for @physical_object, url: @url, html: {id: 'physical_object_form'} do |f| %>
+  <%= hidden_field_tag "original_action", (action_name == 'ajax_rebuild_form' ? params[:original_action] : action_name) %>
+  <%= hidden_field_tag "original_po_id", @original_po_id if @original_po_id %>
+  <% if params[:medium_changed] %>
+    <%= hidden_field_tag "medium_changed", true %>
+  <% end %>
   <% if @physical_object.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this physical_object from being saved:</h2>
+      <h2><%= pluralize(@physical_object.errors.count, "error") %> prohibited this Physical Object from being saved:</h2>
       <ul>
       <% @physical_object.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -36,8 +41,98 @@
         <%= flash[:other_message].html_safe %>
       </div>
   <% end %>
-  <%= render partial: 'physical_objects/physical_object_metadata_editable', locals: {f: f} %>
-  <div class="actions">
-    <%= f.submit %>
+  <div id="core_metadata" class="metadata_section">
+    <h4>Core Metadata</h4>
+    <div class="left _50">
+      <div><b>* Title(s)</b></div>
+      <%= render partial: 'physical_objects/physical_object_title_form', locals: { f: f } %>
+      <div class="label"><b>Alternative Title</b></div>
+      <div class="field"><%= f.text_field :alternative_title %></div>
+      <div class="label"><b>Compilation</b></div>
+      <div class="field"><%= f.text_field :compilation %></div>
+      <div class="label"><b>* Medium</b></div>
+      <div class="field"><%= f.select :medium, PhysicalObject::NEW_MEDIUMS, {}, {id: 'medium_types'} %></div>
+      <div class="label">
+        <b>* Unit</b>
+      </div>
+      <div class="field">
+        <% if @collection %>
+          <%= @collection.unit.abbreviation %>
+          <%= f.hidden_field :unit_id %>
+        <% else %>
+          <%= f.collection_select :unit_id, Unit.order('menu_index').all, :id, :abbreviation %>
+        <% end %>
+      </div>
+      <div class="label">
+        <b>Collection</b>
+      </div>
+      <div class="field">
+        <% if @collection %>
+          <%= @collection.name%>
+        <% else %>
+          <%= f.text_field :collection_text%>
+          <div>
+            No Collection? <input id="physical_object_no_collection" type="checkbox" name="no_collection" value="no_collection" <%= (action_name == 'edit' && @collection.nil?) ? 'checked' : '' %>>
+          </div>
+        <% end %>
+        <%= f.hidden_field :collection_id %>
+      </div>
+    </div>
+    <div class="left _50">
+      <div class="label">
+        <b>* IU Barcode</b>
+      </div>
+      <div class="field">
+        <%= f.text_field :iu_barcode %>
+      </div>
+      <div class="label">
+        <b>MDPI Barcode</b>
+      </div>
+      <div class="field">
+        <%= f.text_field :mdpi_barcode %>
+      </div>
+      <div class="label">
+        <b>IUCAT Title No.</b>
+      </div>
+      <div class="field">
+        <%= f.text_field :title_control_number %>
+      </div>
+      <div class="label">
+        <b>Catalog Key</b>
+      </div>
+      <div class="field">
+        <%= f.text_field :catalog_key %>
+      </div>
+      <div class="label">
+        <b>Storage Location</b>
+      </div>
+      <div class="field">
+        <%= f.object.storage_location %>
+      </div>
+      <div class="label">
+        <b>Alf Shelf/Freezer Location</b>
+      </div>
+      <div class="field">
+        <%= f.text_field :alf_shelf %>
+      </div>
+    </div>
+  </div>
+  <div id="format_notes_metadata" class="metadata_section">
+    <h4>Format Notes</h4>
+    <%= f.text_area :format_notes, class: "_100" %>
+  </div>
+  <div id="accompanying_documentation_metadata" class="metadata_section">
+    <h4>Accompanying Documentation</h4>
+    <div>
+      <%= f.text_area :accompanying_documentation %> <br>
+      <b>Accompanying Documentation Location</b><%= f.text_field :accompanying_documentation_location, size: 75 %>
+    </div>
+  </div>
+  <%= render partial: "physical_objects/#{physical_object_specific_medium}/metadata_editable", locals: {f: f} %>
+
+  <div class="actions clear">
+    <%= f.submit "#{action_name.include?('edit') ? 'Update' : 'Create'} #{@physical_object.medium}" %>
   </div>
 <% end %>
+<%= render partial: "physical_objects/#{physical_object_specific_medium}/metadata_editable_js" %>
+<%= render partial: "physical_objects/physical_object_metadata_editable_js" %>

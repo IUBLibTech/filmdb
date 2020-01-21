@@ -22,7 +22,7 @@
 </div>
 <div id="menu">
   <div class="menuItem">
-    <%= link_to 'Inventory', inventory_path %>
+    <%= link_to 'Inventory', new_physical_object_path %>
   </div>
 	<div class="menuItem">
 		<a href="#">Workflow</a>
@@ -119,14 +119,13 @@
           $(this).children('ul').slideUp(200);
         }
     );
-    $("form").keypress(function(e) {
-        e = e || event;
-        var txtArea = /textarea/i.test((e.target || e.srcElement).tagName);
-        return txtArea || (e.keyCode || e.which || e.charCode || 0) !== 13
-    });
+    // $("form").keypress(function(e) {
+    //     e = e || event;
+    //     var txtArea = /textarea/i.test((e.target || e.srcElement).tagName);
+    //     return txtArea || (e.keyCode || e.which || e.charCode || 0) !== 13
+    // });
     $(':text').attr('autocomplete', 'off');
   });
-
 </script>
 </body>
 </html>

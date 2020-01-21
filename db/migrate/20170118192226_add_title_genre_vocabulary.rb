@@ -8,7 +8,7 @@ class AddTitleGenreVocabulary < ActiveRecord::Migration
         'Experimental - Dada', 'Experimental - Diary', 'Experimental - Feminist', 'Experimental - Gay/lesbian', 'Experimental - Intermittent animation',
         'Experimental - Landscape', 'Experimental - Loop', 'Experimental - Lyrical', 'Experimental - Participatory', 'Experimental - Portrait',
         'Experimental - Reflexive', 'Experimental - Street', 'Experimental - Structural', 'Experimental - Surrealist', 'Experimental - Text',
-        'Experimental - Trance', 'Exploitation', 'Fallen woman', 'Family', 'Fantasy', 'Film noir', 'Game', 'Gangster', 'Historical',
+        'Experimental - Trance', 'Exploitation', 'Fallen woman', 'Family', 'Fantasy', 'film noir', 'Game', 'Gangster', 'Historical',
         'Home shopping', 'Horror', 'Industrial', 'Instructional', 'Interview', 'Journalism', 'Jungle', 'Juvenile delinquency',
         'Lecture', 'Legal', 'Magazine', 'Martial arts', 'Maternal melodrama', 'Medical', 'Medical (Nonfiction)', 'Melodrama',
         'Military', 'Music', 'Music video', 'Musical', 'Mystery', 'Nature', 'News', 'Newsreel', 'Opera', 'Operetta', 'Parody',

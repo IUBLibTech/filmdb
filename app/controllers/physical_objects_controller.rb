@@ -5,10 +5,7 @@ class PhysicalObjectsController < ApplicationController
   include MailHelper
 
   before_action :set_physical_object, only: [:show, :show_xml, :edit, :update, :destroy, :mark_missing]
-  before_action :set_cv, only: [:new_physical_object, :create, :edit, :update, :new, :edit_ad_strip, :update_ad_strip,
-                                :edit_location, :update_location, :duplicate
-  ]
-
+  before_action :acting_as_params, only: [:update_ad_strip]
   # GET /physical_objects
   # GET /physical_objects.json
   def index
@@ -23,8 +20,8 @@ class PhysicalObjectsController < ApplicationController
         @page = (params[:page].nil? ? 1 : params[:page].to_i)
         #@physical_objects = PhysicalObject.where_current_workflow_status_is((@page - 1) * PhysicalObject.per_page, PhysicalObject.per_page, params[:digitized], params[:status])
         @physical_objects = PhysicalObject.joins(:current_workflow_status).includes([:current_workflow_status, :titles, :active_component_group]).where("workflow_statuses.status_name = '#{params[:status]}'")
-        if params[:digited]
-          @physical_objects = @physical_object.where('physlca_objects.digitized = true')
+        if params[:digitized]
+          @physical_objects = @physical_object.where('physical_objects.digitized = true')
         end
         @physical_objects = @physical_objects.offset((@page - 1) * PhysicalObject.per_page).limit(PhysicalObject.per_page)
       else
@@ -79,55 +76,134 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects/new_physical_object
   def new
     u = User.current_user_object
-    @physical_object = PhysicalObject.new(inventoried_by: u.id, modified_by: u.id)
+    if request.get?
+      @em = "Creating New Physical Object"
+      @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      #@physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
+      set_cv
+    elsif request.post?
+      new_one = blank_specific_po(medium_value_from_params)
+      new_one.inventoried_by = u.id
+      new_one.modified_by = u.id
+      new_one.date_inventoried = DateTime.now
+      # copy all PhysicalObject only attributes that have been posted
+      class_sym = class_symbol_from_params
+      params[class_sym].keys.each do |p|
+        if PO_ONLY_ATTRIBUTES.include?(p.parameterize.to_sym)
+          new_one.send(p+"=", params[class_sym][p])
+        end
+      end
+      # copy any title associations created before the switch
+      params[:physical_object][:title_ids].split(',').each do |t_id|
+        new_one.titles << Title.find(t_id.to_i)
+      end
+      @physical_object = new_one.specific
+      set_cv
+    else
+      raise "How did we get a #{request.method} request here???"
+    end
     render 'new_physical_object'
   end
-
-  # GET /physical_objects/1/edit
-  def edit
-    @em = 'Editing Physical Object'
-    @physical_object = PhysicalObject.find(params[:id])
-    @physical_object.modified_by = User.current_user_object.id
-    if @physical_object.nil?
-      flash.now[:warning] = "No such physical object..."
-      redirect_to :back
-    end
-  end
-
   # POST /physical_objects
   # POST /physical_objects.json
   def create
     create_physical_object
   end
 
+  # GET /physical_objects/1/edit
+  def edit
+    if request.get?
+      if @physical_object.nil?
+        flash.now[:warning] = "No such physical object..."
+        redirect_to :back
+      end
+    else
+      # so this part is complicated... a POST/PATCH on the #edit action means that the input:select Medium value was
+      # changed and we need to rebuild the form based on the Medium value. Because of the shared-by-all-formats attributes
+      # and associations that are maintained on the PhysicalObject portion of the original (titles for instance), we need
+      # to look at the submit, as some of those values may have been edited. But we need to build a new edit form based
+      # on a different Medium than the original object.
+
+      # Now the wonky part: if a user changes from an existing Medium (say Film to Video), then changes BACK to the
+      # original Medium, there is no physical workflow where this is correct behavior. It is always user error. In this
+      # particular instance, we need to restart the edit process with the original PhysicalObject metadata, ignoring all
+      # submits up to this point.
+      o_medium = @physical_object.medium
+      s_medium = medium_value_from_params
+
+      # only create a new, different Medium, PO if the original and submitted Mediums are different
+      if o_medium == s_medium
+        flash.now[:warning] = "You have changed this Physical Object back to it's original Medium. Any edits you have made up to this point have been discarded."
+      else
+        flash.now[:warning] = "You have changed this Physical Object from #{o_medium} to #{s_medium}. Any #{o_medium} metadata will be permanently lost if you update the record."
+        # save the original id so that the form can build the route correctly
+        @original_po_id = @physical_object.acting_as.id
+        new_one = nil
+        if s_medium == 'Film'
+          new_one = Film.new(po_only_params)
+        elsif s_medium == 'Video'
+          new_one = Video.new(po_only_params)
+        end
+        # copy any title associations based on the state of the form when the medium switch occurred
+        params[:physical_object][:title_ids].split(',').each do |t_id|
+          t = Title.find(t_id.to_i)
+          new_one.titles << t unless new_one.titles.include? t
+        end
+        @physical_object = new_one.specific
+      end
+    end
+    set_cv
+    @physical_object.modified_by = User.current_user_object.id
+  end
+
   # PATCH/PUT /physical_objects/1
   # PATCH/PUT /physical_objects/1.json
   def update
-    nitrate = @physical_object.base_nitrate
-    respond_to do |format|
-      begin
-        PhysicalObject.transaction do
-          # check to see if titles have changed in the update
-          process_titles
+    # if the medium has been changed we need to delete the old, medium specific, object
+    o_medium = @physical_object.medium
+    s_medium = medium_value_from_params
+    # active_record-acts_as stomps on creation dates for some reason...
+    c = @physical_object.created_at
+    begin
+      PhysicalObject.transaction do
+        # need to cleanup the old specific class that was changed to something else
+        if o_medium == s_medium
           @physical_object.modifier = User.current_user_object
-          @success = @physical_object.update_attributes!(physical_object_params)
+          #@success = @physical_object.update_attributes!(physical_object_params)
+          @physical_object.acting_as.date_inventoried = c
+        else
+          specific_to_delete = @physical_object.specific
+          new_one = blank_specific_po(medium_value_from_params)
+          new_one.acting_as = @physical_object.acting_as
+          @physical_object.specific.actable = new_one
+          @physical_object.specific.actable_type = new_one.class.to_s
+          new_one.save
+          specific_to_delete.delete
+          @physical_object = new_one
+          @physical_object.acting_as.date_inventoried = c
         end
-      rescue Exception => error
-        logger.debug $!
+        @nitrate = (@physical_object.is_a?(Film) && @physical_object.base_nitrate)
+        # check to see if titles have changed in the update
+        process_titles
+        @physical_object.modifier = User.current_user_object
+        @success = @physical_object.update_attributes!(physical_object_params)
       end
-      if @success
-        if @physical_object.base_nitrate and !nitrate
-          notify_nitrate(@physical_object)
-        end
-        format.html { redirect_to @physical_object, notice: 'Physical object was successfully updated.' }
-        format.json { render :show, status: :ok, location: @physical_object }
-      else
-        format.html { render :edit }
-        format.json { render json: @physical_object.errors, status: :unprocessable_entity }
+    rescue Exception => error
+      puts error.message
+      puts error.backtrace.join("\n")
+      logger.debug $!
+    end
+    if @success
+      if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
+        notify_nitrate(@physical_object)
       end
+      redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.'
+    else
+      @original_po_id = @physical_object.acting_as.id
+      set_cv
+      render :edit
     end
   end
-
 
   def duplicate
     @em = 'Duplicating Physical Object'
@@ -144,7 +220,8 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def edit_ad_strip
-    @physical_object = PhysicalObject.new
+    @physical_object = Film.new(medium: 'Film')
+    set_cv
   end
 
   def update_ad_strip
@@ -153,11 +230,14 @@ class PhysicalObjectsController < ApplicationController
     @physical_object = PhysicalObject.where(iu_barcode: bc).first
     if @physical_object.nil?
       flash[:warning] = "No Physical Object with Barcode #{bc} Could Be Found!".html_safe
+    elsif @physical_object.specific.class != Film
+      flash[:warning] = "#{bc} is a #{@physical_object.specific.class}, not a Film"
     else
-      nitrate = @physical_object.base_nitrate
-      @physical_object.update_attributes(ad_strip: adv)
+      set_cv
+      nitrate = @physical_object.specific.base_nitrate
+      @physical_object.specific.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
-      if @physical_object.base_nitrate && !nitrate
+      if @physical_object.specific.base_nitrate && !nitrate
         notify_nitrate(@physical_object)
       end
     end
@@ -232,18 +312,14 @@ class PhysicalObjectsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_physical_object
-    @physical_object = PhysicalObject.find(params[:id])
+    @physical_object = PhysicalObject.find(params[:id]).specific
   end
 
   def set_cv
-    @cv = ControlledVocabulary.physical_object_cv
+    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
     @l_cv = ControlledVocabulary.language_cv
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
 
-  def page_link_path(page)
-	  physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
-  end
-  helper_method :page_link_path
 
 end

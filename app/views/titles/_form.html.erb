@@ -48,7 +48,7 @@
     <h4>Creators</h4>
     <div id="creators_div" class="fields_for_div">
       <%= f.fields_for :title_creators do |tc| %>
-          <div class="label"><b>Creator</b></div> <div class="field"><%= tc.text_field :name%></div>
+          <div class="label"><b>Creator</b></div> <div class="field"><%= tc.text_field :name, class: 'tc_name'%></div>
           <div class="label"><b>Role</b></div> <div class="field"><%= tc.select :role, options_for_select(@title_cv[:title_creator_role_type], tc.object.role) %></div>
           <div class="clear"><%= tc.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
@@ -57,7 +57,7 @@
     <h4>Publishers</h4>
     <div id="publishers_div" class="fields_for_div">
       <%= f.fields_for :title_publishers do |tp| %>
-          <div class="label"><b>Publisher</b></div> <div class="field"><%= tp.text_field :name, class: 'title_publisher' %></div>
+          <div class="label"><b>Publisher</b></div> <div class="field"><%= tp.text_field :name, class: 'tp_name' %></div>
           <div class="label"><b>Role</b></div>
           <div class="field"><%= tp.select :publisher_type, options_for_select(@title_cv[:title_publisher_role_type], tp.object.publisher_type) %></div>
           <div class="clear"><%= tp.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
@@ -100,13 +100,17 @@
       <%= f.link_to_add "New Date", :title_dates %>
     </div>
     <h4>Locations</h4>
+
     <div id="dates_div">
       <%= f.fields_for :title_locations do |tl| %>
-          <div class="label"><b>Location</b></div> <div class="field"><%= tl.text_field :location %></div>
-					<%= tl.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+        <div class="label"><b>Location</b> <br>
+          <%= tl.text_field :location %> <br>
+          <%= tl.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+        </div>
       <% end %>
       <%= f.link_to_add "New Location", :title_locations %>
     </div>
+
     <h4>Notes</h4>
     <div id="notes_div">
       <%= f.text_area :notes %>

@@ -31,7 +31,7 @@ module CagesHelper
 					builder.objectsCount cage.top_shelf.physical_objects.size
 					builder.physicalObjects do
 						cage.top_shelf.physical_objects.each do |p|
-							p.to_xml(builder: builder)
+							p.specific.to_xml(builder: builder)
 						end
 					end
 				end
@@ -48,7 +48,7 @@ module CagesHelper
 					builder.objectsCount cage.middle_shelf.physical_objects.size
 					builder.physicalObjects do
 						cage.middle_shelf.physical_objects.each do |p|
-							p.to_xml(builder: builder)
+							p.specific.to_xml(builder: builder)
 						end
 					end
 				end
@@ -65,7 +65,7 @@ module CagesHelper
 					builder.objectsCount cage.bottom_shelf.physical_objects.size
 					builder.physicalObjects do
 						cage.bottom_shelf.physical_objects.each do |p|
-							p.to_xml(builder: builder)
+							p.specific.to_xml(builder: builder)
 						end
 					end
 				end

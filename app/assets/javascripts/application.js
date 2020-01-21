@@ -67,3 +67,14 @@ function showLoad(jqSelector, scale) {
 function hideLoader(jqSelector) {
 	jqSelector.find('.loader').remove();
 }
+
+function hookBarcodeValidators() {
+    // validator for the IU barcode field
+    $("#"+medium+"_iu_barcode").bind("input", function () {
+        validateIUBarcode($(this));
+    });
+    // validator for MDPI barcode field
+    $("#"+medium+"_mdpi_barcode").bind("input", function () {
+        validateMdpiBarcode($(this));
+    });
+}

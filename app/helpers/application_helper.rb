@@ -4,7 +4,7 @@ module ApplicationHelper
 	# wikipedia provides a clear explanation of it:
 	# http://en.wikipedia.org/wiki/Luhn_algorithm#Implementation_of_standard_Mod_10
 	def ApplicationHelper.valid_barcode?(barcode, mdpi=false)
-		if barcode.is_a? Fixnum
+		if barcode.is_a? Integer
 			barcode = barcode.to_s
 		end
 
@@ -54,7 +54,7 @@ module ApplicationHelper
 
 	def ApplicationHelper.iu_barcode_assigned?(barcode)
 		b = false
-		if (po = PhysicalObject.where(iu_barcode: barcode).limit(1)).size == 1
+		if (po = PhysicalObject.where(iu_barcode: barcode)).size == 1
 			b = po[0]
 		end
 		return b
@@ -69,6 +69,16 @@ module ApplicationHelper
 			val.blank? ? '' : (val == '0' ? 'No' : 'Yes')
 		else
 			val.nil? ? '' : (val ? 'Yes' : 'No')
+		end
+	end
+
+	def medium_symbol_from_params(params)
+		if params[:film]
+			:film
+		elsif params[:video]
+			:video
+		else
+			raise "Unsupported Physical Object Medium #{params.keys}"
 		end
 	end
 

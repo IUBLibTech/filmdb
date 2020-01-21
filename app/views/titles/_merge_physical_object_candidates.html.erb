@@ -48,6 +48,7 @@
     <th>Leave in Workflow</th>
 	</tr>
 	<% @physical_objects.each do |p| %>
+  <% p = p.specific %>
     <% locked = (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
     <tr class="<%= p.digitized? ? (locked ? 'digitized_tr' : 'digitized_tr po_row') : (locked ? '' : 'po_row') %>">
 		<td>
@@ -57,15 +58,15 @@
 			<%= p.current_location %>
 		</td>
 		<td>
-			<%= p.gauge %>
+			<%= p.medium_name %>
 		</td>
 		<td>
-			<%= p.humanize_boolean_fields(PhysicalObject::GENERATION_FIELDS) %>
+			<%= p.humanize_boolean_generation_fields %>
 		</td>
-    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.scan_resolution) %></td>
-    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.color_space) %></td>
-    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]],  p.active_scan_settings.nil? ? '' : p.active_scan_settings.return_on_reel) %></td>
-    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.clean) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][scan_resolution]", options_for_select(ComponentGroup::SCAN_RESOLUTIONS.collect{|s| [s, s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.scan_resolution) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][color_space]", options_for_select(ComponentGroup::COLOR_SPACES.collect{|s| [s,s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.color_space) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]],  p.active_scan_settings.nil? ? '' : p.active_scan_settings.return_on_reel) %></td>
+    <td><%= select_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][clean]", options_for_select(ComponentGroup::CLEAN.collect{|s| [s, s]}, p.active_scan_settings.nil? ? '' : p.active_scan_settings.clean) %></td>
 
       <% if (p.current_location == WorkflowStatus::SHIPPED_EXTERNALLY || p.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS) %>
       <td>
@@ -81,13 +82,13 @@
       </td>
     <% else %>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][checked]", "", false,  {class: 'po_check add'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][checked]", "", false,  {class: 'po_check add'} %>
       </td>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][return]", "", false,  {class: 'po_check return'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][return]", "", false,  {class: 'po_check return'} %>
       </td>
       <td>
-        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.id}][workflow]", "", false,  {class: 'po_check leave'} %>
+        <%= check_box_tag "component_group[component_group_physical_objects_attributes][#{p.acting_as.id}][workflow]", "", false,  {class: 'po_check leave'} %>
       </td>
     <% end %>
 

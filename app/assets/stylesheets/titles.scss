@@ -44,7 +44,7 @@ h4 {
     font-weight: normal;
 }
 div > a {
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 input.title_publisher {
@@ -145,4 +145,8 @@ div#title_sum {
 
 .split_title_div {
   margin-bottom: 20px;
+}
+
+.tc_name, .tp_name {
+  width: 300px
 }

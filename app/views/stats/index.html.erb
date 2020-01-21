@@ -5,14 +5,14 @@
 				<td><b>Unit</b></td>
 				<td class="stats_form_input">
 					<%# options_for_select(Unit.all.collect{ |u| [u.abbreviation, u.id]}, include_blank: '')  %>
-					<%= select_tag :unit, options_from_collection_for_select(Unit.all, 'id', 'abbreviation' ), {include_blank: ''} %>
+					<%= select_tag :unit, options_from_collection_for_select(Unit.all, 'id', 'abbreviation', params[:unit] ), {include_blank: ''} %>
 				</td>
 			</tr>
 			<tr>
 				<td><b>Collection</b></td>
 				<td class="stats_form_input">
-					<%= text_field_tag :collection, '', {id: 'collection_text'} %>
-					<%= hidden_field_tag 'collection_id' %>
+					<%= text_field_tag :collection, "#{params[:collection].blank? ? '' : params[:collection]}", {id: 'collection_text'} %>
+					<%= hidden_field_tag 'collection_id', "#{params[:collection_id].blank? ? '' : params[:collection_id]}" %>
 				</td>
 			</tr>
 			<tr>
@@ -37,102 +37,74 @@
 		<th>Physical Object Count</th>
 		<td><%= @physical_object_count %></td>
 	</tr>
+  <tr>
+    <th>Digitized Physical Object Count</th>
+    <td><%= @digitized_count %></td>
+  </tr>
 	<tr>
 		<th>Title Count</th>
 		<td><%= @title_count %></td>
 	</tr>
+  <tr>
+    <th>Fully Cataloged Titles</th>
+    <td><%= @title_cat_count %></td>
+  </tr>
 	<tr>
 		<th>Series Count</th>
 		<td><%= @series_count %></td>
 	</tr>
 </table>
-
 <h4>Physical Object Breakdown</h4>
-<table>
-	<tr>
-		<th>Media Type</th>
-		<td>
-			<ul>
-				<% @media_type_count.keys.sort.each do |m| %>
-				<li><%= "#{m}: #{@media_type_count[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Medium</th>
-		<td>
-			<ul>
-				<% @medium_count.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@medium_count[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Generations</th>
-		<td>
-			<ul>
-				<% @generations.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@generations[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Gauges</th>
-		<td>
-			<ul>
-				<% @gauges.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@gauges[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Bases</th>
-		<td>
-			<ul>
-				<% @bases.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@bases[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Sound</th>
-		<td>
-			<ul>
-				<% @sounds.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@sounds[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Color</th>
-		<td>
-			<ul>
-				<% @colors.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@colors[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<th>Overall Conditions</th>
-		<td>
-			<ul>
-				<% @conditions.keys.sort.each do |m| %>
-						<li><%= "#{m}: #{@conditions[m]}" %></li>
-				<% end  %>
-			</ul>
-		</td>
-	</tr>
-</table>
+<div class="flex_wrap">
+  <% @medium_count.keys.sort.each do |m| %>
+    <div class="medium_metadata_link" data-medium_type="<%= m %>">
+      <div class="flex_wrap">
+        <div class="h">
+          <%= m.pluralize %>
+        </div>
+        <div class="v"><%= @medium_count[m] %></div>
+      </div>
+      <div class="stats"></div>
+    </div>
+  <% end  %>
+</div>
 
 <script type="text/javascript" charset="utf-8">
+  var unit = '<%= params[:unit] %>';
+  var collection_id = '<%= params[:collection_id] %>'
+  var start = '<%= params[:start] %>'
+  var end = '<%= params[:end] %>'
+
 	$(document).ready(function() {
+	    $('.medium_metadata_link').click(function() {
+          var medium = $(this).attr('data-medium_type');
+          var statsDiv = $(this).children('.stats')
+          if (statsDiv.contents().size() > 0) {
+              statsDiv.html('');
+          } else {
+              statsDiv.html("<div style='text-align: center; padding: 5px'><img src='<%= asset_path('loading.gif') %>' alt='loading resource'></img></div>");
+            $.ajax({
+                url: '<%= ajax_medium_stats_path %>',
+                data: {
+                    medium: medium,
+                    unit: unit,
+                    collection_id: collection_id,
+                    start: start,
+                    end: end
+                },
+                success: function(result) {
+                    statsDiv.html(result);
+                },
+                error: function(jqXHR, exception) {
+                    swal({
+                        title: 'Ajax Error',
+                        text: 'An error occured while making an AJAX call. Please contact Carmel if this problem persists.'
+                    });
+                    statsDiv.html('');
+                }
+            });
+          }
+      });
 		//autcomplete for collections
 		$('#collection_text').focus(function() {
 //			if ($(this).data('autocomplete')) {

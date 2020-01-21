@@ -6,10 +6,11 @@
       <tr>
         <th><%= Title.find(tid).title_text %></th>
       </tr>
-      <% @retitled[tid][:retitled].each do |po| %>
+      <% @retitled[tid][:retitled].each do |p| %>
+        <% p = p.specific %>
         <tr>
-          <td><%= po.iu_barcode %></td>
-          <td><%= po.gauge %></td>
+          <td><%= p.iu_barcode %></td>
+          <td><%= p.medium_name %></td>
         </tr>
       <% end %>
     </table>
@@ -20,12 +21,12 @@
         <th>Previous Location</th>
         <th>New Location</th>
       </tr>
-      <% @retitled[tid][:moved].each do |po| %>
-        <% po.reload %>
+      <% @retitled[tid][:moved].each do |p| %>
+        <% p.reload %>
         <tr>
-          <td><%= po.iu_barcode %></td>
-          <td><%= po.previous_location %></td>
-          <td><%= po.current_location %></td>
+          <td><%= p.iu_barcode %></td>
+          <td><%= p.previous_location %></td>
+          <td><%= p.current_location %></td>
         </tr>
       <% end %>
     </table>

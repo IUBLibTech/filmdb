@@ -21,32 +21,52 @@ class StatsController < ApplicationController
 
 	end
 
+	def ajax_medium_stats
+		if params[:medium] == 'Film'
+			@generations = generations(Film)
+			@gauges = Film.joins("INNER JOIN physical_objects ON physical_objects.actable_id = films.id").where(po_sql_where).where("gauge is not null AND gauge != ''").group(:gauge).count
+			@bases = bases(Film)
+			@sounds = sounds(Film)
+			@colors = colors(Film)
+			@conditions = PhysicalObject.where(po_sql_where).where(medium: 'Film').where("condition_rating is not null and condition_rating != ''").group(:condition_rating).count
+			render partial: 'film_metadata_stats'
+		elsif params[:medium] == 'Video'
+			@generations = generations(Video)
+			@gauges = Video.joins("INNER JOIN physical_objects ON physical_objects.actable_id = videos.id").where(po_sql_where).where("gauge is not null AND gauge != ''").group(:gauge).count
+			@bases = bases(Video)
+			@sounds = sounds(Video)
+			@colors = colors(Video)
+			@conditions = PhysicalObject.where(po_sql_where).where(medium: 'Video').where("condition_rating is not null and condition_rating != ''").group(:condition_rating).count
+			render partial: 'video_metadata_stats'
+		else
+			render text: "Unsupported medium: #{params[:medium]}", status: 400
+		end
+	end
+
+
 	private
 	def set_counts
 		if any_filters?
 			#if unit or collection are specified we have to go from physical object to title/series since
-			# the associtions to unit/collect are through physical object and not title.
+			# the associations to unit/collect are through physical object and not title.
 			@title_count = Title.find_by_sql(title_count_sql).size
+			@digitized_count = PhysicalObject.find_by_sql(po_digit_count).size
+			@title_cat_count = Title.find_by_sql(title_cat_count_sql).size
 			@physical_object_count = PhysicalObject.where(po_sql_where).size
 			#@empty_title_count = "N/A"
 			#@empty_series_count = "N/A"
 			@series_count = Series.find_by_sql(series_count_sql).size
 		else
 			@title_count = Title.all.size
+			@digitized_count = PhysicalObject.where(digitized: true).size
+			@title_cat_count = Title.where(fully_cataloged: true).size
 			#@empty_title_count = Title.count_titles_without_physical_objects
 			@series_count = Series.all.size
 			#@empty_series_count = Series.series_without_titles_count
 			@physical_object_count = PhysicalObject.all.size
 		end
 
-		@media_type_count = PhysicalObject.where(po_sql_where).group(:media_type).count
 		@medium_count = PhysicalObject.where(po_sql_where).group(:medium).count
-		@generations = generations
-		@gauges = PhysicalObject.where(po_sql_where).where("gauge is not null AND gauge != ''").group(:gauge).count
-		@bases = bases
-		@sounds = sounds
-		@colors = colors
-		@conditions = PhysicalObject.where(po_sql_where).where("condition_rating is not null and condition_rating != ''").group(:condition_rating).count
 	end
 
 	def any_filters?
@@ -82,7 +102,17 @@ class StatsController < ApplicationController
 
 	def title_count_sql
 		"select distinct(titles.id) from physical_objects, titles, physical_object_titles "+
-			"where #{po_sql_where} and physical_objects.id = physical_object_titles.physical_object_id and physical_object_titles.title_id = titles.id"
+				"where #{po_sql_where} and physical_objects.id = physical_object_titles.physical_object_id and physical_object_titles.title_id = titles.id"
+	end
+
+	def po_digit_count
+		"select count(*) from physical_objects where #{po_sql_where} AND digitized = true"
+	end
+
+	def title_cat_count_sql
+		"select distinct(titles.id) from physical_objects, titles, physical_object_titles "+
+				"where #{po_sql_where} AND physical_objects.id = physical_object_titles.physical_object_id AND "+
+				"physical_object_titles.title_id = titles.id AND titles.fully_cataloged = true"
 	end
 
 	def series_count_sql
@@ -90,38 +120,44 @@ class StatsController < ApplicationController
 			"WHERE #{po_sql_where} AND physical_objects.id = physical_object_titles.physical_object_id AND titles.id = physical_object_titles.title_id AND titles.series_id = series.id"
 	end
 
-	def generations
+	def generations(cl)
 		gens = Hash.new
-		PhysicalObject::GENERATION_FIELDS.each do |gf|
-			count =  PhysicalObject.where(gf => true).where(po_sql_where).size
-			gens[PhysicalObject::GENERATION_FIELDS_HUMANIZED[gf]] = count unless count == 0
+		cl::GENERATION_FIELDS.each do |gf|
+			count =  cl.where(gf => true).joins("INNER JOIN physical_objects ON physical_objects.actable_id = #{cl.to_s.downcase.pluralize}.id").where(po_sql_where).size
+			gens[cl::GENERATION_FIELDS_HUMANIZED[gf]] = count unless count == 0
 		end
 		gens
 	end
 
-	def bases
+	def bases(cl)
 		b = Hash.new
-		PhysicalObject::BASE_FIELDS.each do |bf|
-			count = PhysicalObject.where(bf => true).where(po_sql_where).size
-			b[PhysicalObject::BASE_FIELDS_HUMANIZED[bf]] = count unless count == 0
+		if cl == Film
+			Film::BASE_FIELDS.each do |bf|
+				count = Film.where(bf => true).joins("INNER JOIN physical_objects ON physical_objects.actable_id = #{cl.to_s.downcase.pluralize}.id").where(po_sql_where).size
+				b[Film::BASE_FIELDS_HUMANIZED[bf]] = count unless count == 0
+			end
+		elsif cl == Video
+			count = Video.joins("INNER JOIN physical_objects ON physical_objects.actable_id = videos.id").where(po_sql_where).group(:base).size
+			b = count
+			b["Not Specifiec"] = b.delete("") unless b[""].nil?
 		end
 		b
 	end
 
-	def sounds
+	def sounds(cl)
 		sounds = Hash.new
-		PhysicalObject::SOUND_FORMAT_FIELDS.each do |sf|
-			count = PhysicalObject.where(sf => true).where(po_sql_where).size
-			sounds[PhysicalObject::SOUND_FORMAT_FIELDS_HUMANIZED[sf]] = count unless count == 0
+		cl::SOUND_FORMAT_FIELDS.each do |sf|
+			count = cl.where(sf => true).joins("INNER JOIN physical_objects ON physical_objects.actable_id = #{cl.to_s.downcase.pluralize}.id").where(po_sql_where).size
+			sounds[cl::SOUND_FORMAT_FIELDS_HUMANIZED[sf]] = count unless count == 0
 		end
 		sounds
 	end
 
-	def colors
+	def colors(cl)
 		colors = Hash.new
-		PhysicalObject::COLOR_FIELDS.each do |cf|
-			count = PhysicalObject.where(cf => true).where(po_sql_where).size
-			colors[PhysicalObject::COLOR_FIELDS_HUMANIZED[cf]] = count unless count == 0
+		cl::COLOR_FIELDS.each do |cf|
+			count = cl.where(cf => true).joins("INNER JOIN physical_objects ON physical_objects.actable_id = #{cl.to_s.downcase.pluralize}.id").where(po_sql_where).size
+			colors[cl::COLOR_FIELDS_HUMANIZED[cf]] = count unless count == 0
 		end
 		colors
 	end

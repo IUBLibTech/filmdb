@@ -24,8 +24,8 @@ Rails.application.routes.draw do
   get '/cage_shelf/memnon_digiprov/:id', to: 'cage_shelves#get_digiprov', as: 'get_digiprov'
 
   resources :collections
-  get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
-  post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
+  #get '/collections/:id/new_physical_object', to: 'collections#new_physical_object', as: 'collection_new_physical_object'
+  #post 'collections/:id/create_physical_object', to: 'collections#create_physical_object', as: 'collection_create_physical_object'
   get '/autocomplete_collection/', to: 'collections#autocomplete_collection', as: 'autocomplete_collection'
   get '/autocomplete_collection_for_unit/:unit_id', to: 'collections#autocomplete_collection_for_unit', as: 'autocomplete_collection_for_uni'
 
@@ -40,20 +40,18 @@ Rails.application.routes.draw do
   post '/component_groups/:id/ajax_edit_summary', to:'component_groups#ajax_edit_summary', as: 'ajax_edit_summary'
 
   resources :controlled_vocabularies
-
-  resources :collection_inventory_configurations do
-    #get '/collection_inventory_configurations/:id/new_physical_object'
-  end
-
-  get '/inventory/', to: 'inventory#index', as: 'inventory'
+  #get '/inventory/', to: 'physical_objects#new', as: 'inventory'
 
   resources :physical_objects
+  post '/physical_objects', to: 'physical_objects#create', as: 'create_physical_object'
   get '/physical_objects_filter', to: 'physical_objects#index', as: 'physical_objects_filter_default'
   get '/physical_objects/dup/:id', to: 'physical_objects#duplicate', as: 'duplicate_physical_object'
   post '/physical_objects/create_duplicate', to: 'physical_objects#create_duplicate', as: 'create_duplicate_physical_object'
   get '/physical_object_ad_strip', to: 'physical_objects#edit_ad_strip', as: 'edit_ad_strip'
   post '/physical_object_ad_strip', to: 'physical_objects#update_ad_strip', as: 'update_ad_strip'
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
+  patch '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'edit_physical_object_medium'
+
   #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
   get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
@@ -63,6 +61,14 @@ Rails.application.routes.draw do
   get '/physical_objects/digiprov/:id', to: 'physical_objects#digiprovs', as: 'digiprovs'
   get '/physical_objects/ajax_belongs_to_title/:iu_barcode/:title_id', to: 'physical_objects#ajax_belongs_to_title?', as: 'ajax_physical_object_belongs_to_title'
   get '/physical_objects/:id/ajax_lookup_barcode', to: 'physical_objects#ajax_lookup_barcode', as: 'ajax_lookup_barcode'
+  post '/physical_objects/ajax/rebuild_form', to: 'physical_objects#ajax_rebuild_form', as: 'physical_objects_ajax_rebuild_form'
+
+  # physical objects have to render the form based on a Medium (film, video, etc). When a users enters data THEN changes
+  # the Medium, we need to POST the already entered data to the original action (#new or #edit).
+  post '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'physical_objects_edit_post'
+  post '/physical_objects/new', to: 'physical_objects#new', as: 'physical_objects_new_post'
+  post '/physical_objects/:id', to: 'physical_objects#update', as: 'physical_object_update'
+
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
   get '/pod_pushes/:id', to: 'pod_pushes#show', as: 'pod_push'
@@ -87,18 +93,20 @@ Rails.application.routes.draw do
   get '/services/update_batch/:bin_barcode', to: 'services#receive', as: 'update_batch_test'
   post '/services/push_cage_to_pod/:cage_id', to: 'services#show_push_cage_to_pod_xml', as: 'show_push_cage_to_pod_xml'
   get '/services/test_pod_connection', to: 'services#test_basic_auth', as: 'test_basic_auth'
+  get '/services/mods/:mdpi_barcode', to: 'services#mods_from_barcode', as: 'mods_service'
 
   resources :spreadsheets, only: [:index, :show, :destroy]
-  post '/spreadhsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
+  post '/spreadsheets', to: 'spreadsheets#upload', as: 'spreadsheet_upload'
   get '/spreadsheets/:id/title/:title', to: 'spreadsheets#merge_title_candidates', as: 'merge_title_candidates'
   post 'spreadsheets/:id/merge_title', to: 'spreadsheets#merge_titles', as: 'merge_spreadsheet_titles'
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
   post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
-  get '/stats/', to: 'stats#index', as: 'stats_index'
-  post '/stats/', to: 'stats#filter_index', as: 'stats_filter_index'
-  get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
-  get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
+	get '/stats/', to: 'stats#index', as: 'stats_index'
+	post '/stats/', to: 'stats#filter_index', as: 'stats_filter_index'
+	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
+	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
+  get '/stats/ajax/medium_stats', to: 'stats#ajax_medium_stats', as: 'ajax_medium_stats'
 
   resources :titles, except: [:index] do
     resources :component_groups, only: [] do

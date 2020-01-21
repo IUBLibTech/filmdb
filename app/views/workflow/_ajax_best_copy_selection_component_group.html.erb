@@ -15,7 +15,7 @@
 				<td><%= p.current_workflow_status.type_and_location %></td>
 				<td>
 					<% if all_here %>
-						Reformating (MDPI) Component Group<%= check_box_tag "po_#{p.id}", "po_#{p.id}", false, class: 'best_copy_check' %>
+						Reformating (MDPI) Component Group<%= check_box_tag "po_#{p.acting_as.id}", "po_#{p.acting_as.id}", false, class: 'best_copy_check' %>
 					<% else %>
 					  Cannot create reformating group. Not all physical objects are present.
 					<% end %>

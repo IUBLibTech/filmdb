@@ -14,6 +14,32 @@ class ApplicationController < ActionController::Base
 
   end
 
+
+
+  def page_link_path(page)
+    physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
+  end
+  def physical_object_specific_path
+    @physical_object.medium.downcase.parameterize.underscore
+  end
+  def physical_object_specific_medium
+    @physical_object.nil? ? '' : @physical_object.medium.downcase.parameterize.underscore
+  end
+  helper_method :page_link_path
+  helper_method :physical_object_specific_medium
+  helper_method :physical_object_specific_path
+
+  # This method simplifies a Physical Object params hash passed in through form submission, replacing the format specific
+  # hash keys with a :physical_object key so that existing code does not need to be modified, only a call to this method
+  # invoked prior to processing the hash. This is necessary because when a form is build around a specific subclass of
+  # PhysicalObject, the form builds the has based on the subclass: @physical_object = Film.new and form_for(@physical_object)
+  # results in params with key :film. Most of the existing code (when multiple format support was implemented) generalizes to
+  # PhysicalObject.
+  def acting_as_params
+    params[:physical_object] = params.delete(:video) if params[:video]
+    params[:physical_object] = params.delete(:film) if params[:film]
+  end
+
   private
   def scope_current_username
     User.current_username = current_username
@@ -30,6 +56,8 @@ class ApplicationController < ActionController::Base
   def meaningful_action_name(name)
     name == 'index' ? 'View' : (name == 'destroy' ? 'Delete' : name)
   end
+
+
 
   # def update_user_loc
   #   if session[:username]
