@@ -9,7 +9,7 @@ class MdpiBarcodeValidator < ActiveModel::EachValidator
 				record.errors.add(attribute, option[:message] || error_message_link(assigned))
 			elsif assigned && assigned.is_a?(PhysicalObject) && record != assigned
 				record.errors.add(attribute, options[:message] || error_message_link(assigned))
-			elsif assigned && !assigned.is_a?(PhysicalObject)
+			elsif assigned && (!assigned.is_a?(PhysicalObject) || !assigned.is_a?(CageShelf))
 				record.errors.add(attribute, options[:message] || error_message_link(assigned))
 			end
 		end
