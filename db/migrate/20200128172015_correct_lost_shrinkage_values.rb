@@ -1,6 +1,5 @@
 class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
   def up
-    change_column :videos, :shrinkage, :float
 
     path = "#{Rails.root}/tmp/shrinkage_update.csv"
     begin
@@ -23,6 +22,5 @@ class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
 
   def down
     change_column :films, :shrinkage, :integer
-    change_column :videos, :shrinkage, :integer
   end
 end
