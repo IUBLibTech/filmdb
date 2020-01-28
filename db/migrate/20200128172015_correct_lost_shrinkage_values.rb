@@ -1,5 +1,7 @@
 class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
   def up
+    change_column :videos, :shrinkage, :float
+
     path = "#{Rails.root}/tmp/shrinkage_update.csv"
     begin
       @csv = CSV.read(path, headers: false)
@@ -20,6 +22,7 @@ class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
   end
 
   def down
-    # do nothing
+    change_column :films, :shrinkage, :integer
+    change_column :videos, :shrinkage, :integer
   end
 end
