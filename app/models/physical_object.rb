@@ -222,7 +222,104 @@ class PhysicalObject < ActiveRecord::Base
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
-  end
+	end
+
+
+	# HUMANIZE methods - these are for generation human readable text that reflects the boolean values set to true for the
+	# field 'categories' (Versions, Generations, Base, etc)
+	def humanize_generations_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::GENERATION_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::GENERATION_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_version_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::VERSION_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::VERSION_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_base_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::BASE_FIELDS)
+		elsif self.medium == 'Video'
+			# not a boolean field for Video
+			self.specific.base
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_stock_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::STOCK_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.stock
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_color_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::COLOR_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::COLOR_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_picture_type_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::PICTURE_TYPE_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::PICTURE_TYPE_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_aspect_ratio_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::ASPECT_RATIO_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::ASPECT_RATIO_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_sound_format_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::SOUND_FORMAT_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::SOUND_FORMAT_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_sound_content_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::SOUND_CONTENT_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::SOUND_CONTENT_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	def humanize_sound_configuration_fields
+		if self.medium == 'Film'
+			self.specific.humanize_boolean_fields(Film::SOUND_CONFIGURATION_FIELDS)
+		elsif self.medium == 'Video'
+			self.specific.humanize_boolean_fields(Video::SOUND_CONFIGURATION_FIELDS)
+		else
+			raise "Unsupported Physical Object Format: #{self.medium}"
+		end
+	end
+	# End HUMANIZE methods comment
+
 
   def belongs_to_title?(title_id)
     PhysicalObjectTitle.where(physical_object_id: id, title_id: title_id).size > 0
