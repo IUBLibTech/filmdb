@@ -171,25 +171,37 @@ class Title < ActiveRecord::Base
 		if po.nil?
 			''
 		else
-			mdpi_barcode = po.mdpi_barcode
-			u = Rails.application.secrets[:pod_service_grouping_url].dup.gsub!(':mdpi_barcode', mdpi_barcode)
+			gk = Title.pod_group_key_id(po.mdpi_barcode).to_i
+			self.update(pod_group_key_identifier: gk)
+			u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
 			uri = URI.parse(u)
 			http = Net::HTTP.new(uri.host, uri.port)
 			http.use_ssl = true
 			request = Net::HTTP::Get.new(uri.request_uri)
 			request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
-			result = http.request(request).body
-			raise "Could not find an Avalon URL" if result.match(/<avalon_url>([.]+)<\/avalon_url>/)[1].nil?
-
-			result.match(/<unit>([-\w]+)<\/unit>/)[1]
+			result = http.request(request).body.gsub(/\s+/, "")
+			url = result.match(/<message>(.*?)<\/message>/)[1]
+			raise "Could not find an Avalon URL" if url.nil?
+			url
 		end
-	end
-	def pod_group_key
-
-
 	end
 
 	private
+	# looks up POD group key identifier (GR000xxx) and converts it to its database ID value: GR000...xxx stripping away
+	# the GR and leading zeroes.
+	def self.pod_group_key_id(mdpi_barcode)
+		u = Rails.application.secrets[:pod_service_grouping_url].dup.gsub!(':mdpi_barcode', mdpi_barcode.to_s)
+		uri = URI.parse(u)
+		http = Net::HTTP.new(uri.host, uri.port)
+		http.use_ssl = true
+		request = Net::HTTP::Get.new(uri.request_uri)
+		request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
+		result = http.request(request).body
+		gr = result.match(/<group_identifier>(GR[0]+)([1-9][0-9]*)<\/group_identifier>/)[2]
+		raise "Missing Group Identifier: #{result}" if gr.nil?
+		gr
+	end
+
 	def self.title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
 		sql = "FROM titles"
 		if !series_name_text.blank?

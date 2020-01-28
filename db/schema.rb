@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200110152553) do
+ActiveRecord::Schema.define(version: 20200128172015) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20200110152553) do
     t.bigint   "cage_shelf_id"
   end
 
-  create_table "films", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "films", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.boolean "first_edition"
     t.boolean "second_edition"
     t.boolean "third_edition"
@@ -211,7 +211,7 @@ ActiveRecord::Schema.define(version: 20200110152553) do
     t.boolean "sound_configuration_multi_track"
     t.boolean "sound_configuration_dual_mono"
     t.string  "ad_strip"
-    t.decimal "shrinkage",                                           precision: 10
+    t.float   "shrinkage",                             limit: 24
     t.string  "mold"
     t.text    "missing_footage",                       limit: 65535
     t.boolean "multiple_items_in_can"
@@ -439,8 +439,8 @@ ActiveRecord::Schema.define(version: 20200110152553) do
   end
 
   create_table "titles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "title_text",         limit: 1024
-    t.text     "summary",            limit: 65535
+    t.string   "title_text",               limit: 1024
+    t.text     "summary",                  limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint   "series_id"
@@ -449,11 +449,12 @@ ActiveRecord::Schema.define(version: 20200110152553) do
     t.bigint   "modified_by_id"
     t.string   "series_part"
     t.bigint   "created_by_id"
-    t.text     "notes",              limit: 65535
-    t.text     "subject",            limit: 65535
-    t.text     "name_authority",     limit: 65535
-    t.text     "country_of_origin",  limit: 65535
+    t.text     "notes",                    limit: 65535
+    t.text     "subject",                  limit: 65535
+    t.text     "name_authority",           limit: 65535
+    t.text     "country_of_origin",        limit: 65535
     t.boolean  "fully_cataloged"
+    t.string   "pod_group_key_identifier"
   end
 
   create_table "units", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -498,7 +499,7 @@ ActiveRecord::Schema.define(version: 20200110152553) do
     t.datetime "updated_at"
   end
 
-  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string  "gauge"
     t.boolean "first_edition"
     t.boolean "second_edition"
@@ -622,11 +623,16 @@ ActiveRecord::Schema.define(version: 20200110152553) do
     t.index ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
   end
 
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
+  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
+  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
+  execute(<<-SQL)
+CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
+FOR EACH ROW
+BEGIN
+    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
+        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
+    END IF;
+END
+  SQL
 
 end
