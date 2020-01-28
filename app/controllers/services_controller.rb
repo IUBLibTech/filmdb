@@ -35,7 +35,7 @@ class ServicesController < ActionController::Base
 					shelf.update!(returned: true, returned_date: DateTime.now)
 				end
 			rescue Exception => error
-				@sucess = 'FAILURE'
+				@success = 'FAILURE'
 				@reason = 'Unexpected failure in Filmdb updating physical objects to Returned to Storage - Please contact Andrew Albrecht'
 				logger.debug $!
 			end
