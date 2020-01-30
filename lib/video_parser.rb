@@ -293,12 +293,13 @@ class VideoParser < CsvParser
 
     # base
     base = row[column_index BASE]
-    if Video::BASE_FIELDS_HUMANIZED.values.include?(base)
-      po.send(:base=, base)
-    else
-      po.errors.add(:base, "Undefined base: #{base}")
+    unless base.blank?
+      if Video::BASE_FIELDS_HUMANIZED.values.include?(base)
+        po.send(:base=, base)
+      else
+        po.errors.add(:base, "Undefined base: #{base}")
+      end
     end
-
     # stock
     stock = row[column_index STOCK]
     unless stock.blank?
