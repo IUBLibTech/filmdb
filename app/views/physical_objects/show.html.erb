@@ -1,4 +1,4 @@
-<%= link_to 'Edit', edit_physical_object_path(@physical_object.acting_as) %> |
+<%= link_to 'Edit', edit_physical_object_path(@physical_object.is_a?(PhysicalObject) ? @physical_object :  @physical_object.acting_as) %> |
 <%= link_to 'Back', url_for(:back) %> |
 <%= link_to 'New Physical Object', new_physical_object_path %>
 
