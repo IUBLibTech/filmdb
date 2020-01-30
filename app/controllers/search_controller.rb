@@ -1,9 +1,10 @@
 class SearchController < ApplicationController
   include PhysicalObjectsHelper
 	def barcode_search
-		@physical_object = PhysicalObject.where("iu_barcode = ? OR mdpi_barcode = ?", params[:barcode], params[:barcode]).first.specific
+		@physical_object = PhysicalObject.where("iu_barcode = ? OR mdpi_barcode = ?", params[:barcode], params[:barcode]).first
 		if @physical_object.nil?
 			@physical_object = PhysicalObjectOldBarcode.includes(:physical_object).where(iu_barcode: params[:barcode]).first&.physical_object
+			@physical_object = @physical_object.specific unless @physical_object.nil?
 		end
 		if @physical_object
 			render 'physical_objects/show'
