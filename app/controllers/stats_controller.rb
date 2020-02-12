@@ -50,7 +50,7 @@ class StatsController < ApplicationController
 			#if unit or collection are specified we have to go from physical object to title/series since
 			# the associations to unit/collect are through physical object and not title.
 			@title_count = Title.find_by_sql(title_count_sql).size
-			@digitized_count = PhysicalObject.find_by_sql(po_digit_count).size
+			@digitized_count = PhysicalObject.where(po_sql_where).where(digitized: true).size
 			@title_cat_count = Title.find_by_sql(title_cat_count_sql).size
 			@physical_object_count = PhysicalObject.where(po_sql_where).size
 			#@empty_title_count = "N/A"
