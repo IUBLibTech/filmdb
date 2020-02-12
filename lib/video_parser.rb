@@ -333,9 +333,8 @@ class VideoParser < CsvParser
     # color
     color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
     color_fields.each do |cf|
-      color_field = "image color #{cf}".parameterize.underscore
-      if (Video::COLOR_FIELDS.include?color_field.to_sym)
-        po.send((color_field << '=').to_sym, true)
+      if Video::COLOR_FIELDS_HUMANIZED.values.include?(cf)
+        po.send(Video::COLOR_FIELDS_HUMANIZED.key(cf), true)
       else
         po.errors.add(:color_fields, "#{cf} is not a valid Video Color value")
       end

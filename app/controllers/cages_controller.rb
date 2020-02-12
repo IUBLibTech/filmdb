@@ -138,6 +138,8 @@ class CagesController < ApplicationController
 					end
 				end
 			rescue ManualRollBackError => e
+				puts e.message
+				puts e.backtrace.join('\n')
 				flash[:warning] = "An error occurred while trying to push the cage to POD."
 			ensure
 				PodPush.new(cage_id: @cage.id, response: @result&.body).save
