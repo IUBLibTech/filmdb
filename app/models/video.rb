@@ -56,7 +56,7 @@ class Video < ActiveRecord::Base
   ]
 
   COLOR_FIELDS_HUMANIZED = {
-      :image_color_bw => "Black and White", :image_color_color => "Color", :image_color_mixed => "Mixed", :image_color_other => "Other"
+      :image_color_bw= => "Black and White", :image_color_color= => "Color", :image_color_mixed= => "Mixed", :image_color_other= => "Other"
   }
 
   ASPECT_RATIO_FIELDS = [
