@@ -31,12 +31,26 @@
       <b class="block">Generation</b>
       <div class="generation_box">
         <div class="check_box">
-          <%= f.check_box :generation_a_roll %>
-          <div>A Roll</div>
+          <%= f.check_box :generation_positive %>
+          <div>Positive</div>
         </div>
         <div class="check_box">
-          <%= f.check_box :generation_answer_print %>
-          <div>Answer Print</div>
+          <%= f.check_box :generation_negative %>
+          <div>Negative</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_reversal %>
+          <div>Reversal</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_other %>
+          <div>Other</div>
+        </div>
+      </div>
+      <div class="generation_box generation_box_ml_5px">
+        <div class="check_box">
+          <%= f.check_box :generation_a_roll %>
+          <div>A Roll</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_b_roll %>
@@ -47,6 +61,22 @@
           <div>C Roll</div>
         </div>
         <div class="check_box">
+          <%= f.check_box :generation_d_roll %>
+          <div>D Roll</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_answer_print %>
+          <div>Answer Print</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_projection_print %>
+          <div>Projection Print</div>
+        </div>
+        <div class="check_box">
+          <%= f.check_box :generation_work_print %>
+          <div>Work Print</div>
+        </div>
+        <div class="check_box">
           <%= f.check_box :generation_original_camera %>
           <div>Camera Original</div>
         </div>
@@ -55,19 +85,15 @@
           <div>Composite</div>
         </div>
         <div class="check_box">
-          <%= f.check_box :generation_d_roll %>
-          <div>D Roll</div>
-        </div>
-        <div class="check_box">
           <%= f.check_box :generation_duplicate %>
           <div>Duplicate</div>
         </div>
+      </div>
+      <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
           <%= f.check_box :generation_edited %>
           <div>Edited</div>
         </div>
-      </div>
-      <div class="generation_box generation_box_ml_5px">
         <div class="check_box">
           <%= f.check_box :generation_fine_grain_master %>
           <div>Fine Grain Master</div>
@@ -85,38 +111,12 @@
           <div>Master</div>
         </div>
         <div class="check_box">
-          <%= f.check_box :generation_mezzanine %>
-          <div>Mezzanine</div>
-        </div>
-        <div class="check_box">
-          <%= f.check_box :generation_negative %>
-          <div>Negative</div>
-        </div>
-        <div class="check_box">
           <%= f.check_box :generation_original %>
           <div>Original</div>
         </div>
         <div class="check_box">
-          <%= f.check_box :generation_other %>
-          <div>Other</div>
-        </div>
-      </div>
-      <div class="generation_box generation_box_ml_5px">
-        <div class="check_box">
           <%= f.check_box :generation_outs_and_trims %>
           <div>Outs and Trims</div>
-        </div>
-        <div class="check_box">
-          <%= f.check_box :generation_positive %>
-          <div>Positive</div>
-        </div>
-        <div class="check_box">
-          <%= f.check_box :generation_projection_print %>
-          <div>Projection Print</div>
-        </div>
-        <div class="check_box">
-          <%= f.check_box :generation_reversal %>
-          <div>Reversal</div>
         </div>
         <div class="check_box">
           <%= f.check_box :generation_magnetic_track %>
@@ -131,10 +131,7 @@
           <div>Separation Master</div>
         </div>
 
-        <div class="check_box">
-          <%= f.check_box :generation_work_print %>
-          <div>Work Print</div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -215,9 +212,9 @@
     <div id="stock_div" class="left">
       <b class="block">Stock</b>
       <div class="flex_wrap flex_col_wrap">
-        <div class="check_box _25"><%= f.check_box :stock_3_m %><%= Film::STOCK_FIELDS_HUMANIZED[:stock_3_m] %></div>
+        <div class="check_box _25"><%= f.check_box :stock_3_m %><div><%= Film::STOCK_FIELDS_HUMANIZED[:stock_3_m] %></div></div>
         <div class="check_box _25"><%= f.check_box :stock_agfa %><div>Agfa</div></div>
-        <div class="check_box _25"><%= f.check_box :stock_agfa_gevaert %><%= Film::STOCK_FIELDS_HUMANIZED[:stock_agfa_gevaert] %></div>
+        <div class="check_box _25"><%= f.check_box :stock_agfa_gevaert %><div><%= Film::STOCK_FIELDS_HUMANIZED[:stock_agfa_gevaert] %></div></div>
         <div class="check_box _25"><%= f.check_box :stock_ansco %><div>Ansco</div></div>
         <div class="check_box _25"><%= f.check_box :stock_dupont %><div>Dupont</div></div>
         <div class="check_box _25"><%= f.check_box :stock_ferrania %><div>Ferrania</div></div>
@@ -225,8 +222,8 @@
         <div class="check_box _25"><%= f.check_box :stock_gevaert %><div>Gevaert</div></div>
         <div class="check_box _25"><%= f.check_box :stock_kodak %><div>Kodak</div></div>
         <div class="check_box _25"><%= f.check_box :stock_orwo %><div>Orwo</div></div>
-        <div class="check_box _25"><%= f.check_box :stock_pathe %><%= Film::STOCK_FIELDS_HUMANIZED[:stock_pathe] %></div>
-        <div class="check_box _25"><%= f.check_box :stock_unknown %><%= Film::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div>
+        <div class="check_box _25"><%= f.check_box :stock_pathe %><div><%= Film::STOCK_FIELDS_HUMANIZED[:stock_pathe] %></div></div>
+        <div class="check_box _25"><%= f.check_box :stock_unknown %><div><%= Film::STOCK_FIELDS_HUMANIZED[:stock_unknown] %></div></div>
       </div>
     </div>
   </div>
@@ -241,14 +238,14 @@
     <b class="block">Picture Type</b>
     <div class="flex_wrap flex_col_wrap h_60px">
         <div><%= f.check_box :picture_composite_picture %>Composite Picture</div>
+        <div><%= f.check_box :picture_mos_picture %>MOS Picture</div>
+        <div><%= f.check_box :picture_silent_picture %>Silent Picture</div>
         <div><%= f.check_box :picture_credits_only %>Credits Only</div>
         <div><%= f.check_box :picture_intertitles_only %>Intertitles Only</div>
         <div><%= f.check_box :picture_kinescope %>Kinescope</div>
-        <div><%= f.check_box :picture_mos_picture %>MOS Picture</div>
         <div><%= f.check_box :picture_not_applicable %>Not Applicable</div>
         <div><%= f.check_box :picture_picture_effects %>Picture Effects</div>
         <div><%= f.check_box :picture_picture_outtakes %>Picture Outtakes</div>
-        <div><%= f.check_box :picture_silent_picture %>Silent Picture</div>
         <div><%= f.check_box :picture_titles %>Titles</div>
     </div>
     <div class="clear">
@@ -257,9 +254,9 @@
     <div id="color_div">
       <b class="block">Color</b>
       <div class="flex_wrap flex_col_wrap h_75px">
-        <div><%= f.check_box :color_bw_color_anscochrome %>Anscochrome</div>
         <div><%= f.check_box :color_bw_bw_black_and_white %>Black and White</div>
         <div><%= f.check_box :color_bw_color_color %>Color</div>
+        <div><%= f.check_box :color_bw_color_anscochrome %>Anscochrome</div>
         <div><%= f.check_box :color_bw_color_eastman %>Eastman</div>
         <div><%= f.check_box :color_bw_color_eco %>Eco</div>
         <div><%= f.check_box :color_bw_color_ektachrome %>Ektachrome</div>
