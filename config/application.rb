@@ -25,5 +25,8 @@ module Filmdb
 
     # load in the cedar scp information
     config.cedar = config_for(:cedar)
+
+    config.autoload_paths << Rails.root.join('lib')
+    config.paths.add 'lib', eager_load: true
   end
 end

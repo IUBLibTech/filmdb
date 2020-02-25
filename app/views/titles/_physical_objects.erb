@@ -29,7 +29,7 @@
     </td>
 
     <td><%= p.condition_rating %></td>
-    <td><%= p.has_attribute?(:reel) ? p.reel_number : '' %></td>
+    <td><%= p.has_attribute?(:reel_number) ? p.reel_number : '' %></td>
     <td><%= p.has_attribute?(:can_size) ? p.can_size : ''%></td>
 	  <td><%= p.collection&.name %></td>
     <% if p.digitized? %>
