@@ -166,29 +166,51 @@ class Title < ActiveRecord::Base
 		hh_mm_sec physical_objects.where(medium: med).inject(0){|sum, p| p[:duration] ? p[:duration].to_i + sum : 0 + sum }
 	end
 
+	# connects to POD to generate a URL for Dark Avalon if one exists. Because this is communication over an HTTP requests,
+	# returns a hash containing important information related to the success of the GET. There are 3 different possible
+	# outcomes with different hash contents:
+	# 1) communication with POD was successful and a URL was determined. The hash contains [status: 200, url: <the url>]
+	# 2) the title doesn't have any digitized PO's so there won't be an Avalon URL anyway: the hash is empty {}
+	# 3) network communication problems (down servers, 5xx HTTP codes, etc): the hash contains: {error: <some message>}
+	#
 	def avalon_url
 		po = self.physical_objects.where(digitized: true).first
 		if po.nil?
-			''
-		else
-			gk = Title.pod_group_key_id(po.mdpi_barcode).to_i
-			self.update(pod_group_key_identifier: gk)
-			u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
-			uri = URI.parse(u)
-			http = Net::HTTP.new(uri.host, uri.port)
-			http.use_ssl = true
-			request = Net::HTTP::Get.new(uri.request_uri)
-			request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
-			result = http.request(request).body.gsub(/\s+/, "")
-			url = result.match(/<message>(.*?)<\/message>/)[1]
-			raise "Could not find an Avalon URL" if url.nil?
-			url
+			{}
+			else
+				begin
+					gk = Title.pod_group_key_id(po.mdpi_barcode)
+					if gk[:status] != 200
+						{error: "Error connecting to POD. Status: #{gk[:status]}"}
+					else
+						gk = gk[:gid]
+						self.update(pod_group_key_identifier: gk.to_i)
+						u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
+						uri = URI.parse(u)
+						http = Net::HTTP.new(uri.host, uri.port)
+						http.use_ssl = true
+						request = Net::HTTP::Get.new(uri.request_uri)
+						request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
+						result = http.request(request).body.gsub(/\s+/, "")
+						url = result.match(/<message>(.*?)<\/message>/)[1]
+						if url.nil?
+							{error: "Could not find an Avalon URL"}
+						else
+							{url: url}
+						end
+					end
+				rescue => e
+					puts e.message
+					puts e.backtrace.join('\n')
+					{error: "An unexpected error occurred while retrieving the Avalon URL from POD: #{e.message}"}
+				end
 		end
 	end
 
 	private
 	# looks up POD group key identifier (GR000xxx) and converts it to its database ID value: GR000...xxx stripping away
-	# the GR and leading zeroes.
+	# the GR and leading zeroes. Returning a hash with two keys: status which is the HTTP status code of the request, and gid
+	# which is the group id in POD IFF status is 200
 	def self.pod_group_key_id(mdpi_barcode)
 		u = Rails.application.secrets[:pod_service_grouping_url].dup.gsub!(':mdpi_barcode', mdpi_barcode.to_s)
 		uri = URI.parse(u)
@@ -196,10 +218,16 @@ class Title < ActiveRecord::Base
 		http.use_ssl = true
 		request = Net::HTTP::Get.new(uri.request_uri)
 		request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
-		result = http.request(request).body
-		gr = result.match(/<group_identifier>(GR[0]+)([1-9][0-9]*)<\/group_identifier>/)[2]
-		raise "Missing Group Identifier: #{result}" if gr.nil?
-		gr
+		result = http.request(request)
+		code = result.code.to_i
+		if code == 200
+			body = result.body
+			gr = body.match(/<group_identifier>(GR[0]+)([1-9][0-9]*)<\/group_identifier>/)[2]
+			raise "Missing Group Identifier: #{result}" if gr.nil?
+			{status: code, gid: gr}
+		else
+			{status: code, gid: nil}
+		end
 	end
 
 	def self.title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
