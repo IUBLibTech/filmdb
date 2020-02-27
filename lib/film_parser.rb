@@ -133,7 +133,6 @@ class FilmParser < CsvParser
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
-        debugger
         @parse_headers_msg << "#{ch} is not a valid column header"
       end
     end

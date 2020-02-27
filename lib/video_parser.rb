@@ -133,14 +133,12 @@ class VideoParser < CsvParser
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
-        debugger
         @parse_headers_msg << "<b>#{ch}</b> is not a valid column header<br/>".html_safe
       end
     end
     # make sure that every header is present in the spreadsheet
     COLUMN_HEADERS.each do |h|
       unless @headers.keys.include?(h)
-        debugger
         @parse_headers_msg <<  "The column <b>#{h}</b> is missing from the spreadsheet<br/>".html_safe
       end
     end
