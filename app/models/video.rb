@@ -4,6 +4,12 @@ class Video < ActiveRecord::Base
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
 
+  # nested_form gem doesn't integrate with active_record-acts_as gem when objects are CREATED, it results in double
+  # object creation from form submissions. Edits/deletes seem to work fine however. Use this in the initializer to omit
+  # processing these nested attributes
+  NESTED_ATTRIBUTES = [:value_conditions_attributes, :boolean_conditions_attributes, :languages_attributes,
+                       :physical_object_original_identifiers_attributes, :physical_object_dates_attributes]
+
   GAUGE_VALUES = ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge').pluck(:value)
   MAXIMUM_RUNTIME_VALUES = ControlledVocabulary.physical_object_cv('Video')[:maximum_runtime].collect{|r| r[0]}
   SIZE_VALUES = ControlledVocabulary.physical_object_cv('Video')[:size].collect{|r| r[0]}
@@ -118,6 +124,17 @@ class Video < ActiveRecord::Base
 
   def initialize(args = {})
     super
+    # !!!! IMPORTANT - how the nested_form gem and active-record_acts_as gem interact with form submission and params.require.permit
+    # creates duplicate entries for PhysicalObjectOriginalIdentifiers, PhysicalObjectDates, Languages, RatedConditions, and
+    # BooleanConditions. The above super call ends up ALSO calling the initializer for PhysicalObjects which holds the
+    # actual associations for these objects. They get created correctly. However, I think that when each of these is passed
+    # through self.send() below, this results in a SECOND call to creating that metadata on the underlying physical object.
+    # This only appears to happen during create action on physical objects however, make sure to remove the keys for these
+    # metadata fields BEFORE iterating through them for the Film attributes
+    NESTED_ATTRIBUTES.each do |na|
+      args.delete(na)
+    end
+
     acting_as.media_type = 'Moving Image'
     if args.is_a? ActionController::Parameters
       args.each do |a|
