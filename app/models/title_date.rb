@@ -1,5 +1,6 @@
 class TitleDate < ActiveRecord::Base
 	include DateHelper
+	belongs_to :title
 
 	# the constructor is responsible for parsing date_text to turn it into coresponding start and end dates based on the string passed
 	def initialize(attributes = {})
