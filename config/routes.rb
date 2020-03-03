@@ -154,6 +154,7 @@ Rails.application.routes.draw do
   resources :users
   get '/users/worksite_location/:id', to: 'users#show_update_location', as: 'show_worksite_location'
   patch '/users/worksite_location/:id', to: 'users#update_location', as: 'update_worksite_location'
+  get '/user_deleters', to: 'users#deleters', as: 'deleters'
 
   # routes for workflow
   get '/workflow/pull_request', to: 'workflow#pull_request', as: 'pull_request'

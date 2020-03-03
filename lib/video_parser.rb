@@ -120,9 +120,9 @@ class VideoParser < CsvParser
     @parse_headers_msg = ''
     # read all of the file's column headers
     row.each_with_index { |header, i|
-      puts "[#{header}, #{i}]"
-      if @headers.keys.include?(header)
-        @parse_headers_msg << "The header <b>#{header}</b> was duplicated at column #{i}<br/>"
+      puts "[#{header.strip}, #{i}]"
+      if @headers.keys.include?(header.strip)
+        @parse_headers_msg << "The header <b>#{header.strip}</b> was duplicated at column #{i}<br/>"
       elsif header.blank?
         @parse_headers_msg << "The header is blank at column #{i}<br/>"
       else
