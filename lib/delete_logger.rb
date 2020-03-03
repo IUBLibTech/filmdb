@@ -46,7 +46,7 @@ module DeleteLogger
       hri = "Title: #{self.title_text}, From Spreadsheet?: #{self.spreadsheet ? self.spreadsheet.filename : "no"}"
     elsif self.class ==TitleCreator
       hri = "Title: #{self.title.title_text}, Name: #{self.name}, Role: #{self.role}"
-    elsif self.class ==TitleDate
+    elsif self.class == TitleDate
       hri = "Title: #{self.title.title_text}, Date: #{self.date_text}, Type: #{self.date_type}"
     elsif self.class ==TitleForm
       hri = "Title: #{self.title.title_text}, Form: #{self.form}"
