@@ -85,6 +85,10 @@ class UsersController < ApplicationController
     redirect_back_or_to root_url
   end
 
+  def deleters
+    @deletes = DeleteLogEntry.all.order("id DESC")
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

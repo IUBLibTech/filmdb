@@ -4,6 +4,12 @@ class Film < ActiveRecord::Base
   validates :mdpi_barcode, mdpi_barcode: true
   validates :gauge, presence: true
 
+  # nested_form gem doesn't integrate with active_record-acts_as gem when objects are CREATED, it results in double
+  # object creation from form submissions. Edits/deletes seem to work fine however. Use this in the initializer to omit
+  # processing these nested attributes
+  NESTED_ATTRIBUTES = [:value_conditions_attributes, :boolean_conditions_attributes, :languages_attributes,
+                       :physical_object_original_identifiers_attributes, :physical_object_dates_attributes]
+
   VERSION_FIELDS = [:first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample,
                     :preview, :revised, :version_original, :captioned, :excerpt, :catholic, :domestic, :trailer, :english, :television, :x_rated]
   VERSION_FIELDS_HUMANIZED = {first_edition: "1st Edition", second_edition: "2nd Edition", third_edition: "3rd Edition", fourth_edition: "4th Edition", x_rated: "X-rated"}
@@ -108,6 +114,17 @@ class Film < ActiveRecord::Base
   def initialize(args = {})
     super
     if args.is_a? ActionController::Parameters
+      # !!!! IMPORTANT - how the nested_form gem and active-record_acts_as gem interact with form submission and params.require.permit
+      # creates duplicate entries for PhysicalObjectOriginalIdentifiers, PhysicalObjectDates, Languages, RatedConditions, and
+      # BooleanConditions. The above super call ends up ALSO calling the initializer for PhysicalObjects which holds the
+      # actual associations for these objects. They get created correctly. However, I think that when each of these is passed
+      # through self.send() below, this results in a SECOND call to creating that metadata on the underlying physical object.
+      # This only appears to happen during create action on physical objects however, make sure to remove the keys for these
+      # metadata fields BEFORE iterating through them for the Film attributes
+      NESTED_ATTRIBUTES.each do |na|
+        args.delete(na)
+      end
+
       args.each do |a|
         self.send(a.dup << "=", args[a])
       end

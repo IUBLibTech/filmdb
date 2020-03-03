@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200128172015) do
+ActiveRecord::Schema.define(version: 20200224165133) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -98,6 +98,15 @@ ActiveRecord::Schema.define(version: 20200128172015) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active_status",   default: true
+  end
+
+  create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "table_id"
+    t.string   "object_type"
+    t.string   "human_readable_identifier"
+    t.string   "who_deleted"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "digiprovs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -623,16 +632,11 @@ ActiveRecord::Schema.define(version: 20200128172015) do
     t.index ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
   end
 
-  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
-  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
-  execute(<<-SQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
-FOR EACH ROW
-BEGIN
-    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
-        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
-    END IF;
-END
-  SQL
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
+  end
 
 end
