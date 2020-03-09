@@ -15,10 +15,8 @@ class TitleDate < ActiveRecord::Base
 	end
 
 	def date_text=(dt)
-    puts "Before parse: #{dt}"
 		super(dt)
 		parse_date_text
-    puts "After parse: #{dt}"
 	end
 
 	def reparse_date

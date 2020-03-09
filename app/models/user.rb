@@ -3,6 +3,10 @@ class User < ActiveRecord::Base
 	validates :username, presence: true, uniqueness: true
 	belongs_to :created_in_sheet, class_name: "Spreadsheet", foreign_key: "created_in_spreadsheet"
 
+	scope :active_user_emails, -> {
+		User.where("active == true AND username != 'jaalbrec'").pluck(:email_address)
+	}
+
 	def self.authenticate(username)
 		return false if username.nil? || username.blank?
 		return false if !active_user?(username)

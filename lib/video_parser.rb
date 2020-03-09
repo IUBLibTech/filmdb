@@ -133,7 +133,7 @@ class VideoParser < CsvParser
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
-        @parse_headers_msg << "<b>#{ch}</b> is not a valid column header<br/>".html_safe
+        @parse_headers_msg << "><b>#{ch}</b>< is not a valid column header<br/>".html_safe
       end
     end
     # make sure that every header is present in the spreadsheet
@@ -201,7 +201,7 @@ class VideoParser < CsvParser
     elsif Video::GAUGE_VALUES.include?(gauge)
       set_value(:gauge, gauge, po)
     else
-      po.errors.add(:gauge, "#{gauge} is not a valid Video Gauge value")
+      po.errors.add(:gauge, ">#{gauge}< is not a valid Video Gauge value")
     end
 
     reel_number = row[column_index REEL_NUMBER]
@@ -219,7 +219,7 @@ class VideoParser < CsvParser
       if Video::SIZE_VALUES.include?(size)
         set_value(:size, size, po)
       else
-        po.errors.add(:size, "#{size} is not a valid Video Size value")
+        po.errors.add(:size, ">#{size}< is not a valid Video Size value")
       end
     end
 
@@ -228,7 +228,7 @@ class VideoParser < CsvParser
       if Video::PLAYBACK_SPEEDS.include?(playback_speed)
         set_value(:playback_speed, playback_speed, po)
       else
-        po.errors.add(:playback_speed, "#{playback_speed} is not a valid Video Playback Speed")
+        po.errors.add(:playback_speed, ">#{playback_speed}< is not a valid Video Playback Speed")
       end
     end
 
@@ -306,7 +306,7 @@ class VideoParser < CsvParser
       if Video::STOCK_VALUES.include?(stock)
         po.stock = stock
       else
-        po.errors.add(:stock, "#{stock} is not a valid Video Stock value")
+        po.errors.add(:stock, ">#{stock}< is not a valid Video Stock value")
       end
     end
 
@@ -315,7 +315,7 @@ class VideoParser < CsvParser
       if Video::RECORDING_STANDARDS_VALUES.include?(rs)
         po.recording_standard = rs
       else
-        po.errors.add(:recording_standard, "#{rs} is not a valid Video Recording Standard value")
+        po.errors.add(:recording_standard, ">#{rs}< is not a valid Video Recording Standard value")
       end
     end
 
@@ -336,7 +336,7 @@ class VideoParser < CsvParser
       if Video::COLOR_FIELDS_HUMANIZED.values.include?(cf)
         po.send(Video::COLOR_FIELDS_HUMANIZED.key(cf), true)
       else
-        po.errors.add(:color_fields, "#{cf} is not a valid Video Color value")
+        po.errors.add(:color_fields, ">#{cf}< is not a valid Video Color value")
       end
     end
 
@@ -353,7 +353,7 @@ class VideoParser < CsvParser
       when "Other"
         po.send(:image_aspect_ratio_other=, true)
       else
-        po.errors.add(:aspect_ratio, "#{af} is not a valid Video Aspect Ratio value")
+        po.errors.add(:aspect_ratio, ">#{af}< is not a valid Video Aspect Ratio value")
       end
     end
 
@@ -364,7 +364,7 @@ class VideoParser < CsvParser
       if Video::SOUND_FORMAT_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_format_type, "#{ff} is not a valid Video Sound Format Type value")
+        po.errors.add(:sound_format_type, ">#{ff}< is not a valid Video Sound Format Type value")
       end
     end
 
@@ -375,7 +375,7 @@ class VideoParser < CsvParser
       if Video::SOUND_CONTENT_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_content_type, "#{cf} is not a valid Video Sound Content Type value")
+        po.errors.add(:sound_content_type, ">#{cf}< is not a valid Video Sound Content Type value")
       end
     end
 
@@ -386,7 +386,7 @@ class VideoParser < CsvParser
       if Video::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_configuration, "#{cf} is not a valid Video Sound Field value")
+        po.errors.add(:sound_configuration, ">#{cf}< is not a valid Video Sound Field value")
       end
     end
 
@@ -544,19 +544,23 @@ class VideoParser < CsvParser
         if match.nil?
           po.errors.add(:title_date, "Malformed date #{date}")
         else
-          date_set = DateHelper.convert_dates(match[1])
-          # error case - start date will always be !nil unless the string is malformed.
-          # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
-          if date_set[:start_date].nil?
-            po.errors.add(:title_date, "Malformed date #{date}")
-          else
-            type = (match[6].blank? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
-            if type.nil?
-              po.errors.add(:title_date, "Unknown title date type: #{date}")
+          begin
+            date_set = DateHelper.convert_dates(match[1])
+            # error case - start date will always be !nil unless the string is malformed.
+            # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
+            if date_set[:start_date].nil?
+              po.errors.add(:title_date, "Malformed date #{date}")
             else
-              td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
-              title.title_dates << td
+              type = (match[6].blank? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
+              if type.nil?
+                po.errors.add(:title_date, "Unknown title date type: #{date}")
+              else
+                td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
+                title.title_dates << td
+              end
             end
+          rescue => e
+            po.errors.add(:title_date, "Malformed date #{date}")
           end
         end
       end
