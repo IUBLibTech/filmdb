@@ -199,6 +199,8 @@ Rails.application.routes.draw do
   get '/workflow/ajax_show_storage_location/:iu_barcode', to: 'workflow#ajax_return_to_storage_lookup', as: 'ajax_return_to_storage_lookup'
   get '/workflow/correct_freezer_loc', to: 'workflow#correct_freezer_loc_get', as: 'correct_freezer_loc_get'
   post '/workflow/correct_freezer_loc', to: 'workflow#correct_freezer_loc_post', as: 'correct_freezer_loc_post'
+  get '/workflow/deaccession', to: 'workflow#deaccession', as: 'deaccession'
+  post '/workflow/deaccession', to: 'workflow#deaccession_ajax_post', as: 'deaccession_ajax_post'
   # workflow_stats routes
   get '/workflow_stats/digitization_staging_stats', to: 'workflow_stats#digitization_staging_stats', as: 'digitization_staging_stats'
   get '/workflow_stats/shipped_so_far', to: 'workflow_stats#shipped_so_far', as: 'shipped_so_far'

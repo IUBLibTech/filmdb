@@ -257,6 +257,29 @@ class WorkflowController < ApplicationController
 		redirect_to :return_to_storage
 	end
 
+	def deaccession
+		@physical_object = PhysicalObject.new
+	end
+	def deaccession_ajax_post
+		@physical_object = PhysicalObject.where(iu_barcode: params[:physical_object][:iu_barcode]).first
+		if @physical_object
+			PhysicalObject.transaction do
+				ws = WorkflowStatus.build_workflow_status(WorkflowStatus::DEACCESSIONED, @physical_object, true)
+				@physical_object.workflow_statuses << ws
+				@physical_object.current_workflow_status = ws
+				if @physical_object.save
+					flash[:notice] = "#{@physical_object.iu_barcode} has bee successfully Deaccessioned"
+				else
+					flash[:warning] = "Something prevented #{@physical_object.iu_barcode} from being Deaccessioned. If this problem persists, please notify Carmel Curtis."
+				end
+			end
+		else
+			@physical_object = PhysicalObject.new
+			flash[:warning] = "Could not find a Physical Object with barcode: #{params[:physical_object][:iu_barcode]}"
+		end
+		render 'deaccession', notice: @msg
+	end
+
 	def send_for_mold_abatement
 	end
 
