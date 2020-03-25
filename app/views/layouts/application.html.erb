@@ -51,6 +51,9 @@
       <li>
         <%= link_to 'Correct Freezer Location', correct_freezer_loc_get_path %>
       </li>
+      <% if policy(User).can_delete_objects? %>
+        <li><%= link_to 'Deaccession', deaccession_path %></li>
+      <% end %>
     </ul>
   </div>
   <div class="menuItem">

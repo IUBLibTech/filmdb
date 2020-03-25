@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200224165133) do
+ActiveRecord::Schema.define(version: 20200309155929) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 20200224165133) do
     t.boolean  "active_status",   default: true
   end
 
-  create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer  "table_id"
     t.string   "object_type"
     t.string   "human_readable_identifier"
