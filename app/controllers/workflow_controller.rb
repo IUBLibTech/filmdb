@@ -267,6 +267,7 @@ class WorkflowController < ApplicationController
 				ws = WorkflowStatus.build_workflow_status(WorkflowStatus::DEACCESSIONED, @physical_object, true)
 				@physical_object.workflow_statuses << ws
 				@physical_object.current_workflow_status = ws
+				@physical_object.component_group_physical_objects.delete_all
 				if @physical_object.save
 					flash[:notice] = "#{@physical_object.iu_barcode} has bee successfully Deaccessioned"
 				else
