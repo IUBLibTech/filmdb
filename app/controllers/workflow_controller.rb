@@ -269,7 +269,7 @@ class WorkflowController < ApplicationController
 				@physical_object.current_workflow_status = ws
 				@physical_object.component_group_physical_objects.delete_all
 				if @physical_object.save
-					flash[:notice] = "#{@physical_object.iu_barcode} has bee successfully Deaccessioned"
+					flash[:notice] = "#{@physical_object.iu_barcode} has been successfully Deaccessioned"
 				else
 					flash[:warning] = "Something prevented #{@physical_object.iu_barcode} from being Deaccessioned. If this problem persists, please notify Carmel Curtis."
 				end
