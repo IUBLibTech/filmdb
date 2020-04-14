@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200309155929) do
+ActiveRecord::Schema.define(version: 20200414143928) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(version: 20200309155929) do
     t.boolean "aspect_ratio_2_35_1"
     t.boolean "aspect_ratio_2_39_1"
     t.boolean "aspect_ratio_2_59_1"
-    t.text    "sound",                                 limit: 65535
+    t.text    "sound",                                                  limit: 65535
     t.boolean "sound_format_optical_variable_area"
     t.boolean "sound_format_optical_variable_density"
     t.boolean "sound_format_magnetic"
@@ -217,18 +217,18 @@ ActiveRecord::Schema.define(version: 20200309155929) do
     t.boolean "sound_configuration_mono"
     t.boolean "sound_configuration_stereo"
     t.boolean "sound_configuration_surround"
-    t.boolean "sound_configuration_multi_track"
+    t.boolean "sound_format_optical_variable_area_maurer"
     t.boolean "sound_configuration_dual_mono"
     t.string  "ad_strip"
-    t.float   "shrinkage",                             limit: 24
+    t.float   "shrinkage",                                              limit: 24
     t.string  "mold"
-    t.text    "missing_footage",                       limit: 65535
+    t.text    "missing_footage",                                        limit: 65535
     t.boolean "multiple_items_in_can"
     t.boolean "color_bw_color_color"
     t.boolean "color_bw_bw_black_and_white"
     t.boolean "color_bw_bw_hand_coloring"
     t.boolean "color_bw_bw_stencil_coloring"
-    t.text    "captions_or_subtitles_notes",           limit: 65535
+    t.text    "captions_or_subtitles_notes",                            limit: 65535
     t.boolean "sound_format_optical"
     t.string  "anamorphic"
     t.integer "track_count"
@@ -247,7 +247,16 @@ ActiveRecord::Schema.define(version: 20200309155929) do
     t.boolean "generation_other"
     t.boolean "sound_content_narration"
     t.string  "close_caption"
-    t.text    "generation_notes",                      limit: 65535
+    t.text    "generation_notes",                                       limit: 65535
+    t.boolean "generation_interpositive"
+    t.boolean "picture_text"
+    t.boolean "aspect_ratio_2_55_1"
+    t.boolean "sound_format_optical_variable_area_bilateral"
+    t.boolean "sound_format_optical_variable_area_dual_bilateral"
+    t.boolean "sound_format_optical_variable_area_unilateral"
+    t.boolean "sound_format_optical_variable_area_dual_unilateral"
+    t.boolean "sound_format_optical_variable_area_rca_duplex"
+    t.boolean "sound_format_optical_variable_density_multiple_density"
   end
 
   create_table "languages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

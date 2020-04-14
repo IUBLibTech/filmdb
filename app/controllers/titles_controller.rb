@@ -563,7 +563,7 @@ class TitlesController < ApplicationController
     )
   end
   def page_link_path(page)
-	  titles_search_path(page: page, title_text: params[:title_text], date: params[:date], publisher_text: params[:publisher_text], creator_text: params[:creator_text],
+	  titles_search_path(page: page, title_text: params[:title_text], series_name_text: params[:series_name_text], date: params[:date], publisher_text: params[:publisher_text], creator_text: params[:creator_text],
 	                     collection_id: (params[:collection_id] == '0' ? 0 : params[:collection_id]))
   end
 	helper_method :page_link_path

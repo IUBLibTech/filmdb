@@ -182,13 +182,13 @@ module PhysicalObjectsHelper
           :generation_kinescope, :generation_magnetic_track, :generation_mezzanine, :generation_negative,
           :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
           :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other,
-          :generation_notes,
+          :generation_interpositive, :generation_notes,
           # base, stock
           :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
           :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania,
           # picture attributes
           :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-          :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles,
+          :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :picture_text,
 
           # color attributes
           :color_bw_bw_black_and_white, :color_bw_color_color, :color_bw_bw_toned, :color_bw_bw_tinted,
@@ -197,17 +197,21 @@ module PhysicalObjectsHelper
           :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_color, :color_bw_bw,
           #aspect ratios
           :aspect_ratio_2_66_1, :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1,
-          :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18,
+          :aspect_ratio_2_39_1, :aspect_ratio_2_59_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :aspect_ratio_2_55_1,
           :anamorphic,
-          # sound attributes
+          # sound format attributes
           :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a, :stock_3_m, :stock_agfa_gevaert, :stock_pathe,
           :stock_unknown, :close_caption, :captions_or_subtitles_notes, :sound, :sound_format_optical, :sound_format_optical_variable_area,
           :sound_format_optical_variable_density, :sound_format_magnetic, :sound_format_digital_sdds, :sound_format_digital_dts,
-          :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media, :sound_content_music_track,
+          :sound_format_digital_dolby_digital, :sound_format_sound_on_separate_media, :sound_format_optical_variable_area_bilateral,
+          :sound_format_optical_variable_area_dual_bilateral, :sound_format_optical_variable_area_unilateral,
+          :sound_format_optical_variable_area_dual_unilateral, :sound_format_optical_variable_area_rca_duplex,
+          :sound_format_optical_variable_density_multiple_density, :sound_format_optical_variable_area_maurer,
+          # sound content attributes
+          :sound_content_music_track,
           :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes,
           :sound_content_narration, :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround,
-          :sound_configuration_multi_track, :sound_configuration_dual_mono, :sound_configuration_single,
-          :track_count,
+          :sound_configuration_dual_mono, :sound_configuration_single, :track_count,
 
           value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
           boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],

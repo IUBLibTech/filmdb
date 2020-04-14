@@ -18,7 +18,7 @@ class Film < ActiveRecord::Base
       :generation_composite, :generation_intermediate, :generation_mezzanine, :generation_kinescope, :generation_magnetic_track, :generation_optical_sound_track,
       :generation_outs_and_trims, :generation_a_roll, :generation_b_roll, :generation_c_roll, :generation_d_roll, :generation_edited,
       :generation_original_camera, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate,
-      :generation_master, :generation_other
+      :generation_master, :generation_other, :generation_interpositive
   ]
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
@@ -27,7 +27,7 @@ class Film < ActiveRecord::Base
       generation_outs_and_trims: "Outs and Trims", generation_a_roll: "A Roll", generation_b_roll: "B Roll", generation_c_roll: "C Roll", generation_d_roll: "D Roll",
       generation_edited: "Edited", generation_original_camera: "Camera Original", generation_original: "Original",
       generation_fine_grain_master: "Fine Grain Master", generation_separation_master: "Separation Master", generation_duplicate: "Duplicate", generation_master: 'Master',
-      generation_other: "Other"
+      generation_other: "Other", generation_interpositive: 'Interpositive'
   }
 
   BASE_FIELDS =[:base_acetate, :base_polyester, :base_nitrate, :base_mixed]
@@ -43,12 +43,13 @@ class Film < ActiveRecord::Base
 
   PICTURE_TYPE_FIELDS = [
       :picture_not_applicable, :picture_silent_picture, :picture_mos_picture, :picture_composite_picture, :picture_intertitles_only,
-      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles
+      :picture_credits_only, :picture_picture_effects, :picture_picture_outtakes, :picture_kinescope, :picture_titles, :picture_text
   ]
   PICTURE_TYPE_FIELDS_HUMANIZED = {
       picture_not_applicable: "Not Applicable", picture_silent_picture: "Silent", picture_mos_picture: "MOS",
       picture_composite_picture: "Composite", picture_intertitles_only: "Intertitles Only", picture_credits_only: "Credits Only",
-      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope", picture_titles: 'Titles'
+      picture_picture_effects: "Picture Effects", picture_picture_outtakes: "Outtakes", picture_kinescope: "Kinescope", picture_titles: 'Titles',
+      picture_text: 'Text'
   }
   COLOR_BW_FIELDS = [
       :color_bw_bw_toned, :color_bw_bw_tinted, :color_bw_bw_hand_coloring, :color_bw_bw_stencil_coloring, :color_bw_bw_black_and_white
@@ -68,24 +69,34 @@ class Film < ActiveRecord::Base
 
   ASPECT_RATIO_FIELDS = [
       :aspect_ratio_1_33_1, :aspect_ratio_1_37_1, :aspect_ratio_1_66_1, :aspect_ratio_1_85_1, :aspect_ratio_2_35_1, :aspect_ratio_2_39_1, :aspect_ratio_2_59_1,
-      :aspect_ratio_2_66_1, :aspect_ratio_1_36, :aspect_ratio_1_18
+      :aspect_ratio_2_66_1, :aspect_ratio_1_36, :aspect_ratio_1_18, :aspect_ratio_2_55_1
   ]
   ASPECT_RATIO_FIELDS_HUMANIZED = {
       aspect_ratio_1_33_1: "1.33:1", aspect_ratio_1_37_1: "1.37:1", aspect_ratio_1_66_1: "1.66:1", aspect_ratio_1_85_1: "1.85:1",
       aspect_ratio_2_35_1: "2.35:1", aspect_ratio_2_39_1: "2.39:1", aspect_ratio_2_59_1: "2.59:1", aspect_ratio_2_66_1: "2.66:1",
-      aspect_ratio_1_36: '1.36:1', aspect_ratio_1_18: '1.18:1'
+      aspect_ratio_1_36: '1.36:1', aspect_ratio_1_18: '1.18:1', aspect_ratio_2_55_1: '2.55:1'
   }
 
   SOUND_FORMAT_FIELDS = [
       :sound_format_optical, :sound_format_optical_variable_area, :sound_format_optical_variable_density, :sound_format_magnetic,
       :sound_format_digital_sdds, :sound_format_digital_dts, :sound_format_digital_dolby_digital,
-      :sound_format_sound_on_separate_media, :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a
+      :sound_format_sound_on_separate_media, :sound_format_digital_dolby_digital_sr, :sound_format_digital_dolby_digital_a,
+      :sound_format_optical_variable_area_bilateral,
+      :sound_format_optical_variable_area_dual_bilateral, :sound_format_optical_variable_area_unilateral,
+      :sound_format_optical_variable_area_dual_unilateral, :sound_format_optical_variable_area_rca_duplex,
+      :sound_format_optical_variable_density_multiple_density,
+  # sound content attributes
   ]
   SOUND_FORMAT_FIELDS_HUMANIZED = {
       sound_format_optical: 'Optical', sound_format_optical_variable_area: "Optical: Variable Area", sound_format_optical_variable_density: "Optical: Variable Density",
       sound_format_magnetic: "Magnetic", sound_format_digital_sdds: "Digital: SDDS", sound_format_digital_dts: "Digital: DTS", sound_format_digital_dolby_digital: "Digital: Dolby Digital",
-      sound_format_sound_on_separate_media: "Sound on Separate Media", sound_format_digital_dolby_digital_sr: 'Digital: Dolby SR',
-      sound_format_digital_dolby_digital_a: 'Digital: Dolby A'
+      sound_format_sound_on_separate_media: "Sound on Separate Media", sound_format_digital_dolby_digital_sr: 'Noise Reduction: Dolby SR',
+      sound_format_digital_dolby_digital_a: 'Noise Reduction: Dolby A', sound_format_optical_variable_area_bilateral: "Optical: Variable Area: Bilateral",
+      sound_format_optical_variable_area_dual_bilateral: "Optical: Variable Area: Dual Bilateral",
+      sound_format_optical_variable_area_unilateral: "Optical: Variable Area: Unilateral", sound_format_optical_variable_area_dual_unilateral: "Optical: Variable Area: Dual Unilateral",
+      sound_format_optical_variable_area_rca_duplex: "Optical: Variable Area: RCA Duplex", sound_format_optical_variable_density_multiple_density: "Optical: Variable Density: Multiple Density",
+      sound_format_optical_variable_area_maurer: "Optical: Variable Area: Multi-track (ie: Maurer)"
+      # sound content attributes
   }
 
   SOUND_CONTENT_FIELDS = [:sound_content_music_track, :sound_content_effects_track, :sound_content_dialog, :sound_content_composite_track, :sound_content_outtakes, :sound_content_narration]
@@ -95,11 +106,10 @@ class Film < ActiveRecord::Base
   }
 
   SOUND_CONFIGURATION_FIELDS = [
-      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_multi_track, :sound_configuration_dual_mono
+      :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_dual_mono
   ]
   SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
-      sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround",
-      sound_configuration_multi_track: "Multi-track (ie. Maurer)", sound_configuration_dual_mono: "Dual Mono"
+      sound_configuration_mono: "Mono", sound_configuration_stereo: "Stereo", sound_configuration_surround: "Surround", sound_configuration_dual_mono: "Dual Mono"
   }
 
   CONDITION_FIELDS_HUMANIZED = { ad_strip: "AD Strip" }
@@ -252,6 +262,7 @@ class Film < ActiveRecord::Base
         xml.originalCamera generation_original_camera
         xml.master generation_master
         xml.other generation_other
+        xml.interpositive generation_interpositive
       end
       xml.bases do
         xml.acetate base_acetate
@@ -328,6 +339,7 @@ class Film < ActiveRecord::Base
         xml.soundOnSeparateMedia sound_format_sound_on_separate_media
         xml.digitalDolbySR sound_format_digital_dolby_digital_sr
         xml.digitalDolbyA sound_format_digital_dolby_digital_a
+        xml.multiTrack sound_format_optical_variable_area_maurer
       end
       xml.soundContent do
         xml.musicTrack sound_content_music_track
@@ -341,7 +353,6 @@ class Film < ActiveRecord::Base
         xml.mono sound_configuration_mono
         xml.stereo sound_configuration_stereo
         xml.surround sound_configuration_surround
-        xml.multiTrack sound_configuration_multi_track
         xml.dual sound_configuration_dual_mono
       end
 
