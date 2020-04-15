@@ -307,17 +307,16 @@
   </div>
   <div class="">
     <b class='block'>Format Type</b>
-    <div class="flex_wrap flex_col_wrap h_80px">
+    <div class="flex_wrap flex_col_wrap h_175px">
       <div><%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital</div>
       <div><%= f.check_box :sound_format_digital_dts %>Digital: DTS</div>
       <div><%= f.check_box :sound_format_digital_sdds %>Digital: SDDS</div>
       <div><%= f.check_box :sound_format_magnetic %>Magnetic</div>
+      <div><%= f.check_box :sound_format_digital_dolby_digital_sr %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %></div>
+      <div><%= f.check_box :sound_format_digital_dolby_digital_a %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %></div>
       <div><%= f.check_box :sound_format_optical %>Optical</div>
       <div><%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area</div>
       <div><%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density</div>
-      <div><%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media</div>
-      <div><%= f.check_box :sound_format_digital_dolby_digital_sr %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %></div>
-      <div><%= f.check_box :sound_format_digital_dolby_digital_a %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %></div>
       <div><%= f.check_box :sound_format_optical_variable_area_bilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_bilateral] %></div>
       <div><%= f.check_box :sound_format_optical_variable_area_dual_bilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_dual_bilateral] %></div>
       <div><%= f.check_box :sound_format_optical_variable_area_unilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_unilateral] %></div>
@@ -325,6 +324,7 @@
       <div><%= f.check_box :sound_format_optical_variable_area_rca_duplex %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_rca_duplex] %></div>
       <div><%= f.check_box :sound_format_optical_variable_density_multiple_density %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_density_multiple_density] %></div>
       <div><%= f.check_box :sound_format_optical_variable_area_maurer %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_maurer] %></div>
+      <div><%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media</div>
     </div>
   </div>
   <div>
