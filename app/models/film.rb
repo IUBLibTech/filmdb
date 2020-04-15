@@ -167,7 +167,11 @@ class Film < ActiveRecord::Base
     xml = options[:builder]
     xml.physicalObject do
       xml.filmdbId id
-      xml.titleId active_component_group.title.id
+      if active_component_group.nil?
+        xml.titlId titles.first.id
+      else
+        xml.titleId active_component_group.title.id
+      end
       xml.mdpiBarcode mdpi_barcode
       xml.iucatBarcode iu_barcode
       xml.redigitize (digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
@@ -205,11 +209,12 @@ class Film < ActiveRecord::Base
       xml.returnTo storage_location
       xml.notifyAlf notify_alf
 
-      xml.resolution (sound_only? ? 'Audio only' : active_scan_settings.scan_resolution)
-      xml.colorSpace active_scan_settings.color_space
-      xml.clean active_scan_settings.clean
-      xml.returnOnOriginalReel active_scan_settings.return_on_reel
-
+      if !active_component_group.nil?
+        xml.resolution (sound_only? ? 'Audio only' : active_scan_settings.scan_resolution)
+        xml.colorSpace active_scan_settings.color_space
+        xml.clean active_scan_settings.clean
+        xml.returnOnOriginalReel active_scan_settings.return_on_reel
+      end
       xml.originalIdentifiers do
         physical_object_original_identifiers.each do |oi|
           xml.identifier oi.identifier
@@ -339,7 +344,6 @@ class Film < ActiveRecord::Base
         xml.soundOnSeparateMedia sound_format_sound_on_separate_media
         xml.digitalDolbySR sound_format_digital_dolby_digital_sr
         xml.digitalDolbyA sound_format_digital_dolby_digital_a
-        xml.multiTrack sound_format_optical_variable_area_maurer
       end
       xml.soundContent do
         xml.musicTrack sound_content_music_track
@@ -354,6 +358,7 @@ class Film < ActiveRecord::Base
         xml.stereo sound_configuration_stereo
         xml.surround sound_configuration_surround
         xml.dual sound_configuration_dual_mono
+        xml.multiTrack sound_format_optical_variable_area_maurer
       end
 
       xml.languages do
