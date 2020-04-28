@@ -69,7 +69,7 @@ class PhysicalObjectsController < ApplicationController
   def show_xml
     xml = Builder::XmlMarkup.new(indent: 2)
     xml.instruct! :xml, :version=>"1.0"
-    @physical_object.to_xml(xml)
+    @physical_object.specific.to_xml(builder: xml)
     render xml: xml.target!
   end
 

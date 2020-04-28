@@ -391,7 +391,7 @@ class FilmParser < CsvParser
     config_fields.each do |cf|
       # multi-track is written SOOOOO many ways in the spreadsheets - save Carla the headaches of correcting them all...
       if cf.downcase.include?('multi')
-        po.send(:sound_configuration_multi_track=, true)
+        po.send(:sound_format_optical_variable_area_maurer=, true)
       else
         field = "sound configuration #{cf}".parameterize.underscore
         if Film::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)

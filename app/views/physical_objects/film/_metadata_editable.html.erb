@@ -103,6 +103,10 @@
           <div>Intermediate</div>
         </div>
         <div class="check_box">
+          <%= f.check_box :generation_interpositive %>
+          <div>Interpositive</div>
+        </div>
+        <div class="check_box">
           <%= f.check_box :generation_kinescope %>
           <div>Kinescope</div>
         </div>
@@ -237,16 +241,17 @@
   <div id="image_metadata_content_div">
     <b class="block">Picture Type</b>
     <div class="flex_wrap flex_col_wrap h_60px">
-        <div><%= f.check_box :picture_composite_picture %>Composite Picture</div>
-        <div><%= f.check_box :picture_mos_picture %>MOS Picture</div>
-        <div><%= f.check_box :picture_silent_picture %>Silent Picture</div>
-        <div><%= f.check_box :picture_credits_only %>Credits Only</div>
-        <div><%= f.check_box :picture_intertitles_only %>Intertitles Only</div>
-        <div><%= f.check_box :picture_kinescope %>Kinescope</div>
-        <div><%= f.check_box :picture_not_applicable %>Not Applicable</div>
-        <div><%= f.check_box :picture_picture_effects %>Picture Effects</div>
-        <div><%= f.check_box :picture_picture_outtakes %>Picture Outtakes</div>
-        <div><%= f.check_box :picture_titles %>Titles</div>
+      <div><%= f.check_box :picture_composite_picture %>Composite Picture</div>
+      <div><%= f.check_box :picture_mos_picture %>MOS Picture</div>
+      <div><%= f.check_box :picture_silent_picture %>Silent Picture</div>
+      <div><%= f.check_box :picture_credits_only %>Credits Only</div>
+      <div><%= f.check_box :picture_intertitles_only %>Intertitles Only</div>
+      <div><%= f.check_box :picture_kinescope %>Kinescope</div>
+      <div><%= f.check_box :picture_not_applicable %>Not Applicable</div>
+      <div><%= f.check_box :picture_picture_effects %>Picture Effects</div>
+      <div><%= f.check_box :picture_picture_outtakes %>Picture Outtakes</div>
+      <div><%= f.check_box :picture_titles %>Titles</div>
+      <div><%= f.check_box :picture_text %>Text</div>
     </div>
     <div class="clear">
       <b class='block'>Frame Rate</b><%= f.select :frame_rate, options_for_select(@cv[:frame_rate], @physical_object.frame_rate), {include_blank: ''}  %>
@@ -281,6 +286,7 @@
         <div><%= f.check_box :aspect_ratio_2_66_1%><%= Film::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_66_1] %></div>
         <div><%= f.check_box :aspect_ratio_1_36 %><%= Film::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_36] %></div>
         <div><%= f.check_box :aspect_ratio_1_18 %><%= Film::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_1_18] %></div>
+        <div><%= f.check_box :aspect_ratio_2_55_1 %><%= Film::ASPECT_RATIO_FIELDS_HUMANIZED[:aspect_ratio_2_55_1] %></div>
       </div>
     </div>
     <div>
@@ -301,17 +307,24 @@
   </div>
   <div class="">
     <b class='block'>Format Type</b>
-    <div class="flex_wrap flex_col_wrap h_80px">
+    <div class="flex_wrap flex_col_wrap h_175px">
       <div><%= f.check_box :sound_format_digital_dolby_digital %>Digital: Dolby Digital</div>
       <div><%= f.check_box :sound_format_digital_dts %>Digital: DTS</div>
       <div><%= f.check_box :sound_format_digital_sdds %>Digital: SDDS</div>
       <div><%= f.check_box :sound_format_magnetic %>Magnetic</div>
+      <div><%= f.check_box :sound_format_digital_dolby_digital_sr %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %></div>
+      <div><%= f.check_box :sound_format_digital_dolby_digital_a %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %></div>
       <div><%= f.check_box :sound_format_optical %>Optical</div>
       <div><%= f.check_box :sound_format_optical_variable_area %>Optical: Variable Area</div>
       <div><%= f.check_box :sound_format_optical_variable_density %>Optical: Variable Density</div>
+      <div><%= f.check_box :sound_format_optical_variable_area_bilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_bilateral] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_area_dual_bilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_dual_bilateral] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_area_unilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_unilateral] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_area_dual_unilateral %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_dual_unilateral] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_area_rca_duplex %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_rca_duplex] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_density_multiple_density %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_density_multiple_density] %></div>
+      <div><%= f.check_box :sound_format_optical_variable_area_maurer %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_optical_variable_area_maurer] %></div>
       <div><%= f.check_box :sound_format_sound_on_separate_media %>Sound on Separate Media</div>
-      <div><%= f.check_box :sound_format_digital_dolby_digital_sr %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_sr] %></div>
-      <div><%= f.check_box :sound_format_digital_dolby_digital_a %><%= Film::SOUND_FORMAT_FIELDS_HUMANIZED[:sound_format_digital_dolby_digital_a] %></div>
     </div>
   </div>
   <div>
@@ -330,7 +343,6 @@
     <div class="left _50">
       <%= f.check_box :sound_configuration_dual_mono %>Dual Mono<br/>
       <%= f.check_box :sound_configuration_mono %>Mono<br/>
-      <%= f.check_box :sound_configuration_multi_track %>Multi-track (i.e. Maurer)
     </div>
     <div class="left _50">
       <%= f.check_box :sound_configuration_stereo %>Stereo<br/>
