@@ -11,6 +11,7 @@ module DeleteLogger
 
 
   def log_deletion
+    debugger
     object_id = self.id
     who_deleted = User.current_username
     object_type = self.class.to_s
