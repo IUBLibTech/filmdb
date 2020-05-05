@@ -5,6 +5,7 @@ class ComponentGroup < ActiveRecord::Base
 
   accepts_nested_attributes_for :component_group_physical_objects, allow_destroy: true
 
+
   BEST_COPY_WELLS = 'Best Copy (Wells)'
   BEST_COPY_MDPI_WELLS = 'Best Copy (MDPI - WELLS)'
   BEST_COPY_ALF = 'Best Copy (MDPI)'
@@ -32,6 +33,7 @@ class ComponentGroup < ActiveRecord::Base
   SCAN_RESOLUTIONS = %w(2k 4k 5k HD)
   CLEAN = %w(Yes No Hand\ clean\ only)
 
+  PULL_REQUEST_GROUP_SORT_ORDER = [REFORMATTING_MDPI, BEST_COPY_ALF, BEST_COPY_MDPI_WELLS, BEST_COPY_WELLS, CATALOG_WELLS, DIGITIZATION_WELLS, EVALUATION_WELLS, EXHIBITION_WELLS, RESEARCHER_WELLS, TEACHING_WELLS]
 
   def generations
     gen_set = Set.new
