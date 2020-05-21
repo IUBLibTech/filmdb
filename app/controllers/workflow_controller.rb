@@ -355,7 +355,7 @@ class WorkflowController < ApplicationController
 		if @po.nil?
 			flash[:warning] = "Could not find Physical Object with barcode #{params[:physical_object][:iu_barcode]}"
 		else
-			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po)
+			ws = WorkflowStatus.build_workflow_status(WorkflowStatus::MISSING, @po, true)
 			@po.workflow_statuses << ws
 			@po.active_component_group = nil
 			@po.save
@@ -587,27 +587,81 @@ class WorkflowController < ApplicationController
 		redirect_to :return_from_mold_abatement
 	end
 
+	# renders the page that accespts a barcode to mark a missing item found
 	def show_mark_found
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
+		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
 		render 'mark_found'
 	end
 
-	def update_mark_found
-		@physical_object = PhysicalObject.joins(:workflow_statuses).where(iu_barcode: params[:iu_barcode]).first
+	# responds to a barcode scan on the show_mark_found action and allows user to create a new CG and specify a workflow location.
+	def choose_found_workflow
+		@physical_object = PhysicalObject.where(iu_barcode: params[:iu_barcode].to_i).first
 		if @physical_object.nil?
-			flash[:warning] = "Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
-		elsif !po_missing?(@physical_object)
-			flash[:warning] = "#{params[:iu_barcode]} is not currently marked missing. It should be at #{@physical_object.current_location}"
-		elsif (@physical_object.active_component_group.nil? && !WorkflowStatus::PULLABLE_STORAGE.include?(@physical_object.previous_location) && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_WELLS && @physical_object.previous_location != WorkflowStatus::JUST_INVENTORIED_ALF)
-			flash[:warning] = "Currently, only Physical Object with an active component group, or objects that went missing in storage can be marked found."
+			@error_msg = "Cannot find a PhysicalObject with IU Barcode: #{params[:iu_barcode]}"
+			puts "\n\n\nCould find the PO...\n\n\n"
+		elsif @physical_object.current_workflow_status.status_name != WorkflowStatus::MISSING
+			@error_msg = "PhysicalObject #{params[:iu_barcode]} is not currently <i>Missing</i>. Its current workflow status is #{@physical_object.current_workflow_status.status_name}".html_safe
+			puts "\n\n\nThe PO IS NOT missing...\n\n\n"
 		else
-			ws = WorkflowStatus.build_workflow_status(@physical_object.previous_location, @physical_object)
-			@physical_object.workflow_statuses << ws
-			@physical_object.save
-			flash[:notice] = "#{@physical_object.iu_barcode} was updated to #{@physical_object.current_location}"
+			puts "\n\n\nUpdating a missing PO...\n\n\n"
+			@statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
+			@component_group_cv = ControlledVocabulary.component_group_cv
 		end
-		@physical_objects = PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::MISSING)
-		render 'mark_found'
+		render partial: 'mark_found_workflow_select'
+	end
+
+	def update_mark_found
+		PhysicalObject.transaction do
+			@physical_object = PhysicalObject.joins(:workflow_statuses).find(params[:physical_object][:id])
+			if @physical_object.nil?
+				@error_msg = "Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
+				render partial: 'mark_found_workflow_select'
+			elsif !po_missing?(@physical_object)
+				@error_msg = "#{params[:iu_barcode]} is not currently marked missing. It should be at #{@physical_object.current_location}"
+				render partial: 'mark_found_workflow_select'
+			elsif params[:return_to_storage] == "true"
+				ws = WorkflowStatus.build_workflow_status(@physical_object.storage_location, @physical_object)
+				@physical_object.workflow_statuses << ws
+				@physical_object.current_workflow_status = ws
+				@physical_object.save
+				flash[:notice] = "#{@physical_object.iu_barcode} was Returned to Storage: #{@physical_object.current_location}"
+				redirect_to update_mark_found_path
+			elsif params[:return_to_storage] == "false"
+				if !params[:title]
+					@error_msg = "You must select a Title"
+					render partial: 'mark_found_workflow_select'
+				else
+					@title = Title.find(params[:title])
+					@cg = ComponentGroup.new(title_id: @title.id, group_type: params[:group_type])
+					@cgpo = ComponentGroupPhysicalObject.new(component_group_id: @cg.id, physical_object_id: @physical_object.id)
+					@physical_object.active_component_group = @cg
+					# active cg must must be set before creating a new workflow status - the WS uses the reference to active_component_group
+					@physical_object.active_component_group = @cg
+					@ws = WorkflowStatus.build_workflow_status(params[:status], @physical_object, true)
+					@physical_object.workflow_statuses << @ws
+					@physical_object.current_workflow_status = @ws
+					@cg.component_group_physical_objects << @cgpo
+					if params[:group_type] == ComponentGroup::REFORMATTING_MDPI
+						@cgpo.scan_resolution = params[:scan_resolution]
+						@cgpo.color_space = params[:color_space]
+						clean = params[:clean]
+						if clean == "Hand clean only"
+							@cgpo.hand_clean_only = true
+						else
+							@cgpo.hand_clean_only = false
+							@cgpo.clean = clean
+						end
+						@cgpo.return_on_reel = params[:return_on_reel]
+					end
+					@cg.save!
+					@ws.save!
+					@physical_object.save!
+					flash[:notice] = "#{@physical_object.iu_barcode} was added to a #{@cg.group_type} Component Group for Title: #{@title.title_text}. "+
+							"It was updated to location #{@ws.status_name}"
+					redirect_to update_mark_found_path
+				end
+			end
+		end
 	end
 
 	def ajax_mark_found

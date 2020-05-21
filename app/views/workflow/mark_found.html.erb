@@ -1,4 +1,3 @@
-<%= form_tag update_mark_found_path do %>
 <table>
 	<tbody>
 	<tr>
@@ -9,39 +8,61 @@
 	</tr>
 	<tr>
 		<th colspan="2">
-			<%= submit_tag "Mark Found" %>
+			<%= button_tag "Mark Found", id: "submit", data: { disable_with: false } %>
 		</th>
 	</tr>
 	</tbody>
 </table>
-<% end %>
-<div id="msg">
+<div id="location_div">
 
 </div>
-<h4 class="m_bottom_10px">Physical Objects <i>Missing</i></h4>
+<h4 class="m_top_10px"><i>Missing</i> Physical Objects</h4>
 <%= render partial: 'physical_objects_table' %>
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
-		$('#iu_barcode').bind('input', function() {
-      valid = validateIUBarcode($(this));
-			$('#msg').html('');
-			if (valid) {
-			    var url = './ajax_mark_found/' + bc;
-				$.ajax({
-					url: url,
-					error: function(jqXHR, textStatus, errorThrown) {
-              swal({
-                  title: 'Ajax Error',
-                  text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
-              }, function() {
-                  window.location.replace(url)
-              });
-          },
-					success: function (result) {
-						$('#msg').html(result)
-					}
-				});
-			}
-		})
+		$('#submit').click(function() {
+        let bc = $('#iu_barcode').val();
+        let url = './choose_found_workflow/';
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {"iu_barcode": bc},
+            error: function (jqXHR, textStatus, errorThrown) {
+                swal({
+                    title: 'Ajax Error',
+                    text: 'An error occured while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+                }, function () {
+                    window.location.replace(url)
+                });
+            },
+            success: function (result) {
+                $('#location_div').html(result);
+                hookLocationSelector();
+            }
+        });
+    });
 	});
+
+  function hookLocationSelector() {
+      $("[id^=edit_physical_object_]").submit(function(event) {
+          let prevent = $('#insert_into_workflow').is(":checked") && $('input[name=title]:checked').size() === 0;
+          if ( prevent ) {
+              event.preventDefault();
+              swal({
+                  title: 'Cannot Insert Into Workflow',
+                  text: 'You must select a Title for the Component Group'
+              });
+          } else {
+              return true;
+          }
+      })
+      $("input[type='radio']").change(function(e) {
+          let el = $('.hidden');
+          if ($(this).attr('id') === 'return_to_storage') {
+              el.fadeOut(200);
+          } else {
+              el.fadeIn(200);
+          }
+      });
+  };
 </script>

@@ -193,6 +193,7 @@ Rails.application.routes.draw do
   post '/workflow/update_return_from_mold_abatement/:id', to: 'workflow#update_return_from_mold_abatement', as: 'update_return_from_mold_abatement'
   get '/workflow/ajax_mark_found/:iu_barcode', to: 'workflow#ajax_mark_found', as: 'ajax_mark_found'
   get '/workflow/update_mark_found', to: 'workflow#show_mark_found', as: 'show_mark_found'
+  post '/workflow/choose_found_workflow/', to: 'workflow#choose_found_workflow', as: 'choose_found_workflow'
   post '/workflow/update_mark_found', to: 'workflow#update_mark_found', as: 'update_mark_found'
   get '/workflow/digitization_staging_list', to: 'workflow#digitization_staging_list', as: 'digitization_staging_list'
   get '/workflow_statuses', to: 'workflow_statuses#index', as: 'workflow_statuses'

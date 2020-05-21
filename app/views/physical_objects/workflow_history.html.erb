@@ -15,7 +15,7 @@
 			<tr>
 		<% end %>
 			<th>Physical Location</th>
-			<td>
+			<td class="<%= s.status_name == 'Missing' ? 'missing' : '' %>">
 				<%= s.status_name %>
 			</td>
 		<th>Reason in Workflow</th>

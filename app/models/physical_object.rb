@@ -181,6 +181,10 @@ class PhysicalObject < ActiveRecord::Base
 		end
 	end
 
+	def missing?
+		current_location == WorkflowStatus::MISSING
+	end
+
 	def ingested_by_alf?
 		last = workflow_statuses.where("status_name in (#{WorkflowStatus::STATUS_TYPES_TO_STATUSES['Storage'].map{ |s| "'#{s}'"}.join(',')})").order('created_at DESC').limit(1).first
 		!last.nil? && last.status_name == WorkflowStatus::IN_STORAGE_INGESTED
