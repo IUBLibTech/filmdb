@@ -28,5 +28,6 @@ module Filmdb
 
     config.autoload_paths << Rails.root.join('lib')
     config.paths.add 'lib', eager_load: true
+
   end
 end

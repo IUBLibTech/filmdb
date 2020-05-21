@@ -878,3 +878,7 @@ a.title_link {
 .flex_col_wrap {
   flex-flow: column wrap;
 }
+.missing, a.missing, a.missing:visited {
+  color: red;
+  font-weight: bold;
+}
