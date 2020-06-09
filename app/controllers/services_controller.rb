@@ -74,7 +74,7 @@ class ServicesController < ActionController::Base
 			if po.nil?
 				@msg = "Could not find an record with MDPI Barcode: #{@bc}"
 			elsif !po.digitized
-				@msg = "The MDPI Barcode #{@bc} does not belong to a -digitized- record"
+				@mods_title_id = po.titles.first.id
 			else
 				# it's possible, although highly unlikely, that a physical object would have more than 1 title association AND
 				# have been pulled for digitization more than once through multiple titles. In this case, there is no way to know
@@ -183,6 +183,10 @@ class ServicesController < ActionController::Base
 									xml.formAuthority_("authority": "gmd") { xml.text "motion picture"}
 									xml.formAuthority_("authority": "marccategory") { xml.text "motion picture"}
 									xml.formAuthority_("authority": "marcsmd") { xml.text "film reel"}
+								elsif formats.include?('Video')
+									xml.formAuthority_("authority": "gmd") { xml.text "motion picture"}
+									xml.formAuthority_("authority": "marccategory") { xml.text "motion picture"}
+									xml.formAuthority_("authority": "marcsmd") { xml.text "video tape"}
 								else
 									raise "Unsupported Format type for MODS record creation: #{formats.join(", ")}"
 								end
