@@ -184,9 +184,9 @@ class ServicesController < ActionController::Base
 									xml.formAuthority_("authority": "marccategory") { xml.text "motion picture"}
 									xml.formAuthority_("authority": "marcsmd") { xml.text "film reel"}
 								elsif formats.include?('Video')
-									xml.formAuthority_("authority": "gmd") { xml.text "motion picture"}
-									xml.formAuthority_("authority": "marccategory") { xml.text "motion picture"}
-									xml.formAuthority_("authority": "marcsmd") { xml.text "video tape"}
+									xml.formAuthority_("authority": "gmd") { xml.text "video recording"}
+									xml.formAuthority_("authority": "marccategory") { xml.text "video recording"}
+									xml.formAuthority_("authority": "marcsmd") { xml.text "videoreel"}
 								else
 									raise "Unsupported Format type for MODS record creation: #{formats.join(", ")}"
 								end
