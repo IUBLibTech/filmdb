@@ -61,6 +61,9 @@ module TitlesHelper
 			PhysicalObjectTitle.where(title_id: m.id).update_all(title_id: master.id)
 			m.delete
 		end
+		last_mod = master.modifier
+		Modification.new(object_type: 'Title', object_id: master.id, user_id: last_mod.id).save!
+		master.modifier = User.current_user_object
 		master.save
 		failed
 	end
