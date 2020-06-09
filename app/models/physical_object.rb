@@ -26,6 +26,7 @@ class PhysicalObject < ActiveRecord::Base
 	has_many :pull_requests, through: :physical_object_pull_requests
 	has_many :digiprovs
 
+
   validates :physical_object_titles, physical_object_titles: true
   validates :unit, presence: true
   #validates :media_type, presence: true

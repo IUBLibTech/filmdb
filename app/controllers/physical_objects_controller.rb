@@ -167,6 +167,7 @@ class PhysicalObjectsController < ApplicationController
     begin
       PhysicalObject.transaction do
         # need to cleanup the old specific class that was changed to something else
+        Modification.new(object_type: 'PhysicalObject', object_id: @physical_object.acting_as.id, user: @physical_object.modifier).save!
         if o_medium == s_medium
           @physical_object.modifier = User.current_user_object
           #@success = @physical_object.update_attributes!(physical_object_params)

@@ -12,6 +12,16 @@
 <%= render partial: 'titles/physical_objects' %>
 <BR>
 <%= render partial: 'titles/component_groups' %>
-
-
-<%#= render partial: 'component_group_form' %>
+<script type="text/javascript" charset="utf-8">
+  let visible = false;
+    $(document).ready(function() {
+       $('#showModifications').click(function() {
+           if (visible) {
+               $('#modifications').hide();
+           } else {
+               $('#modifications').show();
+           }
+           visible = !visible;
+       })
+    })
+</script>
