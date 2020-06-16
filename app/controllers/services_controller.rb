@@ -151,6 +151,7 @@ class ServicesController < ActionController::Base
 						@title.title_genres.each do |g|
 							xml.genre_ g.genre
 						end
+
 						xml.physicalDescription { xml.internetMediaType_ "application/octet-stream" }
 						xml.abstract_ @title.summary
 						xml.note_("type":"general") { xml.text @title.notes } unless @title.notes.blank?
@@ -192,13 +193,7 @@ class ServicesController < ActionController::Base
 								end
 							}
 							xml.physicalDescription {
-								mediums = @title.physical_objects.group(:medium).count
-								@msg = ''
-								mediums.each do |m|
-									@msg << "#{@title.physical_objects.where(medium: m[0]).size} #{m[0].pluralize(@title.physical_objects.where(medium: m[0]).size)} (#{ @title.medium_duration(m[0]) }); "+
-											"#{ @title.physical_objects.where(medium: m[0]).collect{|p| p.specific.has_attribute?('gauge') ? p.specific.gauge : ''}.uniq.join(", ")}"
-								end
-								xml.extent_ @msg
+								xml.extent_ @title.mods_extent(po)
 							}
 							xml.identier_("type":"local") { xml.text "filmdb:#{@title.id}"}
 						}
