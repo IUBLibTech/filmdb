@@ -10,7 +10,7 @@ module ServicesHelper
 	end
 
 	def test_basic_auth
-		uri = URI.parse("https://pod-dev.mdpi.iu.edu/responses/objects/40000000334609/metadata/full")
+		uri = URI.parse("http://sycamore.dlib.indiana.edu:8510/responses/objects/40000000334609/metadata/full")
 		http = Net::HTTP.new(uri.host, uri.port)
 		http.use_ssl = true
 		request = Net::HTTP::Get.new(uri.request_uri)
