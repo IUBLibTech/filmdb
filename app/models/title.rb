@@ -147,6 +147,28 @@ class Title < ActiveRecord::Base
 		physical_objects.any?{ |p| p.digitized? }
 	end
 
+	def mods_extent(po)
+		cgs = po.component_groups.where(title_id: self.id)
+		if cgs.nil? || cgs.size == 0
+			# we don't have workflow history so make a best guess based on medium of po
+			calc_extent_from_po_medium po
+		else
+			possible = WorkflowStatus.where(status_name: WorkflowStatus::SHIPPED_EXTERNALLY, component_group_id: cgs.collect { |cg| cg.id }).first
+			if possible.nil?
+				# we don't have workflow history so make a best guess based on medium of po
+				calc_extent_from_po_medium po
+			else
+				# we have a CG that was Shipped Externally - the best we can know about whether something was digitized
+				pos = ComponentGroup.find(possible.component_group_id).physical_objects
+				"#{pos.size} #{po.medium.pluralize(pos.size)} (#{ self.duration_of_specific pos }); "+"#{ pos.collect{|p| p.specific.has_attribute?(:gauge) ? p.specific.gauge : ''}.uniq.join(', ')}"
+			end
+		end
+	end
+	def calc_extent_from_po_medium(po)
+		pos = physical_objects.where(medium: po.medium)
+		"#{pos.size} #{po.medium.pluralize(pos.size)} (#{ self.duration_of_specific pos }); "+"#{  pos.collect{|p| p.specific.has_attribute?(:gauge) ? p.specific.gauge : ''}.uniq.join(', ')}}"
+	end
+
 	def in_active_workflow?
 		physical_objects.any?{ |p|
 			cs = p.current_workflow_status
@@ -163,11 +185,17 @@ class Title < ActiveRecord::Base
 		titles.uniq.sort{|t1,t2| t1.title_text <=> t2.title_text}
 	end
 
+	# calculates the total duration of all PhysicalObjects in hh:mm:ss format
 	def total_duration
 		hh_mm_sec physical_objects.inject(0){|sum, p| p[:duration].to_i + sum }
 	end
+	# calculates the total duration of all PhysicalObjects with the specified 'medium' med, in hh:mm:ss format
 	def medium_duration(med)
 		hh_mm_sec physical_objects.where(medium: med).inject(0){|sum, p| p[:duration] ? p[:duration].to_i + sum : 0 + sum }
+	end
+	# calculates the total duration of PhysicalObjects in po_list in hh:mm:ss format
+	def duration_of_specific(po_list)
+		hh_mm_sec po_list.inject(0){|sum, p| p[:duration] ? p[:duration].to_i + sum : 0 + sum }
 	end
 
 	# connects to POD to generate a URL for Dark Avalon if one exists. Because this is communication over an HTTP requests,
