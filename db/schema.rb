@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200604144338) do
+ActiveRecord::Schema.define(version: 20200701170437) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -107,6 +107,22 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "updated_at"
     t.boolean  "active_status",               default: true
   end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   limit: 4,     default: 0, null: false
+    t.integer  "attempts",   limit: 4,     default: 0, null: false
+    t.text     "handler",    limit: 65535,             null: false
+    t.text     "last_error", limit: 65535
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "delete_log_entries", force: :cascade do |t|
     t.integer  "table_id",                  limit: 4
@@ -383,6 +399,19 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "updated_at"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.integer  "collection_id",     limit: 4
+    t.string   "medium_type",       limit: 255
+    t.integer  "creator",           limit: 8
+    t.string   "file_path",         limit: 255
+    t.boolean  "complete"
+    t.text     "error",             limit: 65535
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.integer  "po_count",          limit: 4,     default: 0
+    t.integer  "po_complete_count", limit: 4,     default: 0
+  end
+
   create_table "series", force: :cascade do |t|
     t.string   "title",             limit: 255
     t.string   "summary",           limit: 255
@@ -422,6 +451,8 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "updated_at",             null: false
   end
 
+  add_index "title_creators", ["title_id"], name: "index_title_creators_on_title_id", using: :btree
+
   create_table "title_dates", force: :cascade do |t|
     t.integer  "title_id",                    limit: 8
     t.string   "date_text",                   limit: 255
@@ -439,12 +470,16 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.boolean  "end_date_is_approximation"
   end
 
+  add_index "title_dates", ["title_id"], name: "index_title_dates_on_title_id", using: :btree
+
   create_table "title_forms", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
     t.string   "form",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "title_forms", ["title_id"], name: "index_title_forms_on_title_id", using: :btree
 
   create_table "title_genres", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
@@ -453,12 +488,16 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "updated_at"
   end
 
+  add_index "title_genres", ["title_id"], name: "index_title_genres_on_title_id", using: :btree
+
   create_table "title_locations", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
     t.string   "location",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "title_locations", ["title_id"], name: "index_title_locations_on_title_id", using: :btree
 
   create_table "title_original_identifiers", force: :cascade do |t|
     t.integer  "title_id",        limit: 8
@@ -468,6 +507,8 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "updated_at"
   end
 
+  add_index "title_original_identifiers", ["title_id"], name: "index_title_original_identifiers_on_title_id", using: :btree
+
   create_table "title_publishers", force: :cascade do |t|
     t.integer  "title_id",       limit: 8
     t.string   "name",           limit: 255
@@ -475,6 +516,8 @@ ActiveRecord::Schema.define(version: 20200604144338) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "title_publishers", ["title_id"], name: "index_title_publishers_on_title_id", using: :btree
 
   create_table "titles", force: :cascade do |t|
     t.string   "title_text",               limit: 1024

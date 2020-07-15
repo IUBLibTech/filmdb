@@ -74,7 +74,7 @@ class ServicesController < ActionController::Base
 			if po.nil?
 				@msg = "Could not find an record with MDPI Barcode: #{@bc}"
 			elsif !po.digitized
-				@msg = "The MDPI Barcode #{@bc} does not belong to a -digitized- record"
+				@mods_title_id = po.titles.first.id
 			else
 				# it's possible, although highly unlikely, that a physical object would have more than 1 title association AND
 				# have been pulled for digitization more than once through multiple titles. In this case, there is no way to know
@@ -151,6 +151,7 @@ class ServicesController < ActionController::Base
 						@title.title_genres.each do |g|
 							xml.genre_ g.genre
 						end
+
 						xml.physicalDescription { xml.internetMediaType_ "application/octet-stream" }
 						xml.abstract_ @title.summary
 						xml.note_("type":"general") { xml.text @title.notes } unless @title.notes.blank?
@@ -183,18 +184,16 @@ class ServicesController < ActionController::Base
 									xml.formAuthority_("authority": "gmd") { xml.text "motion picture"}
 									xml.formAuthority_("authority": "marccategory") { xml.text "motion picture"}
 									xml.formAuthority_("authority": "marcsmd") { xml.text "film reel"}
+								elsif formats.include?('Video')
+									xml.formAuthority_("authority": "gmd") { xml.text "video recording"}
+									xml.formAuthority_("authority": "marccategory") { xml.text "video recording"}
+									xml.formAuthority_("authority": "marcsmd") { xml.text "videoreel"}
 								else
 									raise "Unsupported Format type for MODS record creation: #{formats.join(", ")}"
 								end
 							}
 							xml.physicalDescription {
-								mediums = @title.physical_objects.group(:medium).count
-								@msg = ''
-								mediums.each do |m|
-									@msg << "#{@title.physical_objects.where(medium: m[0]).size} #{m[0].pluralize(@title.physical_objects.where(medium: m[0]).size)} (#{ @title.medium_duration(m[0]) }); "+
-											"#{ @title.physical_objects.where(medium: m[0]).collect{|p| p.specific.has_attribute?('gauge') ? p.specific.gauge : ''}.uniq.join(", ")}"
-								end
-								xml.extent_ @msg
+								xml.extent_ @title.mods_extent(po)
 							}
 							xml.identier_("type":"local") { xml.text "filmdb:#{@title.id}"}
 						}

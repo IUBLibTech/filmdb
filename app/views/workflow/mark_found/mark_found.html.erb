@@ -6,11 +6,6 @@
 			<%= text_field_tag :iu_barcode  %>
 		</td>
 	</tr>
-	<tr>
-		<th colspan="2">
-			<%= button_tag "Mark Found", id: "submit", data: { disable_with: false } %>
-		</th>
-	</tr>
 	</tbody>
 </table>
 <div id="location_div">
@@ -19,7 +14,14 @@
 <h4 class="m_top_10px"><i>Missing</i> Physical Objects</h4>
 <%= render partial: 'physical_objects_table' %>
 <script type="text/javascript" charset="utf-8">
+  let scan_barcodes = [];
+
 	$(document).ready(function() {
+	    hookBarcodeValidators();
+	    $('#iu_barcode').change(function() {
+
+      })
+
 		$('#submit').click(function() {
         let bc = $('#iu_barcode').val();
         let url = './choose_found_workflow/';
