@@ -8,3 +8,7 @@
 #wells_info_div {
 	float: left;
 }
+.choice > label, .choice > input {
+  vertical-align: baseline;
+  margin: 10px;
+}
