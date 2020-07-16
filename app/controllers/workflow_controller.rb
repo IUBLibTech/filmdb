@@ -594,9 +594,9 @@ class WorkflowController < ApplicationController
 	end
 
 	def ajax_mark_found_lookup
-		po = PhysicalObject.where(iu_barcode: params[:iu_barcode])
-		if po.current_location
-		vals = {"id" => po.id, "title(s)" => po.title_text }
+		bcs = params[:barcodes]
+		@pos = PhysicalObject.includes(:titles, :current_workflow_status).where(iu_barcode: bcs)
+		render partial: 'workflow/mark_found/ajax_mark_found_lookup'
 	end
 
 	# responds to a barcode scan on the show_mark_found action and allows user to create a new CG and specify a workflow location.
@@ -714,5 +714,4 @@ class WorkflowController < ApplicationController
 		po.current_location == WorkflowStatus::MISSING
 	end
 
-
-end
+	end
