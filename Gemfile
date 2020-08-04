@@ -7,7 +7,7 @@ gem 'rails', '~> 4.2'
 
 # Use mysql as the database for Active Record
 # hold back mysql2 gem as newer ones are actually broken with newer activerecord
-gem 'mysql2', '~> 0.4'
+gem 'mysql2', '0.4.10'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0'
 # Use Uglifier as compressor for JavaScript assets

@@ -10,7 +10,7 @@
 </table>
 <br>
 <div id="finder_table">
-  <p><b>Scan your "found" IU Barcode above</b></p>
+
 </div>
 <p>
   A couple things to note: at this point <i>any</i> Missing PO can be scanned and will appear. As things get fleshed out
@@ -48,32 +48,69 @@
 <script type="text/javascript" charset="utf-8">
   let scan_barcodes = [];
 	$(document).ready(function() {
-      let lookup_url = "<%= ajax_mark_found_lookup_path %>"
 	    hookBarcodeValidators();
 	    $('#iu_barcode').on("input", function() {
           let bc = $('#iu_barcode').val();
+          let lookup_url = "./ajax_mark_found_lookup/"+bc;
           if (isValidBarcode(bc, false) && !scan_barcodes.includes(bc)) {
-              scan_barcodes.push(bc)
               $.ajax({
-                  url: lookup_url,
+                  url: "./ajax_mark_found_lookup/",
                   method: "GET",
-                  data: {"barcodes" : scan_barcodes},
+                  data: {
+                      'iu_barcode' : bc,
+                      "scan_barcodes": JSON.stringify(scan_barcodes)
+                  },
                   error: function (jqXHR, textStatus, errorThrown) {
                       swal({
                           title: 'Ajax Error',
                           text: 'An error occurred while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
                       }, function () {
-                          window.location.replace(lookup_url)
+                          //window.location.replace(lookup_url)
                       });
                   },
                   success: function (result) {
-                      $('#finder_table').replaceWith(result);
-                      hookInjectables();
-                  }
+                      if (result.success) {
+                          scan_barcodes.push(bc)
+                          ajaxLoadSelectionTable();
+                      } else {
+                          swal({
+                              title: "Cannot Add Physical Object",
+                              text: result.msg
+                          })
+                      }
+
+                  },
+                complete: function () {
+                  $('#iu_barcode').val('');
+                }
               });
           }
        })
 	});
+	function ajaxLoadSelectionTable() {
+      $.ajax({
+          url: './ajax_load_found_selection_table',
+          method: "GET",
+          data: {
+              scan_barcodes: JSON.stringify(scan_barcodes)
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              swal({
+                  title: 'Ajax Error',
+                  text: 'An error occurred while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+              }, function () {
+                  //window.location.replace(lookup_url)
+              });
+          },
+          success: function (result) {
+            $('#finder_table').replaceWith(result);
+            // remove the CG table because contents have changed
+            $('#cg_div').html("");
+            hookInjectables();
+          }
+      })
+  }
+
 	function removeBadBcs(bcs) {
 	    for (let i = 0; i < bcs.length; i++) {
           let index = scan_barcodes.indexOf(bcs[i]);
@@ -86,13 +123,42 @@
       let remove_bc = $("tr#po_"+po_id+" > td:first-child").text();
       removeBadBcs([remove_bc])
       tr.remove();
+      loadCgTable();
   }
 
   function hookInjectables() {
       $('.injectable').off("change").on("change",
-          function() {
-              let el = $(this);
-          }
+        function() {
+          loadCgTable();
+        }
       );
+      $('.returnable').off("change").on("change", function() {
+      	loadCgTable();
+      });
   }
+  function loadCgTable() {
+	  let ids = [];
+	  $('.injectable:checked').each( function() {
+		  ids.push($(this).attr('data-po-id'))
+	  });
+    $.ajax({
+	    url: './ajax/load_found_cg_table',
+	    method: "GET",
+	    data: {
+		    ids: JSON.stringify(ids)
+	    },
+	    error: function (jqXHR, textStatus, errorThrown) {
+		    swal({
+			    title: 'Ajax Error',
+			    text: 'An error occurred while making an AJAX call. When this dialog closes, Filmdb will redirect to the underlying error page. Please screen shot the error page and forward it to Carmel.'
+		    }, function () {
+			    //window.location.replace(lookup_url)
+		    });
+	    },
+	    success: function (result) {
+        $('#cg_div').replaceWith(result);
+	    }
+    })
+  }
+
 </script>

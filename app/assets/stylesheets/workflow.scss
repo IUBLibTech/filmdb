@@ -9,6 +9,9 @@
 	float: left;
 }
 .choice > label, .choice > input {
-  vertical-align: baseline;
-  margin: 10px;
+  vertical-align: middle;
+  margin: 2px;
+}
+.w_100per {
+  width: 100%;
 }
