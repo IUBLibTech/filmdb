@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200701170437) do
+ActiveRecord::Schema.define(version: 20200604144338) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -63,6 +63,52 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.boolean  "shipped",                       default: false
   end
 
+  create_table "collection_inventory_configurations", force: :cascade do |t|
+    t.integer  "collection_id",              limit: 8
+    t.boolean  "location"
+    t.boolean  "copy_right"
+    t.boolean  "series_production_number"
+    t.boolean  "series_part"
+    t.boolean  "alternative_title"
+    t.boolean  "title_version"
+    t.boolean  "item_original_identifier"
+    t.boolean  "creator"
+    t.boolean  "language"
+    t.boolean  "accompanying_documentation"
+    t.boolean  "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "generation"
+    t.boolean  "base"
+    t.boolean  "stock"
+    t.boolean  "access"
+    t.boolean  "gauge"
+    t.boolean  "can_size"
+    t.boolean  "footage"
+    t.boolean  "duration"
+    t.boolean  "reel_number"
+    t.boolean  "format_notes"
+    t.boolean  "picture_type"
+    t.boolean  "frame_rate"
+    t.boolean  "color_or_bw"
+    t.boolean  "aspect_ratio"
+    t.boolean  "sound_field_language"
+    t.boolean  "captions_or_subtitles"
+    t.boolean  "silent"
+    t.boolean  "sound_format_type"
+    t.boolean  "sound_content_type"
+    t.boolean  "sound_configuration"
+    t.boolean  "ad_strip"
+    t.boolean  "shrinkage"
+    t.boolean  "mold"
+    t.boolean  "condition_type"
+    t.boolean  "condition_rating"
+    t.boolean  "research_value"
+    t.boolean  "conservation_actions"
+    t.boolean  "multiple_items_in_can"
+    t.boolean  "title_control_number"
+  end
+
   create_table "collections", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at"
@@ -107,22 +153,6 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "updated_at"
     t.boolean  "active_status",               default: true
   end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   limit: 4,     default: 0, null: false
-    t.integer  "attempts",   limit: 4,     default: 0, null: false
-    t.text     "handler",    limit: 65535,             null: false
-    t.text     "last_error", limit: 65535
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by",  limit: 255
-    t.string   "queue",      limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "delete_log_entries", force: :cascade do |t|
     t.integer  "table_id",                  limit: 4
@@ -399,19 +429,6 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "updated_at"
   end
 
-  create_table "reports", force: :cascade do |t|
-    t.integer  "collection_id",     limit: 4
-    t.string   "medium_type",       limit: 255
-    t.integer  "creator",           limit: 8
-    t.string   "file_path",         limit: 255
-    t.boolean  "complete"
-    t.text     "error",             limit: 65535
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "po_count",          limit: 4,     default: 0
-    t.integer  "po_complete_count", limit: 4,     default: 0
-  end
-
   create_table "series", force: :cascade do |t|
     t.string   "title",             limit: 255
     t.string   "summary",           limit: 255
@@ -451,8 +468,6 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "title_creators", ["title_id"], name: "index_title_creators_on_title_id", using: :btree
-
   create_table "title_dates", force: :cascade do |t|
     t.integer  "title_id",                    limit: 8
     t.string   "date_text",                   limit: 255
@@ -470,16 +485,12 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.boolean  "end_date_is_approximation"
   end
 
-  add_index "title_dates", ["title_id"], name: "index_title_dates_on_title_id", using: :btree
-
   create_table "title_forms", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
     t.string   "form",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "title_forms", ["title_id"], name: "index_title_forms_on_title_id", using: :btree
 
   create_table "title_genres", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
@@ -488,16 +499,12 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "updated_at"
   end
 
-  add_index "title_genres", ["title_id"], name: "index_title_genres_on_title_id", using: :btree
-
   create_table "title_locations", force: :cascade do |t|
     t.integer  "title_id",   limit: 8
     t.string   "location",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "title_locations", ["title_id"], name: "index_title_locations_on_title_id", using: :btree
 
   create_table "title_original_identifiers", force: :cascade do |t|
     t.integer  "title_id",        limit: 8
@@ -507,8 +514,6 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "updated_at"
   end
 
-  add_index "title_original_identifiers", ["title_id"], name: "index_title_original_identifiers_on_title_id", using: :btree
-
   create_table "title_publishers", force: :cascade do |t|
     t.integer  "title_id",       limit: 8
     t.string   "name",           limit: 255
@@ -516,8 +521,6 @@ ActiveRecord::Schema.define(version: 20200701170437) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "title_publishers", ["title_id"], name: "index_title_publishers_on_title_id", using: :btree
 
   create_table "titles", force: :cascade do |t|
     t.string   "title_text",               limit: 1024
@@ -706,11 +709,16 @@ ActiveRecord::Schema.define(version: 20200701170437) do
   add_index "workflow_statuses", ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
 
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
+  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
+  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
+  execute(<<-TRIGGERSQL)
+CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
+FOR EACH ROW
+BEGIN
+    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
+        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
+    END IF;
+END
+  TRIGGERSQL
 
 end

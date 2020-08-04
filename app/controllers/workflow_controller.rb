@@ -418,7 +418,7 @@ class WorkflowController < ApplicationController
 
 
 	def best_copy_selection
-		@physical_objects = []#PhysicalObject.where_current_workflow_status_is(nil, nil, false, WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_MDPI_WELLS)
+		@physical_objects = []
 	end
 
 	def ajax_best_copy_selection_barcode
@@ -438,7 +438,6 @@ class WorkflowController < ApplicationController
 				render partial: 'ajax_best_copy_selection_error'
 			else
 				redirect_to title_component_group_best_copy_selection_path(@cg.title, @cg)
-				#render partial: 'ajax_best_copy_selection_component_group'
 			end
 		end
 	end
@@ -593,10 +592,63 @@ class WorkflowController < ApplicationController
 		render 'workflow/mark_found/mark_found'
 	end
 
+	# Rules about adding a PO to a mark found set start with multiple PO having shared titles.
+	# 1) the first *Missing* PO is always accepted
+	# 2) Subsequent scans are sent with an array of accepted POs so far. The scanned PO (params[:iu_barcode]) is compared
+	# to the already scanned barcode (params[:barcodes]) and the 'candidate' is only accepted if it has at least one title
+	# in common with the already scanned POs.
+	# 3) If the candidate is not missing, doesn't match and existing PO, or does not share at least one title in common with
+	# the titles found by POs in params[:barcodes], the resulting JSON returned will contain an error message along with
+	# the success attribute set to false
 	def ajax_mark_found_lookup
-		bcs = params[:barcodes]
-		@pos = PhysicalObject.includes(:titles, :current_workflow_status).where(iu_barcode: bcs)
-		render partial: 'workflow/mark_found/ajax_mark_found_lookup'
+		# the PO that is trying to be added to the set scanned so far
+		candidate = PhysicalObject.where(iu_barcode: params[:iu_barcode]).first
+		if candidate.nil?
+			@error_msg = "Could not find a PhysicalObject with IU Barcode: #{params[:iu_barcode]}"
+		elsif candidate.current_location != WorkflowStatus::MISSING
+			@error_msg = "PhysicalObject #{params[:iu_barcode]} is not Missing. It's current location is: #{candidate.current_location}"
+		else
+			# check to see if the passed barcodes have any ids present yet (it's simply a javascript array sent as a string: "[]" is empty)
+			bcs = params[:scan_barcodes].tr('\"[]', '').split(',').map(&:to_i)
+			if bcs.length > 0
+				# turn it into an array of integers
+				# lookup the POs in that set
+				@pos = PhysicalObject.includes(:titles, :current_workflow_status).where(iu_barcode: bcs)
+				# grab the all Titles for those (we've already calculated that there IS an intersection in previous ajax call)
+				# and intersect with the candidate's titles/
+				@shared_title_ids = @pos.collect{|p| p.titles.collect{|t| t.id}}.flatten.uniq & candidate.titles.collect{|t| t.id}
+				# empty array means no intersection
+				unless @shared_title_ids.size > 0
+					@error_msg = "#{candidate.iu_barcode} does not share any Titles in common with the already select PhysicalObject(s)."
+				end
+			else
+				# This is the first scan so no need to calculate intersections, candidates Titles are the set
+				@shared_title_ids = candidate.titles.collect{|t| t.id}
+			end
+		end
+		render json: {:success => @error_msg.nil?, :msg => "#{@error_msg.nil? ? "" : @error_msg}" }.to_json
+	end
+
+	def ajax_load_found_selection_table
+		bcs = params[:scan_barcodes].tr('\"[]', '').split(',').map(&:to_i)
+		@pos = PhysicalObject.where(iu_barcode: bcs)
+		shared_title_ids = @pos.collect{|p| p.titles.collect{|t| t.id}}.flatten.uniq
+		@titles = Title.where(id: shared_title_ids)
+		render partial: 'workflow/mark_found/ajax_load_found_selection_table'
+	end
+
+	def ajax_load_found_cg_table
+		ids = params[:ids].tr('\"[]', '').split(',').map(&:to_i)
+		@pos = PhysicalObject.where(id: ids)
+		@titles = []
+		@pos.each do |p|
+			if @titles.length == 0
+				@titles = p.titles
+			else
+				@titles = @titles & p.titles
+			end
+		end
+		render partial: 'workflow/mark_found/ajax_load_found_cg_table'
 	end
 
 	# responds to a barcode scan on the show_mark_found action and allows user to create a new CG and specify a workflow location.
