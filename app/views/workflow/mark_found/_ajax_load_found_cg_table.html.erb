@@ -10,7 +10,7 @@
         </td>
         <th>Component Group Type</th>
         <td>
-          <%= select_tag :cg_type, options_for_select(ComponentGroup::ALL_TYPES.collect{|t| [t, t]}) %>
+          <%= select_tag :cg_type, options_for_select(ComponentGroup::ALL_TYPES.collect{|t| [t, t]}), {class: "cg_type"} %>
         </td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
             <%= select_tag "component_group[component_group_physical_objects][#{p.id}][return_on_reel]", options_for_select([["No", false], ["Yes", true]]) %>
           </td>
           <td>
-            <%= select_tag "component_group[component_group_physical_objects][#{p.id}][location]", options_for_select(WorkflowStatus::ALL_STATUSES.collect { |s| [s, s] }) %>
+            <%= select_tag "component_group[component_group_physical_objects][#{p.id}][location]", options_for_select([WorkflowStatus::BEST_COPY_ALF, WorkflowStatus::BEST_COPY_WELLS].collect { |s| [s, s] }), {class: 'location_select'} %>
           </td>
         </tr>
       <% end %>
