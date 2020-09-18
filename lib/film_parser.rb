@@ -278,9 +278,9 @@ class FilmParser < CsvParser
       end
     end
 
-    # generation_notes
-    gen_notes = row[column_index GENERATION_NOTES]
-    set_value(:generation_notes, gen_notes, po)
+    # generation_notes this should have been handled by HEADERS_TO_ASSIGNERS
+    # gen_notes = row[column_index GENERATION_NOTES]
+    # set_value(:generation_notes, gen_notes, po)
 
     # original identifiers
     o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
