@@ -876,5 +876,33 @@ a.title_link {
   flex-wrap: wrap;
 }
 .flex_col_wrap {
-  flex-flow: column wrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.flex_col_wrap > div {
+  //flex-basis: 33%;
+}
+.flex_col_wrap > div > div.check_box {
+  width: 100%;
+}
+
+.flex_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: .4rem;
+}
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  //flex-basis: 100%;
+  flex: 1;
+}
+.flex_column_auto {
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  min-width: 5rem;
 }

@@ -734,12 +734,16 @@ class FilmParser < CsvParser
   end
 
   def set_value(attr_symbol, val, po)
-    unless val.blank?
-      if @cv[attr_symbol].collect { |x| x[0] }.include? val
-        po.send((attr_symbol.to_s << "=").to_sym, val)
-      else
-        po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+    begin
+      unless val.blank?
+        if @cv[attr_symbol].collect { |x| x[0] }.include? val
+          po.send((attr_symbol.to_s << "=").to_sym, val)
+        else
+          po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+        end
       end
+    rescue
+      debugger
     end
   end
 

@@ -93,7 +93,7 @@ class Video < ActiveRecord::Base
       :sound_configuration_mono, :sound_configuration_stereo, :sound_configuration_surround,
       :sound_configuration_other
   ]
-  SOUND_CONFIRGURATION_FIELDS_HUMANIZED = {
+  SOUND_CONFIGURATION_FIELDS_HUMANIZED = {
       :sound_configuration_mono => "Mono", :sound_configuration_stereo => "Strereo", :sound_configuration_surround => "Surround",
       :sound_configuration_other => "Other"
   }
@@ -119,7 +119,7 @@ class Video < ActiveRecord::Base
   HUMANIZED_SYMBOLS = GENERATION_FIELDS_HUMANIZED.merge(VERSION_FIELDS_HUMANIZED.merge(BASE_FIELDS_HUMANIZED.merge(
       PICTURE_TYPE_FIELDS_HUMANIZED.merge(COLOR_FIELDS_HUMANIZED.merge(
           ASPECT_RATIO_FIELDS_HUMANIZED.merge(SOUND_FORMAT_FIELDS_HUMANIZED.merge(SOUND_CONTENT_FIELDS_HUMANIZED.merge(
-              SOUND_CONFIRGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED)
+              SOUND_CONFIGURATION_FIELDS_HUMANIZED.merge(SOUND_REDUCTION_FIELDS_HUMANIZED)
           ))))))))
 
   def initialize(args = {})
@@ -168,7 +168,6 @@ class Video < ActiveRecord::Base
       hh_mm_sec(super)
     end
   end
-
 
   # overridden to provide for more human readable attribute names for things like :sample_rate_32k
   def self.human_attribute_name(attribute, options = {})

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200429143632) do
+ActiveRecord::Schema.define(version: 20200825145611) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -98,6 +98,21 @@ ActiveRecord::Schema.define(version: 20200429143632) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active_status",   default: true
+  end
+
+  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "priority",                 default: 0, null: false
+    t.integer  "attempts",                 default: 0, null: false
+    t.text     "handler",    limit: 65535,             null: false
+    t.text     "last_error", limit: 65535
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
   create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -267,6 +282,14 @@ ActiveRecord::Schema.define(version: 20200429143632) do
     t.datetime "updated_at"
   end
 
+  create_table "modifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "object_type"
+    t.integer  "object_id"
+    t.bigint   "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "physical_object_dates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
     t.bigint   "controlled_vocabulary_id"
@@ -362,6 +385,75 @@ ActiveRecord::Schema.define(version: 20200429143632) do
     t.text     "file_contents", limit: 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "recorded_sounds", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.boolean  "version_first_edition"
+    t.boolean  "version_second_edition"
+    t.boolean  "version_third_edition"
+    t.boolean  "version_fourth_edition"
+    t.boolean  "version_abridged"
+    t.boolean  "version_anniversary"
+    t.boolean  "version_domestic"
+    t.boolean  "version_english"
+    t.boolean  "version_excerpt"
+    t.boolean  "version_long"
+    t.boolean  "version_original"
+    t.boolean  "version_reissue"
+    t.boolean  "version_revised"
+    t.boolean  "version_sample"
+    t.boolean  "version_short"
+    t.boolean  "version_x_rated"
+    t.string   "gauge"
+    t.boolean  "generation_copy_access"
+    t.boolean  "generation_dub"
+    t.boolean  "generation_duplicate"
+    t.boolean  "generation_intermediate"
+    t.boolean  "generation_master"
+    t.boolean  "generation_master_distribution"
+    t.boolean  "generation_master_production"
+    t.boolean  "generation_off_air_recording"
+    t.boolean  "generation_original_recording"
+    t.boolean  "generation_preservation"
+    t.boolean  "generation_work_tapes"
+    t.boolean  "generation_other"
+    t.string   "sides"
+    t.string   "part"
+    t.string   "size"
+    t.string   "base"
+    t.string   "stock"
+    t.text     "detailed_stock_information",         limit: 65535
+    t.boolean  "multiple_items_in_can"
+    t.string   "playback"
+    t.boolean  "sound_content_type_composite_track"
+    t.boolean  "sound_content_type_dialog"
+    t.boolean  "sound_content_type_effects_track"
+    t.boolean  "sound_content_type_music_track"
+    t.boolean  "sound_content_type_outtakes"
+    t.boolean  "sound_configuration_dual_mono"
+    t.boolean  "sound_configuration_mono"
+    t.boolean  "sound_configuration_stereo"
+    t.boolean  "sound_configuration_surround"
+    t.boolean  "sound_configuration_unknown"
+    t.boolean  "sound_configuration_other"
+    t.string   "mold"
+    t.integer  "actable_id"
+    t.string   "actable_type"
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+  end
+
+  create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "collection_id"
+    t.string   "medium_type"
+    t.bigint   "creator"
+    t.string   "file_path"
+    t.boolean  "complete"
+    t.text     "error",             limit: 65535
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.integer  "po_count",                        default: 0
+    t.integer  "po_complete_count",               default: 0
   end
 
   create_table "series", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
