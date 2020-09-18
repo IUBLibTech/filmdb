@@ -98,6 +98,7 @@ module PhysicalObjectsHelper
     type = nil
     type = :film if params[:film]
     type = :video if params[:video]
+    type = :recorded_sound if params[:recorded_sound]
     raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
     type
   end
@@ -107,6 +108,10 @@ module PhysicalObjectsHelper
       Film.new
     elsif medium == "Video" || medium == :video
       Video.new
+    elsif medium == 'Recorded Sound' || medium == :recorded_sound
+      RecordedSound.new
+    else
+      raise "Unsupported medium: #{medium}"
     end
   end
 
