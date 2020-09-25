@@ -121,6 +121,9 @@ module PhysicalObjectsHelper
     elsif medium == :video
       p = physical_object_params
       Video.new(p)
+    elsif medium == :recorded_sound
+      p = physical_object_params
+      RecordedSound.new(p)
     else
       raise "Unsupported Physical Object Medium #{medium}"
     end
@@ -138,6 +141,8 @@ module PhysicalObjectsHelper
       Film.new(physical_object_params)
     elsif params[:video]
       Video.new(physical_object_params)
+    elsif params[:recorded_sound]
+      RecordedSound.new(physical_object_params)
     else
       raise 'Unsupported Format'
     end
@@ -159,6 +164,14 @@ module PhysicalObjectsHelper
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
           :catalog_key, :compilation, :format_notes)
+    elsif params[:recorded_sound]
+      params.require(:recorded_sound).permit(
+          # physical object specific attributes
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes
+      )
     else
       raise "Unsupported Medium: #{params.keys}"
     end
@@ -255,6 +268,33 @@ module PhysicalObjectsHelper
           :sound_noise_redux_adres, :sound_noise_redux_anrs, :sound_noise_redux_dnl, :sound_noise_redux_dnr, :sound_noise_redux_cedar,
           :sound_noise_redux_none, :notes, :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold,
 
+          value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
+          boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
+          languages_attributes: [:id, :language, :language_type, :_destroy],
+          physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
+          physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
+      )
+    elsif params[:recorded_sound]
+      params.require(:recorded_sound).permit(
+          # physical object specific attributes
+          :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+          :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+          :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+          :catalog_key, :compilation, :format_notes,
+
+          # recorded sound specific attributes
+          :version_first_edition, :version_second_edition, :version_third_edition, :version_fourth_edition, :version_abridged,
+          :version_anniversary, :version_domestic, :version_english, :version_excerpt, :version_long, :version_original,
+          :version_reissue, :version_revised, :version_sample, :version_short, :version_x_rated, :gauge, :generation_copy_access,
+          :generation_dub, :generation_duplicate, :generation_intermediate, :generation_master, :generation_master_distribution,
+          :generation_master_production, :generation_off_air_recording, :generation_original_recording, :generation_preservation,
+          :generation_work_tapes, :generation_other, :sides, :part, :size, :base, :stock, :detailed_stock_information,
+          :multiple_items_in_can, :playback, :sound_content_type_composite_track, :sound_content_type_dialog, :sound_content_type_effects_track,
+          :sound_content_type_music_track, :sound_content_type_outtakes, :sound_configuration_dual_mono, :sound_configuration_mono,
+          :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_unknown, :sound_configuration_other,
+          :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold,
+
+          # additional physical object specific associations
           value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
           boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
           languages_attributes: [:id, :language, :language_type, :_destroy],

@@ -38,6 +38,14 @@ class StatsController < ApplicationController
 			@colors = colors(Video)
 			@conditions = PhysicalObject.where(po_sql_where).where(medium: 'Video').where("condition_rating is not null and condition_rating != ''").group(:condition_rating).count
 			render partial: 'video_metadata_stats'
+		elsif params[:medium] == 'Recorded Sound'
+			@generations = generations(RecordedSound)
+			@gauges = RecordedSound.joins("INNER JOIN physical_objects ON physical_objects.actable_id = recorded_sounds.id").where(po_sql_where).where("gauge is not null and gauge !=''").group(:gauge).count
+			@bases = bases(RecordedSound)
+			@sounds = [] # not applicable to recorded sound
+			@colors = [] # not applicable to recorded sound
+			@conditions = PhysicalObject.where(po_sql_where).where(medium: 'Recorded Sound').where("condition_rating is not null and condition_rating != ''").group(:condition_rating).count
+			render partial: 'recorded_sound_metadata_stats'
 		else
 			render text: "Unsupported medium: #{params[:medium]}", status: 400
 		end

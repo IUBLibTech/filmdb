@@ -743,7 +743,7 @@ class FilmParser < CsvParser
         end
       end
     rescue
-      debugger
+      raise "How did this error happen? Passed args: #{attr_symbol}, #{val}, #{po}"
     end
   end
 

@@ -79,7 +79,6 @@ class PhysicalObjectsController < ApplicationController
     if request.get?
       @em = "Creating New Physical Object"
       #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
-
       @physical_object = RecordedSound.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Recorded Sound', medium: 'Recorded Sound')
       set_cv
     elsif request.post?
