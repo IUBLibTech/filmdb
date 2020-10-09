@@ -26,49 +26,49 @@ class AddRecordedSoundControlledVocab < ActiveRecord::Migration
   def up
     ControlledVocabulary.transaction do
       BASES.each do |b|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':base', value: b).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':base', value: b).save!
       end
       GAUGES.each do |g|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':gauge', value: g).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':gauge', value: g).save!
       end
       MOLD.each do |m|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':mold', value: m).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':mold', value: m).save!
       end
       OA_CONDITIONS.each do |c|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':overall_condition_rating', value: c).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':overall_condition_rating', value: c).save!
       end
       CONDITIONS.each do |c|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':value_condition', value: c).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':value_condition', value: c).save!
       end
       # only 2 boolean conditions for Recorded Sound
-      ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':boolean_condition', value: 'Broken').save!
-      ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':boolean_condition', value: 'Missing Pieces').save!
+      ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':boolean_condition', value: 'Broken').save!
+      ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':boolean_condition', value: 'Missing Pieces').save!
 
 
       PLAYBACKS.each do |s|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':playback_speed', value: s).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':playback_speed', value: s).save!
       end
 
       rated_conditions = OA_CONDITIONS
       rated_conditions.each do |rc|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':rated_condition', value: rc).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':rated_condition', value: rc).save!
       end
       RESEARCH_VALS.each do |rv|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':research_value', value: rv).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':research_value', value: rv).save!
       end
       SIDES.each do |s|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':sides', value: s).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':sides', value: s).save!
       end
       SIZES.each do |s|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':size', value: s).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':size', value: s).save!
       end
       STOCKS.each do |s|
-        ControlledVocabulary.new(model_type: 'Recorded Sound', model_attribute: ':stock', value: s).save!
+        ControlledVocabulary.new(model_type: 'RecordedSound', model_attribute: ':stock', value: s).save!
       end
     end
   end
 
   def down
-    ControlledVocabulary.where(model_type: 'Recorded Sound').delete_all
+    ControlledVocabulary.where(model_type: 'RecordedSound').delete_all
   end
 end

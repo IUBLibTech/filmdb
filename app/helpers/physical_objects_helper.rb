@@ -288,11 +288,11 @@ module PhysicalObjectsHelper
           :version_reissue, :version_revised, :version_sample, :version_short, :version_x_rated, :gauge, :generation_copy_access,
           :generation_dub, :generation_duplicate, :generation_intermediate, :generation_master, :generation_master_distribution,
           :generation_master_production, :generation_off_air_recording, :generation_original_recording, :generation_preservation,
-          :generation_work_tapes, :generation_other, :sides, :part, :size, :base, :stock, :detailed_stock_information,
+          :generation_work_tapes, :generation_other, :generation_notes, :sides, :part, :size, :base, :stock, :detailed_stock_information,
           :multiple_items_in_can, :playback, :sound_content_type_composite_track, :sound_content_type_dialog, :sound_content_type_effects_track,
           :sound_content_type_music_track, :sound_content_type_outtakes, :sound_configuration_dual_mono, :sound_configuration_mono,
           :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_unknown, :sound_configuration_other,
-          :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold,
+          :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold, :noise_reduction, :capacity,
 
           # additional physical object specific associations
           value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],

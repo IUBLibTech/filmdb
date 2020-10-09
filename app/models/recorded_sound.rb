@@ -6,10 +6,10 @@ class RecordedSound < ApplicationRecord
 
   NESTED_ATTRIBUTES = [:value_conditions_attributes, :boolean_conditions_attributes, :languages_attributes,
                        :physical_object_original_identifiers_attributes, :physical_object_dates_attributes]
-  GAUGE_VALUES = ControlledVocabulary.where(model_type: 'Recorded Sound', model_attribute: ':gauge').pluck(:value)
-  SIZE_VALUES = ControlledVocabulary.physical_object_cv('Recorded Sound')[:size].collect{|r| r[0]}
-  STOCK_VALUES = ControlledVocabulary.physical_object_cv('Recorded Sound')[:stock].collect{|r| r[0]}
-  PLAYBACK_SPEEDS = ControlledVocabulary.physical_object_cv('Recorded Sound')[:playback_speed].collect { |r| r[0] }
+  GAUGE_VALUES = ControlledVocabulary.where(model_type: 'RecordedSound', model_attribute: ':gauge').pluck(:value)
+  SIZE_VALUES = ControlledVocabulary.physical_object_cv('RecordedSound')[:size].collect{|r| r[0]}
+  STOCK_VALUES = ControlledVocabulary.physical_object_cv('RecordedSound')[:stock].collect{|r| r[0]}
+  PLAYBACK_SPEEDS = ControlledVocabulary.physical_object_cv('RecordedSound')[:playback_speed].collect { |r| r[0] }
 
   VERSION_FIELDS = [:version_first_edition, :version_second_edition, :version_third_edition, :version_fourth_edition,
                     :version_abridged,  :version_anniversary, :version_domestic, :version_english, :version_excerpt, :version_long,

@@ -126,6 +126,10 @@
         <div class="flex_column_auto"><%= f.select :stock, options_for_select(@cv[:stock], @physical_object.stock), {include_blank: ''} %></div>
       </div>
       <div class="flex_row">
+        <div class="flex_column_auto"><b>Capacity</b></div>
+        <div class="flex_column_auto"><%= f.text_field :capacity %></div>
+      </div>
+      <div class="flex_row">
         <b>Detailed Stock Information</b>
       </div>
       <div class="flex_row">
@@ -140,7 +144,11 @@
     <div class="flex_column">
       <div class="flex_row">
         <div class="flex_column_auto"><b>Playback</b></div>
-        <div class="flex_column_auto"><%= f.select :playback, options_for_select(@cv[:playback_speed], @physical_object.playback), {include_blank: ''} %></div>
+        <div class="flex_column_auto ml_10"><%= f.select :playback, options_for_select(@cv[:playback_speed], @physical_object.playback), {include_blank: ''} %></div>
+      </div>
+      <div class="flex_row">
+        <div class="flex_column_auto"><b>Noise Reduction</b></div>
+        <div class="flex_column_auto"><%= f.select :noise_reduction, options_for_select(@cv[:noise_reduction], @physical_object.noise_reduction), {include_blank: ''} %></div>
       </div>
     </div>
     <div class="flex_column">
@@ -220,6 +228,13 @@
   </div>
   <div>
     <h4 class="m_bottom_5px">Condition</h4>
+    <div class="flex_row">
+      <div class="flex_column">
+        <div class="flex_row">
+          <b>Mold</b> <%= f.select :mold, options_for_select(@cv[:mold], @physical_object.mold), {include_blank: ''}   %>
+        </div>
+      </div>
+    </div>
     <div class="flex_row">
       <div class="flex_column">
         <div class="flex_row">

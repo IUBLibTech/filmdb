@@ -316,7 +316,7 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def set_cv
-    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
+    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium.gsub(' ', ''))
     @l_cv = ControlledVocabulary.language_cv
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
