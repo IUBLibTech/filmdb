@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200825145611) do
+ActiveRecord::Schema.define(version: 20201009135923) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -441,6 +441,9 @@ ActiveRecord::Schema.define(version: 20200825145611) do
     t.string   "actable_type"
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
+    t.string   "noise_reduction"
+    t.string   "capacity"
+    t.text     "generation_notes",                   limit: 65535
   end
 
   create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
