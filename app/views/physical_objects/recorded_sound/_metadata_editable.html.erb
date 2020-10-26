@@ -158,7 +158,6 @@
           <%= f.fields_for :languages do |l| %>
             <div class="left condition">
               <b class="stagger_40">Language </b><%= l.select :language, options_for_select(@l_cv[:language], l.object.language) %><br/>
-              <b class="stagger_40">Type </b><%= l.select :language_type, options_for_select(@l_cv[:language_type], l.object.language_type) %>
               <%= l.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
             </div>
           <% end %>
