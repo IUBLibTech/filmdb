@@ -174,7 +174,7 @@ class Film < ActiveRecord::Base
       end
       xml.mdpiBarcode mdpi_barcode
       xml.iucatBarcode iu_barcode
-      xml.redigitize (digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
+      xml.redigitize(digitized || workflow_statuses.any?{|w| w.status_name == WorkflowStatus::SHIPPED_EXTERNALLY})
       xml.iucatTitleControlNumber title_control_number
       xml.catalogKey catalog_key
       xml.format medium
