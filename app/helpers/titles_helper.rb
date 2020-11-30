@@ -100,8 +100,7 @@ module TitlesHelper
 							 "Accompanying Documentation", "Accompanying Documentation Location", "Overall Condition", "Condition Notes",
 							 "Research Value", "Research Value Notes", "AD Strip", "Shrinkage", "Mold",
 							 "Conditions",
-							 "Missing Footage", "Miscellaneous", "Conservation Actions"
-
+							 "Missing Footage", "Miscellaneous", "Conservation Actions", "Title Last Modified By"
 							 ]
 		CSV.generate(headers: true) do |csv|
 			csv << headers
@@ -125,7 +124,7 @@ module TitlesHelper
 								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
 								p.research_value, p.research_value_notes, p.ad_strip, p.shrinkage, p.mold,
 								((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
-								p.missing_footage, p.miscellaneous, p.conservation_actions
+								p.missing_footage, p.miscellaneous, p.conservation_actions, t.modifier&.username
 						]
 					elsif p.medium == 'Video'
 						csv << [
@@ -144,7 +143,7 @@ module TitlesHelper
 								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
 								p.research_value, p.research_value_notes, '', '', p.mold,
 								((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
-								p.missing_footage, p.miscellaneous, p.conservation_actions
+								p.missing_footage, p.miscellaneous, p.conservation_actions, t.modifier&.username
 						]
 					else
 						raise "Unsupported Physical Object medium: #{@physical_object.medium}"
