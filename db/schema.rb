@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201009135923) do
+ActiveRecord::Schema.define(version: 20201130200758) do
 
   create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
@@ -98,21 +98,6 @@ ActiveRecord::Schema.define(version: 20201009135923) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active_status",   default: true
-  end
-
-  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "priority",                 default: 0, null: false
-    t.integer  "attempts",                 default: 0, null: false
-    t.text     "handler",    limit: 65535,             null: false
-    t.text     "last_error", limit: 65535
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
   create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -282,14 +267,6 @@ ActiveRecord::Schema.define(version: 20201009135923) do
     t.datetime "updated_at"
   end
 
-  create_table "modifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "object_type"
-    t.integer  "object_id"
-    t.bigint   "user_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
   create_table "physical_object_dates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.bigint   "physical_object_id"
     t.bigint   "controlled_vocabulary_id"
@@ -444,19 +421,6 @@ ActiveRecord::Schema.define(version: 20201009135923) do
     t.string   "noise_reduction"
     t.string   "capacity"
     t.text     "generation_notes",                   limit: 65535
-  end
-
-  create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "collection_id"
-    t.string   "medium_type"
-    t.bigint   "creator"
-    t.string   "file_path"
-    t.boolean  "complete"
-    t.text     "error",             limit: 65535
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "po_count",                        default: 0
-    t.integer  "po_complete_count",               default: 0
   end
 
   create_table "series", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

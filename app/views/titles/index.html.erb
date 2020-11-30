@@ -146,7 +146,7 @@
 					<b>Generations</b>: <%= t.physical_objects.collect{ |p| p.humanize_boolean_generation_fields }.flatten.sort.uniq.join(', ') %>
 				</li>
 				<li>
-					<b>Gauges</b>: <%= t.physical_objects.collect{ |p| p.specific.medium_name }.uniq.join(', ') %>
+					<b>Gauges/Formats</b>: <%= t.physical_objects.collect{ |p| p.specific.medium_name }.uniq.join(', ') %>
 				</li>
 				<li>
 					<b>Physical Objects Selected for Digitization</b>: <%= c %>
