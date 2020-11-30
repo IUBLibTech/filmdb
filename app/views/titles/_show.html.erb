@@ -22,14 +22,14 @@
       <h4 class="clean">Digitized</h4>
       <% avalon_url = @title.avalon_url %>
       <% if avalon_url.empty? %>
-        <div class="warning clear" style="font-size: inherit; padding-left: 10px">Could not generate Dark Avalon URL - no mapping between Filmdb Title id and POD Group Key
+        <div class="warning clear" style="font-size: inherit; padding-left: 10px">Could not generate Dark Avalon URL - no mapping between Filmdb Title id and POD Group Key</div>
       <% elsif avalon_url[:url] %>
         <div class="_25 left m_bottom_10px">
         <%= link_to "Dark Avalon Files", "#{avalon_url[:url]}", target: '_blank' %>
+        </div>
       <% elsif avalon_url[:error] %>
-        <div class="warning clear" style="font-size: inherit; padding-left: 10px"><%= avalon_url[:error] %>
+        <div class="warning clear" style="font-size: inherit; padding-left: 10px"><%= avalon_url[:error] %></div>
       <% end %>
-      </div>
     </div>
   </div>
 <% end %>
@@ -107,7 +107,6 @@
           </div>
       <% end %>
   <% end %>
-
   <% unless @title.title_genres.empty? %>
       <h4>Genres</h4>
       <% @title.title_genres.each do |tg| %>
@@ -116,30 +115,27 @@
           </div>
       <% end %>
   <% end %>
-
   <% unless @title.title_forms.empty? %>
       <h4>Forms</h4>
       <% @title.title_forms.each do |tf| %>
-          <div class="left_div creator_div">
-            <div class="field"><%= tf.form %></div>
-          </div>
+        <div class="left_div creator_div">
+          <div class="field"><%= tf.form %></div>
+        </div>
       <% end %>
   <% end %>
-
   <% unless @title.title_locations.empty? %>
       <h4>Locations</h4>
       <% @title.title_locations.each do |tl| %>
-          <div class="left_div creator_div">
-            <div class="field"><%= tl.location %></div>
-          </div>
+        <div class="left_div creator_div">
+          <div class="field"><%= tl.location %></div>
+        </div>
       <% end %>
   <% end %>
-
   <% unless @title.title_dates.empty? %>
-      <h4>Dates</h4>
-      <% @title.title_dates.each do |td| %>
-			<div class="date"><b><%= td.date_type %>:</b> <%= td.date_to_s %></div>
-      <% end %>
+    <h4>Dates</h4>
+    <% @title.title_dates.each do |td| %>
+      <div class="date"><b><%= td.date_type %>:</b> <%= td.date_to_s %></div>
+    <% end %>
   <% end %>
   <h4>Notes</h4>
 	<div class="simple_text">
@@ -154,4 +150,5 @@
 		<%= format_newlines(@title.name_authority) %>
 	</div>
 </div>
-</div>
+
+
