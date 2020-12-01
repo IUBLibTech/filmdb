@@ -710,7 +710,7 @@ class VideoParser < CsvParser
   end
 
   def gen_error_msg(row, physical_object)
-    msg = "<div class='po_error_div'>Physical Object at row #{row + 1} has the following problem(s):<ul>".html_safe
+    msg = "<div class='po_error_div'><b>Physical Object at row #{row + 1} has the following problem(s):</b><ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
       problems = physical_object.errors[k].map(&:inspect).join(', ')

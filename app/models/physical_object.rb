@@ -88,7 +88,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 
-	NEW_MEDIUMS = ['Film', 'Video']
+	NEW_MEDIUMS = ['Film', 'Video', 'Recorded Sound']
 
 	def self.per_page
 		100
@@ -219,6 +219,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::GENERATION_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::GENERATION_FIELDS)
+		elsif self.medium == 'Recorded Sound'
+			self.specific.humanize_boolean_fields(RecordedSound::GENERATION_FIELDS)
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -232,6 +234,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::GENERATION_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::GENERATION_FIELDS)
+		elsif medium == 'Recorded Sound'
+			self.specific.humanize_boolean_fields(RecordedSound::GENERATION_FIELDS)
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -241,6 +245,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::VERSION_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::VERSION_FIELDS)
+		elsif medium == 'Recorded Sound'
+			self.specific.humanize_boolean_fields(RecordedSound::VERSION_FIELDS)
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -251,6 +257,8 @@ class PhysicalObject < ActiveRecord::Base
 		elsif self.medium == 'Video'
 			# not a boolean field for Video
 			self.specific.base
+		elsif self.medium == 'Recorded Sound'
+			self.specific.base
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -259,6 +267,8 @@ class PhysicalObject < ActiveRecord::Base
 		if self.medium == 'Film'
 			self.specific.humanize_boolean_fields(Film::STOCK_FIELDS)
 		elsif self.medium == 'Video'
+			self.specific.stock
+		elsif self.medium = 'Recorded Sound'
 			self.specific.stock
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
@@ -269,6 +279,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::COLOR_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::COLOR_FIELDS)
+		elsif self.specific.medium = 'Recorded Sound'
+			'N/A'
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -278,6 +290,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::PICTURE_TYPE_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::PICTURE_TYPE_FIELDS)
+		elsif self.medium == 'Recorded Sound'
+			'N/A'
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -287,6 +301,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::ASPECT_RATIO_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::ASPECT_RATIO_FIELDS)
+		elsif self.medium == 'Recorded Sound'
+			'N/A'
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -296,6 +312,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::SOUND_FORMAT_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::SOUND_FORMAT_FIELDS)
+		elsif self.medium == 'Recorded Sound'
+			'N/A'
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -305,6 +323,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::SOUND_CONTENT_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::SOUND_CONTENT_FIELDS)
+		elsif self.specific.medium == 'Recorded Sound'
+			self.specific.humanize_boolean_fields(RecordedSound::SOUND_CONTENT_FIELDS)
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -314,6 +334,8 @@ class PhysicalObject < ActiveRecord::Base
 			self.specific.humanize_boolean_fields(Film::SOUND_CONFIGURATION_FIELDS)
 		elsif self.medium == 'Video'
 			self.specific.humanize_boolean_fields(Video::SOUND_CONFIGURATION_FIELDS)
+		elsif self.medium == 'Recorded Sound'
+			self.specific.humanize_boolean_fields(RecordedSound::SOUND_CONFIGURATION_FIELDS)
 		else
 			raise "Unsupported Physical Object Format: #{self.medium}"
 		end
@@ -459,7 +481,7 @@ class PhysicalObject < ActiveRecord::Base
   # a helper for concatenating MEDIUM with additional medium specific info. For instance, a 35mm Film would be
   # displayed as 'Film 35mm'
   def format
-    if [Film, Video].include?(self.specific.class)
+    if [Film, Video, RecordedSound].include?(self.specific.class)
       "#{self.medium} (#{self.specific.gauge})"
     else
       raise "Unsupported Medium... #{self.specific}"

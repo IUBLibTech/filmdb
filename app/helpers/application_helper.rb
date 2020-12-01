@@ -77,6 +77,8 @@ module ApplicationHelper
 			:film
 		elsif params[:video]
 			:video
+		elsif params[:recorded_sound]
+			:recorded_sound
 		else
 			raise "Unsupported Physical Object Medium #{params.keys}"
 		end

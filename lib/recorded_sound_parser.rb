@@ -1,40 +1,34 @@
-class FilmParser < CsvParser
+class RecordedSoundParser < CsvParser
   include DateHelper
   include PhysicalObjectsHelper
   require 'csv'
   require 'manual_roll_back_error'
 
-
-  # the column headers that spreadsheets should contain for Films - only the 5 metadata fields required to create a physical object
-  # are required in the spreadsheet headers, but if optional fields are supplied, they must conform to this vocabulary
-  COLUMN_HEADERS = PO_HEADERS + [
-      'Title', 'Duration', 'Series Name', 'Version', 'Gauge', 'Generation', 'Original Identifier', 'Reel Number', 'Multiple Items in Can',
-      'Can Size', 'Footage', 'Edge Code Date', 'Base', 'Stock', 'Picture Type', 'Frame Rate', 'Color', 'Aspect Ratio',
-      'Sound', 'Captions or Subtitles', 'Captions or Subtitles Notes', 'Sound Format Type', 'Sound Content Type', 'Sound Field',
-      'Dialog Language', 'Captions or Subtitles Language', 'AD Strip', 'Shrinkage', 'Mold', 'Missing Footage', 'Creator',
-      'Publisher', 'Genre', 'Form', 'Subject', 'Alternative Title', 'Series Production Number', 'Series Part',
-      'Date', 'Location', 'Title Summary', 'Title Notes', 'Name Authority', 'Generation Notes'
+  RECORDED_SOUND_HEADERS = [
+      'Title', 'Alternative Title', 'Title Notes', 'Title Summary', 'Series Name', 'Series Part', 'Creator', 'Publisher',
+      'Name Authority', 'Genre', 'Form', 'Subject', 'Date', 'Location', 'Version', 'Original Identifier', 'Gauge',
+      'Stock', 'Detailed Stock Information', 'Capacity', 'Generation', 'Generation Notes', 'Sides', 'Part',
+      'Duration', 'Playback Speed', 'Size', 'Sound Configuration', 'Sound Content Type', 'Language', 'Base',
+      'Mold','Noise Reduction'
   ]
+  # the column headers that spreadsheets should contain for Recorded Sound - they must conform to this vocabulary
+  COLUMN_HEADERS = PO_HEADERS + RECORDED_SOUND_HEADERS
 
-  # Constant integer values used to link to the index in COLUMN_HEADERS where the specified string is indexed
-  TITLE, DURATION, SERIES_NAME, VERSION, GAUGE, GENERATION, ORIGINAL_IDENTIFIER, REEL_NUMBER, MULTIPLE_ITEMS_IN_CAN = 22,23,24,25,26,27,28,29,30
-  CAN_SIZE, FOOTAGE, EDGE_CODE_DATE, BASE, STOCK, PICTURE_TYPE, FRAME_RATE, COLOR, ASPECT_RATIO = 31,32,33,34,35,36,37,38,39
-  SOUND, CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, SOUND_FORMAT_TYPE, SOUND_CONTENT_TYPE, SOUND_CONFIGURATION = 40,41,42,43,44,45
-  DIALOG_LANGUAGE, CAPTIONS_OR_SUBTITLES_LANGUAGE, AD_STRIP, SHRINKAGE, MOLD, MISSING_FOOTAGE, CREATOR = 46,47,48,49,50,51,52
-  PUBLISHER, GENRE, FORM, SUBJECT, ALTERNATIVE_TITLE, SERIES_PRODUCTION_NUMBER, SERIES_PART = 53,54,55,56,57,58,59
-  DATE, LOCATION, TITLE_SUMMARY, TITLE_NOTES, NAME_AUTHORITY, GENERATION_NOTES = 60,61,62,63,64,65
+  TITLE, ALTERNATIVE_TITLE, TITLE_NOTES, TITLE_SUMMARY, SERIES_NAME, SERIES_PART, CREATOR, PUBLISHER = 22,23,24,25,26,27,28,29
+  NAME_AUTHORITY, GENRE, FORM, SUBJECT, DATE, LOCATION, VERSION, ORIGINAL_IDENTIFIER, GAUGE = 30,31,32,33,34,35,36,37,38
+  STOCK, DETAILED_STOCK_INFORMATION, CAPACITY, GENERATION, GENERATION_NOTES, SIDES, PART = 39,40,41,42,43,44,45
+  DURATION, PLAYBACK_SPEED, SIZE, SOUND_CONFIGURATION, SOUND_CONTENT_TYPE, LANGUAGE, BASE = 46,47,48,49,50,51,52
+  MOLD, NOISE_REDUCTION = 53,54
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
       COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
-      COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=,
-      COLUMN_HEADERS[MISSING_FOOTAGE] => :missing_footage=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
+      COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
       COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
       COLUMN_HEADERS[ALF_SHELF_LOCATION] => :alf_shelf=, COLUMN_HEADERS[GENERATION_NOTES] => :generation_notes=
   }
-
   # special logger for parsing spreadsheets
   def self.logger
     @@logger ||= Logger.new("#{Rails.root}/log/spreadsheet_submission_logger.log")
@@ -57,7 +51,7 @@ class FilmParser < CsvParser
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
-      @cv = ControlledVocabulary.physical_object_cv('Film')
+      @cv = ControlledVocabulary.physical_object_cv('RecordedSound')
       @l_cv = ControlledVocabulary.language_cv
       # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
       error_msg = ""
@@ -119,9 +113,9 @@ class FilmParser < CsvParser
     @parse_headers_msg = ''
     # read all of the file's column headers
     row.each_with_index { |header, i|
-      puts "[#{header}, #{i}]"
-      if @headers.keys.include?(header)
-        @parse_headers_msg << "The header <b>#{header}</b> was duplicated at column #{i}<br/>"
+      puts "[#{header.strip}, #{i}]"
+      if @headers.keys.include?(header.strip)
+        @parse_headers_msg << "The header <b>#{header.strip}</b> was duplicated at column #{i}<br/>"
       elsif header.blank?
         @parse_headers_msg << "The header is blank at column #{i}<br/>"
       else
@@ -129,31 +123,25 @@ class FilmParser < CsvParser
       end
     }
 
-
     # examine spreadsheet headers to make sure they conform to vocabulary
     @headers.keys.each do |ch|
       if !COLUMN_HEADERS.include?(ch)
-        @parse_headers_msg << "#{ch} is not a valid column header"
+        @parse_headers_msg << "><b>#{ch}</b>< is not a valid column header<br/>".html_safe
       end
     end
     # make sure that every header is present in the spreadsheet
     COLUMN_HEADERS.each do |h|
       unless @headers.keys.include?(h)
-        @parse_headers_msg <<  "The column <b>#{h}</b> is missing from the spreadsheet".html_safe
+        @parse_headers_msg <<  "The column <b>#{h}</b> is missing from the spreadsheet<br/>".html_safe
       end
     end
   end
-  ControlledVocabulary.physical_object_cv('Video')[:stock].collect{|r| r[0]}
-  # utility for formatting a string message about a bad column header
-  # def parsed_header_message(ch)
-  #   "Missing or malformed <i>#{ch}</i> header<br/>"
-  # end
 
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
   def parse_physical_object(row, i)
     puts("Parsing Physical Object at Row: #{i + 1}")
     # read all auto parse fields
-    po = Film.new(spreadsheet_id: @spreadsheet.id)
+    po = RecordedSound.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
       po.send(HEADERS_TO_ASSIGNER[k], row[@headers[k]]) unless @headers[k].nil?
     end
@@ -165,21 +153,19 @@ class FilmParser < CsvParser
       po.errors.add(:date, "Unable to parse date created")
     end
 
-    if !row[column_index EDGE_CODE_DATE].blank?
-      edge_codes = row[column_index EDGE_CODE_DATE].split(' ; ')
-      edge_codes.each do |d|
-        po.physical_object_dates << PhysicalObjectDate.new(physical_object_id: po.id, controlled_vocabulary_id: ControlledVocabulary.physical_object_date_cv[:type][0][1].to_i, date: d)
-      end
-    end
-
     # manually parse the other values to ensure conformance to controlled vocabulary
     dur = row[column_index DURATION]
     unless dur.blank?
       if po.valid_duration?(dur)
         po.send(:duration=, dur)
       else
-        po.errors.add(:duration, "Improperly formated duration value (h:mm:ss): #{dur}")
+        po.errors.add(:duration, "Improperly formatted duration value (h:mm:ss): #{dur}")
       end
+    end
+
+    tc = row[column_index CAPACITY]
+    unless tc.blank?
+        po.send(:capacity=, tc)
     end
 
     # metadata fields common to all PO's
@@ -197,69 +183,61 @@ class FilmParser < CsvParser
     # end common metadata fields
 
     gauge = row[column_index GAUGE]
-    set_value(:gauge, gauge, po)
+    if gauge.blank?
+      po.errors.add(:gauge, "Recorded Sound Gauge cannot be blank!")
+    elsif RecordedSound::GAUGE_VALUES.include?(gauge)
+      set_value(:gauge, gauge, po)
+    else
+      po.errors.add(:gauge, ">#{gauge}< is not a valid Recorded Sound Gauge value")
+    end
 
-    reel = row[column_index REEL_NUMBER]
-    unless reel.blank?
-      if /^[0-9\?]+ of [0-9\?]+$/.match(reel)
-        po.send(:reel_number=, reel)
+    part = row[column_index PART]
+    unless part.blank?
+      po.send(:part=, part)
+    end
+
+    detailed_stock_info = row[column_index DETAILED_STOCK_INFORMATION]
+    unless detailed_stock_info.blank?
+      po.send(:detailed_stock_information=, detailed_stock_info)
+    end
+
+    size = row[column_index SIZE]
+    unless size.blank?
+      if RecordedSound::SIZE_VALUES.include?(size)
+        set_value(:size, size, po)
       else
-        po.errors.add(:reel_number, "Invalid Reel Number format (x of y): #{reel}")
+        po.errors.add(:size, ">#{size}< is not a valid Recorded Sound Size value")
       end
     end
 
-    miic = row[column_index MULTIPLE_ITEMS_IN_CAN]
-    set_boolean_value(:multiple_items_in_can, miic, po)
-
-    can_sizes = @cv[:can_size].collect{ |c| c[0]}
-    can = row[column_index CAN_SIZE]
-    unless can.blank?
-      if can_sizes.include?(can)
-        set_value(:can_size, can, po)
+    playback_speed = row[column_index PLAYBACK_SPEED]
+    unless playback_speed.blank?
+      if RecordedSound::PLAYBACK_SPEEDS.include?(playback_speed)
+        po.send(:playback=, playback_speed)
       else
-        po.errors.add(:can_size, "Invalid Can Size: #{can}")
+        po.errors.add(:playback, ">#{playback_speed}< is not a valid Recorded Sound Playback value")
       end
     end
-    footage = row[column_index FOOTAGE]
-    unless footage.blank?
-      po.send(:footage=, footage.to_i)
-    end
-
-    frame = row[column_index FRAME_RATE]
-    set_value(:frame_rate, frame, po)
-
-    sound = row[column_index SOUND]
-    unless sound.blank?
-      sounds = @cv[:sound].collect { |x| x[0].downcase }
-      if sounds.include? sound.downcase
-        set_value(:sound, @cv[:sound][sounds.find_index(sound.downcase)][0], po)
-      else
-        po.errors.add(:sound, "Invalid Sound value: #{sound}")
-      end
-    end
-
-    captioned = row[column_index CAPTIONS_OR_SUBTITLES]
-    set_boolean_value(:close_caption, captioned, po)
-
 
     # version
     version_fields = row[column_index VERSION].blank? ? [] : row[column_index VERSION].split(DELIMITER)
     version_fields.each do |vf|
-      field = vf.parameterize.underscore
-      if Film::VERSION_FIELDS.include?(field.to_sym)
+      # these attributes are prepended with version_
+      field = ("version_#{vf}").parameterize.underscore
+      if RecordedSound::VERSION_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
         # it could be 1st - 4th edition which don't 'map' easily from attribute name to humanized text
         case field
-        when "1st_edition"
-          po.send(:first_edition=, true)
-        when "2nd_edition"
-          po.send(:second_edition=, true)
-        when "3rd_edition"
-          po.send(:third_edition=, true)
-        when "4th_edition"
-          po.send(:fourth_edition=, true)
-        when "original"
+        when "version_1st_edition"
+          po.send(:version_first_edition=, true)
+        when "version_2nd_edition"
+          po.send(:version_second_edition=, true)
+        when "version_3rd_edition"
+          po.send(:version_third_edition=, true)
+        when "version_4th_edition"
+          po.send(:version_fourth_edition=, true)
+        when "version_original"
           po.send(:version_original=, true)
         else
           po.errors.add(:version, "Undefined version: #{vf}")
@@ -270,17 +248,13 @@ class FilmParser < CsvParser
     # generation
     gen_fields = row[column_index GENERATION].blank? ? [] : row[column_index GENERATION].split(DELIMITER)
     gen_fields.each do |gf|
-      if Film::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
-        sym = Film::GENERATION_FIELDS_HUMANIZED.key(gf)
+      if RecordedSound::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
+        sym = RecordedSound::GENERATION_FIELDS_HUMANIZED.key(gf)
         po.send((sym.to_s << "=").to_sym, true)
       else
         po.errors.add(:generation, "Undefined generation: #{gf}")
       end
     end
-
-    # generation_notes this should have been handled by HEADERS_TO_ASSIGNERS
-    # gen_notes = row[column_index GENERATION_NOTES]
-    # set_value(:generation_notes, gen_notes, po)
 
     # original identifiers
     o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
@@ -289,170 +263,61 @@ class FilmParser < CsvParser
     end
 
     # base
-    base_fields = row[column_index BASE].blank? ? [] : row[column_index BASE].split(DELIMITER)
-    base_fields.each do |bf|
-      field = "base #{bf}".parameterize.underscore
-      if Film::BASE_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+    base = row[column_index BASE]
+    unless base.blank?
+      if RecordedSound::BASE_FIELDS_HUMANIZED.values.include?(base)
+        po.send(:base=, base)
       else
-        po.errors.add(:base, "Undefined base: #{bf}")
+        po.errors.add(:base, "Undefined base: #{base}")
       end
     end
-
     # stock
-    stock_fields = row[column_index STOCK].blank? ? [] : row[column_index STOCK].split(DELIMITER)
-    stock_fields.each do |sf|
-      field = "stock #{sf}".parameterize.underscore
-      # 3m is a special case
-      if sf == '3M'
-        po.stock_3_m = true
-      elsif Film::STOCK_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
+    stock = row[column_index STOCK]
+    unless stock.blank?
+      if RecordedSound::STOCK_VALUES.include?(stock)
+        po.stock = stock
       else
-        po.errors.add(:stock, "Undefined stock: #{sf}")
-      end
-    end
-
-    #picture type
-    picture_fields = row[column_index PICTURE_TYPE].blank? ? [] : row[column_index PICTURE_TYPE].split(DELIMITER)
-    picture_fields.each do |pf|
-      field = "picture #{pf}".parameterize.underscore
-      if (Film::PICTURE_TYPE_FIELDS.include?(field.to_sym))
-        po.send((field << "=").to_sym, true)
-      else
-        po.errors.add(:picture_type, "Undefined picture type: #{pf}")
-      end
-    end
-
-    # color
-    color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
-    color_fields.each do |cf|
-      color_field = "color bw color #{cf}".parameterize.underscore
-      bw_field = "color bw bw #{cf.gsub('&', 'and')}".parameterize.underscore
-      if (Film::COLOR_BW_FIELDS.include?(bw_field.to_sym))
-        po.send((bw_field << '=').to_sym, true)
-      elsif (Film::COLOR_COLOR_FIELDS.include?(color_field.to_sym))
-        po.send((color_field << '=').to_sym, true)
-      else
-        po.errors.add(:color_fields, "Undefined Color: #{cf}")
-      end
-    end
-
-    # aspect ratio
-    aspect_fields = row[column_index ASPECT_RATIO].blank? ? [] : row[column_index ASPECT_RATIO].split(DELIMITER)
-    aspect_fields.each do |af|
-      case af
-      when "1.33:1"
-        po.send(:aspect_ratio_1_33_1=, true)
-      when "1.37:1"
-        po.send(:aspect_ratio_1_37_1=, true)
-      when "1.66:1"
-        po.send(:aspect_ratio_1_66_1=, true)
-      when "1.85:1"
-        po.send(:aspect_ratio_1_85_1=, true)
-      when "2.35:1"
-        po.send(:aspect_ratio_2_35_1=, true)
-      when "2.39:1"
-        po.send(:aspect_ratio_2_39_1=, true)
-      when "2.59:1"
-        po.send(:aspect_ratio_2_59_1=, true)
-      else
-        puts "Bad aspect ratio: #{af}"
-        po.errors.add(:aspect_ratio, "Undefined aspect ratio: #{af}")
-      end
-    end
-
-    # sound format type
-    format_fields = row[column_index SOUND_FORMAT_TYPE].blank? ? [] : row[column_index SOUND_FORMAT_TYPE].split(DELIMITER)
-    format_fields.each do |ff|
-      field = "sound format #{ff}".parameterize.underscore
-      if Film::SOUND_FORMAT_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
-      elsif !Film::SOUND_FORMAT_FIELDS_HUMANIZED.key(ff).nil?
-        po.send((Film::SOUND_FORMAT_FIELDS_HUMANIZED.key(ff).to_s << "=").to_sym, true)
-      else
-        po.errors.add(:sound_format_type, "Undefined sound format: #{ff}")
+        po.errors.add(:stock, ">#{stock}< is not a valid Recorded Sound Stock value")
       end
     end
 
     # sound content type
     content_fields = row[column_index SOUND_CONTENT_TYPE].blank? ? [] : row[column_index SOUND_CONTENT_TYPE].split(DELIMITER)
     content_fields.each do |cf|
-      field = "sound content #{cf}".parameterize.underscore
-      if Film::SOUND_CONTENT_FIELDS.include?(field.to_sym)
+      field = "sound content type #{cf}".parameterize.underscore
+      if RecordedSound::SOUND_CONTENT_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_content_type, "Undefined sound content type: #{cf}")
+        po.errors.add(:sound_content_type, ">#{cf}< is not a valid Recorded Sound 'Sound Content Type' value")
       end
     end
 
     # sound configuration
     config_fields = row[column_index SOUND_CONFIGURATION].blank? ? [] : row[column_index SOUND_CONFIGURATION].split(DELIMITER)
     config_fields.each do |cf|
-      # multi-track is written SOOOOO many ways in the spreadsheets - save Carla the headaches of correcting them all...
-      if cf.downcase.include?('multi')
-        po.send(:sound_format_optical_variable_area_maurer=, true)
+      field = "sound configuration #{cf}".parameterize.underscore
+      if RecordedSound::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
+        po.send((field << "=").to_sym, true)
       else
-        field = "sound configuration #{cf}".parameterize.underscore
-        if Film::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
-          po.send((field << "=").to_sym, true)
-        else
-          po.errors.add(:sound_configuration, "Undefined sound configuration: #{cf}")
-        end
+        po.errors.add(:sound_configuration, ">#{cf}< is not a valid Recorded Sound 'Sound Configuration' value")
       end
     end
 
-    # language fields both dialog and captions
-    lang_fields = row[column_index DIALOG_LANGUAGE].blank? ? [] : row[column_index DIALOG_LANGUAGE].split(DELIMITER)
+    # language fields - RecordedSound languages do not have a type
+    lang_fields = row[column_index LANGUAGE].blank? ? [] : row[column_index LANGUAGE].split(DELIMITER)
     langs = @l_cv[:language].collect { |x| x[0].downcase }
     lang_fields.each do |lf|
       index = langs.find_index(lf.downcase)
       if ! index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::ORIGINAL_DIALOG, physical_object_id: po.id)
+        po.languages << Language.new(language: @l_cv[:language][index][0], physical_object_id: po.id)
       else
-        po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
+        po.errors.add(:dialog_language, "Undefined language: #{lf}")
       end
-    end
-    lang_fields = row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].blank? ? [] : row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].split(DELIMITER)
-    lang_fields.each do |lf|
-      index = langs.find_index(lf.downcase)
-      if !index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::CAPTIONS, physical_object_id: po.id)
-      else
-        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: '#{lf}'")
-      end
-    end
-
-
-    # ad strip, mold, and shrinkage have their own columns
-    ad = row[column_index AD_STRIP]
-    ad_vals = @cv[:ad_strip].collect{|v| v[0]}
-    unless ad.blank?
-      if ad_vals.include?(ad)
-        po.send(:ad_strip=, ad)
-      else
-        po.errors.add(:ad_strip, "Invalid AD Strip value: #{ad}")
-      end
-    end
-
-    mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
-    mold_vals = @cv[:mold].collect{ |cv| cv[0]}
-    if mold.length > 0
-      if mold_vals.include?(mold)
-        po.send(:mold=, mold)
-      else
-        po.errors.add(:mold, "Invalid mold value: '#{mold}'")
-      end
-    end
-
-    shrink = row[column_index SHRINKAGE]
-    unless shrink.blank?
-      po.send(:shrinkage=, shrink.to_f)
     end
 
     # condition type fields with value ranges or booleans
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
-    cv = ControlledVocabulary.physical_object_cv('Film')
+    cv = ControlledVocabulary.physical_object_cv('RecordedSound')
     val_conditions = cv[:value_condition].collect { |x| x[0].downcase }
     bool_conditions = cv[:boolean_condition].collect { |x| x[0].downcase }
     condition_fields.each do |cf|
@@ -470,18 +335,35 @@ class FilmParser < CsvParser
       end
     end
 
-    # location = row[column_index LOCATION]
-    # ws = nil
-    # if location.blank?
-    #  ws = WorkflowStatus.build_workflow_status(WorkflowStatus::IN_STORAGE_INGESTED, po)
-    # else
-    #  if WorkflowStatus.is_storage_status?(location)
-    #    ws = WorkflowStatus.build_workflow_status(location, po)
-    #  else
-    #    po.errors.add(:condition, "Undefined Location: #{cf}")
-    #  end
-    # end
-    # po.workflow_statuses << ws unless ws.nil?
+    mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
+    mold_vals = @cv[:mold].collect{ |cv| cv[0]}
+    if mold.length > 0
+      if mold_vals.include?(mold)
+        po.send(:mold=, mold)
+      else
+        po.errors.add(:mold, "Invalid mold value: '#{mold}'")
+      end
+    end
+
+    nr = row[column_index NOISE_REDUCTION].blank? ? "" : row[column_index NOISE_REDUCTION].strip
+    nr_vals = @cv[:noise_reduction].collect{|cv| cv[0]}
+    if nr.length > 0
+      if nr_vals.include?(nr)
+        po.send(:noise_reduction=, nr)
+      else
+        po.errors.add(:noise_reduction, "#{nr} is not a valid Noise Reduction value")
+      end
+    end
+
+    sides = row[column_index SIDES].blank? ? "" : row[column_index SIDES].strip
+    sides_vals = @cv[:sides].collect{|cv| cv[0]}
+    if sides.length > 0
+      if sides_vals.include?(sides)
+        po.send(:sides=, sides)
+      else
+        po.errors.add(:sides, "#{sides} is not a valid Sides value")
+      end
+    end
     po
   end
 
@@ -503,7 +385,9 @@ class FilmParser < CsvParser
       po.errors.add(:catalog_key, "Malformed Catalog Key: #{ck}")
     end
   end
+
   def parse_media_type(po, row)
+    # media type is no longer used for PhysicalObjects
     #media_type = row[column_index MEDIA_TYPE]
     #if media_type.blank? || !po.media_types.include?(media_type)
     #  po.errors.add(:media_type, "Media Type blank or malformed: '#{media_type}'")
@@ -511,12 +395,13 @@ class FilmParser < CsvParser
     #  po.send(:media_type=, media_type)
     medium = row[column_index MEDIUM]
     if medium.blank? || ! po.media_type_mediums.include?(medium)
-      po.errors.add(:medium, "Medium: '#{medium}' is malformed or unsupported.")
+      po.errors.add(:medium, "Medium: '#{medium}' is malformed or unsupported")
     else
       po.send(:medium=, medium)
     end
     #end
   end
+
   def parse_po_location(po, row)
     location = row[column_index CURRENT_LOCATION]
     # for now we are just storing the value in a text field, later this will be parsed
@@ -593,19 +478,23 @@ class FilmParser < CsvParser
         if match.nil?
           po.errors.add(:title_date, "Malformed date #{date}")
         else
-          date_set = DateHelper.convert_dates(match[1])
-          # error case - start date will always be !nil unless the string is malformed.
-          # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
-          if date_set[:start_date].nil?
-            po.errors.add(:title_date, "Malformed date #{date}")
-          else
-            type = (match[6].blank? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
-            if type.nil?
-              po.errors.add(:title_date, "Unknown title date type: #{date}")
+          begin
+            date_set = DateHelper.convert_dates(match[1])
+            # error case - start date will always be !nil unless the string is malformed.
+            # DateHelper.convert_dates will also set :start_date to nil if end_date exists but is malformed
+            if date_set[:start_date].nil?
+              po.errors.add(:title_date, "Malformed date #{date}")
             else
-              td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
-              title.title_dates << td
+              type = (match[6].blank? ? 'TBD' : @title_date_types.include?(match[6]) ? match[6] : nil)
+              if type.nil?
+                po.errors.add(:title_date, "Unknown title date type: #{date}")
+              else
+                td = TitleDate.new(title_id: title.id, date_text: match[1], date_type: type)
+                title.title_dates << td
+              end
             end
+          rescue => e
+            po.errors.add(:title_date, "Malformed date #{date}")
           end
         end
       end
@@ -734,16 +623,16 @@ class FilmParser < CsvParser
   end
 
   def set_value(attr_symbol, val, po)
-    begin
-      unless val.blank?
+    unless val.blank?
+      begin
         if @cv[attr_symbol].collect { |x| x[0] }.include? val
           po.send((attr_symbol.to_s << "=").to_sym, val)
         else
           po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
         end
+      rescue
+        po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
       end
-    rescue
-      raise "How did this error happen? Passed args: #{attr_symbol}, #{val}, #{po}"
     end
   end
 
@@ -766,4 +655,5 @@ class FilmParser < CsvParser
   def column_index(column_constant)
     @headers[COLUMN_HEADERS[column_constant]]
   end
+
 end

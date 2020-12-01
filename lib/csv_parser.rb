@@ -40,6 +40,8 @@ class CsvParser
       FilmParser.new(@csv, @spreadsheet, @spreadsheet_submission).parse_csv
     elsif medium.downcase == Video.to_s.downcase
       VideoParser.new(@csv, @spreadsheet, @spreadsheet_submission).parse_csv
+    elsif medium == 'Recorded Sound'
+      RecordedSoundParser.new(@csv, @spreadsheet, @spreadsheet_submission).parse_csv
     else
       raise "Cannot ingest spreadsheet. Unsupported Medium: #{medium}"
     end
