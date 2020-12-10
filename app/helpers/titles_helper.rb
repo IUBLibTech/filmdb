@@ -103,8 +103,7 @@ module TitlesHelper
 							 "Accompanying Documentation", "Accompanying Documentation Location", "Overall Condition", "Condition Notes",
 							 "Research Value", "Research Value Notes", "AD Strip", "Shrinkage", "Mold",
 							 "Conditions",
-							 "Missing Footage", "Miscellaneous", "Conservation Actions"
-
+							 "Missing Footage", "Miscellaneous", "Conservation Actions", "Title Last Modified By"
 							 ]
 		CSV.generate(headers: true) do |csv|
 			csv << headers
@@ -128,7 +127,7 @@ module TitlesHelper
 								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
 								p.research_value, p.research_value_notes, p.ad_strip, p.shrinkage, p.mold,
 								((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
-								p.missing_footage, p.miscellaneous, p.conservation_actions
+								p.missing_footage, p.miscellaneous, p.conservation_actions, t.modifier&.username
 						]
 					elsif p.medium == 'Video'
 						csv << [
@@ -143,6 +142,23 @@ module TitlesHelper
 								p.reel_number, '', p.humanize_picture_type_fields, '', p.humanize_color_fields,
 								p.humanize_aspect_ratio_fields, '', p.sound,'', p.humanize_sound_format_fields,
 								p.humanize_sound_content_fields, p.humanize_sound_configuration_fields,
+								'', (p.languages.collect {|l| "#{l.language} [#{l.language_type}]"}.join(', ') unless p.languages.size == 0), p.format_notes,
+								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
+								p.research_value, p.research_value_notes, '', '', p.mold,
+								((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
+								p.missing_footage, p.miscellaneous, p.conservation_actions, t.modifier&.username
+						]
+					elsif p.medium == 'Recorded Sound'
+						csv << [
+								p.iu_barcode, p.mdpi_barcode, p.titles_text, t.title_text, t.series_title_text, t.series_part, t.country_of_origin,
+								t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') unless t.title_original_identifiers.size == 0), (t.title_publishers.collect {|p| "#{p.name} [#{p.publisher_type}]"}.join(', ') unless t.title_publishers.size == 0), (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') unless t.title_creators.size == 0),
+								(t.title_genres.collect {|g| g.genre}.join(', ') unless t.title_genres.size == 0), (t.title_forms.collect {|f| f.form}.join(', ') unless t.title_forms.size == 0), (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') unless t.title_dates.size == 0),
+								(t.title_locations.collect {|l| l.location}.join(', ') unless t.title_locations.size == 0), t.notes, t.subject, t.name_authority,
+								p.title_control_number, p.catalog_key, p.alternative_title,
+								p.media_type, p.medium, p.humanize_version_fields, p.unit&.name, p.collection&.name,
+								p.gauge, p.humanize_generations_fields, p.generation_notes, '', '', p.duration, (p.physical_object_dates.collect {|d| "#{d.date} [#{d&.controlled_vocabulary.value}]"}.join(', ') unless p.physical_object_dates.size == 0),
+								p.humanize_base_fields, '', (p.physical_object_original_identifiers.collect {|oi| oi.identifier}.join(', ') unless p.physical_object_original_identifiers.size == 0),
+								'', '', '', '', '', '', '', '','', '', p.humanize_sound_content_fields, p.humanize_sound_configuration_fields,
 								'', (p.languages.collect {|l| "#{l.language} [#{l.language_type}]"}.join(', ') unless p.languages.size == 0), p.format_notes,
 								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
 								p.research_value, p.research_value_notes, '', '', p.mold,

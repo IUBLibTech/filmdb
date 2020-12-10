@@ -278,9 +278,9 @@ class FilmParser < CsvParser
       end
     end
 
-    # generation_notes
-    gen_notes = row[column_index GENERATION_NOTES]
-    set_value(:generation_notes, gen_notes, po)
+    # generation_notes this should have been handled by HEADERS_TO_ASSIGNERS
+    # gen_notes = row[column_index GENERATION_NOTES]
+    # set_value(:generation_notes, gen_notes, po)
 
     # original identifiers
     o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
@@ -734,12 +734,16 @@ class FilmParser < CsvParser
   end
 
   def set_value(attr_symbol, val, po)
-    unless val.blank?
-      if @cv[attr_symbol].collect { |x| x[0] }.include? val
-        po.send((attr_symbol.to_s << "=").to_sym, val)
-      else
-        po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+    begin
+      unless val.blank?
+        if @cv[attr_symbol].collect { |x| x[0] }.include? val
+          po.send((attr_symbol.to_s << "=").to_sym, val)
+        else
+          po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+        end
       end
+    rescue
+      raise "How did this error happen? Passed args: #{attr_symbol}, #{val}, #{po}"
     end
   end
 
@@ -748,7 +752,7 @@ class FilmParser < CsvParser
   end
 
   def gen_error_msg(row, physical_object)
-    msg = "<div class='po_error_div'>Physical Object at row #{row + 1} has the following problem(s):<ul>".html_safe
+    msg = "<div class='po_error_div'><b>Physical Object at row #{row + 1} has the following problem(s):</b><ul>".html_safe
     physical_object.errors.keys.each do |k|
       attr = k.to_s.humanize
       problems = physical_object.errors[k].map(&:inspect).join(', ')

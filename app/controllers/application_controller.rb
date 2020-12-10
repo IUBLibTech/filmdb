@@ -14,8 +14,6 @@ class ApplicationController < ActionController::Base
 
   end
 
-
-
   def page_link_path(page)
     physical_objects_path(page: page, status: params[:status], digitized: params[:digitized])
   end

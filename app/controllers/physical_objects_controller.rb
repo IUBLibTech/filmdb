@@ -79,7 +79,6 @@ class PhysicalObjectsController < ApplicationController
     if request.get?
       @em = "Creating New Physical Object"
       @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
-      #@physical_object = Video.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Video')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
@@ -317,7 +316,7 @@ class PhysicalObjectsController < ApplicationController
   end
 
   def set_cv
-    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium)
+    @cv = ControlledVocabulary.physical_object_cv(@physical_object.medium.gsub(' ', ''))
     @l_cv = ControlledVocabulary.language_cv
     @pod_cv = ControlledVocabulary.physical_object_date_cv
   end
