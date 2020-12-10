@@ -797,6 +797,8 @@ class WorkflowController < ApplicationController
 			medium = :film
 		elsif params[:video]
 			medium = :video
+		elsif params[:recorded_sound]
+			medium = :recorded_sound
 		else
 			raise "Unsupported Physical Object medium #{params.keys}"
 		end

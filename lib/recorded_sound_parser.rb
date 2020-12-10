@@ -1,40 +1,34 @@
-class VideoParser < CsvParser
+class RecordedSoundParser < CsvParser
   include DateHelper
   include PhysicalObjectsHelper
   require 'csv'
   require 'manual_roll_back_error'
 
-  VIDEO_HEADERS = [
-      'Title', 'Duration', 'Series Name', 'Version', 'Format', 'Generation', 'Original Identifier', 'Base', 'Stock',
-      'Picture Type', 'Capacity', 'Playback Speed', 'Alternative Title', 'Title Summary', 'Title Notes',
-      'Name Authority', 'Creator', 'Publisher', 'Genre', 'Form', 'Subject', 'Series Part', 'Date', 'Location',
-      'Generation Notes', 'Size', 'Aspect Ratio', 'Sound', 'Color', 'Sound Content Type', 'Dialog Language',
-      'Captions or Subtitles', 'Captions or Subtitles Notes', 'Captions or Subtitles Language',
-      # missing fields from sample spreadsheet but I'm adding anyway
-      'Sound Format Type', 'Series Production Number', 'Sound Field', 'Noise Reduction', 'Recording Standard',
-      'OCLC Number', 'Reel Number', 'Detailed Stock Information'
+  RECORDED_SOUND_HEADERS = [
+      'Title', 'Alternative Title', 'Title Notes', 'Title Summary', 'Series Name', 'Series Part', 'Creator', 'Publisher',
+      'Name Authority', 'Genre', 'Form', 'Subject', 'Date', 'Location', 'Version', 'Original Identifier', 'Gauge',
+      'Stock', 'Detailed Stock Information', 'Capacity', 'Generation', 'Generation Notes', 'Sides', 'Part',
+      'Duration', 'Playback Speed', 'Size', 'Sound Configuration', 'Sound Content Type', 'Language', 'Base',
+      'Mold','Noise Reduction'
   ]
-  # the column headers that spreadsheets should contain for Videos - they must conform to this vocabulary
-  COLUMN_HEADERS = PO_HEADERS + VIDEO_HEADERS
+  # the column headers that spreadsheets should contain for Recorded Sound - they must conform to this vocabulary
+  COLUMN_HEADERS = PO_HEADERS + RECORDED_SOUND_HEADERS
 
-  TITLE, DURATION, SERIES_NAME, VERSION, FORMAT, GENERATION, ORIGINAL_IDENTIFIER, BASE, STOCK = 22,23,24,25,26,27,28,29,30
-  PICTURE_TYPE, CAPACITY, PLAYBACK_SPEED, ALTERNATIVE_TITLE, TITLE_SUMMARY, TITLE_NOTES = 31,32,33,34,35,36
-  NAME_AUTHORITY, CREATOR, PUBLISHER, GENRE, FORM, SUBJECT, SERIES_PART, DATE, LOCATION = 37,38,39,40,41,42,43,44,45
-  GENERATION_NOTES, SIZE, ASPECT_RATIO, SOUND, COLOR, SOUND_CONTENT_TYPE, DIALOG_LANGUAGE = 46,47,48,49,50,51,52
-  CAPTIONS_OR_SUBTITLES, CAPTIONS_OR_SUBTITLES_NOTES, CAPTIONS_OR_SUBTITLES_LANGUAGE = 53,54,55
-  SOUND_FORMAT_TYPE, SERIES_PRODUCTION_NUMBER, SOUND_CONFIGURATION, NOISE_REDUCTION, RECORDING_STANDARD = 56,57,58,59,60
-  OCLC_NUMBER, REEL_NUMBER, DETAILED_STOCK_INFORMATION = 56,62,63
+  TITLE, ALTERNATIVE_TITLE, TITLE_NOTES, TITLE_SUMMARY, SERIES_NAME, SERIES_PART, CREATOR, PUBLISHER = 22,23,24,25,26,27,28,29
+  NAME_AUTHORITY, GENRE, FORM, SUBJECT, DATE, LOCATION, VERSION, ORIGINAL_IDENTIFIER, GAUGE = 30,31,32,33,34,35,36,37,38
+  STOCK, DETAILED_STOCK_INFORMATION, CAPACITY, GENERATION, GENERATION_NOTES, SIDES, PART = 39,40,41,42,43,44,45
+  DURATION, PLAYBACK_SPEED, SIZE, SOUND_CONFIGURATION, SOUND_CONTENT_TYPE, LANGUAGE, BASE = 46,47,48,49,50,51,52
+  MOLD, NOISE_REDUCTION = 53,54
 
   # hash mapping a column header to its physical object assignment operand using send() - only plain text fields that require no validation can be set this way
   HEADERS_TO_ASSIGNER = {
       COLUMN_HEADERS[ALTERNATIVE_TITLE] => :alternative_title=,
-      COLUMN_HEADERS[CAPTIONS_OR_SUBTITLES_NOTES] => :captions_or_subtitles_notes=, COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
+      COLUMN_HEADERS[MISCELLANEOUS_CONDITION_TYPE] => :miscellaneous=,
       COLUMN_HEADERS[OVERALL_CONDITION_NOTES] => :condition_notes=, COLUMN_HEADERS[CONSERVATION_ACTIONS] => :conservation_actions=,
       COLUMN_HEADERS[MDPI_BARCODE] => :mdpi_barcode=, COLUMN_HEADERS[IU_BARCODE] => :iu_barcode=, COLUMN_HEADERS[FORMAT_NOTES] => :format_notes=,
       COLUMN_HEADERS[RESEARCH_VALUE_NOTES] => :research_value_notes=, COLUMN_HEADERS[ACCOMPANYING_DOCUMENTATION_LOCATION] => :accompanying_documentation_location=,
       COLUMN_HEADERS[ALF_SHELF_LOCATION] => :alf_shelf=, COLUMN_HEADERS[GENERATION_NOTES] => :generation_notes=
   }
-
   # special logger for parsing spreadsheets
   def self.logger
     @@logger ||= Logger.new("#{Rails.root}/log/spreadsheet_submission_logger.log")
@@ -57,7 +51,7 @@ class VideoParser < CsvParser
     if @parse_headers_msg.size > 0
       @spreadsheet_submission.update_attributes(failure_message: @parse_headers_msg, successful_submission: false, submission_progress: 100)
     else
-      @cv = ControlledVocabulary.physical_object_cv('Video')
+      @cv = ControlledVocabulary.physical_object_cv('RecordedSound')
       @l_cv = ControlledVocabulary.language_cv
       # the error message that gets stored in the SpreadSheetSubmission if it fails parsing
       error_msg = ""
@@ -113,7 +107,6 @@ class VideoParser < CsvParser
     end
   end
 
-
   private
   def parse_headers(row)
     @headers = Hash.new
@@ -144,12 +137,11 @@ class VideoParser < CsvParser
     end
   end
 
-
   # this method parses a single row in the spreadsheet trying to reconstitute a physical object - it creates association objects (title, series, etc) as well
   def parse_physical_object(row, i)
     puts("Parsing Physical Object at Row: #{i + 1}")
     # read all auto parse fields
-    po = Video.new(spreadsheet_id: @spreadsheet.id)
+    po = RecordedSound.new(spreadsheet_id: @spreadsheet.id)
     HEADERS_TO_ASSIGNER.keys.each do |k|
       po.send(HEADERS_TO_ASSIGNER[k], row[@headers[k]]) unless @headers[k].nil?
     end
@@ -160,7 +152,6 @@ class VideoParser < CsvParser
     rescue
       po.errors.add(:date, "Unable to parse date created")
     end
-
 
     # manually parse the other values to ensure conformance to controlled vocabulary
     dur = row[column_index DURATION]
@@ -174,11 +165,7 @@ class VideoParser < CsvParser
 
     tc = row[column_index CAPACITY]
     unless tc.blank?
-      if po.valid_duration?(tc)
-        po.send(:tape_capacity=, tc)
-      else
-        po.errors.add(:tape_capacity, "Improperly formatted Capacity value (h:mm:ss): #{tc}")
-      end
+        po.send(:capacity=, tc)
     end
 
     # metadata fields common to all PO's
@@ -195,18 +182,18 @@ class VideoParser < CsvParser
     parse_accompanying_documentation(po, row)
     # end common metadata fields
 
-    gauge = row[column_index FORMAT]
+    gauge = row[column_index GAUGE]
     if gauge.blank?
-      po.errors.add(:gauge, "Video Gauge cannot be blank!")
-    elsif Video::GAUGE_VALUES.include?(gauge)
+      po.errors.add(:gauge, "Recorded Sound Gauge cannot be blank!")
+    elsif RecordedSound::GAUGE_VALUES.include?(gauge)
       set_value(:gauge, gauge, po)
     else
-      po.errors.add(:gauge, ">#{gauge}< is not a valid Video Gauge value")
+      po.errors.add(:gauge, ">#{gauge}< is not a valid Recorded Sound Gauge value")
     end
 
-    reel_number = row[column_index REEL_NUMBER]
-    unless reel_number.blank?
-      po.send(:reel_number=, reel_number)
+    part = row[column_index PART]
+    unless part.blank?
+      po.send(:part=, part)
     end
 
     detailed_stock_info = row[column_index DETAILED_STOCK_INFORMATION]
@@ -216,53 +203,42 @@ class VideoParser < CsvParser
 
     size = row[column_index SIZE]
     unless size.blank?
-      if Video::SIZE_VALUES.include?(size)
+      if RecordedSound::SIZE_VALUES.include?(size)
         set_value(:size, size, po)
       else
-        po.errors.add(:size, ">#{size}< is not a valid Video Size value")
+        po.errors.add(:size, ">#{size}< is not a valid Recorded Sound Size value")
       end
     end
 
     playback_speed = row[column_index PLAYBACK_SPEED]
     unless playback_speed.blank?
-      if Video::PLAYBACK_SPEEDS.include?(playback_speed)
-        set_value(:playback_speed, playback_speed, po)
+      if RecordedSound::PLAYBACK_SPEEDS.include?(playback_speed)
+        po.send(:playback=, playback_speed)
       else
-        po.errors.add(:playback_speed, ">#{playback_speed}< is not a valid Video Playback Speed")
+        po.errors.add(:playback, ">#{playback_speed}< is not a valid Recorded Sound Playback value")
       end
     end
-
-    sound = row[column_index SOUND]
-    unless sound.blank?
-      if Video::SOUND_VALUES.include?(sound)
-        po.send(:sound=, sound)
-      else
-        po.errors.add(:sound, "Invalid Sound value: #{sound}")
-      end
-    end
-
-    captioned = row[column_index CAPTIONS_OR_SUBTITLES]
-    po.captions_or_subtitles = true unless captioned.blank?
 
     # version
     version_fields = row[column_index VERSION].blank? ? [] : row[column_index VERSION].split(DELIMITER)
     version_fields.each do |vf|
-      field = vf.parameterize.underscore
-      if Video::VERSION_FIELDS.include?(field.to_sym)
+      # these attributes are prepended with version_
+      field = ("version_#{vf}").parameterize.underscore
+      if RecordedSound::VERSION_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
         # it could be 1st - 4th edition which don't 'map' easily from attribute name to humanized text
         case field
-        when "1st_edition"
-          po.send(:first_edition=, true)
-        when "2nd_edition"
-          po.send(:second_edition=, true)
-        when "3rd_edition"
-          po.send(:third_edition=, true)
-        when "4th_edition"
-          po.send(:fourth_edition=, true)
-        when "original"
-          po.send(:original=, true)
+        when "version_1st_edition"
+          po.send(:version_first_edition=, true)
+        when "version_2nd_edition"
+          po.send(:version_second_edition=, true)
+        when "version_3rd_edition"
+          po.send(:version_third_edition=, true)
+        when "version_4th_edition"
+          po.send(:version_fourth_edition=, true)
+        when "version_original"
+          po.send(:version_original=, true)
         else
           po.errors.add(:version, "Undefined version: #{vf}")
         end
@@ -272,18 +248,13 @@ class VideoParser < CsvParser
     # generation
     gen_fields = row[column_index GENERATION].blank? ? [] : row[column_index GENERATION].split(DELIMITER)
     gen_fields.each do |gf|
-      if Video::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
-        sym = Video::GENERATION_FIELDS_HUMANIZED.key(gf)
+      if RecordedSound::GENERATION_FIELDS_HUMANIZED.values.include?(gf)
+        sym = RecordedSound::GENERATION_FIELDS_HUMANIZED.key(gf)
         po.send((sym.to_s << "=").to_sym, true)
       else
         po.errors.add(:generation, "Undefined generation: #{gf}")
       end
     end
-
-    # generation_notes
-    # these should be being set by HEADER_TO_ASSIGNER keys
-    # gen_notes = row[column_index GENERATION_NOTES]
-    # set_value(:generation_notes, gen_notes, po)
 
     # original identifiers
     o_ids = row[column_index ORIGINAL_IDENTIFIER].blank? ? [] : row[column_index ORIGINAL_IDENTIFIER].split(DELIMITER)
@@ -294,7 +265,7 @@ class VideoParser < CsvParser
     # base
     base = row[column_index BASE]
     unless base.blank?
-      if Video::BASE_FIELDS_HUMANIZED.values.include?(base)
+      if RecordedSound::BASE_FIELDS_HUMANIZED.values.include?(base)
         po.send(:base=, base)
       else
         po.errors.add(:base, "Undefined base: #{base}")
@@ -303,68 +274,10 @@ class VideoParser < CsvParser
     # stock
     stock = row[column_index STOCK]
     unless stock.blank?
-      if Video::STOCK_VALUES.include?(stock)
+      if RecordedSound::STOCK_VALUES.include?(stock)
         po.stock = stock
       else
-        po.errors.add(:stock, ">#{stock}< is not a valid Video Stock value")
-      end
-    end
-
-    rs = row[column_index RECORDING_STANDARD]
-    unless rs.blank?
-      if Video::RECORDING_STANDARDS_VALUES.include?(rs)
-        po.recording_standard = rs
-      else
-        po.errors.add(:recording_standard, ">#{rs}< is not a valid Video Recording Standard value")
-      end
-    end
-
-
-    #picture type
-    picture_fields = row[column_index PICTURE_TYPE].blank? ? [] : row[column_index PICTURE_TYPE].split(DELIMITER)
-    picture_fields.each do |pf|
-      if (Video::PICTURE_TYPE_FIELDS_HUMANIZED.values.include?(pf))
-        po.send((Video::PICTURE_TYPE_FIELDS_HUMANIZED.key(pf).to_s << "=").to_sym, true)
-      else
-        po.errors.add(:picture_type, "Undefined picture type: #{pf}")
-      end
-    end
-
-    # color
-    color_fields = row[column_index COLOR].blank? ? [] : row[column_index COLOR].split(DELIMITER)
-    color_fields.each do |cf|
-      if Video::COLOR_FIELDS_HUMANIZED.values.include?(cf)
-        po.send(Video::COLOR_FIELDS_HUMANIZED.key(cf), true)
-      else
-        po.errors.add(:color_fields, ">#{cf}< is not a valid Video Color value")
-      end
-    end
-
-    # aspect ratio
-    aspect_fields = row[column_index ASPECT_RATIO].blank? ? [] : row[column_index ASPECT_RATIO].split(DELIMITER)
-    aspect_fields.each do |af|
-      case af
-      when "4:3"
-        po.send(:image_aspect_ratio_4_3=, true)
-      when "16:9"
-        po.send(:image_aspect_ratio_16_9=, true)
-      when "other"
-        po.send(:image_aspect_ratio_other=, true)
-      when "Other"
-        po.send(:image_aspect_ratio_other=, true)
-      else
-        po.errors.add(:aspect_ratio, ">#{af}< is not a valid Video Aspect Ratio value")
-      end
-    end
-
-    # sound format type
-    format_fields = row[column_index SOUND_FORMAT_TYPE].blank? ? [] : row[column_index SOUND_FORMAT_TYPE].split(DELIMITER)
-    format_fields.each do |ff|
-      field = "sound format type #{ff}".parameterize.underscore
-      if Video::SOUND_FORMAT_FIELDS.include?(field.to_sym)
-        po.send((field << "=").to_sym, true)
-      else
-        po.errors.add(:sound_format_type, ">#{ff}< is not a valid Video Sound Format Type value")
+        po.errors.add(:stock, ">#{stock}< is not a valid Recorded Sound Stock value")
       end
     end
 
@@ -372,10 +285,10 @@ class VideoParser < CsvParser
     content_fields = row[column_index SOUND_CONTENT_TYPE].blank? ? [] : row[column_index SOUND_CONTENT_TYPE].split(DELIMITER)
     content_fields.each do |cf|
       field = "sound content type #{cf}".parameterize.underscore
-      if Video::SOUND_CONTENT_FIELDS.include?(field.to_sym)
+      if RecordedSound::SOUND_CONTENT_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_content_type, ">#{cf}< is not a valid Video Sound Content Type value")
+        po.errors.add(:sound_content_type, ">#{cf}< is not a valid Recorded Sound 'Sound Content Type' value")
       end
     end
 
@@ -383,37 +296,28 @@ class VideoParser < CsvParser
     config_fields = row[column_index SOUND_CONFIGURATION].blank? ? [] : row[column_index SOUND_CONFIGURATION].split(DELIMITER)
     config_fields.each do |cf|
       field = "sound configuration #{cf}".parameterize.underscore
-      if Video::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
+      if RecordedSound::SOUND_CONFIGURATION_FIELDS.include?(field.to_sym)
         po.send((field << "=").to_sym, true)
       else
-        po.errors.add(:sound_configuration, ">#{cf}< is not a valid Video Sound Field value")
+        po.errors.add(:sound_configuration, ">#{cf}< is not a valid Recorded Sound 'Sound Configuration' value")
       end
     end
 
-    # language fields both dialog and captions
-    lang_fields = row[column_index DIALOG_LANGUAGE].blank? ? [] : row[column_index DIALOG_LANGUAGE].split(DELIMITER)
+    # language fields - RecordedSound languages do not have a type
+    lang_fields = row[column_index LANGUAGE].blank? ? [] : row[column_index LANGUAGE].split(DELIMITER)
     langs = @l_cv[:language].collect { |x| x[0].downcase }
     lang_fields.each do |lf|
       index = langs.find_index(lf.downcase)
       if ! index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::ORIGINAL_DIALOG, physical_object_id: po.id)
+        po.languages << Language.new(language: @l_cv[:language][index][0], physical_object_id: po.id)
       else
-        po.errors.add(:dialog_language, "Undefined dialog language: #{lf}")
-      end
-    end
-    lang_fields = row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].blank? ? [] : row[column_index CAPTIONS_OR_SUBTITLES_LANGUAGE].split(DELIMITER)
-    lang_fields.each do |lf|
-      index = langs.find_index(lf.downcase)
-      if !index.nil?
-        po.languages << Language.new(language: @l_cv[:language][index][0], language_type: Language::CAPTIONS, physical_object_id: po.id)
-      else
-        po.errors.add(:caption_subtitles_language, "Undefined caption/subtitle language: '#{lf}'")
+        po.errors.add(:dialog_language, "Undefined language: #{lf}")
       end
     end
 
     # condition type fields with value ranges or booleans
     condition_fields = row[column_index CONDITION_TYPE].blank? ? [] : row[column_index CONDITION_TYPE].split(DELIMITER)
-    cv = ControlledVocabulary.physical_object_cv('Video')
+    cv = ControlledVocabulary.physical_object_cv('RecordedSound')
     val_conditions = cv[:value_condition].collect { |x| x[0].downcase }
     bool_conditions = cv[:boolean_condition].collect { |x| x[0].downcase }
     condition_fields.each do |cf|
@@ -428,6 +332,36 @@ class VideoParser < CsvParser
         else
           po.errors.add(:condition, "Undefined or malformed condition type: #{cf}")
         end
+      end
+    end
+
+    mold = row[column_index MOLD].blank? ? "" : row[column_index MOLD].strip
+    mold_vals = @cv[:mold].collect{ |cv| cv[0]}
+    if mold.length > 0
+      if mold_vals.include?(mold)
+        po.send(:mold=, mold)
+      else
+        po.errors.add(:mold, "Invalid mold value: '#{mold}'")
+      end
+    end
+
+    nr = row[column_index NOISE_REDUCTION].blank? ? "" : row[column_index NOISE_REDUCTION].strip
+    nr_vals = @cv[:noise_reduction].collect{|cv| cv[0]}
+    if nr.length > 0
+      if nr_vals.include?(nr)
+        po.send(:noise_reduction=, nr)
+      else
+        po.errors.add(:noise_reduction, "#{nr} is not a valid Noise Reduction value")
+      end
+    end
+
+    sides = row[column_index SIDES].blank? ? "" : row[column_index SIDES].strip
+    sides_vals = @cv[:sides].collect{|cv| cv[0]}
+    if sides.length > 0
+      if sides_vals.include?(sides)
+        po.send(:sides=, sides)
+      else
+        po.errors.add(:sides, "#{sides} is not a valid Sides value")
       end
     end
     po
@@ -474,7 +408,7 @@ class VideoParser < CsvParser
     #set_value(:location, location, po)
     #po.location = location
     if WorkflowStatus::SPREADSHEET_START_LOCATIONS.include?(location)
-      ws = WorkflowStatus.build_workflow_status(location, po, true)
+      ws = WorkflowStatus.build_workflow_status(location, po)
       po.workflow_statuses << ws
     else
       po.errors.add(:location, "Unknown or malformed Current Location field: #{location}")
@@ -632,13 +566,6 @@ class VideoParser < CsvParser
       end
     end
 
-    # OCLC - new for Video
-    oclc = row[column_index OCLC_NUMBER]
-    unless oclc.blank?
-      toi = TitleOriginalIdentifier.new(title_id: title.id, identifier: oclc, identifier_type: 'OCLC Number')
-      title.title_original_identifiers << toi
-    end
-
     # series data
     series = row[column_index SERIES_NAME].blank? ? nil : Series.new(title: row[column_index SERIES_NAME])
     unless series.nil?
@@ -697,9 +624,13 @@ class VideoParser < CsvParser
 
   def set_value(attr_symbol, val, po)
     unless val.blank?
-      if @cv[attr_symbol].collect { |x| x[0] }.include? val
-        po.send((attr_symbol.to_s << "=").to_sym, val)
-      else
+      begin
+        if @cv[attr_symbol].collect { |x| x[0] }.include? val
+          po.send((attr_symbol.to_s << "=").to_sym, val)
+        else
+          po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
+        end
+      rescue
         po.errors.add(attr_symbol, "Invalid #{attr_symbol.to_s.humanize} value: #{val}")
       end
     end
