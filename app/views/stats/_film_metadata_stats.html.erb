@@ -21,6 +21,14 @@
     </td>
   </tr>
   <tr>
+    <th>Can Sizes</th>
+    <td><ul>
+      <% @can_sizes.keys.sort.each do |c| %>
+      <li><%= "#{c}: #{@can_sizes[c]}" %></li>
+      <% end %>
+    </ul></td>
+  </tr>
+  <tr>
     <th>Bases</th>
     <td>
       <ul>

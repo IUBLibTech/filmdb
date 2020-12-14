@@ -63,52 +63,6 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "shipped",                       default: false
   end
 
-  create_table "collection_inventory_configurations", force: :cascade do |t|
-    t.integer  "collection_id",              limit: 8
-    t.boolean  "location"
-    t.boolean  "copy_right"
-    t.boolean  "series_production_number"
-    t.boolean  "series_part"
-    t.boolean  "alternative_title"
-    t.boolean  "title_version"
-    t.boolean  "item_original_identifier"
-    t.boolean  "creator"
-    t.boolean  "language"
-    t.boolean  "accompanying_documentation"
-    t.boolean  "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "generation"
-    t.boolean  "base"
-    t.boolean  "stock"
-    t.boolean  "access"
-    t.boolean  "gauge"
-    t.boolean  "can_size"
-    t.boolean  "footage"
-    t.boolean  "duration"
-    t.boolean  "reel_number"
-    t.boolean  "format_notes"
-    t.boolean  "picture_type"
-    t.boolean  "frame_rate"
-    t.boolean  "color_or_bw"
-    t.boolean  "aspect_ratio"
-    t.boolean  "sound_field_language"
-    t.boolean  "captions_or_subtitles"
-    t.boolean  "silent"
-    t.boolean  "sound_format_type"
-    t.boolean  "sound_content_type"
-    t.boolean  "sound_configuration"
-    t.boolean  "ad_strip"
-    t.boolean  "shrinkage"
-    t.boolean  "mold"
-    t.boolean  "condition_type"
-    t.boolean  "condition_rating"
-    t.boolean  "research_value"
-    t.boolean  "conservation_actions"
-    t.boolean  "multiple_items_in_can"
-    t.boolean  "title_control_number"
-  end
-
   create_table "collections", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at"
@@ -429,7 +383,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.datetime "updated_at"
   end
 
-  create_table "recorded_sounds", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "recorded_sounds", force: :cascade do |t|
     t.boolean  "version_first_edition"
     t.boolean  "version_second_edition"
     t.boolean  "version_third_edition"
@@ -446,7 +400,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "version_sample"
     t.boolean  "version_short"
     t.boolean  "version_x_rated"
-    t.string   "gauge"
+    t.string   "gauge",                              limit: 255
     t.boolean  "generation_copy_access"
     t.boolean  "generation_dub"
     t.boolean  "generation_duplicate"
@@ -459,14 +413,14 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "generation_preservation"
     t.boolean  "generation_work_tapes"
     t.boolean  "generation_other"
-    t.string   "sides"
-    t.string   "part"
-    t.string   "size"
-    t.string   "base"
-    t.string   "stock"
+    t.string   "sides",                              limit: 255
+    t.string   "part",                               limit: 255
+    t.string   "size",                               limit: 255
+    t.string   "base",                               limit: 255
+    t.string   "stock",                              limit: 255
     t.text     "detailed_stock_information",         limit: 65535
     t.boolean  "multiple_items_in_can"
-    t.string   "playback"
+    t.string   "playback",                           limit: 255
     t.boolean  "sound_content_type_composite_track"
     t.boolean  "sound_content_type_dialog"
     t.boolean  "sound_content_type_effects_track"
@@ -478,19 +432,19 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "sound_configuration_surround"
     t.boolean  "sound_configuration_unknown"
     t.boolean  "sound_configuration_other"
-    t.string   "mold"
-    t.integer  "actable_id"
-    t.string   "actable_type"
+    t.string   "mold",                               limit: 255
+    t.integer  "actable_id",                         limit: 4
+    t.string   "actable_type",                       limit: 255
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
-    t.string   "noise_reduction"
-    t.string   "capacity"
+    t.string   "noise_reduction",                    limit: 255
+    t.string   "capacity",                           limit: 255
     t.text     "generation_notes",                   limit: 65535
   end
 
-  create_table "series", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "title"
-    t.string   "summary"
+  create_table "series", force: :cascade do |t|
+    t.string   "title",             limit: 255
+    t.string   "summary",           limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id",     limit: 8
@@ -768,16 +722,11 @@ ActiveRecord::Schema.define(version: 20201130200758) do
   add_index "workflow_statuses", ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
 
-  # WARNING: generating adapter-specific definition for physical_objects_after_update_of_iu_barcode_row_tr due to a mismatch.
-  # either there's a bug in hairtrigger or you've messed up your migrations and/or db :-/
-  execute(<<-TRIGGERSQL)
-CREATE DEFINER = 'iulmia_inv_prod'@'localhost' TRIGGER physical_objects_after_update_of_iu_barcode_row_tr AFTER UPDATE ON `physical_objects`
-FOR EACH ROW
-BEGIN
-    IF NEW.iu_barcode <> OLD.iu_barcode OR (NEW.iu_barcode IS NULL) <> (OLD.iu_barcode IS NULL) THEN
-        INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);
-    END IF;
-END
-  TRIGGERSQL
+  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
+      on("physical_objects").
+      after(:update).
+      of(:iu_barcode) do
+    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
+  end
 
 end
