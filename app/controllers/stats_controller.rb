@@ -25,6 +25,7 @@ class StatsController < ApplicationController
 		if params[:medium] == 'Film'
 			@generations = generations(Film)
 			@gauges = Film.joins("INNER JOIN physical_objects ON physical_objects.actable_id = films.id").where(po_sql_where).where("gauge is not null AND gauge != ''").group(:gauge).count
+			@can_sizes = can_sizes(Film)
 			@bases = bases(Film)
 			@sounds = sounds(Film)
 			@colors = colors(Film)
@@ -150,6 +151,10 @@ class StatsController < ApplicationController
 			b["Not Specifiec"] = b.delete("") unless b[""].nil?
 		end
 		b
+	end
+
+	def can_sizes(cl)
+		Film.where("can_size is not null and can_size != ''").group(:can_size).count
 	end
 
 	def sounds(cl)
