@@ -20,6 +20,7 @@ class Film < ActiveRecord::Base
       :generation_original_camera, :generation_original, :generation_fine_grain_master, :generation_separation_master, :generation_duplicate,
       :generation_master, :generation_other, :generation_interpositive
   ]
+
   GENERATION_FIELDS_HUMANIZED = {
       generation_negative: "Negative", generation_positive: "Positive", generation_reversal: "Reversal", generation_projection_print: "Projection Print",
       generation_answer_print: "Answer Print", generation_work_print: "Work Print", generation_composite: "Composite", generation_intermediate: "Intermediate",

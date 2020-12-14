@@ -5,7 +5,7 @@ class PhysicalObject < ActiveRecord::Base
 	include PhysicalObjectsHelper
 
 	belongs_to :title
-	belongs_to :spreadhsheet
+	belongs_to :spreadsheet
 	belongs_to :collection, autosave: true
 	belongs_to :unit, autosave: true
 	belongs_to :inventorier, class_name: "User", foreign_key: "inventoried_by", autosave: true
