@@ -70,11 +70,21 @@ function hideLoader(jqSelector) {
 
 function hookBarcodeValidators() {
     // validator for the IU barcode field
-    $("#"+medium+"_iu_barcode").bind("input", function () {
-        validateIUBarcode($(this));
-    });
-    // validator for MDPI barcode field
-    $("#"+medium+"_mdpi_barcode").bind("input", function () {
-        validateMdpiBarcode($(this));
-    });
+    if (typeof medium === 'undefined') {
+        $("#iu_barcode").bind("input", function () {
+            validateIUBarcode($(this));
+        });
+        $("#mdpi_barcode").bind("input", function () {
+            validateMdpiBarcode($(this));
+        });
+    } else {
+        $("#" + medium + "_iu_barcode").bind("input", function () {
+            validateIUBarcode($(this));
+        });
+        // validator for MDPI barcode field
+        $("#" + medium + "_mdpi_barcode").bind("input", function () {
+            validateMdpiBarcode($(this));
+        });
+    }
 }
+

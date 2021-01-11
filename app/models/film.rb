@@ -135,8 +135,7 @@ class Film < ActiveRecord::Base
       NESTED_ATTRIBUTES.each do |na|
         args.delete(na)
       end
-
-      args.each do |a|
+      args.keys.each do |a|
         self.send(a.dup << "=", args[a])
       end
     elsif args.is_a? Hash

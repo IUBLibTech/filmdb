@@ -165,8 +165,12 @@ class TitlesController < ApplicationController
 		    @series = Series.new(title: params[:title][:series_title_text])
 		    @series.save
 		    @tp[:series_id] = @series.id
-	    end
+      end
+      last_mod = @title.modifier
       if @title.update(@tp)
+        Modification.new(object_type: 'Title', object_id: @title.id, user_id: last_mod.id).save
+        @title.modifier = User.current_user_object
+        @title.save
         format.html { redirect_to @title, notice: 'Title was successfully updated.' }
         format.json { render :show, status: :ok, location: @title }
       else

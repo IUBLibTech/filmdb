@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,112 +13,119 @@
 
 ActiveRecord::Schema.define(version: 20201130200758) do
 
-  create_table "boolean_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.string   "condition_type"
+  create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
+    t.string   "value",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "boolean_conditions", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "condition_type",     limit: 255
     t.text     "comment",            limit: 65535
     t.text     "fixed_comment",      limit: 65535
-    t.bigint   "fixed_user_id"
+    t.integer  "fixed_user_id",      limit: 8
     t.boolean  "active",                           default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "cage_shelf_physical_objects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.bigint   "cage_shelf_id"
+  create_table "cage_shelf_physical_objects", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "cage_shelf_id",      limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "cage_shelves", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "cage_id"
-    t.bigint   "mdpi_barcode"
-    t.string   "identifier"
+  create_table "cage_shelves", force: :cascade do |t|
+    t.integer  "cage_id",       limit: 8
+    t.integer  "mdpi_barcode",  limit: 8
+    t.string   "identifier",    limit: 255
     t.text     "notes",         limit: 65535
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.boolean  "returned",                    default: false
     t.datetime "shipped"
     t.datetime "returned_date"
-    t.index ["mdpi_barcode"], name: "index_cage_shelves_on_mdpi_barcode", unique: true, using: :btree
   end
 
-  create_table "cages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "identifier"
+  add_index "cage_shelves", ["mdpi_barcode"], name: "index_cage_shelves_on_mdpi_barcode", unique: true, using: :btree
+
+  create_table "cages", force: :cascade do |t|
+    t.string   "identifier",      limit: 255
     t.text     "notes",           limit: 65535
-    t.bigint   "top_shelf_id"
-    t.bigint   "middle_shelf_id"
-    t.bigint   "bottom_shelf_id"
+    t.integer  "top_shelf_id",    limit: 8
+    t.integer  "middle_shelf_id", limit: 8
+    t.integer  "bottom_shelf_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "ready_to_ship",                 default: false
     t.boolean  "shipped",                       default: false
   end
 
-  create_table "collections", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
+  create_table "collections", force: :cascade do |t|
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint   "unit_id"
+    t.integer  "unit_id",    limit: 8
     t.text     "summary",    limit: 65535
   end
 
-  create_table "component_group_physical_objects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "component_group_id"
-    t.bigint   "physical_object_id"
+  create_table "component_group_physical_objects", force: :cascade do |t|
+    t.integer  "component_group_id", limit: 8
+    t.integer  "physical_object_id", limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "scan_resolution"
-    t.string   "clean"
+    t.string   "scan_resolution",    limit: 255
+    t.string   "clean",              limit: 255
     t.boolean  "hand_clean_only"
     t.boolean  "return_on_reel"
-    t.string   "color_space"
+    t.string   "color_space",        limit: 255
   end
 
-  create_table "component_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id",                                      null: false
-    t.string   "group_type",                                    null: false
+  create_table "component_groups", force: :cascade do |t|
+    t.integer  "title_id",        limit: 8,                     null: false
+    t.string   "group_type",      limit: 255,                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "group_summary",   limit: 65535
     t.text     "scan_resolution", limit: 65535
-    t.string   "clean",                         default: "Yes"
+    t.string   "clean",           limit: 255,   default: "Yes"
     t.boolean  "hand_clean_only",               default: false
     t.boolean  "hd"
     t.boolean  "return_on_reel",                default: false
-    t.string   "color_space"
+    t.string   "color_space",     limit: 255
   end
 
-  create_table "controlled_vocabularies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "model_type"
-    t.string   "model_attribute"
-    t.string   "value"
+  create_table "controlled_vocabularies", force: :cascade do |t|
+    t.string   "model_type",      limit: 255
+    t.string   "model_attribute", limit: 255
+    t.string   "value",           limit: 255
     t.boolean  "default"
-    t.integer  "menu_index",      default: 0
+    t.integer  "menu_index",      limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active_status",   default: true
+    t.boolean  "active_status",               default: true
   end
 
-  create_table "delete_log_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "table_id"
-    t.string   "object_type"
-    t.string   "human_readable_identifier"
-    t.string   "who_deleted"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+  create_table "delete_log_entries", force: :cascade do |t|
+    t.integer  "table_id",                  limit: 4
+    t.string   "object_type",               limit: 255
+    t.string   "human_readable_identifier", limit: 255
+    t.string   "who_deleted",               limit: 255
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
-  create_table "digiprovs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
+  create_table "digiprovs", force: :cascade do |t|
+    t.integer  "physical_object_id",      limit: 8
     t.text     "digital_provenance_text", limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint   "cage_shelf_id"
+    t.integer  "cage_shelf_id",           limit: 8
   end
 
-  create_table "films", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "films", force: :cascade do |t|
     t.boolean "first_edition"
     t.boolean "second_edition"
     t.boolean "third_edition"
@@ -137,7 +145,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "english"
     t.boolean "television"
     t.boolean "x_rated"
-    t.string  "gauge"
+    t.string  "gauge",                                                  limit: 255
     t.boolean "generation_projection_print"
     t.boolean "generation_a_roll"
     t.boolean "generation_b_roll"
@@ -161,9 +169,9 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "generation_separation_master"
     t.boolean "generation_work_print"
     t.boolean "generation_mixed"
-    t.string  "reel_number"
-    t.string  "can_size"
-    t.integer "footage"
+    t.string  "reel_number",                                            limit: 255
+    t.string  "can_size",                                               limit: 255
+    t.integer "footage",                                                limit: 4
     t.boolean "base_acetate"
     t.boolean "base_polyester"
     t.boolean "base_nitrate"
@@ -185,7 +193,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "picture_picture_effects"
     t.boolean "picture_picture_outtakes"
     t.boolean "picture_kinescope"
-    t.string  "frame_rate"
+    t.string  "frame_rate",                                             limit: 255
     t.boolean "color_bw_bw_toned"
     t.boolean "color_bw_bw_tinted"
     t.boolean "color_bw_color_ektachrome"
@@ -219,9 +227,9 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "sound_configuration_surround"
     t.boolean "sound_format_optical_variable_area_maurer"
     t.boolean "sound_configuration_dual_mono"
-    t.string  "ad_strip"
+    t.string  "ad_strip",                                               limit: 255
     t.float   "shrinkage",                                              limit: 24
-    t.string  "mold"
+    t.string  "mold",                                                   limit: 255
     t.text    "missing_footage",                                        limit: 65535
     t.boolean "multiple_items_in_can"
     t.boolean "color_bw_color_color"
@@ -230,8 +238,8 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "color_bw_bw_stencil_coloring"
     t.text    "captions_or_subtitles_notes",                            limit: 65535
     t.boolean "sound_format_optical"
-    t.string  "anamorphic"
-    t.integer "track_count"
+    t.string  "anamorphic",                                             limit: 255
+    t.integer "track_count",                                            limit: 4
     t.boolean "generation_original_camera"
     t.boolean "generation_master"
     t.boolean "sound_format_digital_dolby_digital_sr"
@@ -246,7 +254,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "picture_titles"
     t.boolean "generation_other"
     t.boolean "sound_content_narration"
-    t.string  "close_caption"
+    t.string  "close_caption",                                          limit: 255
     t.text    "generation_notes",                                       limit: 65535
     t.boolean "generation_interpositive"
     t.boolean "picture_text"
@@ -259,112 +267,123 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "sound_format_optical_variable_density_multiple_density"
   end
 
-  create_table "languages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.string   "language"
-    t.string   "language_type"
+  create_table "languages", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "language",           limit: 255
+    t.string   "language_type",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "physical_object_dates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.bigint   "controlled_vocabulary_id"
-    t.string   "date"
+  create_table "modifications", force: :cascade do |t|
+    t.string   "object_type", limit: 255
+    t.integer  "object_id",   limit: 4
+    t.integer  "user_id",     limit: 8
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  create_table "physical_object_dates", force: :cascade do |t|
+    t.integer  "physical_object_id",       limit: 8
+    t.integer  "controlled_vocabulary_id", limit: 8
+    t.string   "date",                     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "physical_object_old_barcodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.bigint   "iu_barcode"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["iu_barcode"], name: "index_physical_object_old_barcodes_on_iu_barcode", unique: true, using: :btree
-  end
-
-  create_table "physical_object_original_identifiers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.string   "identifier",         null: false
+  create_table "physical_object_old_barcodes", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "iu_barcode",         limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "physical_object_pull_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.bigint   "pull_request_id"
+  add_index "physical_object_old_barcodes", ["iu_barcode"], name: "index_physical_object_old_barcodes_on_iu_barcode", unique: true, using: :btree
+
+  create_table "physical_object_original_identifiers", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "identifier",         limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "physical_object_titles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.bigint   "physical_object_id"
+  create_table "physical_object_pull_requests", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.integer  "pull_request_id",    limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["physical_object_id", "title_id"], name: "index_physical_object_titles_on_physical_object_id_and_title_id", unique: true, using: :btree
   end
 
-  create_table "physical_objects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "physical_object_titles", force: :cascade do |t|
+    t.integer  "title_id",           limit: 8
+    t.integer  "physical_object_id", limit: 8
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "physical_object_titles", ["physical_object_id", "title_id"], name: "index_physical_object_titles_on_physical_object_id_and_title_id", unique: true, using: :btree
+
+  create_table "physical_objects", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "date_inventoried"
-    t.bigint   "inventoried_by"
-    t.string   "location"
-    t.bigint   "collection_id"
-    t.string   "media_type"
-    t.bigint   "iu_barcode",                                                        null: false
-    t.integer  "spreadsheet_id"
-    t.string   "alternative_title"
+    t.integer  "inventoried_by",                      limit: 8
+    t.string   "location",                            limit: 255
+    t.integer  "collection_id",                       limit: 8
+    t.string   "media_type",                          limit: 255
+    t.integer  "iu_barcode",                          limit: 8,                     null: false
+    t.integer  "spreadsheet_id",                      limit: 4
+    t.string   "alternative_title",                   limit: 255
     t.text     "accompanying_documentation",          limit: 65535
     t.text     "notes",                               limit: 65535
-    t.bigint   "unit_id"
-    t.string   "medium"
-    t.bigint   "modified_by"
-    t.string   "access"
-    t.integer  "duration"
+    t.integer  "unit_id",                             limit: 8
+    t.string   "medium",                              limit: 255
+    t.integer  "modified_by",                         limit: 8
+    t.string   "access",                              limit: 255
+    t.integer  "duration",                            limit: 4
     t.text     "format_notes",                        limit: 65535
-    t.string   "condition_rating"
+    t.string   "condition_rating",                    limit: 255
     t.text     "condition_notes",                     limit: 65535
-    t.string   "research_value"
+    t.string   "research_value",                      limit: 255
     t.text     "research_value_notes",                limit: 65535
     t.text     "conservation_actions",                limit: 65535
-    t.bigint   "mdpi_barcode"
+    t.integer  "mdpi_barcode",                        limit: 8
     t.text     "accompanying_documentation_location", limit: 65535
     t.text     "miscellaneous",                       limit: 65535
-    t.string   "title_control_number"
-    t.bigint   "cage_shelf_id"
-    t.bigint   "component_group_id"
+    t.string   "title_control_number",                limit: 255
+    t.integer  "cage_shelf_id",                       limit: 8
+    t.integer  "component_group_id",                  limit: 8
     t.boolean  "in_freezer",                                        default: false
     t.boolean  "awaiting_freezer",                                  default: false
-    t.string   "alf_shelf"
-    t.string   "catalog_key"
+    t.string   "alf_shelf",                           limit: 255
+    t.string   "catalog_key",                         limit: 255
     t.boolean  "digitized"
-    t.bigint   "current_workflow_status_id"
-    t.string   "compilation"
-    t.integer  "actable_id"
-    t.string   "actable_type"
-    t.index ["actable_id", "actable_type"], name: "index_physical_objects_on_actable_id_and_actable_type", unique: true, using: :btree
-    t.index ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
-    t.index ["iu_barcode", "mdpi_barcode"], name: "index_physical_objects_on_iu_barcode_and_mdpi_barcode", unique: true, using: :btree
+    t.integer  "current_workflow_status_id",          limit: 8
+    t.string   "compilation",                         limit: 255
+    t.integer  "actable_id",                          limit: 4
+    t.string   "actable_type",                        limit: 255
   end
 
-  create_table "pod_pushes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  add_index "physical_objects", ["actable_id", "actable_type"], name: "index_physical_objects_on_actable_id_and_actable_type", unique: true, using: :btree
+  add_index "physical_objects", ["current_workflow_status_id"], name: "index_physical_objects_on_current_workflow_status_id", using: :btree
+  add_index "physical_objects", ["iu_barcode", "mdpi_barcode"], name: "index_physical_objects_on_iu_barcode_and_mdpi_barcode", unique: true, using: :btree
+
+  create_table "pod_pushes", force: :cascade do |t|
     t.text     "response",   limit: 4294967295
-    t.bigint   "cage_id"
+    t.integer  "cage_id",    limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "pull_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "created_by_id"
-    t.string   "filename"
+  create_table "pull_requests", force: :cascade do |t|
+    t.integer  "created_by_id", limit: 8
+    t.string   "filename",      limit: 255
     t.text     "file_contents", limit: 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "recorded_sounds", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "recorded_sounds", force: :cascade do |t|
     t.boolean  "version_first_edition"
     t.boolean  "version_second_edition"
     t.boolean  "version_third_edition"
@@ -381,7 +400,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "version_sample"
     t.boolean  "version_short"
     t.boolean  "version_x_rated"
-    t.string   "gauge"
+    t.string   "gauge",                              limit: 255
     t.boolean  "generation_copy_access"
     t.boolean  "generation_dub"
     t.boolean  "generation_duplicate"
@@ -394,14 +413,14 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "generation_preservation"
     t.boolean  "generation_work_tapes"
     t.boolean  "generation_other"
-    t.string   "sides"
-    t.string   "part"
-    t.string   "size"
-    t.string   "base"
-    t.string   "stock"
+    t.string   "sides",                              limit: 255
+    t.string   "part",                               limit: 255
+    t.string   "size",                               limit: 255
+    t.string   "base",                               limit: 255
+    t.string   "stock",                              limit: 255
     t.text     "detailed_stock_information",         limit: 65535
     t.boolean  "multiple_items_in_can"
-    t.string   "playback"
+    t.string   "playback",                           limit: 255
     t.boolean  "sound_content_type_composite_track"
     t.boolean  "sound_content_type_dialog"
     t.boolean  "sound_content_type_effects_track"
@@ -413,60 +432,61 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "sound_configuration_surround"
     t.boolean  "sound_configuration_unknown"
     t.boolean  "sound_configuration_other"
-    t.string   "mold"
-    t.integer  "actable_id"
-    t.string   "actable_type"
+    t.string   "mold",                               limit: 255
+    t.integer  "actable_id",                         limit: 4
+    t.string   "actable_type",                       limit: 255
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
-    t.string   "noise_reduction"
-    t.string   "capacity"
+    t.string   "noise_reduction",                    limit: 255
+    t.string   "capacity",                           limit: 255
     t.text     "generation_notes",                   limit: 65535
   end
 
-  create_table "series", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "title"
-    t.string   "summary"
+  create_table "series", force: :cascade do |t|
+    t.string   "title",             limit: 255
+    t.string   "summary",           limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint   "created_by_id"
-    t.bigint   "modified_by_id"
-    t.string   "production_number"
-    t.string   "date"
-    t.integer  "total_episodes"
-    t.bigint   "spreadsheet_id"
+    t.integer  "created_by_id",     limit: 8
+    t.integer  "modified_by_id",    limit: 8
+    t.string   "production_number", limit: 255
+    t.string   "date",              limit: 255
+    t.integer  "total_episodes",    limit: 4
+    t.integer  "spreadsheet_id",    limit: 8
   end
 
-  create_table "spreadsheet_submissions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "spreadsheet_id"
-    t.integer  "submission_progress"
+  create_table "spreadsheet_submissions", force: :cascade do |t|
+    t.integer  "spreadsheet_id",        limit: 4
+    t.integer  "submission_progress",   limit: 4
     t.boolean  "successful_submission"
     t.text     "failure_message",       limit: 4294967295
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "spreadsheets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "filename",                          null: false
+  create_table "spreadsheets", force: :cascade do |t|
+    t.string   "filename",          limit: 255,                 null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "successful_upload", default: false
-    t.index ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
+    t.boolean  "successful_upload",             default: false
   end
 
-  create_table "title_creators", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "name"
-    t.string   "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  add_index "spreadsheets", ["filename"], name: "index_spreadsheets_on_filename", unique: true, using: :btree
+
+  create_table "title_creators", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "name",       limit: 255
+    t.string   "role",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
-  create_table "title_dates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "date_text"
-    t.string   "date_type"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+  create_table "title_dates", force: :cascade do |t|
+    t.integer  "title_id",                    limit: 8
+    t.string   "date_text",                   limit: 255
+    t.string   "date_type",                   limit: 255
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.date     "start_date"
     t.boolean  "start_month_present"
     t.boolean  "start_day_present"
@@ -478,106 +498,107 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean  "end_date_is_approximation"
   end
 
-  create_table "title_forms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "form"
+  create_table "title_forms", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "form",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "title_genres", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "genre"
+  create_table "title_genres", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "genre",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "title_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "location",   null: false
+  create_table "title_locations", force: :cascade do |t|
+    t.integer  "title_id",   limit: 8
+    t.string   "location",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "title_original_identifiers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "identifier"
-    t.string   "identifier_type"
+  create_table "title_original_identifiers", force: :cascade do |t|
+    t.integer  "title_id",        limit: 8
+    t.string   "identifier",      limit: 255
+    t.string   "identifier_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "title_publishers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "title_id"
-    t.string   "name"
-    t.string   "publisher_type"
+  create_table "title_publishers", force: :cascade do |t|
+    t.integer  "title_id",       limit: 8
+    t.string   "name",           limit: 255
+    t.string   "publisher_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "titles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "titles", force: :cascade do |t|
     t.string   "title_text",               limit: 1024
     t.text     "summary",                  limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint   "series_id"
-    t.bigint   "spreadsheet_id"
-    t.integer  "series_title_index"
-    t.bigint   "modified_by_id"
-    t.string   "series_part"
-    t.bigint   "created_by_id"
+    t.integer  "series_id",                limit: 8
+    t.integer  "spreadsheet_id",           limit: 8
+    t.integer  "series_title_index",       limit: 4
+    t.integer  "modified_by_id",           limit: 8
+    t.string   "series_part",              limit: 255
+    t.integer  "created_by_id",            limit: 8
     t.text     "notes",                    limit: 65535
     t.text     "subject",                  limit: 65535
     t.text     "name_authority",           limit: 65535
     t.text     "country_of_origin",        limit: 65535
     t.boolean  "fully_cataloged"
-    t.string   "pod_group_key_identifier"
+    t.string   "pod_group_key_identifier", limit: 255
   end
 
-  create_table "units", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
+  create_table "units", force: :cascade do |t|
+    t.string   "name",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "abbreviation", null: false
-    t.string   "institution",  null: false
-    t.string   "campus"
-    t.integer  "menu_index"
-    t.index ["abbreviation"], name: "index_units_on_abbreviation", unique: true, using: :btree
+    t.string   "abbreviation", limit: 255, null: false
+    t.string   "institution",  limit: 255, null: false
+    t.string   "campus",       limit: 255
+    t.integer  "menu_index",   limit: 4
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "username",                                            null: false
-    t.string   "first_name",                                          null: false
-    t.string   "last_name",                                           null: false
-    t.integer  "role_mask",                           default: 0
+  add_index "units", ["abbreviation"], name: "index_units_on_abbreviation", unique: true, using: :btree
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username",                            limit: 255,                 null: false
+    t.string   "first_name",                          limit: 255,                 null: false
+    t.string   "last_name",                           limit: 255,                 null: false
+    t.integer  "role_mask",                           limit: 4,   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",                              default: false
-    t.string   "email_address"
-    t.bigint   "created_in_spreadsheet"
-    t.boolean  "can_delete",                          default: false
-    t.string   "worksite_location"
-    t.boolean  "works_in_both_locations",             default: false
-    t.boolean  "can_update_physical_object_location", default: false
-    t.boolean  "can_edit_users",                      default: false
-    t.boolean  "can_add_cv",                          default: false
+    t.boolean  "active",                                          default: false
+    t.string   "email_address",                       limit: 255
+    t.integer  "created_in_spreadsheet",              limit: 8
+    t.boolean  "can_delete",                                      default: false
+    t.string   "worksite_location",                   limit: 255
+    t.boolean  "works_in_both_locations",                         default: false
+    t.boolean  "can_update_physical_object_location",             default: false
+    t.boolean  "can_edit_users",                                  default: false
+    t.boolean  "can_add_cv",                                      default: false
     t.boolean  "read_only"
   end
 
-  create_table "value_conditions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.string   "condition_type"
-    t.string   "value"
+  create_table "value_conditions", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "condition_type",     limit: 255
+    t.string   "value",              limit: 255
     t.text     "comment",            limit: 65535
     t.text     "fixed_comment",      limit: 65535
-    t.bigint   "fixed_user_id"
+    t.integer  "fixed_user_id",      limit: 8
     t.boolean  "active",                           default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "videos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "gauge"
+  create_table "videos", force: :cascade do |t|
+    t.string  "gauge",                                     limit: 255
     t.boolean "first_edition"
     t.boolean "second_edition"
     t.boolean "third_edition"
@@ -617,12 +638,12 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "generation_work_tapes"
     t.boolean "generation_work_track"
     t.boolean "generation_other"
-    t.string  "reel_number"
-    t.string  "size"
-    t.string  "recording_standard"
-    t.string  "maximum_runtime"
-    t.string  "base"
-    t.string  "stock"
+    t.string  "reel_number",                               limit: 255
+    t.string  "size",                                      limit: 255
+    t.string  "recording_standard",                        limit: 255
+    t.string  "maximum_runtime",                           limit: 255
+    t.string  "base",                                      limit: 255
+    t.string  "stock",                                     limit: 255
     t.boolean "picture_type_not_applicable"
     t.boolean "picture_type_silent_picture"
     t.boolean "picture_type_mos_picture"
@@ -631,7 +652,7 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "picture_type_picture_effects"
     t.boolean "picture_type_picture_outtakes"
     t.boolean "picture_type_other"
-    t.string  "playback_speed"
+    t.string  "playback_speed",                            limit: 255
     t.boolean "image_color_bw"
     t.boolean "image_color_color"
     t.boolean "image_color_mixed"
@@ -674,31 +695,32 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.boolean "sound_noise_redux_dnr"
     t.boolean "sound_noise_redux_cedar"
     t.boolean "sound_noise_redux_none"
-    t.string  "mold"
+    t.string  "mold",                                      limit: 255
     t.text    "playback_issues_video_artifacts",           limit: 65535
     t.text    "playback_issues_audio_artifacts",           limit: 65535
     t.text    "missing_footage",                           limit: 65535
     t.text    "captions_or_subtitles_notes",               limit: 65535
     t.text    "generation_notes",                          limit: 65535
-    t.string  "sound"
-    t.integer "tape_capacity"
+    t.string  "sound",                                     limit: 255
+    t.integer "tape_capacity",                             limit: 4
     t.text    "detailed_stock_information",                limit: 65535
   end
 
-  create_table "workflow_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.bigint   "physical_object_id"
-    t.string   "notes"
+  create_table "workflow_statuses", force: :cascade do |t|
+    t.integer  "physical_object_id", limit: 8
+    t.string   "notes",              limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "workflow_type"
-    t.string   "whose_workflow"
-    t.string   "status_name"
-    t.integer  "component_group_id"
-    t.integer  "external_entity_id"
-    t.bigint   "created_by"
-    t.index ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
-    t.index ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
+    t.string   "workflow_type",      limit: 255
+    t.string   "whose_workflow",     limit: 255
+    t.string   "status_name",        limit: 255
+    t.integer  "component_group_id", limit: 4
+    t.integer  "external_entity_id", limit: 4
+    t.integer  "created_by",         limit: 8
   end
+
+  add_index "workflow_statuses", ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
+  add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
 
   create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
       on("physical_objects").

@@ -9,7 +9,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-		@statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
+    @statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
       @count = PhysicalObject.joins(:current_workflow_status).where("workflow_statuses.status_name = '#{params[:status]}'")
       @count = @count.where("physical_objects.digitized = true") if params[:digitized]
@@ -166,6 +166,7 @@ class PhysicalObjectsController < ApplicationController
     begin
       PhysicalObject.transaction do
         # need to cleanup the old specific class that was changed to something else
+        Modification.new(object_type: 'PhysicalObject', object_id: @physical_object.acting_as.id, user: @physical_object.modifier).save!
         if o_medium == s_medium
           @physical_object.modifier = User.current_user_object
           #@success = @physical_object.update_attributes!(physical_object_params)
