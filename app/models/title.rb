@@ -118,10 +118,14 @@ class Title < ActiveRecord::Base
 		res.first.nil? ? 0 : res.first[0]
 	}
 
+
 	def self.per_page
 		100
 	end
 
+	def modifications
+		Modification.where(object_type: 'Title', object_id: self.id)
+	end
 	def series_title_text
 		self.series.title if self.series
   end
@@ -337,7 +341,6 @@ class Title < ActiveRecord::Base
 	def self.escape_wildcard(value)
 		ActiveRecord::Base.connection.quote("%#{value}%")
 	end
-
 end
 
 

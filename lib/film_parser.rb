@@ -523,7 +523,7 @@ class FilmParser < CsvParser
     #set_value(:location, location, po)
     #po.location = location
     if WorkflowStatus::SPREADSHEET_START_LOCATIONS.include?(location)
-      ws = WorkflowStatus.build_workflow_status(location, po)
+      ws = WorkflowStatus.build_workflow_status(location, po, true)
       po.workflow_statuses << ws
     else
       po.errors.add(:location, "Unknown or malformed Current Location field: #{location}")

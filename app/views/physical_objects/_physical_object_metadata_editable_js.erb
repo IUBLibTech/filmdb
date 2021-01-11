@@ -11,6 +11,7 @@
      */
     function hookListeners() {
         hookBarcodeValidators();
+        hookReelNumberValidator();
         // autocomplete for titles
         // when typing takes place in title_text, clear the hidden title_id value as it should only be set by selecting from
         // the autocomplete list. Additionally we need to unlock series title text in case it was locked from a previous title
@@ -256,5 +257,25 @@
     // make sure to register listeners for both Physical Object fields, AND format specific metadata fields.
     $(document).ready(function() {
         hookListeners();
+        $('#physical_object_form').submit(function(e) {
+	        if (!validReelNumber($("#film_reel_number, #video_reel_number").val())) {
+	        	e.preventDefault();
+          }
+        })
     });
+
+
+    function hookReelNumberValidator() {
+	    $("#film_reel_number, #video_reel_number").bind("input", function() {
+	    	let v = $(this).val()
+        if (validReelNumber(v)) {
+	        $(this).removeClass('bad_barcode')
+        } else {
+	        $(this).addClass('bad_barcode')
+        }
+	    });
+    }
+    function validReelNumber(val) {
+    	return val === "" || /^[\d]+ of [\d?]+$/.test(val);
+    }
 </script>

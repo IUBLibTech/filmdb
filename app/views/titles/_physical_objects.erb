@@ -20,12 +20,8 @@
     <td><%= link_to "#{p.iu_barcode}", physical_object_path(p.acting_as) %></td>
     <td><%= p.medium_name %></td>
     <td><%= p.humanize_boolean_generation_fields %></td>
-    <% if p.current_location == WorkflowStatus::DEACCESSIONED %>
-      <td class="warning">
-    <% else %>
-      <td>
-    <% end %>
-    <%= p.current_workflow_status.status_name %>
+    <td class="<%= (p.missing? || p.current_location == WorkflowStatus::DEACCESSIONED) ? 'missing' : '' %>">
+      <%= p.current_workflow_status.status_name %>
     </td>
 
     <td><%= p.condition_rating %></td>
