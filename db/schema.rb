@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201130200758) do
+ActiveRecord::Schema.define(version: 20210113172716) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -297,8 +297,6 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "physical_object_old_barcodes", ["iu_barcode"], name: "index_physical_object_old_barcodes_on_iu_barcode", unique: true, using: :btree
 
   create_table "physical_object_original_identifiers", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
