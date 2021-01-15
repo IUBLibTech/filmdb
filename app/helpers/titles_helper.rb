@@ -163,7 +163,7 @@ module TitlesHelper
 								p.accompanying_documentation, p.accompanying_documentation_location, p.condition_rating, p.condition_notes,
 								p.research_value, p.research_value_notes, '', '', p.mold,
 								((p.boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + p.value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (p.boolean_conditions.size == 0 && p.value_conditions.size == 0)),
-								p.missing_footage, p.miscellaneous, p.conservation_actions
+								'', p.miscellaneous, p.conservation_actions
 						]
 					else
 						raise "Unsupported Physical Object medium: #{@physical_object.medium}"

@@ -47,9 +47,12 @@ class PhysicalObject < ActiveRecord::Base
 
 	attr_accessor :workflow
 	attr_accessor :updated
+	after_update :record_barcode_changes
 
-	trigger.after(:update).of(:iu_barcode) do
-		"INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode)"
+	def record_barcode_changes
+		if iu_barcode_changed? && !iu_barcode_was.blank?
+			PhysicalObjectOldBarcode.new(physical_object_id: id, iu_barcode: iu_barcode_was).save!
+		end
 	end
 
 	# returns all physical whose workflow status matches any specified in *status - use WorkflowStatus status constants as values

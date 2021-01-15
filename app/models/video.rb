@@ -1,8 +1,8 @@
 class Video < ActiveRecord::Base
   acts_as :physical_object
-  validates :gauge, presence: true
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
+  validates :gauge, presence: true
 
   # nested_form gem doesn't integrate with active_record-acts_as gem when objects are CREATED, it results in double
   # object creation from form submissions. Edits/deletes seem to work fine however. Use this in the initializer to omit
