@@ -16,7 +16,7 @@ class IuBarcodeValidator < ActiveModel::EachValidator
 				# old barcodes are allowed to be reassigned to the object to which they were originally assigned though
 				old = PhysicalObjectOldBarcode.where(iu_barcode: value)
 				if old.size > 0
-					if !old.collect{|o| o.id}.include?(record.acting_as.id)
+					if !old.collect{|o| o.physical_object_id}.include?(record.acting_as.id)
 						record.errors.add(attribute, "#{value} was previously assigned to another Physical Object.")
 					end
 				end
