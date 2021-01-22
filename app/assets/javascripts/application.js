@@ -10,7 +10,6 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require_self
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui/widgets/autocomplete
@@ -18,6 +17,7 @@
 //= require jquery-ui
 //= require jquery_nested_form
 //= require sweet_alerts/dist/sweetalert.min
+//= require_self
 //= require_tree .
 
 
