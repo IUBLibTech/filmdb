@@ -166,7 +166,7 @@ class TitlesController < ApplicationController
 		    @series.save
 		    @tp[:series_id] = @series.id
       end
-      last_mod_id = @title&.modifier.nil? ? nil : @title.modified.id
+      last_mod_id = @title&.modifier.nil? ? nil : @title.modifier.id
       if @title.update(@tp)
         Modification.new(object_type: 'Title', object_id: @title.id, user_id: last_mod_id).save
         @title.modifier = User.current_user_object
