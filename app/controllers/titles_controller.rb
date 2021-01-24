@@ -166,9 +166,9 @@ class TitlesController < ApplicationController
 		    @series.save
 		    @tp[:series_id] = @series.id
       end
-      last_mod = @title.modifier
+      last_mod_id = @title&.modifier.nil? ? nil : @title.modifier.id
       if @title.update(@tp)
-        Modification.new(object_type: 'Title', object_id: @title.id, user_id: last_mod.id).save
+        Modification.new(object_type: 'Title', object_id: @title.id, user_id: last_mod_id).save
         @title.modifier = User.current_user_object
         @title.save
         format.html { redirect_to @title, notice: 'Title was successfully updated.' }

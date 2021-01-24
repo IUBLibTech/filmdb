@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201130200758) do
+ActiveRecord::Schema.define(version: 20210114164000) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -297,8 +297,6 @@ ActiveRecord::Schema.define(version: 20201130200758) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "physical_object_old_barcodes", ["iu_barcode"], name: "index_physical_object_old_barcodes_on_iu_barcode", unique: true, using: :btree
 
   create_table "physical_object_original_identifiers", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -721,12 +719,5 @@ ActiveRecord::Schema.define(version: 20201130200758) do
 
   add_index "workflow_statuses", ["physical_object_id"], name: "index_workflow_statuses_on_physical_object_id", using: :btree
   add_index "workflow_statuses", ["status_name"], name: "index_workflow_statuses_on_status_name", using: :btree
-
-  create_trigger("physical_objects_after_update_of_iu_barcode_row_tr", :generated => true, :compatibility => 1).
-      on("physical_objects").
-      after(:update).
-      of(:iu_barcode) do
-    "INSERT INTO physical_object_old_barcodes(physical_object_id, iu_barcode) VALUES(OLD.id, OLD.iu_barcode);"
-  end
 
 end

@@ -18,9 +18,11 @@
       <h5 style="padding: auto 1em">Edit History</h5>
       <ul>
         <% @title.modifications.each do |m| %>
-        <li>
-          <%= "#{m.user.username} - #{I18n.l m.created_at, format: :long}" %>
-        </li>
+          <% unless m.user.nil? %>
+            <li>
+              <%= "#{m.user.username} - #{I18n.l m.created_at, format: :long}" %>
+            </li>
+          <% end %>
         <% end %>
       </ul>
     </div>
