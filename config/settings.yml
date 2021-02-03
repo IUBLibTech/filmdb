@@ -1,6 +1,0 @@
-pod_qc_user: podPeople
-pod_qc_pass: 1956InvasionOfThe
-filmdb_service_username: filmdbService
-filmdb_service_pass: RalphWiggum1989
-memnon_xml: "http://http://sycamore.dlib.indiana.edu:8513/responses/objects/memnon_qc/<MDPI_BARCODE>"
-digitized: "http://http://sycamore.dlib.indiana.edu:8513/responses/objects/<MDPI_BARCODE>/digital_workflow"
