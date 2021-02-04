@@ -1,4 +1,4 @@
-class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
+class CorrectLostShrinkageValues < ActiveRecord::Migration
   def up
 
     path = "#{Rails.root}/tmp/shrinkage_update.csv"
@@ -13,9 +13,8 @@ class CorrectLostShrinkageValues < ActiveRecord::Migration[5.0]
       @csv.each_with_index do |row, i|
         next if i == 0
         puts "Row: #{i} of #{@csv.size}"
-        film = PhysicalObject.find(row[0].to_i).specific
-        raise "Couldn't find a Film with PO id: #{row[0]}" if film.nil?
-        film.update(shrinkage: row[1].to_f)
+        film = PhysicalObject.where(id: row[0].to_i).first&.specific
+        film.update(shrinkage: row[1].to_f) unless film.nil?
       end
     end
   end

@@ -1,4 +1,4 @@
-class AddNoiseReductionTorecordedSound < ActiveRecord::Migration[5.0]
+class AddNoiseReductionTorecordedSound < ActiveRecord::Migration
   NOISE = ['Dolby A', 'Dolby B', 'Dolby C', 'Dolby S', 'Dolby SR', 'Dolby NR', 'Dolby HX', 'Dolby HX Pro', 'DBX',
            'DBX Type II', 'High Com', 'High Com II', 'adres', 'ANRS', 'DNL', 'DNR', 'CEDAR', 'None', 'Other']
   def up

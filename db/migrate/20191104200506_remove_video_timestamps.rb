@@ -1,4 +1,4 @@
-class RemoveVideoTimestamps < ActiveRecord::Migration[5.0]
+class RemoveVideoTimestamps < ActiveRecord::Migration
   def change
     remove_column :videos, :created_at
     remove_column :videos, :updated_at

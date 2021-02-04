@@ -1,4 +1,4 @@
-class AddNewVideoStockValues < ActiveRecord::Migration[5.0]
+class AddNewVideoStockValues < ActiveRecord::Migration
 
   NEW_VALS = ['BASF', 'JVC', 'Kodak', 'Memorex', 'Phillips', 'RCA']
 

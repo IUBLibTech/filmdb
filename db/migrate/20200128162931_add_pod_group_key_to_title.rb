@@ -1,4 +1,4 @@
-class AddPodGroupKeyToTitle < ActiveRecord::Migration[5.0]
+class AddPodGroupKeyToTitle < ActiveRecord::Migration
   def change
     # the only place this should be used is in service calls to POD, don't store as an integer because we want to be
     # able to test if blank?

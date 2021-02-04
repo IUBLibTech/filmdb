@@ -1,4 +1,4 @@
-class AddNewSounfFormatsToFilm < ActiveRecord::Migration[5.0]
+class AddNewSounfFormatsToFilm < ActiveRecord::Migration
   def change
     add_column :films, :sound_format_optical_variable_area_bilateral, :boolean
     add_column :films, :sound_format_optical_variable_area_dual_bilateral, :boolean

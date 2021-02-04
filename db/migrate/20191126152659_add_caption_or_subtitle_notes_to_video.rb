@@ -1,4 +1,4 @@
-class AddCaptionOrSubtitleNotesToVideo < ActiveRecord::Migration[5.0]
+class AddCaptionOrSubtitleNotesToVideo < ActiveRecord::Migration
   def up
     rename_column :videos, :caption_or_subtitles, :captions_or_subtitles
     add_column :videos, :captions_or_subtitles_notes, :text unless column_exists? :videos, :captions_or_subtitles_notes

@@ -13,12 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20210114164000) do
 
-  create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
-    t.string   "value",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
     t.string   "condition_type",     limit: 255
@@ -113,8 +107,8 @@ ActiveRecord::Schema.define(version: 20210114164000) do
     t.string   "object_type",               limit: 255
     t.string   "human_readable_identifier", limit: 255
     t.string   "who_deleted",               limit: 255
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "digiprovs", force: :cascade do |t|
@@ -433,8 +427,8 @@ ActiveRecord::Schema.define(version: 20210114164000) do
     t.string   "mold",                               limit: 255
     t.integer  "actable_id",                         limit: 4
     t.string   "actable_type",                       limit: 255
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "noise_reduction",                    limit: 255
     t.string   "capacity",                           limit: 255
     t.text     "generation_notes",                   limit: 65535

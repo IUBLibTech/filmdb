@@ -1,4 +1,4 @@
-class AddTapeCapacityToVideo < ActiveRecord::Migration[5.0]
+class AddTapeCapacityToVideo < ActiveRecord::Migration
   def change
     add_column :videos, :tape_capacity, :string
   end

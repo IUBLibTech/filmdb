@@ -1,4 +1,4 @@
-class AdditionStocksForRecordedSound < ActiveRecord::Migration[5.0]
+class AdditionStocksForRecordedSound < ActiveRecord::Migration
   NEW_ONES = ['3M', 'Agfa', 'Ampex', 'Maxwell', 'Scotch', 'Sony',  'TDK']
   def up
     NEW_ONES.each do |s|

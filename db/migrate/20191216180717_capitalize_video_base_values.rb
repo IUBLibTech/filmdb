@@ -1,4 +1,4 @@
-class CapitalizeVideoBaseValues < ActiveRecord::Migration[5.0]
+class CapitalizeVideoBaseValues < ActiveRecord::Migration
   def change
     ControlledVocabulary.where(model_type: 'Video', model_attribute: ':base').each do |cv|
       cv.update(value: cv.value.capitalize)

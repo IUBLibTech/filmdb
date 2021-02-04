@@ -1,4 +1,4 @@
-class CopyPoCreatedAtIntoInventoryDate < ActiveRecord::Migration[5.0]
+class CopyPoCreatedAtIntoInventoryDate < ActiveRecord::Migration
   def up
     ActiveRecord::Base.connection.execute("update physical_objects set date_inventoried = created_at")
   end
