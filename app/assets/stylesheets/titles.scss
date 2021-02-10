@@ -157,3 +157,18 @@ div#title_sum {
 #showModifications {
   cursor: pointer;
 }
+#title_copyright_notes, #title_summary {
+  max-height: 3rem;
+  min-height: 3rem;
+  width: 98%;
+}
+#title_summary {
+  width: 99%;
+}
+.cp_info > input[type='checkbox'] {
+  margin-left: 1rem
+}
+.cp_info > div {
+  min-height: 20px;
+  margin-bottom: 5px;
+}

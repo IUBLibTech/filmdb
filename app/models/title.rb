@@ -239,6 +239,14 @@ class Title < ActiveRecord::Base
 		end
 	end
 
+	def copyright_verify_by_text
+		vs = []
+		vs << "IU Libraries Copyright Research" if copyright_verified_by_iu_cp_research
+		vs << "Viewing Physical Object" if copyright_verified_by_viewing_po
+		vs << "Other" if copyright_verified_by_other
+		vs.join(", ")
+	end
+
 	private
 	# looks up POD group key identifier (GR000xxx) and converts it to its database ID value: GR000...xxx stripping away
 	# the GR and leading zeroes. Returning a hash with two keys: status which is the HTTP status code of the request, and gid

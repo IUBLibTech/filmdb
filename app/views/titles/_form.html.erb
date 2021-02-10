@@ -29,10 +29,24 @@
         <div class="field"><%= f.check_box :fully_cataloged %></div>
       </div>
       <div class="left _50">
-        <div class="block_label"><b>Summary</b></div>
-        <div class="text_field_field">
-          <%= f.text_area :summary %>
+        <div class="cp_info">
+          <div>
+            <label for="title_in_copyright"><b>In Copyright?</b></label> <%= f.select :in_copyright, options_for_select([["Yes", "Yes"],["No", "No"],["Unknown", "Unknown"]], @title.in_copyright), include_blank: true  %>
+            <label for="title_expiration_date_edtf"><b>Expiration Date</b></label><%= f.text_field :copyright_end_date_edtf %>
+          </div>
+          <div style="margin-top: .5rem"><b>Copyright Verified By</b></div>
+          <div>
+            <%= f.check_box :copyright_verified_by_iu_cp_research %><label class="check_box_left" for="">IU Libraries Copyright Research</label>
+            <%= f.check_box :copyright_verified_by_viewing_po %><label class="check_box_left" for="">Viewing Physical object</label>
+            <%= f.check_box :copyright_verified_by_other %><label class="check_box_left" for="">Other</label>
+          </div>
+          <div style="margin-top: .5rem"><b>Copyright Notes</b></div>
+          <%= f.text_area :copyright_notes %>
         </div>
+      </div>
+      <div class="clear"><b>Title Summary</b></div>
+      <div class="">
+        <%= f.text_area :summary %>
       </div>
     </div>
     <h4>Title Original Identifiers</h4>

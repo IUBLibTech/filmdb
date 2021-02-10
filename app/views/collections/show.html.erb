@@ -19,7 +19,15 @@
     <td><%= @collection.summary %></td>
   </tr>
   <tr>
-    <th></th>
-    <td><%#= link_to "Inventory This Collection", collection_new_physical_object_path %></td>
+    <th>Donated Materials shall be made accessible for research, subject to the following terms and conditions</th>
+    <td><%= @collection.accessible ? @collection.accessible_notes : "" %></td>
+  </tr>
+  <tr>
+    <th>Current copyright ownership and control	</th>
+    <td><%= Collection::CURRENT_OWNERSHIP_AND_CONTROL_MAP[@collection.current_ownership_and_control].html_safe unless @collection.current_ownership_and_control.blank? %></td>
+  </tr>
+  <tr>
+    <th>Transfer of copyright ownership	</th>
+    <td><%= Collection::TRANSFER_OF_OWNERSHIP_MAP[@collection.transfer_of_ownership].html_safe unless @collection.transfer_of_ownership.blank? %></td>
   </tr>
 </table>

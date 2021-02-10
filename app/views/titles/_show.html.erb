@@ -55,11 +55,17 @@
       <div class="label"><b>Fully Cataloged</b></div><div class="field">Yes</div>
     <% end  %>
   </div>
-  <div class="right_div">
-    <h5>Summary</h5>
-    <div class="simple_text">
-      <%= format_newlines(@title.summary) %>
-    </div>
+  <div class="left_div cp_info">
+    <div class=""><b>In Copyright? </b><%= @title.in_copyright %></div>
+    <div><b>Copyright Expiration Date</b> <%= @title.copyright_end_date_edtf %></div>
+    <div class=""><b>Copyright Verified by</b><br><%= @title.copyright_verify_by_text %></div>
+    <div class=""><b>Copyright Notes</b><br><%= @title.copyright_notes %></div>
+  </div>
+</div>
+<div class="">
+  <h5>Title Summary</h5>
+  <div class="simple_text" style="margin-bottom: .5rem">
+    <%= format_newlines(@title.summary) %>
   </div>
 </div>
 <h4 class="clear">Alternative Titles</h4>

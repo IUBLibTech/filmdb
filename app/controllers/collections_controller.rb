@@ -101,7 +101,9 @@ class CollectionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_params
-      params.require(:collection).permit(:name, :unit_id, :summary)
+      params.require(:collection).permit(
+        :name, :unit_id, :summary, :accessible, :accessible_notes, :current_ownership_and_control, :transfer_of_ownership
+      )
     end
 
 end
