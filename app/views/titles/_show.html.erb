@@ -55,17 +55,11 @@
       <div class="label"><b>Fully Cataloged</b></div><div class="field">Yes</div>
     <% end  %>
   </div>
-  <div class="left_div cp_info">
-    <div class=""><b>In Copyright? </b><%= @title.in_copyright %></div>
-    <div><b>Copyright Expiration Date</b> <%= @title.copyright_end_date_edtf %></div>
-    <div class=""><b>Copyright Verified by</b><br><%= @title.copyright_verify_by_text %></div>
-    <div class=""><b>Copyright Notes</b><br><%= @title.copyright_notes %></div>
-  </div>
-</div>
-<div class="">
-  <h5>Title Summary</h5>
-  <div class="simple_text" style="margin-bottom: .5rem">
-    <%= format_newlines(@title.summary) %>
+  <div class="left _50">
+    <h5>Title Summary</h5>
+    <div class="simple_text" style="margin-bottom: .5rem">
+      <%= format_newlines(@title.summary) %>
+    </div>
   </div>
 </div>
 <h4 class="clear">Alternative Titles</h4>
@@ -141,6 +135,24 @@
         </div>
       <% end %>
   <% end %>
+  <% unless @title.title_dates.empty? %>
+    <h4>Dates</h4>
+    <% @title.title_dates.each do |td| %>
+      <div class="date"><b><%= td.date_type %>:</b> <%= td.date_to_s %></div>
+    <% end %>
+  <% end %>
+  <h4>Copyright</h4>
+  <div class="cp_info">
+    <div class="left _50">
+      <div class=""><b>In Copyright? </b><%= @title.in_copyright %></div>
+      <div><b>Copyright Expiration Date</b> <%= @title.copyright_end_date_edtf %></div>
+      <div class=""><b>Copyright Verified by</b><br><%= @title.copyright_verify_by_text %></div>
+    </div>
+    <div class="left _50">
+      <div class=""><b>Copyright Notes</b><br><%= @title.copyright_notes %></div>
+    </div>
+
+  </div>
   <% unless @title.title_locations.empty? %>
       <h4>Locations</h4>
       <% @title.title_locations.each do |tl| %>
@@ -148,12 +160,6 @@
           <div class="field"><%= tl.location %></div>
         </div>
       <% end %>
-  <% end %>
-  <% unless @title.title_dates.empty? %>
-    <h4>Dates</h4>
-    <% @title.title_dates.each do |td| %>
-      <div class="date"><b><%= td.date_type %>:</b> <%= td.date_to_s %></div>
-    <% end %>
   <% end %>
   <h4>Notes</h4>
 	<div class="simple_text">
