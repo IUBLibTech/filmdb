@@ -1,4 +1,4 @@
-class CapitalizeVideoGaugeOther < ActiveRecord::Migration[5.0]
+class CapitalizeVideoGaugeOther < ActiveRecord::Migration
 
   def up
     ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge', value: 'other').update_all(value: 'Other')

@@ -1,7 +1,7 @@
-class CorrectPhilipsMisspelling < ActiveRecord::Migration[5.0]
+class CorrectPhilipsMisspelling < ActiveRecord::Migration
   def change
     ControlledVocabulary.transaction do
-      ControlledVocabulary.where(model_type: 'Video', model_attribute: ':stock', value: 'Phillips').update(value: 'Philips')
+      ControlledVocabulary.where(model_type: 'Video', model_attribute: ':stock', value: 'Phillips').update_all(value: 'Philips')
       Video.where(stock: 'Phillips').update_all(stock: 'Philips')
     end
   end

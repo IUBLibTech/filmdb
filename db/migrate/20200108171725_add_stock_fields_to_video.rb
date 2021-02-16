@@ -1,4 +1,4 @@
-class AddStockFieldsToVideo < ActiveRecord::Migration[5.0]
+class AddStockFieldsToVideo < ActiveRecord::Migration
   NEW_VALS = %w(3M Eastman Quantegy TDK)
 
   def up

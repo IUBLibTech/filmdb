@@ -1,4 +1,4 @@
-class CreateRecordedSounds < ActiveRecord::Migration[5.0]
+class CreateRecordedSounds < ActiveRecord::Migration
   def change
     create_table :recorded_sounds do |t|
       t.boolean :version_first_edition

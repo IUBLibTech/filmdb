@@ -1,4 +1,4 @@
-class AddNewRatedConditionTypes < ActiveRecord::Migration[5.0]
+class AddNewRatedConditionTypes < ActiveRecord::Migration
   VALS = ["Redox blemishes", "Plasticizer exudation"]
   def up
     ControlledVocabulary.transaction do

@@ -1,4 +1,4 @@
-class AddGenerationNotesToRecordedSound < ActiveRecord::Migration[5.0]
+class AddGenerationNotesToRecordedSound < ActiveRecord::Migration
   def change
     add_column :recorded_sounds, :generation_notes, :text
   end

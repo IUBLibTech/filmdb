@@ -29,8 +29,8 @@
         <div class="field"><%= f.check_box :fully_cataloged %></div>
       </div>
       <div class="left _50">
-        <div class="block_label"><b>Summary</b></div>
-        <div class="text_field_field">
+        <div class="clear"><b>Title Summary</b></div>
+        <div class="">
           <%= f.text_area :summary %>
         </div>
       </div>
@@ -98,6 +98,29 @@
           <div class="clear"><%= td.link_to_remove(action_name == 'edit' ? 'Delete' : 'Cancel') %></div>
       <% end %>
       <%= f.link_to_add "New Date", :title_dates %>
+    </div>
+    <h4 class="m_bottom_5px">Copyright</h4>
+    <div>
+      <div>
+        <div class="cp_info">
+          <div class="left _50">
+            <div>
+              <label for="title_in_copyright"><b>In Copyright?</b></label> <%= f.select :in_copyright, options_for_select([["Yes", "Yes"],["No", "No"],["Unknown", "Unknown"]], @title.in_copyright), include_blank: true  %>
+              <label for="title_expiration_date_edtf"><b>Expiration Date</b></label><%= f.text_field :copyright_end_date_edtf %>
+            </div>
+            <div style="margin-top: .5rem"><b>Copyright Verified By</b></div>
+            <div>
+              <%= f.check_box :copyright_verified_by_iu_cp_research %><label class="check_box_left" for="">IU Libraries Copyright Research</label>
+              <%= f.check_box :copyright_verified_by_viewing_po %><label class="check_box_left" for="">Viewing Physical object</label>
+              <%= f.check_box :copyright_verified_by_other %><label class="check_box_left" for="">Other</label>
+            </div>
+          </div>
+          <div class="left _50">
+            <div><b>Copyright Notes</b></div>
+            <%= f.text_area :copyright_notes %>
+          </div>
+        </div>
+      </div>
     </div>
     <h4>Locations</h4>
 

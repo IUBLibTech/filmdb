@@ -258,7 +258,9 @@
     $(document).ready(function() {
         hookListeners();
         $('#physical_object_form').submit(function(e) {
-	        if (!validReelNumber($("#film_reel_number, #video_reel_number").val())) {
+        	//only film and video have a reel_number field so check for the presence before validating the format
+          let sel = $("#film_reel_number, #video_reel_number")
+	        if (sel.length > 0 && !validReelNumber(sel.val())) {
 	        	e.preventDefault();
           }
         })

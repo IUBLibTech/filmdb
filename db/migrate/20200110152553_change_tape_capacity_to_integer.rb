@@ -1,4 +1,4 @@
-class ChangeTapeCapacityToInteger < ActiveRecord::Migration[5.0]
+class ChangeTapeCapacityToInteger < ActiveRecord::Migration
   def up
     change_column :videos, :tape_capacity, :integer
   end

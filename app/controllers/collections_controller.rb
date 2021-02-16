@@ -46,7 +46,7 @@ class CollectionsController < ApplicationController
   def update
     respond_to do |format|
       if @collection.update(collection_params)
-        format.html { redirect_to action: :index, notice: 'Collection was successfully updated.' }
+        format.html { render :show, notice: 'Collection was successfully updated.' }
         format.json { render :show, status: :ok, location: @collection }
       else
         format.html { render :edit }
@@ -101,7 +101,9 @@ class CollectionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_params
-      params.require(:collection).permit(:name, :unit_id, :summary)
+      params.require(:collection).permit(
+        :name, :unit_id, :summary, :accessible, :accessible_notes, :current_ownership_and_control, :transfer_of_ownership
+      )
     end
 
 end

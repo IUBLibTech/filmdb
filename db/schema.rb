@@ -11,13 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210114164000) do
-
-  create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
-    t.string   "value",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
+ActiveRecord::Schema.define(version: 20210209140956) do
 
   create_table "boolean_conditions", force: :cascade do |t|
     t.integer  "physical_object_id", limit: 8
@@ -64,11 +58,15 @@ ActiveRecord::Schema.define(version: 20210114164000) do
   end
 
   create_table "collections", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name",                          limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "unit_id",    limit: 8
-    t.text     "summary",    limit: 65535
+    t.integer  "unit_id",                       limit: 8
+    t.text     "summary",                       limit: 65535
+    t.boolean  "accessible"
+    t.text     "accessible_notes",              limit: 65535
+    t.integer  "current_ownership_and_control", limit: 4
+    t.integer  "transfer_of_ownership",         limit: 4
   end
 
   create_table "component_group_physical_objects", force: :cascade do |t|
@@ -113,8 +111,8 @@ ActiveRecord::Schema.define(version: 20210114164000) do
     t.string   "object_type",               limit: 255
     t.string   "human_readable_identifier", limit: 255
     t.string   "who_deleted",               limit: 255
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "digiprovs", force: :cascade do |t|
@@ -433,8 +431,8 @@ ActiveRecord::Schema.define(version: 20210114164000) do
     t.string   "mold",                               limit: 255
     t.integer  "actable_id",                         limit: 4
     t.string   "actable_type",                       limit: 255
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "noise_reduction",                    limit: 255
     t.string   "capacity",                           limit: 255
     t.text     "generation_notes",                   limit: 65535
@@ -534,22 +532,29 @@ ActiveRecord::Schema.define(version: 20210114164000) do
   end
 
   create_table "titles", force: :cascade do |t|
-    t.string   "title_text",               limit: 1024
-    t.text     "summary",                  limit: 65535
+    t.string   "title_text",                           limit: 1024
+    t.text     "summary",                              limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "series_id",                limit: 8
-    t.integer  "spreadsheet_id",           limit: 8
-    t.integer  "series_title_index",       limit: 4
-    t.integer  "modified_by_id",           limit: 8
-    t.string   "series_part",              limit: 255
-    t.integer  "created_by_id",            limit: 8
-    t.text     "notes",                    limit: 65535
-    t.text     "subject",                  limit: 65535
-    t.text     "name_authority",           limit: 65535
-    t.text     "country_of_origin",        limit: 65535
+    t.integer  "series_id",                            limit: 8
+    t.integer  "spreadsheet_id",                       limit: 8
+    t.integer  "series_title_index",                   limit: 4
+    t.integer  "modified_by_id",                       limit: 8
+    t.string   "series_part",                          limit: 255
+    t.integer  "created_by_id",                        limit: 8
+    t.text     "notes",                                limit: 65535
+    t.text     "subject",                              limit: 65535
+    t.text     "name_authority",                       limit: 65535
+    t.text     "country_of_origin",                    limit: 65535
     t.boolean  "fully_cataloged"
-    t.string   "pod_group_key_identifier", limit: 255
+    t.string   "pod_group_key_identifier",             limit: 255
+    t.string   "in_copyright",                         limit: 255
+    t.string   "copyright_end_date_edtf",              limit: 255
+    t.date     "copyright_end_date"
+    t.boolean  "copyright_verified_by_iu_cp_research"
+    t.boolean  "copyright_verified_by_viewing_po"
+    t.boolean  "copyright_verified_by_other"
+    t.text     "copyright_notes",                      limit: 65535
   end
 
   create_table "units", force: :cascade do |t|

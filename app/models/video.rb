@@ -136,13 +136,13 @@ class Video < ActiveRecord::Base
     end
 
     acting_as.media_type = 'Moving Image'
-    if args.is_a? ActionController::Parameters
-      args.each do |a|
-        self.send(a.dup << "=", args[a])
-      end
-    elsif args.is_a? Hash
+    # this is necessary, as is the order of the test, because when creating this type of PhysicalObject through the UI the
+    # ActionController::Parameters is passed. Whereas creating this type of PhysicalObject through spreadsheet ingest creates
+    # a Hash. The else statement is in case I've missed something or some other way of creating a PO is created in the
+    # future that is not covered by these two.
+    if args.is_a?(ActionController::Parameters) || args.is_a?(Hash)
       args.keys.each do |k|
-        self.send((k.to_s << "=").to_sym, args[k])
+        self.send((k.dup.to_s << "=").to_sym, args[k])
       end
     else
       raise "What is args?!?!?"
