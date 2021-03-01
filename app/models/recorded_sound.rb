@@ -127,7 +127,7 @@ class RecordedSound < ApplicationRecord
     worksheet.add_row [iu_barcode, mdpi_barcode, titles_text, t.title_text,
                        t.series_title_text, t.series_part, t.country_of_origin,
                        t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') if t.title_original_identifiers.any?),
-                         (t.title_publishers.collect {|p| "#{name} [#{p.publisher_type}]"}.join(', ') if t.title_publishers.any?),
+                         (t.title_publishers.collect {|pub| "#{pub.name} [#{pub.publisher_type}]"}.join(', ') if t.title_publishers.any?),
                          (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') if t.title_creators.any?),
                        (t.title_genres.collect {|g| g.genre}.join(', ') if t.title_genres.any?),
                          (t.title_forms.collect {|f| f.form}.join(', ') if t.title_forms.any?),
