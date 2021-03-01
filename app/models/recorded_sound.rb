@@ -1,4 +1,5 @@
 class RecordedSound < ApplicationRecord
+  include ApplicationHelper
   acts_as :physical_object
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
@@ -101,5 +102,50 @@ class RecordedSound < ApplicationRecord
       str << (self.specific[f] ? (str.length > 0 ? ", " << self.class.human_attribute_name(f) : self.class.human_attribute_name(f)) : "")
     end
     str
+  end
+
+  def self.write_xlsx_header_row(worksheet)
+    worksheet.add_row ["IU Barcode","MDPI Barcode", "All Title(s) on Media", "Matching Title (If more than one title on media)",
+                       "Series Title", "Series Part", "Title Country of Origin",
+                       "Title Summary", "Title Original Identifiers", "Title Publishers", "Title Creators",
+                       "Title Genres","Title Forms", "Title Dates",
+                       "Title Locations", "Title Notes", "Title Subject", "Title Name Authority",
+                       "IUCat Title Control Number","Catalog Key", "Alternative Title",
+                       "Medium","Version","Unit","Collection",
+                       "Format", "Generation","Generation Notes","Duration", "Sides", "Part", "Dates",
+                       "Base", "Stock", "Detailed Stock Information" "Original Identifiers",
+                       "Multiple Items in Can", "Playback",
+                       "Format Type", "Content Type", "Sound Field",
+                       "Languages", "Format Notes",
+                       "Accompanying Documentation", "Accompanying Documentation Location", "Overall Condition", "Condition Notes",
+                       "Research Value", "Research Value Notes",
+                       "Conditions",
+                       "Miscellaneous", "Conservation Actions", "Title Last Modified By"
+                      ]
+  end
+  def write_xlsx_row(t, worksheet)
+    worksheet.add_row [iu_barcode, mdpi_barcode, titles_text, t.title_text,
+                       t.series_title_text, t.series_part, t.country_of_origin,
+                       t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') if t.title_original_identifiers.any?),
+                         (t.title_publishers.collect {|p| "#{name} [#{p.publisher_type}]"}.join(', ') if t.title_publishers.any?),
+                         (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') if t.title_creators.any?),
+                       (t.title_genres.collect {|g| g.genre}.join(', ') if t.title_genres.any?),
+                         (t.title_forms.collect {|f| f.form}.join(', ') if t.title_forms.any?),
+                         (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') if t.title_dates.any?),
+                       (t.title_locations.collect {|l| l.location}.join(', ') if t.title_locations.any?),
+                         t.notes, t.subject, t.name_authority,
+                       title_control_number, catalog_key, alternative_title,
+                       medium, humanize_version_fields, unit&.name, collection&.name,
+                       gauge, humanize_generations_fields, generation_notes, duration, sides, part,
+                         (physical_object_dates.collect {|d| "#{d.date} [#{d&.controlled_vocabulary.value}]"}.join(', ') if physical_object_dates.any?),
+                       humanize_base_fields, humanize_stock_fields, detailed_stock_information,
+                        (physical_object_original_identifiers.collect {|oi| oi.identifier}.join(', ') if physical_object_original_identifiers.any?),
+                       bool_to_yes_no(multiple_items_in_can), playback,
+                       humanize_sound_format_fields, humanize_sound_content_fields, humanize_sound_configuration_fields,
+                       (languages.collect {|l| "#{l.language} [#{l.language_type}]"}.join(', ') unless languages.size == 0), format_notes,
+                       accompanying_documentation, accompanying_documentation_location, condition_rating, condition_notes,
+                       research_value, research_value_notes,
+                       ((boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (boolean_conditions.size == 0 && value_conditions.size == 0)),
+                       miscellaneous, conservation_actions, t.modifier&.username]
   end
 end
