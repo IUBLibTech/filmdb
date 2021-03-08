@@ -149,6 +149,7 @@ Rails.application.routes.draw do
   get '/titles/merge/in_storage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
   post '/titles/merge/in_storage_update', to: 'titles#merge_in_storage_update', as: 'merge_in_storage_update'
   get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
+  get '/titles/search/xls_search', to: 'titles#xls_search', as: 'title_xls_search'
   resources :units
 
   resources :users

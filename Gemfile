@@ -45,7 +45,9 @@ gem 'hairtrigger'
 gem 'pundit'
 
 # roo adds XLSX read-only support
-gem 'roo'
+gem "roo", "~> 2.8.0"
+# favoring axlsx instead of roo but unsure where roo might be in code...
+gem 'caxlsx'
 
 # handle email notifications
 gem 'mail'

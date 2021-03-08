@@ -1,4 +1,5 @@
 class Film < ActiveRecord::Base
+  include ApplicationHelper
   acts_as :physical_object
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
@@ -161,6 +162,44 @@ class Film < ActiveRecord::Base
 
   def medium_name
     "#{gauge} #{medium}"
+  end
+
+  def self.write_xlsx_header_row(worksheet)
+    worksheet.add_row ["IU Barcode","MDPI Barcode", "All Title(s) on Media", "Matching Title (If more than one title on media)", "Series Title", "Series Part", "Title Country of Origin",
+     "Title Summary", "Title Original Identifiers", "Title Publishers", "Title Creators",
+     "Title Genres","Title Forms", "Title Dates",
+     "Title Locations", "Title Notes", "Title Subject", "Title Name Authority",
+     "IUCat Title Control Number","Catalog Key", "Alternative Title",
+     "Media Type","Medium","Version","Unit","Collection",
+     "Gauge", "Generation","Generation Notes", "Can Size", "Footage", "Duration", "Reel Dates",
+     "Base", "Stock", "Original Identifiers",
+     "Reel Number", "Multiple Items in Can", "Picture Type", "Frame Rate", "Color",
+     "Aspect Ratio", "Anamorphic", "Sound",
+     "Captions/Subtitles", "Format Type", "Content Type", "Sound Field",
+     "Track Count", "Languages", "Format Notes",
+     "Accompanying Documentation", "Accompanying Documentation Location", "Overall Condition", "Condition Notes",
+     "Research Value", "Research Value Notes", "AD Strip", "Shrinkage", "Mold",
+     "Conditions",
+     "Missing Footage", "Miscellaneous", "Conservation Actions", "Title Last Modified By"
+    ]
+  end
+  def write_xlsx_row(t, worksheet)
+    worksheet.add_row [iu_barcode, mdpi_barcode, titles_text, t.title_text, t.series_title_text, t.series_part, t.country_of_origin,
+      t.summary, (t.title_original_identifiers.collect {|i| "#{i.identifier} [#{i.identifier_type}]"}.join(', ') if t.title_original_identifiers.any?), (t.title_publishers.collect {|pub| "#{pub.name} [#{pub.publisher_type}]"}.join(', ') if t.title_publishers.any?), (t.title_creators.collect {|c| "#{c.name} [#{c.role}]"}.join(', ') unless t.title_creators.size == 0),
+      (t.title_genres.collect {|g| g.genre}.join(', ') unless t.title_genres.size == 0), (t.title_forms.collect {|f| f.form}.join(', ') unless t.title_forms.size == 0), (t.title_dates.collect {|d| "#{d.date_text} [#{d.date_type}]"}.join(', ') unless t.title_dates.size == 0),
+      (t.title_locations.collect {|l| l.location}.join(', ') unless t.title_locations.size == 0), t.notes, t.subject, t.name_authority,
+      title_control_number, catalog_key, alternative_title,
+      media_type, medium, humanize_version_fields, unit&.name, collection&.name,
+      gauge, humanize_generations_fields, generation_notes, can_size, footage, duration, (physical_object_dates.collect {|d| "#{d.date} [#{d&.controlled_vocabulary.value}]"}.join(', ') unless physical_object_dates.size == 0),
+      humanize_base_fields, humanize_stock_fields, (physical_object_original_identifiers.collect {|oi| oi.identifier}.join(', ') unless physical_object_original_identifiers.size == 0),
+      reel_number, bool_to_yes_no(multiple_items_in_can), humanize_picture_type_fields, frame_rate, humanize_color_fields,
+      humanize_aspect_ratio_fields, anamorphic, sound,
+      bool_to_yes_no(close_caption), humanize_sound_format_fields, humanize_sound_content_fields, humanize_sound_configuration_fields,
+      track_count, (languages.collect {|l| "#{l.language} [#{l.language_type}]"}.join(', ') unless languages.size == 0), format_notes,
+      accompanying_documentation, accompanying_documentation_location, condition_rating, condition_notes,
+      research_value, research_value_notes, ad_strip, shrinkage, mold,
+      ((boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (boolean_conditions.size == 0 && value_conditions.size == 0)),
+      missing_footage, miscellaneous, conservation_actions, t.modifier&.username]
   end
 
   def to_xml(options)

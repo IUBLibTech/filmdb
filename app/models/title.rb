@@ -1,4 +1,5 @@
 class Title < ActiveRecord::Base
+	require 'axlsx'
 	include DateHelper
 	include PhysicalObjectsHelper
 	include SessionsHelper
@@ -97,6 +98,42 @@ class Title < ActiveRecord::Base
 	  connection.execute("DROP TABLE #{current_user}_title_search")
 	  res
   }
+
+	scope :title_spreadsheet_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id) {
+		t = title_text.blank? ? Title.all : Title.where("title_text like #{escape_wildcard(title_text)}")
+		t = t.where("summary_text like #{escape_wildcard(summary_text)}") unless summary_text.blank?
+		t = t.where("subject like #{escape_wildcard(subject_text)}") unless subject_text.blank?
+		t.includes(:series, :title_dates, :title_publishers, :title_creators, :title_locations, :physical_objects)
+		unless series_name_text.blank?
+			t.joins(:series).where("series.title like #{escape_wildcard(series_name_text)}")
+		end
+		unless publisher_text.blank?
+			t = t.joins(:title_publishers).where("title_publishers.name like #{escape_wildcard(publisher_text)}")
+		end
+		unless creator_text.blank?
+			t = t.joins(:title_creators).where("title_creators.name like #{escape_wildcard(creator_text)}")
+		end
+		unless location_text.blank?
+			t = t.joins(:title_locations).where("title_locations.location like #{escape_wildcard(location_text)}")
+		end
+		unless collection_id.blank?
+			t = t.joins(:physical_objects).where("physical_objects.collection_id = ?", collection_id)
+		end
+		unless date.blank?
+			dates = date.gsub(' ', '').split('-')
+			if dates.size == 1
+				t = t.where("((title_dates.end_date is null AND year(title_dates.start_date) = #{dates[0]}) OR "+
+					"(title_dates.end_date is not null AND year(title_dates.start_date) <= #{dates[0]} AND year(title_dates.end_date) >=  #{dates[0]}))")
+			else
+				t = t.where("((title_dates.end_date is null AND year(title_dates.start_date) >= #{dates[0]} AND year(title_dates.start_date) <= #{dates[1]})  OR "+
+					"(title_dates.end_date is not null AND "+
+					"((year(title_dates.start_date) >= #{dates[0]} AND year(title_dates.start_date) <= #{dates[1]}) OR "+
+					"(year(title_dates.end_date) >= #{dates[0]} AND year(title_dates.end_date) <= #{dates[1]}) OR "+
+					"(year(title_dates.start_date) < #{dates[0]} AND year(title_dates.end_date) > #{dates[1]}))))")
+			end
+		end
+		t
+	}
 	scope :title_search_count, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, current_user, offset, limit) {
 		connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 		tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
@@ -245,6 +282,19 @@ class Title < ActiveRecord::Base
 		vs << "Viewing Physical Object" if copyright_verified_by_viewing_po
 		vs << "Other" if copyright_verified_by_other
 		vs.join(", ")
+	end
+
+	def self.test
+		Axlsx::Package.new do |p|
+			p.workbook.add_worksheet(:name => "Pie Chart") do |sheet|
+				sheet.add_row ["Simple Pie Chart"]
+				%w(first second third).each { |label| sheet.add_row [label, rand(24)+1] }
+				sheet.add_chart(Axlsx::Pie3DChart, :start_at => [0,5], :end_at => [10, 20], :title => "example 3: Pie Chart") do |chart|
+					chart.add_series :data => sheet["B2:B4"], :labels => sheet["A2:A4"],  :colors => ['FF0000', '00FF00', '0000FF']
+				end
+			end
+			p.serialize('simple.xlsx')
+		end
 	end
 
 	private

@@ -1,4 +1,5 @@
 module TitlesHelper
+	require 'roo'
 	include ApplicationHelper
 	# attempts to merge all mergees into the master title record - physical objects are reassigned, all non-duplicate creator,
 	# publisher, date, genre, form, etc data is also moved over to the master record.
@@ -85,6 +86,11 @@ module TitlesHelper
 				cg.save
 			end
 		end
+	end
+
+	def title_search_to_xls(titles)
+
+
 	end
 
 	def title_search_to_csv(titles)

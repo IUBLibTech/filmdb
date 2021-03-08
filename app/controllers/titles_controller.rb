@@ -1,5 +1,6 @@
 class TitlesController < ApplicationController
   require 'manual_roll_back_error'
+  require "axlsx"
   include PhysicalObjectsHelper
   include TitlesHelper
   before_action :set_title, only: [:show, :edit, :update, :destroy, :create_physical_object, :new_physical_object, :ajax_summary, :create_component_group]
@@ -27,15 +28,46 @@ class TitlesController < ApplicationController
     end
   end
 
-  def csv_search
-    if params[:title_text]
-      # find out whether or not to do pagination
-      @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
-      @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
+  # def csv_search
+  #   # if params[:title_text]
+  #   #   # find out whether or not to do pagination
+  #   #   @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
+  #   #   @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
+  #   # end
+  #   # respond_to do |format|
+  #   #   format.csv {send_data title_search_to_csv(@titles), filename: 'title_search.csv' }
+  #   # end
+  #
+  # end
+
+  def xls_search
+    @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
+    @titles = Title.title_spreadsheet_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+    x = Axlsx::Package.new
+    wb = x.workbook
+    films = wb.add_worksheet(name: "Films")
+    videos = wb.add_worksheet(name: "Videos")
+    recorded_sounds = wb.add_worksheet(name: "Recorded Sounds")
+    Film.write_xlsx_header_row( films)
+    Video.write_xlsx_header_row( videos )
+    RecordedSound.write_xlsx_header_row( recorded_sounds )
+    @titles.each do |t|
+      t.physical_objects.each do |po|
+        if po.specific.medium == "Film"
+          @worksheet = films
+        elsif po.specific.medium == "Video"
+          @worksheet = videos
+        elsif po.specific.medium == "Recorded Sound"
+          @worksheet = recorded_sounds
+        else
+          raise "Unsupported spreadsheet download medium: #{po.specific.medium}"
+        end
+        po.specific.write_xlsx_row(t, @worksheet)
+      end
     end
-    respond_to do |format|
-      format.csv {send_data title_search_to_csv(@titles), filename: 'title_search.csv' }
-    end
+    f = prepare_file("search_results")
+    x.serialize(f.path)
+    send_file f.path, disposition: 'attachment'
   end
 
   # GET /titles/1
@@ -573,4 +605,9 @@ class TitlesController < ApplicationController
 	                     collection_id: (params[:collection_id] == '0' ? 0 : params[:collection_id]))
   end
 	helper_method :page_link_path
+
+  private
+  def prepare_file(file_name)
+    Tempfile.new([file_name, '.xlsx'], encoding: 'ascii-8bit')
+  end
 end
