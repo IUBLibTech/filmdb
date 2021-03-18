@@ -28,7 +28,7 @@ class MemnonDigiprovCollector
         dig_url = Settings.digitized_url.gsub("<MDPI_BARCODE>", mdpi.to_s)
         p.update_attributes(digitized: successful_digitization?(get(dig_url)))
 
-        # overwrite any digiprovs from this casge shelf/physical object combination as they are unique
+        # overwrite any digiprovs from this cage shelf/physical object combination as they are unique
         Digiprov.where(physical_object_id: p.id, cage_shelf_id: cs.id).delete_all
         xml_url = Settings.memnon_xml_url.gsub("<MDPI_BARCODE>", mdpi.to_s)
         dp = Digiprov.new(physical_object: p, digital_provenance_text: get(xml_url).body, cage_shelf_id: cs.id)
@@ -43,7 +43,7 @@ class MemnonDigiprovCollector
   def get(url)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
+    http.use_ssl = false
     request = Net::HTTP::Get.new(uri.request_uri)
     request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
     http.request(request)

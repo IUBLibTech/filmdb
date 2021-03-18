@@ -202,7 +202,9 @@ class WorkflowController < ApplicationController
 		if po.nil?
 			render text: "Error: Could not find Physical Object with IU barcode: #{params[:iu_barcode]}"
 		elsif po.current_workflow_status.is_storage_status?
-			render text: "<div class='return_warn'>#{po.iu_barcode} is already in storage</div>".html_safe
+			# no longer preventing PO's from being moved around IN storage
+			# render text: "<div class='return_warn'>#{po.iu_barcode} is already in storage</div>".html_safe
+			render text: "#{params[:iu_barcode]} Should Be Stored: <b>#{(po.storage_location.blank? ? WorkflowStatus::IN_STORAGE_INGESTED : po.storage_location)}</b>".html_safe
 		elsif po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF
 			render text: "#{params[:iu_barcode]} Should Be Returned to: <b>#{(po.storage_location.blank? ? WorkflowStatus::IN_STORAGE_INGESTED : po.storage_location)}</b>".html_safe
 		elsif po.current_workflow_status.missing?
@@ -230,7 +232,8 @@ class WorkflowController < ApplicationController
 		if @po.nil?
 			flash[:warning] = "Could not find a PhysicalObject with barcode: #{params[:physical_object][:iu_barcode]}"
 		elsif @po.current_workflow_status.is_storage_status?
-			flash[:warning] = "#{@po.iu_barcode} is already in a storage location: #{@po.current_location}!"
+			w = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
+			flash[:notice] = "#{@po.iu_barcode} has been relocated in storage from: #{@po.current_location} to #{params[:physical_object][:location]}"
 		elsif @po.current_location == WorkflowStatus::JUST_INVENTORIED_WELLS || @po.current_location == WorkflowStatus::JUST_INVENTORIED_ALF
 			w = WorkflowStatus.build_workflow_status(params[:physical_object][:location], @po)
 			flash[:notice] = "#{@po.iu_barcode}'s location has been updated to #{params[:physical_object][:location]}."
