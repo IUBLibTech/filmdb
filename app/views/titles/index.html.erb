@@ -92,6 +92,7 @@
 <table>
 	<tr>
 		<th>Title</th>
+    <th>Series Title</th>
 		<th>Date(s)</th>
 		<th>Publisher(s)</th>
 		<th>Creator(s)</th>
@@ -109,6 +110,9 @@
         <%= image_tag('paw.png', class: 'cat') %>
       <% end %>
       <%= link_to t.title_text, title_path(t) %>
+    </td>
+    <td>
+      <%= t.series_title_text %>
     </td>
 		<td>
 			<ul>

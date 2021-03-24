@@ -20,7 +20,7 @@
     </table>
 <% end %>
 <br>
-<h2>Physical Objects: <%= params[:status].blank? ? 'All' : params[:status]  %> <%= params[:digitized] ? "(Digitized)" : "" %></h2>
+<h2><%= "#{@count} " if (@count && @count > 0) %>Physical Objects: <%= params[:status].blank? ? 'All' : params[:status]  %> <%= params[:digitized] ? "(Digitized)" : "" %></h2>
 <%= render partial: 'physical_objects_table' %>
 <br>
 
