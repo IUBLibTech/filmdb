@@ -156,21 +156,21 @@ module PhysicalObjectsHelper
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes)
+          :catalog_key, :compilation, :format_notes, :digitized)
     elsif params[:video]
       params.require(:video).permit(
           # physical object specific attributes
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes)
+          :catalog_key, :compilation, :format_notes, :digitized)
     elsif params[:recorded_sound]
       params.require(:recorded_sound).permit(
           # physical object specific attributes
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes
+          :catalog_key, :compilation, :format_notes, :digitized
       )
     else
       raise "Unsupported Medium: #{params.keys}"
@@ -184,7 +184,7 @@ module PhysicalObjectsHelper
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes,
+          :catalog_key, :compilation, :format_notes, :digitized,
 
           # film specific attributes
           :gauge, :reel_number, :can_size, :footage, :frame_rate, :ad_strip, :shrinkage, :mold,
@@ -243,7 +243,7 @@ module PhysicalObjectsHelper
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes,
+          :catalog_key, :compilation, :format_notes, :digitized,
 
           # video specific attributes
           :gauge, :first_edition, :second_edition, :third_edition, :fourth_edition, :abridged, :short, :long, :sample, :revised,
@@ -280,7 +280,7 @@ module PhysicalObjectsHelper
           :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
-          :catalog_key, :compilation, :format_notes,
+          :catalog_key, :compilation, :format_notes, :digitized,
 
           # recorded sound specific attributes
           :version_first_edition, :version_second_edition, :version_third_edition, :version_fourth_edition, :version_abridged,

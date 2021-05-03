@@ -170,12 +170,16 @@
 			  return false;
 		  },
 		  close: function(event, ui) {
-			  $('#title_series_title_text').bind('keydown.remove_series', function() {
-				  $('#title_series_id').val('')
+			  $('#title_series_title_text').bind('keydown.remove_series', function(e) {
+				  if (e.keyCode !== 9) {
+            $('#title_series_id').val('')
+          }
 			  });
 		  }
-	  }).bind('keydown.remove_series', function() {
-		  $('#title_series_id').val('')
+	  }).bind('keydown.remove_series', function(e) {
+		  if (e.keyCode !== 9) {
+        $('#title_series_id').val('')
+      }
 	  });
   });
 </script>

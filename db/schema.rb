@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210209140956) do
+ActiveRecord::Schema.define(version: 20210426174351) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -561,6 +561,7 @@ ActiveRecord::Schema.define(version: 20210209140956) do
     t.boolean  "copyright_verified_by_viewing_po"
     t.boolean  "copyright_verified_by_other"
     t.text     "copyright_notes",                      limit: 65535
+    t.string   "stream_url",                           limit: 255
   end
 
   create_table "units", force: :cascade do |t|

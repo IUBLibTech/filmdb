@@ -43,7 +43,7 @@ class MemnonDigiprovCollector
   def get(url)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = false
+    http.use_ssl = true
     request = Net::HTTP::Get.new(uri.request_uri)
     request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
     http.request(request)
