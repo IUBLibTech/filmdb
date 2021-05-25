@@ -32,15 +32,10 @@
   <div class="m_bottom_10px">
     <div class="clear">
       <h4 class="clean">Digitized</h4>
-      <% avalon_url = @title.avalon_url %>
-      <% if avalon_url.empty? %>
-        <div class="warning clear" style="font-size: inherit; padding-left: 10px">Could not generate Dark Avalon URL - no mapping between Filmdb Title id and POD Group Key</div>
-      <% elsif avalon_url[:url] %>
+      <% if @title.stream_url %>
         <div class="_25 left m_bottom_10px">
-        <%= link_to "Dark Avalon Files", "#{avalon_url[:url]}", target: '_blank' %>
+          <a href="<%= url_for @title.stream_url %>" target="_blank">Stream URL</a>
         </div>
-      <% elsif avalon_url[:error] %>
-        <div class="warning clear" style="font-size: inherit; padding-left: 10px"><%= avalon_url[:error] %></div>
       <% end %>
     </div>
   </div>
