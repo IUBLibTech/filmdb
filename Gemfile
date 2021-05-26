@@ -68,16 +68,22 @@ gem 'net-scp'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'web-console', '~> 2.0', group: :development
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
+
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'rspec-rails'
   gem 'simplecov'
+end
+
+group :development do
+  gem "puma"
+  gem 'web-console', '~> 2.0'
 end
 
 group :test do
