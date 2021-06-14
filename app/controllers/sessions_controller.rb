@@ -51,6 +51,7 @@ class SessionsController < ActionController::Base
     request.ssl_version = :TLSv1_2
     response = request.get("#{iu_login_staging}/cas/serviceValidate?ticket=#{@casticket}&service=#{root_url}sessions/validate_login")
     @resp = response.body
+    logger.warn "Response from IU Login: #{@resp}"
     user = extract_username(@resp)
     if User.authenticate(user)
       sign_in(user)
