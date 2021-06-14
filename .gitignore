@@ -20,6 +20,11 @@ config/pod_db.yml
 
 .byebug_history
 
+# IU Libraries infrastructure stuffs
+.iul_service.yaml
+bin/iul_start
+bin/iul_stop
+
 # files for rubymine
 .idea/*
 .idea/filmdb.iml
