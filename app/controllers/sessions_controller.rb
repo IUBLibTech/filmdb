@@ -49,7 +49,7 @@ class SessionsController < ActionController::Base
     request.use_ssl = true
     request.verify_mode = OpenSSL::SSL::VERIFY_PEER
     request.ssl_version = :TLSv1_2
-    response = request.get("#{iu_login_staging}/cas/serviceValidate?ticket=#{@casticket}&service=#{root_url}sessions/validate_login")
+    response = request.get("#{which_iu_login}/cas/serviceValidate?ticket=#{@casticket}&service=#{root_url}sessions/validate_login")
     @resp = response.body
     logger.warn "Response from IU Login: #{@resp}"
     user = extract_username(@resp)
