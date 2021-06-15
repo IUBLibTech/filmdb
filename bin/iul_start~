@@ -1,0 +1,18 @@
+#!/bin/bash
+PORT=8315
+APP_NAME="Filmdb-prod"
+PID_FILE=/srv/services/filmdb-prod-8315/tmp/pids/server.pid
+
+
+echo "Starting Filmdb-dev on port $PORT"
+
+if [ -e $PID_FILE ]; then
+    echo "$PID_FILE found! - $APP_NAME appears to already be running."
+    echo "Exiting without starting $APP_NAME"
+    exit 1
+fi
+
+if rails s -b 0.0.0.0 -p $PORT -d RAILS_ENV=production; then
+    echo "Starting $APP_NAME on port $PORT"
+fi
+

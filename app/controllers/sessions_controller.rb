@@ -4,45 +4,77 @@ class SessionsController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   include SessionsHelper
-  
-  def cas_reg
-    "https://cas-reg.uits.iu.edu"
+
+
+  # def cas_reg
+  #   "https://cas-reg.uits.iu.edu"
+  # end
+  # def cas
+  #   "https://cas.iu.edu"
+  # end
+
+  def iu_login_staging
+    "https://idp-stg.login.iu.edu/idp/profile"
   end
-  def cas
-    "https://cas.iu.edu"
+
+  def iu_login
+    "https://idp.login.iu.edu/idp/profile"
+  end
+
+  def which_iu_login
+    if Rails.env == "production"
+      iu_login
+    else
+      iu_login_staging
+    end
   end
 
   def new
-    redirect_to("#{cas}/cas/login?cassvc=ANY&casurl=#{root_url}sessions/validate_login")
+    new_iu_login
+  end
+
+  def new_iu_login
+    url = "#{which_iu_login}/cas/login?service=#{root_url}sessions/validate_login"
+    logger.warn "Redirecting to IU Login for authentication: #{url}"
+    redirect_to(url)
   end
 
   def validate_login
-    @casticket=params[:casticket]
-    uri = URI.parse("#{cas}/cas/validate?cassvc=ANY&casticket=#{@casticket}&casurl=#{root_url}")
+    @casticket=params[:ticket]
+    logger.warn "Returning from IU Login, cas ticket: #{params}"
+    use =
+    url = "#{which_iu_login}/cas/serviceValidate?ticket=#{@casticket}&service=#{root_url}"
+    uri = URI.parse(url)
     request = Net::HTTP.new(uri.host, uri.port)
     request.use_ssl = true
-    request.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = request.get("#{cas}/cas/validate?cassvc=ANY&casticket=#{@casticket}&casurl=#{root_url}")
+    request.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    request.ssl_version = :TLSv1_2
+    response = request.get("#{which_iu_login}/cas/serviceValidate?ticket=#{@casticket}&service=#{root_url}sessions/validate_login")
     @resp = response.body
-    if @resp.slice(0,3) == 'yes'
-      @resp_true = @resp.slice(0,3)
-      @nlength=@resp.length - 7
-      @resp_user=@resp.slice(5,@nlength)
-      if User.authenticate(@resp_user)
-        sign_in(@resp_user) 
-        redirect_back_or_to root_url
-      else
-        redirect_to "#{root_url}denied.html"
-      end
+    logger.warn "Response from IU Login: #{@resp}"
+    user = extract_username(@resp)
+    if User.authenticate(user)
+      sign_in(user)
+      redirect_back_or_to root_url
     else
-      @resp_true = @resp.slice(0,2)
       redirect_to "#{root_url}denied.html"
     end
   end
 
   def destroy
     sign_out
-    redirect_to 'https://cas.iu.edu/cas/logout'
+    redirect_to "#{which_iu_login}/cas/logout"
+  end
+
+  private
+  def extract_username(response)
+    doc = Nokogiri::XML(response)
+    node = doc.xpath("//cas:user").first
+    if node
+      node.content
+    else
+      nil
+    end
   end
 
 end
