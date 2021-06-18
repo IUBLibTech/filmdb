@@ -246,33 +246,33 @@ class Title < ActiveRecord::Base
 		po = self.physical_objects.where(digitized: true).first
 		if po.nil?
 			{}
+		else
+			#begin
+			gk = Title.pod_group_key_id(po.mdpi_barcode)
+			if gk[:status] != 200
+				{error: "Error connecting to POD. Status: #{gk[:status]}"}
 			else
-				#begin
-					gk = Title.pod_group_key_id(po.mdpi_barcode)
-					if gk[:status] != 200
-						{error: "Error connecting to POD. Status: #{gk[:status]}"}
-					else
-						gk = gk[:gid]
-						self.update(pod_group_key_identifier: gk.to_i)
-						u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
-						uri = URI.parse(u)
-						http = Net::HTTP.new(uri.host, uri.port)
-						http.use_ssl = false
-						request = Net::HTTP::Get.new(uri.request_uri)
-						request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
-						result = http.request(request).body.gsub(/\s+/, "")
-						url = result.match(/<message>(.*?)<\/message>/)[1]
-						if url.nil?
-							{error: "Could not find an Avalon URL"}
-						else
-							{url: url}
-						end
-					end
-				# rescue => e
-				# 	puts e.message
-				# 	puts e.backtrace.join('\n')
-				# 	{error: "An unexpected error occurred while retrieving the Avalon URL from POD: #{e.message}"}
-				# end
+				gk = gk[:gid]
+				self.update(pod_group_key_identifier: gk.to_i)
+				u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
+				uri = URI.parse(u)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
+				request = Net::HTTP::Get.new(uri.request_uri)
+				request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
+				result = http.request(request).body.gsub(/\s+/, "")
+				url = result.match(/<message>(.*?)<\/message>/)[1]
+				if url.nil?
+					{error: "Could not find an Avalon URL"}
+				else
+					{url: url}
+				end
+			end
+			# rescue => e
+			# 	puts e.message
+			# 	puts e.backtrace.join('\n')
+			# 	{error: "An unexpected error occurred while retrieving the Avalon URL from POD: #{e.message}"}
+			# end
 		end
 	end
 
@@ -333,7 +333,7 @@ class Title < ActiveRecord::Base
 		u = Rails.application.secrets[:pod_service_grouping_url].dup.gsub!(':mdpi_barcode', mdpi_barcode.to_s)
 		uri = URI.parse(u)
 		http = Net::HTTP.new(uri.host, uri.port)
-		http.use_ssl = false
+		http.use_ssl = true
 		request = Net::HTTP::Get.new(uri.request_uri)
 		request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
 		result = http.request(request)
