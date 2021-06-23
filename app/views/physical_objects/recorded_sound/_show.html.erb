@@ -21,6 +21,9 @@
   </div>
   <div class="flex_column">
     <div class="inline m_top_10px">
+      <b>Original Identifiers</b> <%= @physical_object.physical_object_original_identifiers.collect{|i| i.identifier}.join(", ") %>
+    </div>
+    <div class="inline">
       <b>Duration</b> <%= @physical_object.duration %>
     </div>
     <div class="inline">
@@ -49,6 +52,12 @@
     <div class="flex_column">
       <div class="inline">
         <b>Playback</b> <%= @physical_object.playback %>
+      </div>
+      <div class="inline">
+        <b>Noise Reduction</b> <%= @physical_object.noise_reduction %>
+      </div>
+      <div class="inline">
+        <b>Track Configuration</b> <%= @physical_object.track_configuration %>
       </div>
       <div class="inline">
         <b>Content Type</b> <%= @physical_object.humanize_boolean_fields(RecordedSound::SOUND_CONTENT_FIELDS) %>

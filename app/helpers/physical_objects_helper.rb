@@ -292,7 +292,7 @@ module PhysicalObjectsHelper
           :multiple_items_in_can, :playback, :sound_content_type_composite_track, :sound_content_type_dialog, :sound_content_type_effects_track,
           :sound_content_type_music_track, :sound_content_type_outtakes, :sound_configuration_dual_mono, :sound_configuration_mono,
           :sound_configuration_stereo, :sound_configuration_surround, :sound_configuration_unknown, :sound_configuration_other,
-          :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold, :noise_reduction, :capacity,
+          :condition_rating, :condition_notes, :research_value, :research_value_notes, :mold, :noise_reduction, :capacity, :track_configuration,
 
           # additional physical object specific associations
           value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],

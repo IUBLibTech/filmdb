@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210616145403) do
+ActiveRecord::Schema.define(version: 20210623191436) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -442,6 +442,7 @@ ActiveRecord::Schema.define(version: 20210616145403) do
     t.string   "noise_reduction",                    limit: 255
     t.string   "capacity",                           limit: 255
     t.text     "generation_notes",                   limit: 65535
+    t.string   "track_configuration",                limit: 255
   end
 
   create_table "series", force: :cascade do |t|
