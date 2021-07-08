@@ -5,6 +5,7 @@ class SessionsController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
 
+
   # def cas_reg
   #   "https://cas-reg.uits.iu.edu"
   # end
@@ -29,7 +30,6 @@ class SessionsController < ActionController::Base
   end
 
   def new
-    #redirect_to("#{cas}/cas/login?cassvc=ANY&casurl=#{root_url}sessions/validate_login")
     new_iu_login
   end
 
@@ -63,7 +63,7 @@ class SessionsController < ActionController::Base
 
   def destroy
     sign_out
-    redirect_to 'https://idp-stg.login.iu.edu/idp/profile/cas/logout'
+    redirect_to "#{which_iu_login}/cas/logout"
   end
 
   private

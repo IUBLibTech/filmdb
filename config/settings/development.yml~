@@ -1,6 +1,0 @@
-pod_qc_user: podPeople
-pod_qc_pass: 1956InvasionOfThe
-filmdb_service_username: filmdbService
-filmdb_service_pass: RalphWiggum1989
-memnon_xml_url: "https://pod.mdpi.iu.edu/responses/objects/memnon_qc/<MDPI_BARCODE>"
-digitized_url: "https://pod.mdpi.iu.edu/responses/objects/<MDPI_BARCODE>/digital_workflow"

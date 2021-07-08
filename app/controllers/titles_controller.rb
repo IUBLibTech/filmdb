@@ -590,7 +590,7 @@ class TitlesController < ApplicationController
         :title_text, :summary, :series_id, :series_title_index, :modified_by_id, :created_by_id, :series_part, :notes,
         :subject, :name_authority, :country_of_origin, :fully_cataloged, :in_copyright, :copyright_end_date_edtf, :copyright_end_date,
         :copyright_verified_by_iu_cp_research, :copyright_verified_by_viewing_po, :copyright_verified_by_other,
-        :copyright_notes,
+        :copyright_notes, :stream_url,
         title_creators_attributes: [:id, :name, :role, :_destroy],
         title_dates_attributes: [:id, :date_text, :date_type, :_destroy],
         title_genres_attributes: [:id, :genre, :_destroy],

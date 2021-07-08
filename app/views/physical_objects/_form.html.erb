@@ -41,6 +41,12 @@
         <%= flash[:other_message].html_safe %>
       </div>
   <% end %>
+  <div class="m_top_10px">
+    <div class="left">
+      <%= f.check_box :digitized %>
+    </div>
+    <div class="left">Digitized?</div>
+  </div>
   <div id="core_metadata" class="metadata_section">
     <h4>Core Metadata</h4>
     <div class="left _50">

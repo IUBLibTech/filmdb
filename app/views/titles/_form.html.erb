@@ -34,6 +34,10 @@
           <%= f.text_area :summary %>
         </div>
       </div>
+      <div class="clear _50">
+        <div class="label short_label"><b>Stream URL</b></div>
+        <div class="field"><%= f.text_field :stream_url, class: "" %></div>
+      </div>
     </div>
     <h4>Title Original Identifiers</h4>
     <div id="toi_div" class="fields_for_div">
@@ -172,14 +176,14 @@
 		  close: function(event, ui) {
 			  $('#title_series_title_text').bind('keydown.remove_series', function(e) {
 				  if (e.keyCode !== 9) {
-					  $('#title_series_id').val('')
-				  }
+            $('#title_series_id').val('')
+          }
 			  });
 		  }
 	  }).bind('keydown.remove_series', function(e) {
 		  if (e.keyCode !== 9) {
-			  $('#title_series_id').val('')
-		  }
+        $('#title_series_id').val('')
+      }
 	  });
   });
 </script>
