@@ -87,19 +87,19 @@ class Title < ActiveRecord::Base
     Title.find_by_sql(sql)
   }
 
-  scope :title_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, current_user, offset, limit) {
-	  connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
+  scope :title_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status, current_user, offset, limit) {
+		connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 	  tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
 		  "#{title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)} "+
-		  "#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)})"
-	  connection.execute(tempTblSql)
+		  "#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)})"
+		connection.execute(tempTblSql)
 	  sql = "SELECT titles.* FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 	  res = Title.find_by_sql(sql)
 	  connection.execute("DROP TABLE #{current_user}_title_search")
 	  res
   }
 
-	scope :title_spreadsheet_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id) {
+	scope :title_spreadsheet_search, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status) {
 		t = title_text.blank? ? Title.all : Title.where("title_text like #{escape_wildcard(title_text)}")
 		t = t.where("summary_text like #{escape_wildcard(summary_text)}") unless summary_text.blank?
 		t = t.where("subject like #{escape_wildcard(subject_text)}") unless subject_text.blank?
@@ -132,14 +132,22 @@ class Title < ActiveRecord::Base
 					"(year(title_dates.start_date) < #{dates[0]} AND year(title_dates.end_date) > #{dates[1]}))))")
 			end
 		end
+		unless digitized_status == 'all'
+			if digitized_status == "not_digitized"
+				t = t.where("AND (titles.stream_url is null OR titles.stream_url = '')")
+			elsif digitized_status == "digitized"
+				t = t.where("AND (titles.stream_url is not null AND titles.stream_url != '')")
+			end
+		end
 		t
 	}
-	scope :title_search_count, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, current_user, offset, limit) {
+	scope :title_search_count, -> (title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status, current_user, offset, limit) {
 		connection.execute("DROP TABLE IF EXISTS #{current_user}_title_search")
 		tempTblSql = "CREATE TEMPORARY TABLE #{current_user}_title_search as (SELECT distinct(titles.id) as title_id "+
 			"#{title_search_from_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)} "+
-			"#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)})"
+			"#{title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)})"
 		connection.execute(tempTblSql)
+
 		sql = "SELECT count(*) FROM titles INNER JOIN #{current_user}_title_search WHERE titles.id = #{current_user}_title_search.title_id ORDER BY titles.title_text LIMIT #{limit} OFFSET #{offset}"
 		res = connection.execute(sql)
 		connection.execute("DROP TABLE #{current_user}_title_search")
@@ -290,7 +298,7 @@ class Title < ActiveRecord::Base
 				u = Rails.application.secrets[:pod_services_avalon_url].dup.gsub!(':gki', pod_group_key_identifier.to_s)
 				uri = URI.parse(u)
 				http = Net::HTTP.new(uri.host, uri.port)
-				http.use_ssl = false
+				http.use_ssl = true
 				request = Net::HTTP::Get.new(uri.request_uri)
 				request.basic_auth(Rails.application.secrets[:pod_service_username], Rails.application.secrets[:pod_service_password])
 				result = http.request(request).body.gsub(/\s+/, "")
@@ -372,7 +380,7 @@ class Title < ActiveRecord::Base
 		end
 		sql
 	end
-	def self.title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id)
+	def self.title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)
 		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank?) ? "" : "WHERE"
 		if !title_text.blank?
 			sql << " titles.title_text like #{escape_wildcard(title_text)}"
@@ -418,6 +426,14 @@ class Title < ActiveRecord::Base
 		if !collection_id.blank?
 			add_and(sql)
 			sql << "collections.id = #{collection_id}"
+		end
+		unless digitized_status == "all"
+			add_and(sql)
+			if digitized_status == "digitized"
+				sql << "(titles.stream_url is not null AND titles.stream_url != '')"
+			else
+				sql << "(titles.stream_url is null OR titles.stream_url = '')"
+			end
 		end
 		sql
 	end

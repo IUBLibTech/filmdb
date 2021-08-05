@@ -10,9 +10,9 @@ module ServicesHelper
 	end
 
 	def test_basic_auth
-		uri = URI.parse("http://sycamore.dlib.indiana.edu:8510/responses/objects/40000000334609/metadata/full")
+		uri = URI.parse("http://pod.mdpi.iu.edu/responses/objects/40000000334609/metadata/full")
 		http = Net::HTTP.new(uri.host, uri.port)
-		http.use_ssl = false
+		http.use_ssl = true
 		request = Net::HTTP::Get.new(uri.request_uri)
 		request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
 		result = http.request(request)
@@ -23,7 +23,7 @@ module ServicesHelper
 	def post_multipart(file_path)
 		uri = URI.parse(Rails.configuration.pod_batch_url)
 		http = Net::HTTP.new(uri.host, uri.port)
-		http.use_ssl = false
+		http.use_ssl = true
 		request = Net::HTTP::Post.new(uri.path)
 		request.basic_auth(Settings.pod_qc_user, Settings.pod_qc_pass)
 		request.body = File.open(file_path).read

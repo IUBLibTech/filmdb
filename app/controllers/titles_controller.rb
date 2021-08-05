@@ -12,15 +12,15 @@ class TitlesController < ApplicationController
 	  if params[:title_text]
 		  # find out whether or not to do pagination
 		  @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
-		                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
+		                               (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status], current_user, 0, Title.all.size)
 		  if @count > Title.per_page
 			  @paginate = true
 			  @page = (params[:page] ? params[:page].to_i : 1)
 			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
-			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, (@page - 1) * Title.per_page, Title.per_page)
+			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status], current_user, (@page - 1) * Title.per_page, Title.per_page)
 		  else
 			  @titles = Title.title_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text],
-			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, @count)
+			                               (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status], current_user, 0, @count)
 		  end
     end
     respond_to do |format|
