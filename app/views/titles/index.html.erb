@@ -50,6 +50,14 @@
 			<%= select_tag :collection_id, options_for_select([['All', "0"]] + Collection.all.order(:name).collect{ |c| [c.name, c.id]}, params[:collection_id]) %>
 		</td>
 	</tr>
+  <tr>
+    <th>Digitized Status</th>
+    <td>
+      <%= radio_button_tag :digitized_status, "all", checked='checked'  %>All<br>
+      <%= radio_button_tag :digitized_status, "digitized"  %>Digitized<br>
+      <%= radio_button_tag :digitized_status, "not_digitized"  %>Not Digitized<br>
+    </td>
+  </tr>
 	<tr>
 		<td colspan="2">
       <div class="left _50">
@@ -80,6 +88,8 @@
 		<td><%= params[:creator_text] %></td>
 		<th>Collection:</th>
 		<td><%= params[:collection_id] == '0' ? 'All' : "#{Collection.find(params[:collection_id].to_i).name}" %></td>
+    <th>Digitized Status</th>
+    <td><%= params[:digitized_status].upcase %></td>
 	</tr>
 </table>
 <% end %>
