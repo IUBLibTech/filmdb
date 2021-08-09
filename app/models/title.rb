@@ -381,7 +381,7 @@ class Title < ActiveRecord::Base
 		sql
 	end
 	def self.title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)
-		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank?) ? "" : "WHERE"
+		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank? && digitized_status == "all") ? "" : "WHERE"
 		if !title_text.blank?
 			sql << " titles.title_text like #{escape_wildcard(title_text)}"
 		end
