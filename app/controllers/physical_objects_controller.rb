@@ -9,7 +9,7 @@ class PhysicalObjectsController < ApplicationController
   # GET /physical_objects
   # GET /physical_objects.json
   def index
-    @statuses = WorkflowStatus::ALL_STATUSES.sort.collect{ |t| [t, t]}
+    @statuses = WorkflowStatus::ALL_STATUSES.uniq.sort.collect{ |t| [t, t]}
 	  if params[:status] && !params[:status].blank?
       @count = PhysicalObject.joins(:current_workflow_status).where("workflow_statuses.status_name = '#{params[:status]}'")
       @count = @count.where("physical_objects.digitized = true") if params[:digitized]
