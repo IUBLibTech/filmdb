@@ -134,9 +134,9 @@ class Title < ActiveRecord::Base
 		end
 		unless digitized_status == 'all'
 			if digitized_status == "not_digitized"
-				t = t.where("AND (titles.stream_url is null OR titles.stream_url = '')")
+				t = t.where("(titles.stream_url is null OR titles.stream_url = '')")
 			elsif digitized_status == "digitized"
-				t = t.where("AND (titles.stream_url is not null AND titles.stream_url != '')")
+				t = t.where("(titles.stream_url is not null AND titles.stream_url != '')")
 			end
 		end
 		t
