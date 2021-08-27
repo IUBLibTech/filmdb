@@ -37,7 +37,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
+gem 'delayed_job_active_record'
 # mimemagic was yanked... this is a temporary workaround
 gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
 
@@ -46,6 +46,7 @@ gem 'hairtrigger'
 
 # pundit adds authorization support
 gem 'pundit'
+
 
 # roo adds XLSX read-only support
 gem "roo", "~> 2.8.0"

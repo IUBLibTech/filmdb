@@ -41,8 +41,9 @@ class TitlesController < ApplicationController
   # end
 
   def xls_search
-    @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), current_user, 0, Title.all.size)
-    @titles = Title.title_spreadsheet_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+    @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status], current_user, 0, Title.all.size)
+    #@titles = Title.title_spreadsheet_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
+    @titles = Title.search_titles_xls(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status])
     x = Axlsx::Package.new
     wb = x.workbook
     films = wb.add_worksheet(name: "Films")
@@ -51,7 +52,8 @@ class TitlesController < ApplicationController
     Film.write_xlsx_header_row( films)
     Video.write_xlsx_header_row( videos )
     RecordedSound.write_xlsx_header_row( recorded_sounds )
-    @titles.each do |t|
+    @titles.each_with_index do |t, i|
+      puts "#{i+1} of #{@count} Titles Processed"
       t.physical_objects.each do |po|
         if po.specific.medium == "Film"
           @worksheet = films
