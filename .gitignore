@@ -26,8 +26,8 @@ bin/iul_start
 bin/iul_stop
 
 # files for rubymine
-.idea/*
-.idea/filmdb.iml
+.idea/
+*.iml
 
 # files from Passenger
 passenger.*
