@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210623191436) do
+ActiveRecord::Schema.define(version: 20210830134048) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -111,6 +111,22 @@ ActiveRecord::Schema.define(version: 20210623191436) do
     t.datetime "updated_at"
     t.boolean  "active_status",               default: true
   end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   limit: 4,     default: 0, null: false
+    t.integer  "attempts",   limit: 4,     default: 0, null: false
+    t.text     "handler",    limit: 65535,             null: false
+    t.text     "last_error", limit: 65535
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "delete_log_entries", force: :cascade do |t|
     t.integer  "table_id",                  limit: 4
@@ -456,6 +472,29 @@ ActiveRecord::Schema.define(version: 20210623191436) do
     t.string   "date",              limit: 255
     t.integer  "total_episodes",    limit: 4
     t.integer  "spreadsheet_id",    limit: 8
+  end
+
+  create_table "spread_sheet_searches", force: :cascade do |t|
+    t.integer  "user_id",             limit: 4
+    t.string   "title_text",          limit: 255
+    t.string   "series_name",         limit: 255
+    t.string   "date_text",           limit: 255
+    t.string   "publisher_text",      limit: 255
+    t.string   "creator_text",        limit: 255
+    t.string   "summary_text",        limit: 255
+    t.string   "location_text",       limit: 255
+    t.string   "subject_text",        limit: 255
+    t.integer  "collection_id",       limit: 4
+    t.string   "digitized_status",    limit: 255
+    t.boolean  "completed"
+    t.float    "query_runtime",       limit: 24
+    t.float    "spreadsheet_runtime", limit: 24
+    t.integer  "percent_complete",    limit: 4
+    t.text     "error_message",       limit: 65535
+    t.float    "request_ts",          limit: 24
+    t.string   "file_location",       limit: 255
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "spreadsheet_submissions", force: :cascade do |t|
