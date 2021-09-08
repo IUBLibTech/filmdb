@@ -3,7 +3,7 @@ class SpreadSheetSearchesController < ApplicationController
   before_action :set_spread_sheet_search, only: [:show, :edit, :update, :destroy]
 
   def index
-    @spread_sheet_searches = SpreadSheetSearch.all
+    @spread_sheet_searches = SpreadSheetSearch.where(created_at: DateTime.now-2.days..DateTime.now)
   end
 
   def check_progress

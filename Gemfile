@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-# need to add the passenger gem for Sycamore because of upgrading ruby/rails/bundler
-gem 'passenger'
+# need to add the passenger gem for Sycamore because of upgrading ruby/rails/bundler#
+# gem 'passenger'
 
 gem 'rails', '~> 4.2'
 
