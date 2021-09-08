@@ -29,5 +29,6 @@ module Filmdb
     config.autoload_paths << Rails.root.join('lib')
     config.paths.add 'lib', eager_load: true
 
+    config.active_job.queue_adapter = :delayed_job
   end
 end
