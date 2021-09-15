@@ -92,7 +92,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 
-	NEW_MEDIUMS = ['Film', 'Video', 'Recorded Sound']
+	NEW_MEDIUMS = ['Film', 'Video', 'Recorded Sound', 'Equipment/Technology']
 
 	def self.per_page
 		100

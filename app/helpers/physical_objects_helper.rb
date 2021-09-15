@@ -18,7 +18,7 @@ module PhysicalObjectsHelper
 	  "#{hh}:#{"%02d" % mm}:#{"%02d" % ss}"
   end
 
-  # this should be used by any action that a creates a physical object from form submission
+  # this should be used by any action that creates a physical object from form submission
   def create_physical_object
     @physical_object = physical_object_specific
     user = User.current_user_object
@@ -99,6 +99,7 @@ module PhysicalObjectsHelper
     type = :film if params[:film]
     type = :video if params[:video]
     type = :recorded_sound if params[:recorded_sound]
+    type = :equipment_technology if params[:equipment_technology]
     raise "Invalid request - no supported formats specified: #{params.keys.join(', ')}" if type.nil?
     type
   end
@@ -110,6 +111,8 @@ module PhysicalObjectsHelper
       Video.new
     elsif medium == 'Recorded Sound' || medium == :recorded_sound
       RecordedSound.new
+    elsif medium == 'Equipment/Technology' || medium == :equipment_technology
+      EquipmentTechnology.new
     else
       raise "Unsupported medium: #{medium}"
     end

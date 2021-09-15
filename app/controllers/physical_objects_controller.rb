@@ -78,7 +78,8 @@ class PhysicalObjectsController < ApplicationController
     u = User.current_user_object
     if request.get?
       @em = "Creating New Physical Object"
-      @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      @physical_object = EquipmentTechnology.new(inventoried_by: u.id, modified_by: u.id, media_type: '', medium: 'Equipment/Technology')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
@@ -92,9 +93,11 @@ class PhysicalObjectsController < ApplicationController
           new_one.send(p+"=", params[class_sym][p])
         end
       end
-      # copy any title associations created before the switch
-      params[:physical_object][:title_ids].split(',').each do |t_id|
-        new_one.titles << Title.find(t_id.to_i)
+      # copy any title associations created before the switch, unless it was an Equipment/Technology object in which case it has no titles
+      unless params[:equipment_technology]
+        params[:physical_object][:title_ids].split(',').each do |t_id|
+          new_one.titles << Title.find(t_id.to_i)
+        end
       end
       @physical_object = new_one.specific
       set_cv

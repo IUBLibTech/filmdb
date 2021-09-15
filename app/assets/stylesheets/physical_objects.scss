@@ -145,6 +145,9 @@ div.select > div {
 #version_div > .check_box {
   width: 10%;
 }
+#version_div > .wide {
+  width: 17%;
+}
 #physical_object_generation_notes {
 	width: 99.3%;
 }
@@ -163,4 +166,20 @@ div.select > div {
 }
 .m_bottom_5px {
   margin-bottom: 5px;
+}
+.et_flex_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: left;
+}
+.et_flex_row > div {
+  margin-right: 10px;
+  width: 200px;
+}
+.m_top_5px {
+  margin-top: 5px;
+}
+._79 {
+  width: 79%;
 }
