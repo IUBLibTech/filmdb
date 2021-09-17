@@ -74,13 +74,11 @@ class SpreadSheetSearch < ActiveRecord::Base
         titles = titles.where("titles.stream_url is not null AND titles.stream_url != ''")
       end
     end
-    titles = titles.where("titles.summary like '%?%'", summary_text) unless summary_text.blank?
-    titles = titles.where("titles.subject like '%?%'", subject_text) unless subject_text.blank?
+    titles = titles.where("titles.summary LIKE ?", "%#{summary_text}%") unless summary_text.blank?
+    titles = titles.where("titles.subject LIKE ?", "%#{subject_text}%") unless subject_text.blank?
 
-    #titles.includes(:physical_objects, :series, :title_dates, :title_publishers, :title_creators, :title_locations)
-    #titles.joins(:physical_objects, :series, :title_dates, :title_publishers, :title_creators, :title_locations)
-    #q.where("titles.title_text like '%?%'", title_text) unless title_text.blank?
-    titles = titles.where("series.series.title like '%?%'", series_name) unless series_name.blank?
+    titles = titles.joins(:series).includes(:series).where("series.title LIKE ?", "%#{series_name}%") unless series_name.blank?
+
     unless date_text.blank?
       dates = date_text.gsub(' ', '').split('-')
       if dates.size == 1
@@ -98,9 +96,9 @@ class SpreadSheetSearch < ActiveRecord::Base
         )
       end
     end
-    titles = titles.joins(:title_publishers).includes(:title_publishers).where("title_publishers.name like '%?%'", publisher_text) unless publisher_text.blank?
-    titles = titles.joins(:title_creators).inlcudes(:title_creators).where("title_creators.name like '%?%'", creator_text) unless creator_text.blank?
-    titles = titles.joins(:title_locations).includes(:title_locations).where("title_locations.location like '%?%'", location_text) unless location_text.blank?
+    titles = titles.joins(:title_publishers).includes(:title_publishers).where("title_publishers.name LIKE ?", "%#{publisher_text}%") unless publisher_text.blank?
+    titles = titles.joins(:title_creators).inlcudes(:title_creators).where("title_creators.name like ?", "%#{creator_text}%") unless creator_text.blank?
+    titles = titles.joins(:title_locations).includes(:title_locations).where("title_locations.location ?", "%#{location_text}%") unless location_text.blank?
     if collection_id == 0
       titles = titles.joins(:physical_objects).includes(:physical_objects)
     else

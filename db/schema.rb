@@ -145,6 +145,43 @@ ActiveRecord::Schema.define(version: 20210830134048) do
     t.integer  "cage_shelf_id",           limit: 8
   end
 
+  create_table "equipment_technologies", force: :cascade do |t|
+    t.boolean  "type_camera"
+    t.boolean  "type_camera_accessory"
+    t.boolean  "type_editor"
+    t.boolean  "type_flatbed"
+    t.boolean  "type_lens"
+    t.boolean  "type_light_reader"
+    t.boolean  "type_photo_equipment"
+    t.boolean  "type_projection_screen"
+    t.boolean  "type_projector"
+    t.boolean  "type_rewind"
+    t.boolean  "type_shrinkage_gauge"
+    t.boolean  "type_squawk_box"
+    t.boolean  "type_splicer"
+    t.boolean  "type_supplies"
+    t.boolean  "type_synchronizer"
+    t.boolean  "type_viewer"
+    t.boolean  "type_video_deck"
+    t.boolean  "type_other"
+    t.text     "type_other_text",          limit: 65535
+    t.string   "related_media_format",     limit: 255
+    t.string   "manufacturer",             limit: 255
+    t.string   "model",                    limit: 255
+    t.string   "serial_number",            limit: 255
+    t.string   "box_number",               limit: 255
+    t.text     "summary",                  limit: 65535
+    t.date     "production_year"
+    t.string   "production_location",      limit: 255
+    t.string   "cost_estimate",            limit: 255
+    t.text     "cost_notes",               limit: 65535
+    t.string   "photos_url",               limit: 255
+    t.text     "external_reference_links", limit: 65535
+    t.string   "working_condition",        limit: 255
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
   create_table "films", force: :cascade do |t|
     t.boolean "first_edition"
     t.boolean "second_edition"
