@@ -140,14 +140,13 @@
         <div><%= f.text_area :cost_notes %></div>
       </div>
       <div class="_20">
-        <div><b>Cost Estimate</b></div>
-        <div><%= f.text_field :cost_estimate %></div>
+        <div><b>Cost Estimate ($)</b> <%= f.text_field :cost_estimate %></div>
       </div>
     </div>
     <div class="m_top_5px">
-      <div class="_20">
+      <div class="">
         <div><b>Link to Photographs</b></div>
-        <div><%= f.text_field :photos_url %></div>
+        <div><%= f.text_field :photos_url, {class: '_50'} %></div>
       </div>
       <div class="_100 m_top_5px">
         <div><b>Links to External References</b></div>
