@@ -75,7 +75,7 @@
       <div class="left"><%= f.check_box :type_other %></div>
       <div class="left">Other&nbsp;</div>
       <div class="left">
-        <%= f.text_field :type_other_text %>
+        <%= f.text_field :type_other_text, {class: 'hidden'} %>
       </div>
     </div>
   </div>
@@ -135,21 +135,21 @@
       </div>
     </div>
     <div class="m_top_5px">
-      <div class="left _20">
-        <div><b>Cost Estimate</b></div>
-        <div><%= f.text_field :cost_estimate %></div>
-      </div>
-      <div class="left _79">
+      <div class="_100">
         <div><b>Cost Estimate Notes</b></div>
         <div><%= f.text_area :cost_notes %></div>
       </div>
+      <div class="_20">
+        <div><b>Cost Estimate</b></div>
+        <div><%= f.text_field :cost_estimate %></div>
+      </div>
     </div>
     <div class="m_top_5px">
-      <div class="left _20">
+      <div class="_20">
         <div><b>Link to Photographs</b></div>
         <div><%= f.text_field :photos_url %></div>
       </div>
-      <div class="left _79">
+      <div class="_100 m_top_5px">
         <div><b>Links to External References</b></div>
         <%= f.text_area :external_reference_links %>
       </div>

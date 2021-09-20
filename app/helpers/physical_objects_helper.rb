@@ -134,11 +134,14 @@ module PhysicalObjectsHelper
 
   private
   def associate_titles
-    titles = Title.where(id: params[:physical_object][:title_ids].split(',').collect { |n| n.to_i} )
-    titles.each do |t|
-      @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
+    unless @physical_object.medium == "Equipment/Technology"
+      titles = Title.where(id: params[:physical_object][:title_ids].split(',').collect { |n| n.to_i} )
+      titles.each do |t|
+        @physical_object.physical_object_titles << PhysicalObjectTitle.new(physical_object_id: @physical_object.id, title_id: t.id)
+      end
     end
   end
+
   def physical_object_specific
     if params[:film]
       Film.new(physical_object_params)
@@ -146,6 +149,8 @@ module PhysicalObjectsHelper
       Video.new(physical_object_params)
     elsif params[:recorded_sound]
       RecordedSound.new(physical_object_params)
+    elsif params[:equipment_technology]
+      EquipmentTechnology.new(physical_object_params)
     else
       raise 'Unsupported Format'
     end
@@ -174,6 +179,13 @@ module PhysicalObjectsHelper
           :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
           :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
           :catalog_key, :compilation, :format_notes, :digitized
+      )
+    elsif params[:equipment_technology]
+      params.require(:equipment_technology).permit(
+        :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+        :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+        :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+        :catalog_key, :compilation, :format_notes, :digitized
       )
     else
       raise "Unsupported Medium: #{params.keys}"
@@ -303,6 +315,28 @@ module PhysicalObjectsHelper
           languages_attributes: [:id, :language, :language_type, :_destroy],
           physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
           physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
+      )
+    elsif params[:equipment_technology]
+      params.require(:equipment_technology).permit(
+        # physical object specific attributes
+        :location, :media_type, :medium, :iu_barcode, :format, :spreadsheet_id, :inventoried_by, :alternative_title,
+        :creator, :language, :accompanying_documentation, :notes, :unit_id, :collection_id, :alf_shelf, :duration,
+        :conservation_actions, :mdpi_barcode, :accompanying_documentation_location, :miscellaneous, :title_control_number,
+        :catalog_key, :compilation, :format_notes, :digitized, :condition_rating, :condition_notes, :research_value, :research_value_notes,
+
+        # attributes specific to EquipmentTechnology POs
+        :type_camera, :type_camera_accessory, :type_editor, :type_flatbed, :type_lens, :type_light_reader, :type_photo_equipment,
+        :type_projection_screen, :type_projector, :type_rewind, :type_shrinkage_gauge, :type_squawk_box, :type_splicer,
+        :type_supplies, :type_synchronizer, :type_viewer, :type_video_deck, :type_other, :type_other_text, :related_media_format,
+        :manufacturer, :model, :serial_number, :box_number, :production_year, :production_location, :summary, :cost_notes,
+        :cost_estimate, :photos_url, :external_reference_links, :working_condition,
+
+        # additional physical object specific associations
+        value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
+        boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
+        languages_attributes: [:id, :language, :language_type, :_destroy],
+        physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
+        physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
       )
     else
       raise "Unsupported Format #{params[:physical_object][:medium]}"

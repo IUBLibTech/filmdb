@@ -46,6 +46,10 @@ class EquipmentTechnology < ActiveRecord::Base
     str
   end
 
+  def gauge
+    humanize_boolean_fields EquipmentTechnology::TYPE_FIELDS
+  end
+
   def medium_name
     "#{medium} [#{humanize_boolean_fields EquipmentTechnology::TYPE_FIELDS}]"
   end

@@ -44,6 +44,7 @@
 
   <% if @physical_object.actable.class == EquipmentTechnology %>
     <%= render partial: "physical_objects/equipment_technology/metadata_editable", locals: {f: f}  %>
+    <%= render partial: "physical_objects/equipment_technology/metadata_editable_js" %>
   <% else %>
     <div class="m_top_10px">
       <div class="left">

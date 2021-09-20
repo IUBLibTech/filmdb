@@ -1,0 +1,11 @@
+<script type="text/javascript" id="metadata_js">
+	function hookMetadataListeners() {
+		$("#equipment_technology_type_other").change(function () {
+			if (this.checked) {
+				$("#equipment_technology_type_other_text").val('').fadeIn();
+      } else {
+				$("#equipment_technology_type_other_text").fadeOut().val('');
+      }
+		});
+	}
+</script>
