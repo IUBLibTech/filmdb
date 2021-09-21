@@ -52,6 +52,8 @@ Rails.application.routes.draw do
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
   patch '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'edit_physical_object_medium'
 
+  get '/equipment_technology/', to: 'physical_objects#equipment_technology', as: 'equipment_technology'
+
   #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
   get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'

@@ -1,5 +1,6 @@
 <script type="text/javascript" id="metadata_js">
   let money_regex = /^(?!0\.00)[1-9]\d{0,2}(,\d{3})*(\.\d\d)?$/;
+	let mon_regex = /^\$?[0-9]+(\.[0-9][0-9])?$/
 	function hookMetadataListeners() {
 		$("#equipment_technology_type_other").change(function () {
 			if (this.checked) {
@@ -10,7 +11,7 @@
 		});
 		$("#equipment_technology_cost_estimate").on('input', function() {
 			let val = $(this).val();
-			if (val === '' || (money_regex.test($(this).val()) === true)) {
+			if (val === '' || (mon_regex.test($(this).val()) === true)) {
 				$(this).removeClass('bad_barcode');
       } else {
 				$(this).addClass('bad_barcode');

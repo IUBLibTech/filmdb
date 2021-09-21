@@ -42,6 +42,11 @@ class PhysicalObjectsController < ApplicationController
 	  end
   end
 
+  def equipment_technology
+    @physical_objects = PhysicalObject.where(medium: 'Equipment/Technology')
+    render 'physical_objects/equipment_technology/index'
+  end
+
   # GET /physical_objects/1
   # GET /physical_objects/1.json
   def show

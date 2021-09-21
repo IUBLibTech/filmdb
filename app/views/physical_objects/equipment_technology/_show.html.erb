@@ -38,9 +38,10 @@
     <b>Cost Estimate</b> <%= @physical_object.cost_estimate %>
   </div>
   <div>
-    <%= link_to "Photo Graphs", @physical_object.photos_url, target: '_blank' unless @physical_object.photos_url.blank? %> <br>
+    <b>Link to Photograhs</b>
+    <%= link_to @physical_object.photos_url, @physical_object.photos_url, target: '_blank' unless @physical_object.photos_url.blank? %> <br>
     <b>Links to External References</b><br>
-    <%= @physical_object.external_reference_links %>
+    <%= @physical_object.external_reference_links.gsub("\n","<br>").html_safe %>
   </div>
   <div>
     <h4>Condition</h4>
