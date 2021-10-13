@@ -202,9 +202,10 @@ class PhysicalObjectsController < ApplicationController
       logger.debug $!
     end
     if @success
-      if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
-        notify_nitrate(@physical_object)
-      end
+      # Filmdb no longer emails notification of nitrate base
+      # if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
+      #   notify_nitrate(@physical_object)
+      # end
       redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.'
     else
       @original_po_id = @physical_object.acting_as.id
@@ -245,9 +246,10 @@ class PhysicalObjectsController < ApplicationController
       nitrate = @physical_object.specific.base_nitrate
       @physical_object.specific.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
-      if @physical_object.specific.base_nitrate && !nitrate
-        notify_nitrate(@physical_object)
-      end
+      # Filmdb no longer emails notification about nitrate
+      # if @physical_object.specific.base_nitrate && !nitrate
+      #   notify_nitrate(@physical_object)
+      # end
     end
     redirect_to edit_ad_strip_path
   end

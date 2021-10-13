@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210915145222) do
+ActiveRecord::Schema.define(version: 20211011133916) do
 
   create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
     t.string   "value",      limit: 255
@@ -164,22 +164,109 @@ ActiveRecord::Schema.define(version: 20210915145222) do
     t.boolean  "type_viewer"
     t.boolean  "type_video_deck"
     t.boolean  "type_other"
-    t.text     "type_other_text",          limit: 65535
-    t.string   "related_media_format",     limit: 255
-    t.string   "manufacturer",             limit: 255
-    t.string   "model",                    limit: 255
-    t.string   "serial_number",            limit: 255
-    t.string   "box_number",               limit: 255
-    t.text     "summary",                  limit: 65535
-    t.date     "production_year"
-    t.string   "production_location",      limit: 255
-    t.string   "cost_estimate",            limit: 255
-    t.text     "cost_notes",               limit: 65535
-    t.string   "photos_url",               limit: 255
-    t.text     "external_reference_links", limit: 65535
-    t.string   "working_condition",        limit: 255
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.text     "type_other_text",                              limit: 65535
+    t.string   "related_media_format",                         limit: 255
+    t.string   "manufacturer",                                 limit: 255
+    t.string   "model",                                        limit: 255
+    t.string   "serial_number",                                limit: 255
+    t.string   "box_number",                                   limit: 255
+    t.text     "summary",                                      limit: 65535
+    t.text     "production_year",                              limit: 65535
+    t.string   "production_location",                          limit: 255
+    t.text     "cost_notes",                                   limit: 65535
+    t.string   "photos_url",                                   limit: 255
+    t.text     "external_reference_links",                     limit: 65535
+    t.string   "working_condition",                            limit: 255
+    t.datetime "created_at",                                                                          null: false
+    t.datetime "updated_at",                                                                          null: false
+    t.decimal  "cost_estimate",                                              precision: 10, scale: 2
+    t.text     "original_notes_from_donor",                    limit: 65535
+    t.boolean  "film_gauge_8mm"
+    t.boolean  "film_gauge_super_8mm"
+    t.boolean  "film_gauge_9_5mm"
+    t.boolean  "film_gauge_16mm"
+    t.boolean  "film_gauge_super_16mm"
+    t.boolean  "film_gauge_28mm"
+    t.boolean  "film_gauge_35mm"
+    t.boolean  "film_gauge_35_32mm"
+    t.boolean  "film_gauge_70mm"
+    t.boolean  "film_gauge_other"
+    t.boolean  "video_gauge_1_inch_videotape"
+    t.boolean  "video_gauge_1_2_inch_videotape"
+    t.boolean  "video_gauge_1_4_inch_videotape"
+    t.boolean  "video_gauge_2_inch_videotape"
+    t.boolean  "video_gauge_betacam"
+    t.boolean  "video_gauge_betacam_sp"
+    t.boolean  "video_gauge_betacam_sx"
+    t.boolean  "video_gauge_betamax"
+    t.boolean  "video_gauge_blu_ray_disc"
+    t.boolean  "video_gauge_cartrivision"
+    t.boolean  "video_gauge_d1"
+    t.boolean  "video_gauge_d2"
+    t.boolean  "video_gauge_d3"
+    t.boolean  "video_gauge_d5"
+    t.boolean  "video_gauge_d6"
+    t.boolean  "video_gauge_d9"
+    t.boolean  "video_gauge_dct"
+    t.boolean  "video_gauge_digital_betacam"
+    t.boolean  "video_gauge_digital8"
+    t.boolean  "video_gauge_dv"
+    t.boolean  "video_gauge_dvcam"
+    t.boolean  "video_gauge_dvcpro"
+    t.boolean  "video_gauge_dvd"
+    t.boolean  "video_gauge_eiaj_cartridge"
+    t.boolean  "video_gauge_evd_videodisc"
+    t.boolean  "video_gauge_hdcam"
+    t.boolean  "video_gauge_hi8"
+    t.boolean  "video_gauge_laserdisc"
+    t.boolean  "video_gauge_mii"
+    t.boolean  "video_gauge_minidv"
+    t.boolean  "video_gauge_hdv"
+    t.boolean  "video_gauge_super_video_cd"
+    t.boolean  "video_gauge_u_matic"
+    t.boolean  "video_gauge_universal_media_disc"
+    t.boolean  "video_gauge_v_cord"
+    t.boolean  "video_gauge_vhs"
+    t.boolean  "video_gauge_vhs_c"
+    t.boolean  "video_gauge_svhs"
+    t.boolean  "video_gauge_video8_aka_8mm_video"
+    t.boolean  "video_gauge_vx"
+    t.boolean  "video_gauge_videocassette"
+    t.boolean  "video_gauge_open_reel_videotape"
+    t.boolean  "video_gauge_optical_video_disc"
+    t.boolean  "video_gauge_other"
+    t.boolean  "video_gauge_svhs_c"
+    t.boolean  "video_gauge_ced"
+    t.boolean  "recorded_sound_gauge_open_reel_audiotape"
+    t.boolean  "recorded_sound_gauge_grooved_analog_disc"
+    t.boolean  "recorded_sound_gauge_1_inch_audio_tape"
+    t.boolean  "recorded_sound_gauge_1_2_inch_audio_cassette"
+    t.boolean  "recorded_sound_gauge_1_4_inch_audio_cassette"
+    t.boolean  "recorded_sound_gauge_1_4_inch_audio_tape"
+    t.boolean  "recorded_sound_gauge_2_inch_audio_tape"
+    t.boolean  "recorded_sound_gauge_8_track"
+    t.boolean  "recorded_sound_gauge_aluminum_disc"
+    t.boolean  "recorded_sound_gauge_audio_cassette"
+    t.boolean  "recorded_sound_gauge_audio_cd"
+    t.boolean  "recorded_sound_gauge_dat"
+    t.boolean  "recorded_sound_gauge_dds"
+    t.boolean  "recorded_sound_gauge_dtrs"
+    t.boolean  "recorded_sound_gauge_flexi_disc"
+    t.boolean  "recorded_sound_gauge_grooved_dictabelt"
+    t.boolean  "recorded_sound_gauge_lacquer_disc"
+    t.boolean  "recorded_sound_gauge_magnetic_dictabelt"
+    t.boolean  "recorded_sound_gauge_mini_cassette"
+    t.boolean  "recorded_sound_gauge_pcm_betamax"
+    t.boolean  "recorded_sound_gauge_pcm_u_matic"
+    t.boolean  "recorded_sound_gauge_pcm_vhs"
+    t.boolean  "recorded_sound_gauge_piano_roll"
+    t.boolean  "recorded_sound_gauge_plastic_cylinder"
+    t.boolean  "recorded_sound_gauge_shellac_disc"
+    t.boolean  "recorded_sound_gauge_super_audio_cd"
+    t.boolean  "recorded_sound_gauge_vinyl_recording"
+    t.boolean  "recorded_sound_gauge_wax_cylinder"
+    t.boolean  "recorded_sound_gauge_wire_recording"
+    t.boolean  "recorded_sound_gauge_1_8_inch_audio_tape"
   end
 
   create_table "films", force: :cascade do |t|

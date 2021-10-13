@@ -75,4 +75,15 @@ module AlfHelper
 		sprintf "%05d", (id.nil? ? 1 : id+1)
 	end
 
+	def test_upload_file(file)
+		cedar = Rails.configuration.cedar
+		Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
+			# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
+			# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
+			upload_dir = cedar['upload_test_dir']
+			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
+			scp.upload!(file, upload_dir)
+		end
+	end
+
 end

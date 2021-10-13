@@ -148,6 +148,13 @@ div.select > div {
 #version_div > .wide {
   width: 17%;
 }
+.film, .video, .recorded_sound {
+  display: none;
+}
+.film > .wide , .video > .wide, .recorded_sound > .wide {
+  width: 17%;
+}
+
 #physical_object_generation_notes {
 	width: 99.3%;
 }

@@ -329,14 +329,39 @@ module PhysicalObjectsHelper
         :type_projection_screen, :type_projector, :type_rewind, :type_shrinkage_gauge, :type_squawk_box, :type_splicer,
         :type_supplies, :type_synchronizer, :type_viewer, :type_video_deck, :type_other, :type_other_text, :related_media_format,
         :manufacturer, :model, :serial_number, :box_number, :production_year, :production_location, :summary, :cost_notes,
-        :cost_estimate, :photos_url, :external_reference_links, :working_condition,
+        :cost_estimate, :photos_url, :external_reference_links, :working_condition, :original_notes_from_donor,
+
+        :film_gauge_8mm, :film_gauge_super_8mm, :film_gauge_9_5mm, :film_gauge_16mm, :film_gauge_super_16mm, :film_gauge_28mm,
+        :film_gauge_35mm, :film_gauge_35_32mm, :film_gauge_70mm, :film_gauge_other,
+
+        :video_gauge_1_inch_videotape, :video_gauge_1_2_inch_videotape, :video_gauge_1_4_inch_videotape, :video_gauge_2_inch_videotape,
+        :video_gauge_betacam, :video_gauge_betacam_sp, :video_gauge_betacam_sx, :video_gauge_betamax, :video_gauge_blu_ray_disc,
+        :video_gauge_cartrivision, :video_gauge_d1, :video_gauge_d2, :video_gauge_d3, :video_gauge_d5, :video_gauge_d6,
+        :video_gauge_d9, :video_gauge_dct, :video_gauge_digital_betacam, :video_gauge_digital8, :video_gauge_dv, :video_gauge_dvcam,
+        :video_gauge_dvcpro, :video_gauge_dvd, :video_gauge_eiaj_cartridge, :video_gauge_evd_videodisc, :video_gauge_hdcam,
+        :video_gauge_hi8, :video_gauge_laserdisc, :video_gauge_mii, :video_gauge_minidv, :video_gauge_hdv, :video_gauge_super_video_cd,
+        :video_gauge_u_matic, :video_gauge_universal_media_disc, :video_gauge_v_cord, :video_gauge_vhs, :video_gauge_vhs_c, :video_gauge_svhs,
+        :video_gauge_video8_aka_8mm_video, :video_gauge_vx, :video_gauge_videocassette, :video_gauge_open_reel_videotape,
+        :video_gauge_optical_video_disc, :video_gauge_other, :video_gauge_svhs_c, :video_gauge_ced,
+
+        :recorded_sound_gauge_open_reel_audiotape, :recorded_sound_gauge_grooved_analog_disc, :recorded_sound_gauge_1_inch_audio_tape,
+        :recorded_sound_gauge_1_2_inch_audio_cassette, :recorded_sound_gauge_1_4_inch_audio_cassette, :recorded_sound_gauge_1_4_inch_audio_tape,
+        :recorded_sound_gauge_2_inch_audio_tape, :recorded_sound_gauge_8_track, :recorded_sound_gauge_aluminum_disc,
+        :recorded_sound_gauge_audio_cassette, :recorded_sound_gauge_audio_cd, :recorded_sound_gauge_dat, :recorded_sound_gauge_dds,
+        :recorded_sound_gauge_dtrs, :recorded_sound_gauge_flexi_disc, :recorded_sound_gauge_grooved_dictabelt,
+        :recorded_sound_gauge_lacquer_disc, :recorded_sound_gauge_magnetic_dictabelt, :recorded_sound_gauge_mini_cassette,
+        :recorded_sound_gauge_pcm_betamax, :recorded_sound_gauge_pcm_u_matic, :recorded_sound_gauge_pcm_vhs, :recorded_sound_gauge_piano_roll,
+        :recorded_sound_gauge_plastic_cylinder, :recorded_sound_gauge_shellac_disc, :recorded_sound_gauge_super_audio_cd,
+        :recorded_sound_gauge_vinyl_recording, :recorded_sound_gauge_wax_cylinder, :recorded_sound_gauge_wire_recording,
+        :recorded_sound_gauge_1_8_inch_audio_tape,
 
         # additional physical object specific associations
         value_conditions_attributes: [:id, :condition_type, :value, :comment, :_destroy],
         boolean_conditions_attributes: [:id, :condition_type, :comment, :_destroy],
         languages_attributes: [:id, :language, :language_type, :_destroy],
         physical_object_original_identifiers_attributes: [:id, :identifier, :_destroy],
-        physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy]
+        physical_object_dates_attributes: [:id, :controlled_vocabulary_id, :date, :_destroy],
+        
       )
     else
       raise "Unsupported Format #{params[:physical_object][:medium]}"

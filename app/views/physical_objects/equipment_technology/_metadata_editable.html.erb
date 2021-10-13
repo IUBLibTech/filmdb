@@ -50,6 +50,14 @@
     </div>
   </div>
 </div>
+<div id="accompanying_documentation_metadata" class="metadata_section">
+  <h4>Accompanying Documentation</h4>
+  <div>
+    <%= f.text_area :accompanying_documentation, {style: "width: 99.4%"} %> <br>
+    <b>Accompanying Documentation Location</b> <%= f.text_field :accompanying_documentation_location, size: 75 %>
+  </div>
+</div>
+
 <h4>Equipment/Technology Metadata Fields</h4>
 <div>
   <div id="version_div" class="clear">
@@ -81,14 +89,6 @@
   </div>
   <div class="clear m_top_10px">
     <div class="et_flex_row">
-      <div class="">
-        <div>
-          <b>Related Media Format</b>
-        </div>
-        <div>
-          <%= f.select :related_media_format, PhysicalObject::NEW_MEDIUMS - ['Equipment/Technology'], include_blank: true %>
-        </div>
-      </div>
       <div class="">
         <div><b>Manufacturer</b></div>
         <div><%= f.text_field :manufacturer %></div>
@@ -128,7 +128,55 @@
         </div>
       </div>
     </div>
-    <div class="m_top_5px">
+    <div class="m_top_10px">
+      <b>Related Media Format</b>
+    </div>
+    <div>
+      <%= f.select :related_media_format, PhysicalObject::NEW_MEDIUMS - ['Equipment/Technology'], include_blank: true %>
+    </div>
+    <div class="related_medium m_top_10px m_bottom_10px" style="overflow: auto" >
+      <div class="film clear" <%= 'style="display: block"'.html_safe if @physical_object.related_media_format == 'Film' %>>
+        <% vals =  ControlledVocabulary.where(model_type: 'Film', model_attribute: ':gauge')%>
+        <% vals.each do |g| %>
+          <div class="check_box wide">
+            <%= f.check_box "film_gauge_#{g.value.downcase.parameterize.underscore}".to_sym %>
+            <div><%= g.value %></div>
+          </div>
+        <% end %>
+      </div>
+      <div class="video clear"  <%= 'style="display: block"'.html_safe if @physical_object.related_media_format == 'Video' %>>
+        <% vals =  ControlledVocabulary.where(model_type: 'Video', model_attribute: ':gauge')%>
+        <% vals.each do |g| %>
+          <div class="check_box wide">
+            <%= f.check_box "video_gauge_#{g.value.downcase.parameterize.underscore}".to_sym %>
+            <div><%= g.value %></div>
+          </div>
+        <% end %>
+      </div>
+      <div class="recorded_sound clear"  <%= 'style="display: block"'.html_safe if @physical_object.related_media_format == 'RecordedSound' %>>
+        <% vals =  ControlledVocabulary.where(model_type: 'RecordedSound', model_attribute: ':gauge')%>
+        <% vals.each do |g| %>
+          <div class="check_box wide">
+            <%= f.check_box "recorded_sound_gauge_#{g.value.downcase.parameterize.underscore}".to_sym %>
+            <div><%= g.value %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <h5 class="clear m_top_10px">Original Identifiers</h5>
+    <div class="">
+      <div class="value">
+        <%= f.fields_for :physical_object_original_identifiers do |id| %>
+          <div class="left condition">
+            Original Identifier: <%= id.text_field :identifier %>
+            <%= id.link_to_remove (action_name == 'edit' ? 'Delete' : 'Cancel') %>
+          </div>
+        <% end %>
+        <%= f.link_to_add 'New Original Identifier', :physical_object_original_identifiers %>
+      </div>
+    </div>
+
+    <div class="clear m_top_5px">
       <div class="_100">
         <b>Summary</b>
         <%= f.text_area :summary %>
@@ -140,7 +188,7 @@
         <div><%= f.text_area :cost_notes %></div>
       </div>
       <div class="_20">
-        <div><b>Cost Estimate</b> <%= f.text_field :cost_estimate %></div>
+        <div><b>Cost Estimate ($)</b> <%= f.text_field :cost_estimate, value: number_with_precision(f.object.cost_estimate, precision: 2, scale: 2) %></div>
       </div>
     </div>
     <div class="m_top_5px">
@@ -151,6 +199,12 @@
       <div class="_100 m_top_5px">
         <div><b>Links to External References</b></div>
         <%= f.text_area :external_reference_links %>
+      </div>
+    </div>
+    <div class="m_top_5px">
+      <div class="_100 m_top_5px">
+        <div><b>Original Notes From Donor</b></div>
+        <%= f.text_area :original_notes_from_donor %>
       </div>
     </div>
   </div>

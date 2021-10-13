@@ -4,7 +4,7 @@
 <% if @continue_url %>
    &nbsp;|&nbsp;<%= link_to @continue_text, @continue_url %>
 <% end %>
-<div>
+<div style="overflow: auto">
 	<% unless @physical_object.active_component_group.nil? %>
 		<div class="left" style="height: 30px; padding-top: 10px; width: 200px;">
 			<b>In Workflow For:</b> <%= @physical_object.active_component_group.group_type %>
