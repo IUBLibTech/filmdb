@@ -156,7 +156,7 @@ class EquipmentTechnology < ActiveRecord::Base
         end
       end
     when 'Recorded Sound'
-      RECORDED_SOUND_GAUGES.ach do |g|
+      RECORDED_SOUND_GAUGES.each do |g|
         if self[g]
           vals << g.to_s
         end

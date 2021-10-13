@@ -153,8 +153,8 @@
           </div>
         <% end %>
       </div>
-      <div class="recorded_sound clear"  <%= 'style="display: block"'.html_safe if @physical_object.related_media_format == 'RecordedSound' %>>
-        <% vals =  ControlledVocabulary.where(model_type: 'RecordedSound', model_attribute: ':gauge')%>
+      <div class="recorded_sound clear"  <%= 'style="display: block"'.html_safe if @physical_object.related_media_format == 'Recorded Sound' %>>
+        <% vals =  ControlledVocabulary.where(model_type: 'RecordedSound', model_attribute: ':gauge').order("value")%>
         <% vals.each do |g| %>
           <div class="check_box wide">
             <%= f.check_box "recorded_sound_gauge_#{g.value.downcase.parameterize.underscore}".to_sym %>

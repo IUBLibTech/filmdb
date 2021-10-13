@@ -27,7 +27,7 @@
 			selected = $(this).val().toLowerCase();
 		}).change(function () {
 			let val = $(this).find("option:selected").attr('value')
-			if ((original_format !== '' && val.toLowerCase() !== original_format)) {
+			if ((original_format !== '' && val.toLowerCase().replace(/ /g, "_") !== original_format)) {
 				swal({
 					title: 'Warning',
 					text: "You are changing the Related Media Format type. Are you sure you wish to continue?",
@@ -44,7 +44,7 @@
 						return_event = false;
 					}
 				})
-      } else if (original_format === '' || original_format === val.toLowerCase()) {
+      } else if (original_format === '' || original_format === val.toLowerCase().replace(/ /g, "_")) {
 				show(val);
       }
 		})
@@ -56,7 +56,7 @@
 	  $(".related_medium").children().hide();
 
 		// if the select is being SET to the original_format, we need to re-check checkboxes before toggling
-    if (val.toLowerCase() === original_format) {
+    if (val.toLowerCase().replace(/ /g, "_") === original_format) {
       for (let i = 0; i < checked.length; i++) {
 				$("#equipment_technology_"+checked[i]).prop('checked', true)
       }
