@@ -6,6 +6,8 @@
   <tr>
     <th>Barcode</th>
     <th>Type</th>
+    <th>Box</th>
+    <th>Collection</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -16,7 +18,11 @@
       <td>
         <%= link_to "#{physical_object&.iu_barcode}", physical_object_path(physical_object.acting_as) %>
       </td>
-      <td><%= physical_object.gauge %></td>
+
+      <td><%= physical_object.gauge %><br><%= physical_object.related_media_format_gauges %></td>
+      <td><%= physical_object.box_number %></td>
+      <td><%= physical_object.collection&.name %></td>
+
       <td>
         <%= link_to 'Show', physical_object.acting_as %> <br/>
         <%= link_to 'Edit', edit_physical_object_path(physical_object.acting_as) %>
