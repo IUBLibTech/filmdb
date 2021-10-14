@@ -7,8 +7,14 @@ module AlfHelper
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
+	# special logger for parsing spreadsheets
+	def logger
+		@@logger ||= Logger.new("#{Rails.root}/log/alf_logger.log")
+	end
+
 	# this method is responsible for generating and upload the ALF system pull request file
 	def push_pull_request(physical_objects, user)
+		logger.info("Pull request made by #{user}. #{physical_objects.size} Physical#{pluralize(physical_objects.size, "Object")}")
 		if physical_objects.length > 0
 			upload_request_file(physical_objects, user)
 		end
@@ -19,23 +25,28 @@ module AlfHelper
 	def upload_request_file(pos, user)
 		cedar = Rails.configuration.cedar
 		upload_dir = cedar['upload_test_dir']
+		logger.info("Target pull request directory: #{upload_dir}")
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
-		puts "\n\n\n\n\nAttempting file upload: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
+		logger.info "Pull request file: #{file.path}"
 
 		PullRequest.transaction do
+			logger.info "File should contain #{file_contents.size} POs"
 			if file_contents.size > 0
 				File.write(file, file_contents.join("\n"))
+				logger.info "#{file.path} created"
 			end
 			@pr = PullRequest.new(filename: file, file_contents: (file_contents.size > 0 ? file_contents.join("\n") : ''), requester: User.current_user_object)
 			pos.each do |p|
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			if file_contents.size > 0
+				logger.info "connecting to #{cedar['host']} as #{cedar['username']}"
 				Net::SSH.start(cedar['host'], cedar['username']) do |ssh|
 					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-					ssh.scp.upload!(file, upload_dir)
+					success = ssh.scp.upload!(file, upload_dir)
+					logger.info "scp.upload! returned #{success}"
 				end
 			end
 			@pr.save!
@@ -67,8 +78,7 @@ module AlfHelper
 	# date the function is called and formated yyyymmdd, and process_number is a 0 padded 5 digit number repesenting the
 	# (hopefully) id of the PullRequest the file will be associated with
 	def gen_file
-		file = File.join(Rails.root, 'tmp', "#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file")
-		#"./tmp/#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file"
+		File.join(Rails.root, 'tmp', "#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file")
 	end
 
 	def gen_process_number
