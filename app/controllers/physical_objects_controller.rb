@@ -83,8 +83,7 @@ class PhysicalObjectsController < ApplicationController
     u = User.current_user_object
     if request.get?
       @em = "Creating New Physical Object"
-      #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
-      @physical_object = EquipmentTechnology.new(inventoried_by: u.id, modified_by: u.id, media_type: '', medium: 'Equipment/Technology')
+      @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
