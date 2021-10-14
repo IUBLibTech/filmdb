@@ -17,6 +17,10 @@ module AlfHelper
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
 	def upload_request_file(pos, user)
+		cedar = Rails.configuration.cedar
+		upload_dir = cedar['upload_test_dir']
+		puts "\n\n\n\n\nAttempting file upload: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
+
 		debugger
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
@@ -29,12 +33,10 @@ module AlfHelper
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			if file_contents.size > 0
-				cedar = Rails.configuration.cedar
+
 				Net::SCP.start(cedar['host'], cedar['username']) do |scp|
 					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-					upload_dir = cedar['upload_test_dir']
-					puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
 					scp.upload!(file, upload_dir)
 				end
 			end
