@@ -87,7 +87,7 @@ module AlfHelper
 			# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 			# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
 			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_test_dir']}\n\n\n\n\n"
-			scp.upload!(file, upload_dir)
+			scp.upload!(file, cedar['upload_test_dir'])
 		end
 	end
 	def upload_test_file(iu_barcode)
