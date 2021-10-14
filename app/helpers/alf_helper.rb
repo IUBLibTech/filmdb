@@ -19,10 +19,10 @@ module AlfHelper
 	def upload_request_file(pos, user)
 		cedar = Rails.configuration.cedar
 		upload_dir = cedar['upload_test_dir']
-		puts "\n\n\n\n\nAttempting file upload: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
-
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
+		puts "\n\n\n\n\nAttempting file upload: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
+
 		PullRequest.transaction do
 			if file_contents.size > 0
 				File.write(file, file_contents.join("\n"))
