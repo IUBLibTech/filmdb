@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-# need to add the passenger gem for Sycamore because of upgrading ruby/rails/bundler
-gem 'passenger'
+# need to add the passenger gem for Sycamore because of upgrading ruby/rails/bundler#
+# gem 'passenger'
 
 gem 'rails', '~> 4.2'
 
@@ -61,17 +61,10 @@ gem 'config'
 
 gem 'net-scp'
 
-# gem 'will_paginate', '~> 3.1.0'
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
+# background process for spreadsheet download
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+gem 'daemons'
 
 
 group :development, :test do

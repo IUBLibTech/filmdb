@@ -52,6 +52,8 @@ Rails.application.routes.draw do
   get '/physical_object_location', to: 'physical_objects#edit_location', as: 'edit_location'
   patch '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'edit_physical_object_medium'
 
+  get '/equipment_technology/', to: 'physical_objects#equipment_technology', as: 'equipment_technology'
+
   #post '/physical_object_location', to: 'physical_objects#update_location', as: 'update_location'
   get '/test_email/', to: 'physical_objects#test_email', as: 'test_email'
   get '/physical_objects/show_xml/:id', to: 'physical_objects#show_xml', as: 'show_physical_object_xml'
@@ -102,7 +104,12 @@ Rails.application.routes.draw do
   get '/spreadsheets/:id/series/:series', to: 'spreadsheets#merge_series_candidates', as: 'merge_series_candidates'
   post '/spreadsheets/:id/merge_series', to: 'spreadsheets#merge_series', as: 'merge_series'
 
-	get '/stats/', to: 'stats#index', as: 'stats_index'
+  resources :spread_sheet_searches, only: [:index, :destroy]
+  get '/spreadsheet_search/download/:id', to: "spread_sheet_searches#download", as: "spreadsheet_search_download"
+  get '/spreadsheet_search/ajax/progress/', to: "spread_sheet_searches#check_progress", as: "spreadsheet_search_progress"
+
+
+  get '/stats/', to: 'stats#index', as: 'stats_index'
 	post '/stats/', to: 'stats#filter_index', as: 'stats_filter_index'
 	get '/stats/empty_titles/:unit/:collection_id/:start/:end', to: 'stats#empty_titles', as: 'empty_title'
 	get '/stats/empty_series/:unit/:collection_id/:start/:end', to: 'stats#empty_series', as: 'empty_series'
@@ -149,7 +156,10 @@ Rails.application.routes.draw do
   get '/titles/merge/in_storage', to: 'titles#merge_in_storage', as: 'merge_in_storage'
   post '/titles/merge/in_storage_update', to: 'titles#merge_in_storage_update', as: 'merge_in_storage_update'
   get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
-  get '/titles/search/xls_search', to: 'titles#xls_search', as: 'title_xls_search'
+
+  # the link that generates a SpreadSheetSearch object so we need to prevent browser back/forward buttons re-creating
+  # the object multiple times. The :ts value should be based on Process.clock_gettime(Process::CLOCK_MONOTONIC) for accuracy
+  get '/titles/search/xls_search/:ts', to: 'titles#xls_search', as: 'title_xls_search'
   resources :units
 
   resources :users

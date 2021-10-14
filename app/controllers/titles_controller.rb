@@ -41,35 +41,21 @@ class TitlesController < ApplicationController
   # end
 
   def xls_search
-    @count = Title.title_search_count(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status], current_user, 0, Title.all.size)
-    #@titles = Title.title_spreadsheet_search(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]))
-    @titles = Title.search_titles_xls(params[:title_text], params[:series_name_text], params[:date], params[:publisher_text], params[:creator_text], params[:summary_text], params[:location_text], params[:subject_text], (params[:collection_id] == '0' ? nil : params[:collection_id]), params[:digitized_status])
-    x = Axlsx::Package.new
-    wb = x.workbook
-    films = wb.add_worksheet(name: "Films")
-    videos = wb.add_worksheet(name: "Videos")
-    recorded_sounds = wb.add_worksheet(name: "Recorded Sounds")
-    Film.write_xlsx_header_row( films)
-    Video.write_xlsx_header_row( videos )
-    RecordedSound.write_xlsx_header_row( recorded_sounds )
-    @titles.each_with_index do |t, i|
-      puts "#{i+1} of #{@count} Titles Processed"
-      t.physical_objects.each do |po|
-        if po.specific.medium == "Film"
-          @worksheet = films
-        elsif po.specific.medium == "Video"
-          @worksheet = videos
-        elsif po.specific.medium == "Recorded Sound"
-          @worksheet = recorded_sounds
-        else
-          raise "Unsupported spreadsheet download medium: #{po.specific.medium}"
-        end
-        po.specific.write_xlsx_row(t, @worksheet)
-      end
+    # this is a stale request - the user hit the back/forward button to arrive here do NOT recreate the SpreadSheetSearch
+    if SpreadSheetSearch.where(request_ts: params[:ts]).any?
+      redirect_to spread_sheet_searches_path
+    else
+      ss = SpreadSheetSearch.new(
+        user_id: User.current_user_object.id, title_text: params[:title_text], series_name: params[:series_name_text],
+        date_text: params[:date_text], publisher_text: params[:publisher_text], creator_text: params[:creator_text],
+        summary_text: params[:summary_text], location_text: params[:location_text], subject_text: params[:subject_text],
+        collection_id: params[:collection_id], digitized_status: params[:digitized_status], percent_complete: 0, request_ts: params[:request_ts]
+      )
+      ss.save!
+      ss.delay.create
+      flash[:notice] = "Your search is running and will be available here for download when it completes."
+      redirect_to spread_sheet_searches_path
     end
-    f = prepare_file("search_results")
-    x.serialize(f.path)
-    send_file f.path, disposition: 'attachment'
   end
 
   # GET /titles/1

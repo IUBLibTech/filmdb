@@ -134,9 +134,9 @@ class Title < ActiveRecord::Base
 		end
 		unless digitized_status == 'all'
 			if digitized_status == "not_digitized"
-				t = t.where("AND (titles.stream_url is null OR titles.stream_url = '')")
+				t = t.where("(titles.stream_url is null OR titles.stream_url = '')")
 			elsif digitized_status == "digitized"
-				t = t.where("AND (titles.stream_url is not null AND titles.stream_url != '')")
+				t = t.where("(titles.stream_url is not null AND titles.stream_url != '')")
 			end
 		end
 		t
@@ -162,6 +162,7 @@ class Title < ActiveRecord::Base
 		res = connection.execute("select count(distinct(id)) from titles where id not in (select title_id from physical_object_titles)")
 		res.first.nil? ? 0 : res.first[0]
 	}
+
 
 
 	def self.per_page

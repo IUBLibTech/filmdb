@@ -42,6 +42,11 @@ class PhysicalObjectsController < ApplicationController
 	  end
   end
 
+  def equipment_technology
+    @physical_objects = PhysicalObject.where(medium: 'Equipment/Technology')
+    render 'physical_objects/equipment_technology/index'
+  end
+
   # GET /physical_objects/1
   # GET /physical_objects/1.json
   def show
@@ -78,7 +83,8 @@ class PhysicalObjectsController < ApplicationController
     u = User.current_user_object
     if request.get?
       @em = "Creating New Physical Object"
-      @physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      #@physical_object = Film.new(inventoried_by: u.id, modified_by: u.id, media_type: 'Moving Image', medium: 'Film')
+      @physical_object = EquipmentTechnology.new(inventoried_by: u.id, modified_by: u.id, media_type: '', medium: 'Equipment/Technology')
       set_cv
     elsif request.post?
       new_one = blank_specific_po(medium_value_from_params)
@@ -92,9 +98,11 @@ class PhysicalObjectsController < ApplicationController
           new_one.send(p+"=", params[class_sym][p])
         end
       end
-      # copy any title associations created before the switch
-      params[:physical_object][:title_ids].split(',').each do |t_id|
-        new_one.titles << Title.find(t_id.to_i)
+      # copy any title associations created before the switch, unless it was an Equipment/Technology object in which case it has no titles
+      unless params[:equipment_technology]
+        params[:physical_object][:title_ids].split(',').each do |t_id|
+          new_one.titles << Title.find(t_id.to_i)
+        end
       end
       @physical_object = new_one.specific
       set_cv
@@ -194,9 +202,10 @@ class PhysicalObjectsController < ApplicationController
       logger.debug $!
     end
     if @success
-      if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
-        notify_nitrate(@physical_object)
-      end
+      # Filmdb no longer emails notification of nitrate base
+      # if (@physical_object.is_a?(Film) && @physical_object.base_nitrate && !@nitrate)
+      #   notify_nitrate(@physical_object)
+      # end
       redirect_to @physical_object.acting_as, notice: 'Physical object was successfully updated.'
     else
       @original_po_id = @physical_object.acting_as.id
@@ -237,9 +246,10 @@ class PhysicalObjectsController < ApplicationController
       nitrate = @physical_object.specific.base_nitrate
       @physical_object.specific.update_attributes(ad_strip: adv)
       flash[:notice] = "Physical Object [#{bc}] was updated with AD Strip Value: #{adv}"
-      if @physical_object.specific.base_nitrate && !nitrate
-        notify_nitrate(@physical_object)
-      end
+      # Filmdb no longer emails notification about nitrate
+      # if @physical_object.specific.base_nitrate && !nitrate
+      #   notify_nitrate(@physical_object)
+      # end
     end
     redirect_to edit_ad_strip_path
   end
