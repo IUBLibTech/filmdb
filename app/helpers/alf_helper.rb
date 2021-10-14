@@ -79,7 +79,7 @@ module AlfHelper
 
 	def test_upload_file(iu_barcode)
 		pos = [PhysicalObject.where(iu_barcode: iu_barcode).first]
-		file_contents = generate_pull_file_contents(pos, User.where(username" 'jaalbrec'").first)
+		file_contents = generate_pull_file_contents(pos, User.where(username: 'jaalbrec').first)
 		file = gen_file
 		File.write(file, file_contents.join("\n"))
 		cedar = Rails.configuration.cedar
