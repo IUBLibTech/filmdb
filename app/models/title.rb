@@ -169,6 +169,43 @@ class Title < ActiveRecord::Base
 		100
 	end
 
+	def self.search_titles_xls(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)
+		q = Title.includes(:physical_objects, :series, :title_dates, :title_publishers, :title_creators, :title_locations)
+		q.where("titles.title_text like '%?%'", title_text) unless title_text.blank?
+		q.where("series.series.title like '%?%'", series_name_text) unless series_name_text.blank?
+		unless date.blank?
+			dates = date.gsub(' ', '').split('-')
+			if dates.size == 1
+				q.where(
+					"title_dates.end_date is null AND year(title_dates.start_date) = ? OR "+
+						"(title_dates.end_date is not null AND year(title_dates.start_date) <= ? AND year(title_dates.end_date) >= ?)", dates[0], dates[0], dates[0])
+			else
+				q.where(
+					"(title_dates.end_date is null AND year(title_dates.start_date) >= ? AND year(title_dates.start_date) <= ?  OR "+
+						"(title_dates.end_date is not null AND "+
+						"((year(title_dates.start_date) >= ? AND year(title_dates.start_date) <= ?) OR "+
+						"(year(title_dates.end_date) >= ? AND year(title_dates.end_date) <= ? OR "+
+						"(year(title_dates.start_date) < ? AND year(title_dates.end_date) > ?)))",
+					dates[0], dates[1], dates[0], dates[1], dates[0], dates[1], dates[0], dates[1]
+				)
+			end
+		end
+		q.where("title_publishers.name like '%?%'", publisher_text) unless publisher_text.blank?
+		q.where("title_creators.name like '%?%'", creator_text) unless creator_text.blank?
+		q.where("title_locations.location like '%?%'", location_text) unless location_text.blank?
+		q.where("titles.summary like '%?%'", summary_text) unless summary_text.blank?
+		q.where("titles.subject like '%?%'", subject_text) unless subject_text.blank?
+		q.where("physical_objects.collection_id = ?", collection_id)
+		unless digitized_status == 'all'
+			if digitized_status == "not_digitized"
+				q.where("titles.stream_url is null OR titles.stream_url = ''")
+			elsif digitized_status == "digitized"
+				q.where("titles.stream_url is not null AND titles.stream_url != ''")
+			end
+		end
+		q
+	end
+
 	def modifications
 		Modification.where(object_type: 'Title', object_id: self.id)
 	end
@@ -382,7 +419,7 @@ class Title < ActiveRecord::Base
 		sql
 	end
 	def self.title_search_where_sql(title_text, series_name_text, date, publisher_text, creator_text, summary_text, location_text, subject_text, collection_id, digitized_status)
-		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank?) ? "" : "WHERE"
+		sql = (title_text.blank? && series_name_text.blank? && date.blank? && publisher_text.blank? && creator_text.blank? && summary_text.blank? && location_text.blank? && subject_text.blank? && collection_id.blank? && digitized_status == "all") ? "" : "WHERE"
 		if !title_text.blank?
 			sql << " titles.title_text like #{escape_wildcard(title_text)}"
 		end

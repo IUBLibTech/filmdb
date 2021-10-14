@@ -81,6 +81,7 @@
       <% if policy(User).can_add_cv? %>
         <li><%= link_to "Controlled Vocabulary", controlled_vocabularies_path %></li>
       <% end %>
+      <li><%= link_to "Equipment/Technology", equipment_technology_path %></li>
       <li><%= link_to "Physical Objects", physical_objects_path %></li>
       <li><%= link_to "Series", series_index_path %></li>
       <li><%= link_to "Spreadsheets", spreadsheets_path %></li>

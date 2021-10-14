@@ -92,7 +92,7 @@ class PhysicalObject < ActiveRecord::Base
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 
-	NEW_MEDIUMS = ['Film', 'Video', 'Recorded Sound']
+	NEW_MEDIUMS = ['Film', 'Video', 'Recorded Sound', 'Equipment/Technology']
 
 	def self.per_page
 		100
@@ -485,11 +485,14 @@ class PhysicalObject < ActiveRecord::Base
 	def video?
 		medium == 'Video'
 	end
+	def equipement_technology?
+		medium == "Equipment/Technology"
+	end
 
   # a helper for concatenating MEDIUM with additional medium specific info. For instance, a 35mm Film would be
   # displayed as 'Film 35mm'
   def format
-    if [Film, Video, RecordedSound].include?(self.specific.class)
+    if [Film, Video, RecordedSound, EquipmentTechnology].include?(self.specific.class)
       "#{self.medium} (#{self.specific.gauge})"
     else
       raise "Unsupported Medium... #{self.specific}"

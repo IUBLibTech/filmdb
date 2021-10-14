@@ -22,16 +22,16 @@ class WorkflowStatus < ActiveRecord::Base
 	QUEUED_FOR_PULL_REQUEST = 'Queued for Pull Request'
 	PULL_REQUESTED = 'Pull Requested'
 	RECEIVED_FROM_STORAGE_STAGING = 'Returned to Pull Requested'
-	TWO_K_FOUR_K_SHELVES = "2k/4k Shelves (ALF)"
+	TWO_K_FOUR_K_SHELVES = "Digitization Shelf"
 	ISSUES_SHELF = 'Issues Shelf (ALF)'
-	BEST_COPY_ALF = 'Best Copy (ALF)'
+	BEST_COPY_ALF = 'Evaluation (ALF)'
 	IN_WORKFLOW_WELLS = 'In Workflow (Wells)'
 	SHIPPED_EXTERNALLY = 'Shipped Externally'
 	DEACCESSIONED = 'Deaccessioned'
 	JUST_INVENTORIED_WELLS = 'Just Inventoried (Wells)'
 	JUST_INVENTORIED_ALF = 'Just Inventoried (ALF)'
-	BEST_COPY_WELLS = 'Best Copy (Wells)'
-	BEST_COPY_MDPI_WELLS = 'Best Copy (MDPI - Wells)'
+	BEST_COPY_WELLS = 'Evaluation (Wells)'
+	BEST_COPY_MDPI_WELLS = 'Evaluation (Wells)'
 	WELLS_TO_ALF_CONTAINER = 'Wells to ALF Container'
 	IN_WORKFLOW_ALF = 'ALF (non MDPI)'
 
