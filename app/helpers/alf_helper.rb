@@ -17,6 +17,7 @@ module AlfHelper
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
 	def upload_request_file(pos, user)
+		debugger
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
 		PullRequest.transaction do
