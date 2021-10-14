@@ -60,7 +60,6 @@ class WorkflowController < ApplicationController
 					flash[:notice] = "Storage has been notified to pull #{@pr.automated_pull_physical_objects.size} records."
 				end
 			rescue Exception => e
-				debugger
 				logger.error e.message
 				logger.error e.backtrace.join("\n")
 				puts e.message

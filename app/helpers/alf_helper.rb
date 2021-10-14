@@ -21,7 +21,6 @@ module AlfHelper
 		upload_dir = cedar['upload_test_dir']
 		puts "\n\n\n\n\nAttempting file upload: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
 
-		debugger
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
 		PullRequest.transaction do
@@ -33,11 +32,10 @@ module AlfHelper
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			if file_contents.size > 0
-
-				Net::SCP.start(cedar['host'], cedar['username']) do |scp|
+				Net::SSH.start(cedar['host'], cedar['username']) do |ssh|
 					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-					scp.upload!(file, upload_dir)
+					ssh.scp.upload!(file, upload_dir)
 				end
 			end
 			@pr.save!
