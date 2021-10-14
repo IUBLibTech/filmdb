@@ -75,16 +75,23 @@ module AlfHelper
 		sprintf "%05d", (id.nil? ? 1 : id+1)
 	end
 
-	def test_upload_file
-		pos = [PhysicalObject.find(PhysicalObject.pluck(:id).sample)]
-		file = generate_pull_file_contents(pos, User.where(username" 'jaalbrec'").first)
+
+
+	def test_upload_file(iu_barcode)
+		pos = [PhysicalObject.where(iu_barcode: iu_barcode).first]
+		file_contents = generate_pull_file_contents(pos, User.where(username" 'jaalbrec'").first)
+		file = gen_file
+		File.write(file, file_contents.join("\n"))
 		cedar = Rails.configuration.cedar
-		Net::SCP.start(cedar['host'], cedar['username'], password: cedar['passphrase']) do |scp|
+		Net::SCP.start(cedar['host'], cedar['username']) do |scp|
 			# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 			# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
 			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_test_dir']}\n\n\n\n\n"
 			scp.upload!(file, upload_dir)
 		end
+	end
+	def upload_test_file(iu_barcode)
+		test_upload_file iu_barcode
 	end
 
 end
