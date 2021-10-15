@@ -39,6 +39,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  config.web_console.permissions = '140.182.79.47'
 
 	config.pod_batch_url = 'https://pod-dev.mdpi.iu.edu//responses/objects/push_filmdb_objects'
 	# so I can tail log file output from dev server while ssh'd in from local
