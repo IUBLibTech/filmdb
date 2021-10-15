@@ -7,14 +7,8 @@ module AlfHelper
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
-	# special logger for parsing spreadsheets
-	def logger
-		@@logger ||= Logger.new("#{Rails.root}/log/alf_logger.log")
-	end
-
 	# this method is responsible for generating and upload the ALF system pull request file
 	def push_pull_request(physical_objects, user)
-		logger.info("Pull request made by #{user}. #{physical_objects.size} Physical#{pluralize(physical_objects.size, "Object")}")
 		if physical_objects.length > 0
 			upload_request_file(physical_objects, user)
 		end
@@ -23,30 +17,24 @@ module AlfHelper
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
 	def upload_request_file(pos, user)
-		cedar = Rails.configuration.cedar
-		upload_dir = cedar['upload_test_dir']
-		logger.info("Target pull request directory: #{upload_dir}")
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
-		logger.info "Pull request file: #{file.path}"
-
 		PullRequest.transaction do
-			logger.info "File should contain #{file_contents.size} POs"
 			if file_contents.size > 0
 				File.write(file, file_contents.join("\n"))
-				logger.info "#{file.path} created"
 			end
 			@pr = PullRequest.new(filename: file, file_contents: (file_contents.size > 0 ? file_contents.join("\n") : ''), requester: User.current_user_object)
 			pos.each do |p|
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			if file_contents.size > 0
-				logger.info "connecting to #{cedar['host']} as #{cedar['username']}"
-				Net::SSH.start(cedar['host'], cedar['username']) do |ssh|
+				cedar = Rails.configuration.cedar
+				Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
 					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-					success = ssh.scp.upload!(file, upload_dir)
-					logger.info "scp.upload! returned #{success}"
+					upload_dir = cedar['upload_test_dir']
+					puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
+					scp.upload!(file, upload_dir)
 				end
 			end
 			@pr.save!
@@ -78,7 +66,8 @@ module AlfHelper
 	# date the function is called and formated yyyymmdd, and process_number is a 0 padded 5 digit number repesenting the
 	# (hopefully) id of the PullRequest the file will be associated with
 	def gen_file
-		File.join(Rails.root, 'tmp', "#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file")
+		file = File.join(Rails.root, 'tmp', "#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file")
+		#"./tmp/#{Date.today.strftime("%Y%m%d")}.#{gen_process_number}.webform.file"
 	end
 
 	def gen_process_number
@@ -86,23 +75,16 @@ module AlfHelper
 		sprintf "%05d", (id.nil? ? 1 : id+1)
 	end
 
-
-
-	def test_upload_file(iu_barcode)
-		pos = [PhysicalObject.where(iu_barcode: iu_barcode).first]
-		file_contents = generate_pull_file_contents(pos, User.where(username: 'jaalbrec').first)
-		file = gen_file
-		File.write(file, file_contents.join("\n"))
+	def test_upload_file
+		pos = [PhysicalObject.find(PhysicalObject.pluck(:id).sample)]
+		file = generate_pull_file_contents(pos, User.where(username" 'jaalbrec'").first)
 		cedar = Rails.configuration.cedar
-		Net::SCP.start(cedar['host'], cedar['username']) do |scp|
+		Net::SCP.start(cedar['host'], cedar['username'], password: cedar['passphrase']) do |scp|
 			# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
 			# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
 			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_test_dir']}\n\n\n\n\n"
-			scp.upload!(file, cedar['upload_test_dir'])
+			scp.upload!(file, upload_dir)
 		end
-	end
-	def upload_test_file(iu_barcode)
-		test_upload_file iu_barcode
 	end
 
 end

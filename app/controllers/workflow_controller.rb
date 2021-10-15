@@ -60,8 +60,8 @@ class WorkflowController < ApplicationController
 					flash[:notice] = "Storage has been notified to pull #{@pr.automated_pull_physical_objects.size} records."
 				end
 			rescue Exception => e
-				logger.error e.message
-				logger.error e.backtrace.join("\n")
+				#logger.error e.message
+				#logger.error e.backtrace.join("\n")
 				puts e.message
 				puts e.backtrace.join("\n")
 				flash[:warning] = "An error occurred when trying to push the request to the ALF system: #{e.message} (see log files for full details)"
