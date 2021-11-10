@@ -66,7 +66,6 @@
       </div>
       <div>
         <% if @titles && @titles.size > 0 %>
-          <% debugger %>
           <%= link_to "Download Search Results", title_xls_search_path(params.symbolize_keys.merge)  %>
         <% end %>
       </div>
