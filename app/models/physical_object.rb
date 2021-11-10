@@ -88,7 +88,7 @@ class PhysicalObject < ActiveRecord::Base
 		ActiveRecord::Base::connection.execute(sql).first[0]
 	}
 
-	FREEZER_AD_STRIP_VALS = ControlledVocabulary.where(model_attribute: ':ad_strip').order('value DESC').limit(3).collect{ |cv| cv.value }
+	FREEZER_AD_STRIP_VALS = ControlledVocabulary.where(model_attribute: ':ad_strip').order('value DESC').limit(3).collect{ |cv| cv.value } if ActiveRecord::Base.connection.table_exists? 'controlled_vocabularies'
 
 	MEDIA_TYPES = ['Moving Image', 'Recorded Sound', 'Still Image', 'Text', 'Three Dimensional Object', 'Software', 'Mixed Material']
 
