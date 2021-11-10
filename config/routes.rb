@@ -159,7 +159,7 @@ Rails.application.routes.draw do
 
   # the link that generates a SpreadSheetSearch object so we need to prevent browser back/forward buttons re-creating
   # the object multiple times. The :ts value should be based on Process.clock_gettime(Process::CLOCK_MONOTONIC) for accuracy
-  get '/titles/search/xls_search/:ts', to: 'titles#xls_search', as: 'title_xls_search'
+  get '/titles/search/xls_search/', to: 'titles#xls_search', as: 'title_xls_search'
   resources :units
 
   resources :users

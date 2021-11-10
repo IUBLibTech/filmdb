@@ -33,6 +33,7 @@
     <orderEntry type="library" scope="PROVIDED" name="activerecord (v4.2.11.3, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v4.2.11.3, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="arel (v6.0.4, rbenv: 2.6.7) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bcrypt_pbkdf (v1.1.0, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="binding_of_caller (v1.0.0, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.4, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.17.3, rbenv: 2.6.7) [gem]" level="application" />
@@ -60,6 +61,7 @@
     <orderEntry type="library" scope="PROVIDED" name="dry-schema (v1.8.0, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="dry-types (v1.5.1, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="dry-validation (v1.7.0, rbenv: 2.6.7) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ed25519 (v1.2.4, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubis (v2.7.0, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="execjs (v2.8.1, rbenv: 2.6.7) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="factory_girl (v4.9.0, rbenv: 2.6.7) [gem]" level="application" />

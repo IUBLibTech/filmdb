@@ -1,8 +1,8 @@
 class CorrectLostShrinkageValues < ActiveRecord::Migration
   def up
-
     path = "#{Rails.root}/tmp/shrinkage_update.csv"
     begin
+      return unless File.exists? path
       @csv = CSV.read(path, headers: false)
     rescue
       @opened_file = File.open(path, "r:ISO-8859-1:UTF-8")
