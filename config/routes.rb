@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   post '/physical_objects/:id/edit', to: 'physical_objects#edit', as: 'physical_objects_edit_post'
   post '/physical_objects/new', to: 'physical_objects#new', as: 'physical_objects_new_post'
   post '/physical_objects/:id', to: 'physical_objects#update', as: 'physical_object_update'
+  get '/compilations', to: 'physical_objects#compilations', as: 'compilations'
+  get '/compilations/:comp', to: 'physical_objects#compilation_physical_objects', as: 'compilation_physical_objects'
 
   # pod_pushes
   get '/pod_pushes', to: 'pod_pushes#index', as: 'pod_pushes'
@@ -79,7 +81,7 @@ Rails.application.routes.draw do
   get '/pull_requests', to: 'pull_requests#index', as: 'pull_requests'
   get '/pull_requests/:id', to: 'pull_requests#show', as: 'show_pull_request'
 
-  get '/search', to: 'search#barcode_search', as: 'barcode_search'
+  get '/search', to: 'search#search', as: 'barcode_search'
 
   resources :series
   get '/series/:id/new_physical_object', to: 'series#new_physical_object', as: 'series_new_physical_object'

@@ -1,1 +1,18 @@
+<% if @pos.size == 0 %>
 <b>No results found for <%= params[:barcode] %></b>
+<% else %>
+  <b>Search Results for <i>'<%= params[:barcode] %>'</i></b>
+  <table>
+    <tbody>
+    <tr>
+      <th>IU Barcode</th>
+    <% @pos.each do |p| %>
+      <tr>
+        <th>
+          <%= link_to "#{p.iu_barcode}", p %>
+        </th>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

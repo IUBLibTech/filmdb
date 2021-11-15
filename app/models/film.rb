@@ -4,6 +4,7 @@ class Film < ActiveRecord::Base
   validates :iu_barcode, iu_barcode: true
   validates :mdpi_barcode, mdpi_barcode: true
   validates :gauge, presence: true
+  validates :shrinkage, numericality: true
 
   # nested_form gem doesn't integrate with active_record-acts_as gem when objects are CREATED, it results in double
   # object creation from form submissions. Edits/deletes seem to work fine however. Use this in the initializer to omit
@@ -200,6 +201,16 @@ class Film < ActiveRecord::Base
       research_value, research_value_notes, ad_strip, shrinkage, mold,
       ((boolean_conditions.collect {|c| "#{c.condition_type} (#{c.comment})"} + value_conditions.collect {|c| "#{c.condition_type}: #{c.value} (#{c.comment})"}).join(' | ') unless (boolean_conditions.size == 0 && value_conditions.size == 0)),
       missing_footage, miscellaneous, conservation_actions, t.modifier&.username]
+  end
+
+  def orientation_text
+    t = ""
+    t << "A-wind" if orientation_a_wind
+    if orientation_a_wind && orientation_b_wind
+      t << " | #{'B-wind'}"
+    else
+      t << 'B-wind'
+    end
   end
 
   def to_xml(options)

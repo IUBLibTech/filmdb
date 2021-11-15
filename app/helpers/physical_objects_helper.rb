@@ -216,6 +216,8 @@ module PhysicalObjectsHelper
           :generation_optical_sound_track, :generation_original, :generation_outs_and_trims, :generation_positive, :generation_master,
           :generation_reversal, :generation_separation_master, :generation_work_print, :generation_mixed, :generation_other,
           :generation_interpositive, :generation_notes,
+          # orientation fields
+          :orientation_a_wind, :orientation_b_wind,
           # base, stock
           :base_acetate, :base_polyester, :base_nitrate, :base_mixed, :stock_agfa, :stock_ansco,
           :stock_dupont, :stock_orwo, :stock_fuji, :stock_gevaert, :stock_kodak, :stock_ferrania,
