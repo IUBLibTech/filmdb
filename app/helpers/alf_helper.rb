@@ -24,10 +24,8 @@ module AlfHelper
 		logger.info "Pull request file: #{file_path}"
 		PullRequest.transaction do
 			logger.info "File should contain #{file_contents.size} POs"
-			debugger
 			if file_contents.size > 0
 				File.write(file_path, file_contents.join("\n"))
-				debugger
 				logger.info "#{file_path} created"
 			end
 			@pr = PullRequest.new(filename: file_path, file_contents: (file_contents.size > 0 ? file_contents.join("\n") : ''), requester: User.current_user_object)
@@ -58,7 +56,6 @@ module AlfHelper
 			Net::SCP.start(pull_request_host, pull_request_user, password: ALF_CFG['cedar_password']) do |scp|
 				# when testing, make sure to use alf['upload_test_dir'] - this is the sftp user account home directory
 				# when ready to move into production testing change this to alf['upload_dir'] - this is the ALF automated ingest directory
-				debugger
 				success = scp.upload!(file, "#{pull_request_upload_dir}")
 				raise "Failed to scp file to #{pull_request_where}" unless success
 				logger.info "scp.upload! returned #{success}"
