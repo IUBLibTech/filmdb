@@ -39,7 +39,7 @@ config/settings/development.yml
 config/settings/test.yml
 config/settings/production.yml
 config/secrets.yml
-config/cedar.yml
+config/alf.yml
 
 config/settings.local.yml
 config/settings/*.local.yml

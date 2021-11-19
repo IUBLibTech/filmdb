@@ -7,6 +7,8 @@ module AlfHelper
 	ALF = "ALF"
 	WELLS_052 = "Wells"
 
+	ALF_CFG = Rails.configuration.alf
+
 	# this method is responsible for generating and upload the ALF system pull request file
 	def push_pull_request(physical_objects, user)
 		if physical_objects.length > 0
@@ -16,7 +18,39 @@ module AlfHelper
 
 	private
 	# generates an array containing lines to be written to the ALF batch ingest file
-	def upload_request_file(pos, user)
+	def upload_request_file_to_jackrabbit(pos, user)
+		cedar = Rails.configuration.cedar
+		upload_dir = cedar['upload_test_dir']
+		logger.info("Target pull request directory: #{upload_dir}")
+		file_contents = generate_pull_file_contents(pos, user)
+		file = gen_file
+		logger.info "Pull request file: #{file.path}"
+
+		PullRequest.transaction do
+			logger.info "File should contain #{file_contents.size} POs"
+			if file_contents.size > 0
+				File.write(file, file_contents.join("\n"))
+				logger.info "#{file.path} created"
+			end
+			@pr = PullRequest.new(filename: file, file_contents: (file_contents.size > 0 ? file_contents.join("\n") : ''), requester: User.current_user_object)
+			pos.each do |p|
+				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
+			end
+			if file_contents.size > 0
+				logger.info "connecting to #{cedar['host']} as #{cedar['username']}"
+				Net::SSH.start(cedar['host'], cedar['username']) do |ssh|
+					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
+					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
+					success = ssh.scp.upload!(file, upload_dir)
+					logger.info "scp.upload! returned #{success}"
+				end
+			end
+			@pr.save!
+			@pr
+		end
+	end
+
+	def upload_pull_request_to_cedar(pos, user)
 		file_contents = generate_pull_file_contents(pos, user)
 		file = gen_file
 		PullRequest.transaction do
@@ -28,18 +62,61 @@ module AlfHelper
 				@pr.physical_object_pull_requests << PhysicalObjectPullRequest.new(physical_object_id: p.id, pull_request_id: @pr.id)
 			end
 			if file_contents.size > 0
-				cedar = Rails.configuration.cedar
-				Net::SCP.start(cedar['host'], cedar['username'], password: cedar['password']) do |scp|
-					# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
-					# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-					upload_dir = cedar['upload_test_dir']
-					puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{upload_dir}\n\n\n\n\n"
-					scp.upload!(file, upload_dir)
-				end
+				scp(file)
 			end
 			@pr.save!
 			@pr
 		end
+	end
+
+	# This method handles differentiating between scp'ing to cedar or jackrabbit depending on the alf.yml configuration file
+	# and the Rails.env variable. The 'where' attribute in the config file determines whether uploads should be to cedar or
+	# to jackrabbit. Only the rails production environment uploads to the actual GFS monitored directory. All other envs
+	# upload to a test directory. Because the latest app migration runs Rails under the app user (and not myself), scp'ing
+	# is handled differently depending on the destination server. scp'ing to cedar requires username/password whereas
+	# scp'ing to jackrabbit is configured to use ssh pub/private keys for the app user.
+	#
+	# Once GFS production has moved to jackrabbit, this code can be condensed to handle only scp'ing to jackrabbit as the app
+	# user
+	def scp(file)
+		if pull_request_where == "jackrabbit"
+			Net::SSH.start(pull_request_host, pull_request_user) do |ssh|
+				# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
+				# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
+				success = ssh.scp.upload!(file, pull_request_upload_dir)
+				logger.info "scp.upload! returned #{success}"
+			end
+		elsif pull_request_where == "cedar"
+			Net::SCP.start(pull_request_host, pull_request_user, password: ALF_CFG['cedar_password']) do |scp|
+				# when testing, make sure to use alf['upload_test_dir'] - this is the sftp user account home directory
+				# when ready to move into production testing change this to alf['upload_dir'] - this is the ALF automated ingest directory
+				success = scp.upload!(file, upload_dir)
+				logger.info "scp.upload! returned #{success}"
+			end
+		else
+			raise "Alf.yml does not have a valid 'where' value defined"
+		end
+	end
+
+	def pull_request_upload_dir
+		if pull_request_where == 'jackrabbit'
+			Rails.env == "production" ? ALF_CFG['upload_dir'] : ALF_CFG['upload_test_dir']
+		elsif pull_request_where == 'cedar'
+			Rails.env == "production" ? ALF_CFG['cedar_upload_dir'] : ALF_CFG['cedar_upload_test_dir']
+		end
+	end
+	def pull_request_user
+		pull_request_where == 'jackrabbit' ? ALF_CFG['username'] : ALF_CFG['cedar_username']
+	end
+	def pull_request_host
+		pull_request_where == 'jackrabbit' ? ALF_CFG['host'] : ALF_CFG["cedar_host"]
+	end
+	def pull_request_where
+		ALF_CFG["where"]
+	end
+
+	def pulling_from?
+		"#{pull_request_user}@#{pull_request_host} uploads to #{pull_request_upload_dir}"
 	end
 
 	def generate_pull_file_contents(physical_objects, user)
@@ -78,11 +155,11 @@ module AlfHelper
 	def test_upload_file
 		pos = [PhysicalObject.find(PhysicalObject.pluck(:id).sample)]
 		file = generate_pull_file_contents(pos, User.where(username" 'jaalbrec'").first)
-		cedar = Rails.configuration.cedar
-		Net::SCP.start(cedar['host'], cedar['username'], password: cedar['passphrase']) do |scp|
-			# when testing, make sure to use cedar['upload_test_dir'] - this is the sftp user account home directory
-			# when ready to move into production testing change this to cedar['upload_dir'] - this is the ALF automated ingest directory
-			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{cedar['upload_test_dir']}\n\n\n\n\n"
+		alf = Rails.configuration.alf
+		Net::SCP.start(alf['host'], alf['username'], password: alf['passphrase']) do |scp|
+			# when testing, make sure to use alf['upload_test_dir'] - this is the sftp user account home directory
+			# when ready to move into production testing change this to alf['upload_dir'] - this is the ALF automated ingest directory
+			puts "\n\n\n\n\nUploaded file: #{file}. Destination: #{alf['upload_test_dir']}\n\n\n\n\n"
 			scp.upload!(file, upload_dir)
 		end
 	end
