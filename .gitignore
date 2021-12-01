@@ -14,9 +14,10 @@ db/*.sqlite3-journal
 # Ignore all logfiles and tempfiles.
 log/*
 !/log/.keep
-tmp
+tmp/
 config/database.yml
 config/pod_db.yml
+
 
 .byebug_history
 
