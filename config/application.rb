@@ -24,7 +24,7 @@ module Filmdb
     config.active_record.raise_in_transactional_callbacks = true
 
     # load in the cedar scp information
-    config.cedar = config_for(:cedar)
+    config.alf = config_for(:alf)
 
     config.autoload_paths << Rails.root.join('lib')
     config.paths.add 'lib', eager_load: true

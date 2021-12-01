@@ -42,6 +42,13 @@ class PhysicalObjectsController < ApplicationController
 	  end
   end
 
+  def compilations
+    @comps = PhysicalObject.uniq.order(:compilation).where("compilation is not null AND compilation != ''").pluck(:compilation)
+  end
+  def compilation_physical_objects
+    @physical_objects = PhysicalObject.where(compilation: params[:comp])
+  end
+
   def equipment_technology
     @physical_objects = PhysicalObject.where(medium: 'Equipment/Technology')
     render 'physical_objects/equipment_technology/index'

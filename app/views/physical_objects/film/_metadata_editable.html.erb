@@ -235,7 +235,15 @@
     <b>Generation Notes</b>
     <%= f.text_area :generation_notes %>
   </div>
+  <div>
+    <b>Orientation</b>
+    <div>
+      <div class="check_box _25"><%= f.check_box :orientation_a_wind %><div>A-wind</div></div>
+      <div class="check_box _25"><%= f.check_box :orientation_b_wind %><div>B-wind</div></div>
+    </div>
+  </div>
 </div>
+
 <div id="image_metadata" class="left _50">
   <h4>Image</h4>
   <div id="image_metadata_content_div">

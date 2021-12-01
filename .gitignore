@@ -14,9 +14,10 @@ db/*.sqlite3-journal
 # Ignore all logfiles and tempfiles.
 log/*
 !/log/.keep
-tmp
+tmp/
 config/database.yml
 config/pod_db.yml
+
 
 .byebug_history
 
@@ -39,7 +40,7 @@ config/settings/development.yml
 config/settings/test.yml
 config/settings/production.yml
 config/secrets.yml
-config/cedar.yml
+config/alf.yml
 
 config/settings.local.yml
 config/settings/*.local.yml

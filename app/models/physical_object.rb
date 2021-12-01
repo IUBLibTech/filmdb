@@ -126,6 +126,10 @@ class PhysicalObject < ActiveRecord::Base
 		titles.first.id
 	end
 
+	def is_media?
+		medium == 'Film' || medium == 'Video' || medium == 'Recorded Sound'
+	end
+
 	def scan_settings(component_group)
 		cgpo = component_group_physical_objects.where(component_group_id: component_group.id).first
 		{
