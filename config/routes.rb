@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   get '/ajax/title_creator/role', to: 'ajax#title_creator_role', as: 'ajax_title_creator_role'
   get '/ajax/title_publisher/role', to: 'ajax#title_publisher_role', as: 'ajax_publisher_role'
   get '/ajax/title_original_identifier/type', to: 'ajax#title_original_identifier', as: 'ajax_title_original_identifier'
+
+  get '/alf/upload_barcodes', to: 'alf#barcode_upload', as: 'alf_barcode_upload'
+  post '/alf/process_upload_barcodes', to: 'alf#process_barcode_upload', as: 'alf_process_barcode_upload'
+
   resources :cages
   get '/cages/cage_shelf/:id/ajax_physical_objects', to: 'cages#shelf_physical_objects', as: 'cage_shelf_physical_objects'
   post '/cages/cage_shelf/:id/ajax_physical_objects/', to: 'cages#add_physical_object_to_shelf', as: 'add_physical_object_to_cage_shelf_post'
