@@ -31,7 +31,7 @@ class AlfController < ApplicationController
       end
       response.headers['Content-Type'] = 'text/csv'
       response.headers['Content-Disposition'] = 'attachment; filename=invoice.csv'
-      send_data download, filename: "alf3 #{bcs.first}.csv"
+      send_data download, filename: "#{Time.now.strftime("%Y%m%d")}_alf3move.csv"
     end
   end
 
