@@ -37,9 +37,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'delayed_job_active_record'
 # mimemagic was yanked... this is a temporary workaround
-gem 'mimemagic', github: 'mimemagicrb/mimemagic', ref: '01f92d86d15d85cfd0f20dabd025dcbd36a8a60f'
+gem 'mimemagic', '~> 0.4.3'
 
 # HairTrigger lets you create and manage database triggers in a concise, db-agnostic, Rails-y way.
 gem 'hairtrigger'
@@ -68,6 +67,8 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
+
+gem "thor", "0.19.1"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
