@@ -163,7 +163,7 @@ Rails.application.routes.draw do
   post '/titles/merge/in_storage_update', to: 'titles#merge_in_storage_update', as: 'merge_in_storage_update'
   get '/titles/search/csv_search', to: 'titles#csv_search', as: 'title_csv_search'
 
-  # the link that generates a SpreadSheetSearch object so we need to prevent browser back/forward buttons re-creating
+  # the link that generates a SpreadSheetSearch.rb. object so we need to prevent browser back/forward buttons re-creating
   # the object multiple times. The :ts value should be based on Process.clock_gettime(Process::CLOCK_MONOTONIC) for accuracy
   get '/titles/search/xls_search/', to: 'titles#xls_search', as: 'title_xls_search'
   resources :units

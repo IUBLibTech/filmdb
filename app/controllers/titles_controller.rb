@@ -41,7 +41,7 @@ class TitlesController < ApplicationController
   # end
 
   def xls_search
-    # this is a stale request - the user hit the back/forward button to arrive here do NOT recreate the SpreadSheetSearch
+    # this is a stale request - the user hit the back/forward button to arrive here do NOT recreate the SpreadSheetSearch.rb.
     if SpreadSheetSearch.where(request_ts: params[:ts]).any?
       redirect_to spread_sheet_searches_path
     else
